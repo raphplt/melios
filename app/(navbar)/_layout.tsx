@@ -1,16 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable, useColorScheme } from "react-native";
-
 import Colors from "../../constants/Colors";
-import {
-	DarkTheme,
-	DefaultTheme,
-	ThemeProvider,
-	useTheme,
-} from "@react-navigation/native";
-import { useContext } from "react";
-import { ThemeContext } from "../../components/ThemContext";
 
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -29,20 +20,20 @@ export default function TabLayout() {
 				options={{
 					title: "Accueil",
 					tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-					headerRight: () => (
-						<Link href="/modal" asChild>
-							<Pressable>
-								{({ pressed }) => (
-									<FontAwesome
-										name="info-circle"
-										size={25}
-										color={Colors[colorScheme ?? "light"].text}
-										style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-									/>
-								)}
-							</Pressable>
-						</Link>
-					),
+					// headerRight: () => (
+					// 	<Link href="/modal" asChild>
+					// 		<Pressable>
+					// 			{({ pressed }) => (
+					// 				<FontAwesome
+					// 					name="info-circle"
+					// 					size={25}
+					// 					color={Colors[colorScheme ?? "light"].text}
+					// 					style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+					// 				/>
+					// 			)}
+					// 		</Pressable>
+					// 	</Link>
+					// ),
 				}}
 			/>
 			<Tabs.Screen
@@ -60,9 +51,9 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="settings"
+				name="account"
 				options={{
-					title: "Profil",
+					title: "Compte",
 					tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
 				}}
 			/>

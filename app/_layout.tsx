@@ -12,10 +12,10 @@ export {
 	ErrorBoundary,
 } from "expo-router";
 
-export const unstable_settings = {
-	// Ensure that reloading on `/modal` keeps a back button present.
-	initialRouteName: "(tabs)",
-};
+// export const unstable_settings = {
+// 	// Ensure that reloading on `/modal` keeps a back button present.
+// 	initialRouteName: "(navbar)",
+// };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -58,8 +58,9 @@ function RootLayoutNav() {
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
 			<ThemeProvider value={theme}>
 				<Stack>
-					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-					<Stack.Screen name="modal" options={{ presentation: "modal" }} />
+					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+					{/* <Stack.Screen name="modal" options={{ presentation: "modal" }} /> */}
+					<Stack.Screen name="login" options={{ presentation: "modal" }} />
 				</Stack>
 			</ThemeProvider>
 		</ThemeContext.Provider>

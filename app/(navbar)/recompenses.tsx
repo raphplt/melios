@@ -8,7 +8,7 @@ export default function TabTwoScreen() {
 		<View>
 			<Text className="text-center mb-4 text-xl mt-3">Récompenses</Text>
 			<View />
-			<EditScreenInfo path="app/(tabs)/two.tsx" />
+			{/* <EditScreenInfo path="app/(tabs)/two.tsx" /> */}
 		</View>
 	);
 }
