@@ -60,7 +60,8 @@ function RootLayoutNav() {
 				<Stack>
 					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
 					{/* <Stack.Screen name="modal" options={{ presentation: "modal" }} /> */}
-					<Stack.Screen name="login" options={{ presentation: "modal" }} />
+					{/* <Stack.Screen name="login" options={{ presentation: "modal" }} /> */}
+					{/* <Stack.Screen name="register" options={{ presentation: "modal" }} /> */}
 				</Stack>
 			</ThemeProvider>
 		</ThemeContext.Provider>

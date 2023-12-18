@@ -3,10 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import ToggleButton from "../../components/Switch";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../db";
 import { Button, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { disconnectUser } from "../../db/users";
+import { auth } from "../../db";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -47,12 +47,29 @@ export default function Account() {
 					>
 						{auth.currentUser?.email}
 					</Text>
-					<Button
-						title="Logout"
-						onPress={() => {
-							handleLogout();
-						}}
-					/>
+					<Pressable
+						onPress={() => navigation.navigate("select")}
+						className=" bg-blue-500 py-2 px-4 rounded-md w-3/4 mx-auto mb-4 mt-4"
+					>
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-lg text-center"
+						>
+							Sélectionner mes habitudes
+						</Text>
+					</Pressable>
+
+					<Pressable
+						onPress={handleLogout}
+						className="mx-auto bg-red-500 py-2 px-4 rounded-md w-3/4"
+					>
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-lg text-center"
+						>
+							Déconnexion
+						</Text>
+					</Pressable>
 				</View>
 			) : (
 				<View style={{ backgroundColor: theme.colors.background }}>
@@ -64,17 +81,23 @@ export default function Account() {
 					</Text>
 					<Pressable
 						onPress={() => navigation.navigate("register")}
-						className="mx-auto bg-blue-500 py-2 px-4 rounded-md"
+						className=" bg-blue-500 py-2 px-4 rounded-md w-1/2 mx-auto mb-4 mt-4"
 					>
-						<Text style={{ color: theme.colors.text }} className="text-xl">
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-xl text-center"
+						>
 							Register
 						</Text>
 					</Pressable>
 					<Pressable
 						onPress={() => navigation.navigate("login")}
-						className="mx-auto bg-green-500 py-2 px-4 rounded-md"
+						className="mx-auto bg-green-500 py-2 px-4 rounded-md w-1/2"
 					>
-						<Text style={{ color: theme.colors.text }} className="text-xl">
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-xl text-center"
+						>
 							Login
 						</Text>
 					</Pressable>

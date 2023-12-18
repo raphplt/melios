@@ -9,14 +9,22 @@ export default function Login() {
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [passwordConfirm, setPasswordConfirm] = useState("");
+	const [error, setError] = useState("");
 
 	const navigation: any = useNavigation();
 
 	const login = async () => {
 		try {
-			await loginUser(email, password);
-			navigation.navigate("index");
+			console.log("Tentative de connexion avec l'email : ", email);
+			console.log("Tentative de connexion avec le mot de passe : ", password);
+			const user: any = await loginUser(email, password);
+
+			if (user.error) {
+				setError(user.error);
+				return;
+			} else {
+				navigation.navigate("index");
+			}
 		} catch (error) {
 			console.error("Erreur lors de la création de l'utilisateur : ", error);
 		}
@@ -57,6 +65,7 @@ export default function Login() {
 				/>
 			</View>
 			<Button onPress={login} title="Se connecter" />
+			<Text className="text-center text-xl mt-6 text-red-400">{error}</Text>
 		</View>
 	);
 }
