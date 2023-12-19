@@ -3,23 +3,33 @@ import { View, TouchableOpacity, Image } from "react-native";
 import { Text } from "react-native";
 import { ThemeContext } from "./ThemContext";
 import Checkbox from "expo-checkbox";
-import { setMemberHabit } from "../db/member";
+import { setMemberHabit, setMemberHabitLog } from "../db/member";
 import { getMemberHabit } from "../db/member";
+import moment from "moment";
 
-export default function CardHabit({ habit, navigation }: any) {
+export default function CardCheckHabit({ habit, navigation }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
+	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 
-	const setHabit = async () => {
-		await setMemberHabit(habit);
+	const setHabitDone = async () => {
+		await setMemberHabitLog(habit.id, date, true);
 
 		setToggleCheckBox(!toggleCheckBox);
 	};
 
 	useEffect(() => {
 		(async () => {
-			const hasHabit = await getMemberHabit(habit.id);
-			setToggleCheckBox(hasHabit ? true : false);
+			const snapshot = await getMemberHabit(habit.id);
+			await setMemberHabitLog(habit.id, date, false);
+
+			// console.log("SNAPSHOT", snapshot);
+			// console.log("DONE", snapshot.logs[date] && snapshot.logs[date].done);
+
+			console.log("SNAPSHOT", snapshot.logs[0].done);
+			setToggleCheckBox(
+				snapshot.logs[date] && snapshot.logs[date].done ? true : false
+			);
 		})();
 	}, []);
 
@@ -34,9 +44,12 @@ export default function CardHabit({ habit, navigation }: any) {
 					{habit.name}
 				</Text>
 				<Text style={{ color: theme.colors.text }}>{habit.img}</Text>
+				<Text style={{ color: theme.colors.text }}>
+					{habit.logs[0].done == false ? "false" : "true"}
+				</Text>
 			</View>
 			<View>
-				<Checkbox value={toggleCheckBox} onValueChange={setHabit} />
+				<Checkbox value={toggleCheckBox} onValueChange={setHabitDone} />
 			</View>
 		</View>
 	);

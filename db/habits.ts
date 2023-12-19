@@ -1,9 +1,19 @@
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from ".";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const LOCAL_STORAGE_KEY = "habitsData";
 
 // Fonction pour récupérer tous les documents de la collection "habits"
 export const getAllHabits = async () => {
 	try {
+		const storedHabits = await AsyncStorage.getItem(LOCAL_STORAGE_KEY);
+
+		if (storedHabits) {
+			console.log("Récupération des habitudes depuis le local storage...");
+			return JSON.parse(storedHabits);
+		}
+
 		const habitsCollection = collection(db, "habits");
 		const habitsSnapshot = await getDocs(habitsCollection);
 
@@ -12,6 +22,7 @@ export const getAllHabits = async () => {
 			...doc.data(),
 		}));
 
+		await AsyncStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(habitsData));
 		return habitsData;
 	} catch (error) {
 		console.error(

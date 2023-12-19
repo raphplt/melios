@@ -62,6 +62,12 @@ function RootLayoutNav() {
 					{/* <Stack.Screen name="modal" options={{ presentation: "modal" }} /> */}
 					{/* <Stack.Screen name="login" options={{ presentation: "modal" }} /> */}
 					{/* <Stack.Screen name="register" options={{ presentation: "modal" }} /> */}
+					<Stack.Screen
+						name="select"
+						options={{
+							title: "Habitudes",
+						}}
+					/>
 				</Stack>
 			</ThemeProvider>
 		</ThemeContext.Provider>

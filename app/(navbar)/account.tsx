@@ -47,17 +47,7 @@ export default function Account() {
 					>
 						{auth.currentUser?.email}
 					</Text>
-					<Pressable
-						onPress={() => navigation.navigate("select")}
-						className=" bg-blue-500 py-2 px-4 rounded-md w-3/4 mx-auto mb-4 mt-4"
-					>
-						<Text
-							style={{ color: theme.colors.text }}
-							className="text-lg text-center"
-						>
-							Sélectionner mes habitudes
-						</Text>
-					</Pressable>
+
 
 					<Pressable
 						onPress={handleLogout}

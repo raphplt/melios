@@ -29,6 +29,12 @@ export default function Select() {
 	return (
 		<ThemeProvider value={theme}>
 			<ScrollView>
+				<Text
+					className="text-xl w-10/12 text-center mx-auto mt-6"
+					style={{ color: theme.colors.text }}
+				>
+					Choisissez vos habitudes
+				</Text>
 				<View
 					className="flex flex-col mt-6"
 					style={{ backgroundColor: theme.colors.background }}
