@@ -13,24 +13,19 @@ import { auth } from ".";
 
 export const setMemberHabit = async (habit: any) => {
 	try {
-		// Récupérer l'uid de l'utilisateur connecté via auth
 		const uid: any = auth.currentUser?.uid;
 
-		console.log(uid);
+		console.log("uid : ", uid);
 
-		// Référence à la collection 'members'
 		const membersCollectionRef = collection(db, "members");
 
-		// Créer une requête pour récupérer le membre avec le champ 'uid' correspondant
 		const querySnapshot = await getDocs(
 			query(membersCollectionRef, where("uid", "==", uid))
 		);
 
 		if (!querySnapshot.empty) {
-			// Le membre existe, récupérer le premier document correspondant (il devrait y en avoir qu'un)
 			const memberDoc = querySnapshot.docs[0];
-			// Mettre à jour le tableau "habits" du document membre
-			console.log(habit);
+			console.log("habit : ", habit);
 
 			const userHabit = {
 				id: habit.id,
@@ -41,9 +36,9 @@ export const setMemberHabit = async (habit: any) => {
 			await updateDoc(memberDoc.ref, {
 				habits: arrayUnion(userHabit),
 			});
-		} else {
-			// Si le membre n'existe pas, le créer avec le tableau "habits"
 
+			console.log("Document membre mis à jour avec succès");
+		} else {
 			await setDoc(doc(membersCollectionRef, uid), {
 				uid: uid,
 				habits: [habit],
@@ -140,7 +135,7 @@ export const getMemberHabit = async (habitId: any) => {
 
 export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 	try {
-		const uid: any = auth.currentUser?.uid;
+		const uid = auth.currentUser?.uid;
 
 		const membersCollectionRef = collection(db, "members");
 
@@ -153,25 +148,26 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 
 			const habits = memberDoc.data().habits;
 
-			const habit = habits.find((habit: any) => habit.id === habitId);
+			const habitIndex = habits.findIndex((h: any) => h.id === habitId);
 
-			// Vérifier si un log avec la même date existe déjà
-			const existingLogIndex = habit.logs.findIndex(
-				(log: any) => log.date === date
-			);
+			if (habitIndex !== -1) {
+				const habit = habits[habitIndex];
 
-			if (existingLogIndex !== -1) {
-				// Mettre à jour le log existant
-				habit.logs[existingLogIndex].done = done;
-			} else {
-				// Ajouter un nouveau log
-				const newLog = { date, done };
-				habit.logs.push(newLog);
+				const existingLogIndex = habit.logs.findIndex((log: any ) => log.date === date);
+
+				if (existingLogIndex !== -1) {
+					// Mettre à jour le log existant
+					habit.logs[existingLogIndex].done = done;
+				} else {
+					// Ajouter un nouveau log
+					const newLog = { date, done };
+					habit.logs.push(newLog);
+				}
+
+				await updateDoc(memberDoc.ref, {
+					habits: habits,
+				});
 			}
-
-			await updateDoc(memberDoc.ref, {
-				habits: habits,
-			});
 		} else {
 			// Si le membre n'existe pas, renvoyer un tableau vide
 			return [];

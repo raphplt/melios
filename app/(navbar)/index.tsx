@@ -114,13 +114,11 @@ export default function Index() {
 								Habitudes à faire aujourd'hui :
 							</Text>
 
-							{userHabits.map(
-								(habit: any) =>
-									habit.logs[0] &&
-									!habit.logs[0].done && <CardCheckHabit key={habit.id} habit={habit} />
-							)}
+							{userHabits.map((habit: any) => (
+								<CardCheckHabit key={habit.id} habit={habit} />
+							))}
 						</View>
-						<View
+						{/* <View
 							className="flex flex-row flex-wrap justify-center"
 							style={{ backgroundColor: theme.colors.background }}
 						>
@@ -132,7 +130,7 @@ export default function Index() {
 									habit.logs[0] &&
 									habit.logs[0].done && <CardCheckHabit key={habit.id} habit={habit} />
 							)}
-						</View>
+						</View> */}
 					</View>
 				) : (
 					<Text style={{ color: theme.colors.text }} className="text-center">
