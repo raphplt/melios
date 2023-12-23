@@ -27,17 +27,26 @@ export const setMemberHabit = async (habit: any) => {
 			const memberDoc = querySnapshot.docs[0];
 			console.log("habit : ", habit);
 
-			const userHabit = {
-				id: habit.id,
-				name: habit.name,
-				logs: [],
-			};
+			// Vérifier si l'habitude existe déjà
+			const existingHabit = memberDoc
+				.data()
+				.habits.find((h: any) => h.id === habit.id);
 
-			await updateDoc(memberDoc.ref, {
-				habits: arrayUnion(userHabit),
-			});
+			if (!existingHabit) {
+				const userHabit = {
+					id: habit.id,
+					name: habit.name,
+					logs: [],
+				};
 
-			console.log("Document membre mis à jour avec succès");
+				await updateDoc(memberDoc.ref, {
+					habits: arrayUnion(userHabit),
+				});
+
+				console.log("Document membre mis à jour avec succès");
+			} else {
+				console.log("L'habitude existe déjà pour ce membre");
+			}
 		} else {
 			await setDoc(doc(membersCollectionRef, uid), {
 				uid: uid,
@@ -53,6 +62,7 @@ export const setMemberHabit = async (habit: any) => {
 		throw error;
 	}
 };
+
 
 export const getMemberHabits = async () => {
 	try {

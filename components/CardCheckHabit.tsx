@@ -7,26 +7,40 @@ import { setMemberHabitLog } from "../db/member";
 import { getMemberHabit } from "../db/member";
 import moment from "moment";
 
-export default function CardCheckHabit({ habit, navigation }: any) {
+export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setDate(moment().format("YYYY-MM-DD"));
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, []);
+
 	const setHabitDone = async () => {
 		await setMemberHabitLog(habit.id, date, true);
-
 		setToggleCheckBox(!toggleCheckBox);
+
+		onHabitStatusChange(habit.id, true);
 	};
 
 	useEffect(() => {
-		(async () => {
-			const snapshot = await getMemberHabit(habit.id);
-			await setMemberHabitLog(habit.id, date, false);
-
-			setToggleCheckBox(
-				snapshot.logs[date] && snapshot.logs[date].done ? true : false
-			);
-		})();
+		if (habit.logs) {
+			if (
+				habit.logs[habit.logs.length - 1] &&
+				habit.logs[habit.logs.length - 1].date === date &&
+				habit.logs[habit.logs.length - 1].done === true
+			) {
+				setToggleCheckBox(true);
+			} else {
+				setToggleCheckBox(false);
+			}
+		} else {
+			setToggleCheckBox(false);
+		}
 	}, []);
 
 	return (
@@ -36,7 +50,10 @@ export default function CardCheckHabit({ habit, navigation }: any) {
 				style={{ backgroundColor: theme.colors.backgroundSecondary }}
 			>
 				<Image source={habit.image} className="ml-3" />
-				<Text style={{ color: theme.colors.text }} className="ml-2 text-[16px]">
+				<Text
+					style={{ color: theme.colors.text }}
+					className="ml-2 text-[16px] line-clamp-2 w-3/4"
+				>
 					{habit.name}
 				</Text>
 				<Text style={{ color: theme.colors.text }}>{habit.img}</Text>

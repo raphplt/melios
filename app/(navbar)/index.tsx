@@ -2,9 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import { View, ScrollView, RefreshControl, Pressable } from "react-native";
 import TopStats from "../../components/TopStats";
-import { ThemeProvider } from "@react-navigation/native";
-import CardHabit from "../../components/CardHabit";
-import { useNavigation } from "expo-router";
+import { ThemeProvider, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "react-native";
 import { getMemberHabits } from "../../db/member";
@@ -36,16 +34,24 @@ export default function Index() {
 	};
 
 	useEffect(() => {
+		const interval = setInterval(() => {
+			setDate(moment().format("YYYY-MM-DD"));
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
 		const fetchHabitsData = async () => {
 			try {
 				const data = await getMemberHabits();
 				if (isMounted.current) {
 					setUserHabits(data);
-					setLoading(false); // Définissez loading à false après la requête
+					setLoading(false);
 				}
 			} catch (error) {
 				handleError(error);
-				setLoading(false); // Définissez loading à false en cas d'erreur
+				setLoading(false);
 			}
 		};
 
@@ -60,6 +66,15 @@ export default function Index() {
 		console.error("Erreur lors de la récupération des habitudes : ", error);
 	};
 
+	const handleHabitStatusChange = (habitId: any, done: boolean) => {
+		// Update the userHabits state based on the status change
+		setUserHabits((prevHabits: any) =>
+			prevHabits.map((habit: any) =>
+				habit.id === habitId ? { ...habit, done } : habit
+			)
+		);
+	};
+
 	if (loading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -70,16 +85,16 @@ export default function Index() {
 		);
 	}
 
-	// Reste du code pour le rendu normal
 	return (
 		<ThemeProvider value={theme}>
 			<ScrollView
+				className="mb-8"
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
 			>
 				<View style={{ backgroundColor: theme.colors.background }}>
-					<TopStats />
+					<TopStats habits={userHabits} />
 				</View>
 				<View
 					style={{ backgroundColor: theme.colors.background }}
@@ -91,7 +106,7 @@ export default function Index() {
 						}}
 						className="text-center text-xl"
 					>
-						Mes bonnes habitudes
+						Mes habitudes
 					</Text>
 					<Pressable
 						onPress={() => navigation.navigate("select")}
@@ -103,34 +118,64 @@ export default function Index() {
 
 				{userHabits.length > 0 ? (
 					<View
-						className="flex flex-row flex-wrap justify-center mt-6"
+						className="flex flex-row flex-wrap justify-center mt-4"
 						style={{ backgroundColor: theme.colors.background }}
 					>
 						<View
-							className="flex flex-row flex-wrap justify-center"
+							className="flex flex-row flex-wrap justify-start"
 							style={{ backgroundColor: theme.colors.background }}
 						>
-							<Text style={{ color: theme.colors.text }}>
-								Habitudes à faire aujourd'hui :
+							<Text
+								style={{ color: theme.colors.text }}
+								className="w-10/12 mx-auto text-lg"
+							>
+								A faire aujourd'hui :
 							</Text>
 
-							{userHabits.map((habit: any) => (
-								<CardCheckHabit key={habit.id} habit={habit} />
-							))}
+							{userHabits
+								.filter(
+									(habit: any) =>
+										habit.logs.length === 0 ||
+										(habit.logs.length > 0 &&
+											habit.logs[habit.logs.length - 1] &&
+											(habit.logs[habit.logs.length - 1].date !== date ||
+												habit.logs[habit.logs.length - 1].done === false))
+								)
+								.map((filteredHabit: any) => (
+									<CardCheckHabit
+										key={filteredHabit.id}
+										habit={filteredHabit}
+										onHabitStatusChange={handleHabitStatusChange}
+									/>
+								))}
 						</View>
-						{/* <View
-							className="flex flex-row flex-wrap justify-center"
+						<View
+							className="flex flex-row flex-wrap justify-start"
 							style={{ backgroundColor: theme.colors.background }}
 						>
-							<Text style={{ color: theme.colors.text }}>
-								Habitudes déjà faites aujourd'hui :
+							<Text
+								style={{ color: theme.colors.text }}
+								className="w-10/12 mx-auto text-lg"
+							>
+								Déjà réalisées :
 							</Text>
-							{userHabits.map(
-								(habit: any) =>
-									habit.logs[0] &&
-									habit.logs[0].done && <CardCheckHabit key={habit.id} habit={habit} />
-							)}
-						</View> */}
+
+							{userHabits
+								.filter(
+									(habit: any) =>
+										habit.logs &&
+										habit.logs[habit.logs.length - 1] &&
+										habit.logs[habit.logs.length - 1].date === date &&
+										habit.logs[habit.logs.length - 1].done === true
+								)
+								.map((filteredHabit: any) => (
+									<CardCheckHabit
+										key={filteredHabit.id}
+										habit={filteredHabit}
+										onHabitStatusChange={handleHabitStatusChange}
+									/>
+								))}
+						</View>
 					</View>
 				) : (
 					<Text style={{ color: theme.colors.text }} className="text-center">
