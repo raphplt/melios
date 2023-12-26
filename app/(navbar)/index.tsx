@@ -1,6 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
-import { View, ScrollView, RefreshControl, Pressable } from "react-native";
+import {
+	View,
+	ScrollView,
+	RefreshControl,
+	Pressable,
+	ActivityIndicator,
+} from "react-native";
 import TopStats from "../../components/TopStats";
 import { ThemeProvider, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,6 +24,8 @@ export default function Index() {
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
+	const [completedHabits, setCompletedHabits] = useState([]);
+	const [uncompletedHabits, setUncompletedHabits] = useState([]);
 
 	const onRefresh = async () => {
 		setRefreshing(true);
@@ -42,25 +50,54 @@ export default function Index() {
 	}, []);
 
 	useEffect(() => {
-		const fetchHabitsData = async () => {
+		(async () => {
 			try {
 				const data = await getMemberHabits();
 				if (isMounted.current) {
 					setUserHabits(data);
+
 					setLoading(false);
 				}
 			} catch (error) {
 				handleError(error);
 				setLoading(false);
 			}
-		};
-
-		fetchHabitsData();
+		})();
 
 		return () => {
 			isMounted.current = false;
 		};
 	}, []);
+
+	useEffect(() => {
+		const completedHabits = userHabits.filter((habit: any) => {
+			if (habit.logs) {
+				const lastLog = habit.logs[habit.logs.length - 1];
+
+				if (lastLog && lastLog.date === date && lastLog.done === true) {
+					return true;
+				}
+			}
+		});
+
+		const uncompletedHabits = userHabits.filter((habit: any) => {
+			if (habit.logs) {
+				const lastLog = habit.logs[habit.logs.length - 1];
+
+				if (lastLog && lastLog.date !== date) {
+					return true;
+				}
+				if (lastLog && lastLog.date === date && lastLog.done === false) {
+					return true;
+				} else if (habit.logs.length === 0) {
+					return true;
+				}
+			}
+		});
+
+		setCompletedHabits(completedHabits);
+		setUncompletedHabits(uncompletedHabits);
+	}, [userHabits, date]);
 
 	const handleError = (error: any) => {
 		console.error("Erreur lors de la récupération des habitudes : ", error);
@@ -78,7 +115,8 @@ export default function Index() {
 	if (loading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<Text style={{ color: theme.colors.text }}>
+				<ActivityIndicator size="large" color={"#007aff"} />
+				<Text style={{ color: theme.colors.text }} className="text-lg mt-8">
 					Chargement des habitudes...
 				</Text>
 			</View>
@@ -129,7 +167,7 @@ export default function Index() {
 								style={{ color: theme.colors.text }}
 								className="w-10/12 mx-auto text-lg"
 							>
-								A faire aujourd'hui :
+								A faire aujourd'hui : {uncompletedHabits.length}
 							</Text>
 
 							{userHabits
@@ -146,6 +184,10 @@ export default function Index() {
 										key={filteredHabit.id}
 										habit={filteredHabit}
 										onHabitStatusChange={handleHabitStatusChange}
+										completedHabits={completedHabits}
+										setCompletedHabits={setCompletedHabits}
+										uncompletedHabits={uncompletedHabits}
+										setUncompletedHabits={setUncompletedHabits}
 									/>
 								))}
 						</View>
@@ -157,7 +199,7 @@ export default function Index() {
 								style={{ color: theme.colors.text }}
 								className="w-10/12 mx-auto text-lg"
 							>
-								Déjà réalisées :
+								Déjà réalisées : {completedHabits.length}
 							</Text>
 
 							{userHabits
@@ -173,13 +215,17 @@ export default function Index() {
 										key={filteredHabit.id}
 										habit={filteredHabit}
 										onHabitStatusChange={handleHabitStatusChange}
+										completedHabits={completedHabits}
+										setCompletedHabits={setCompletedHabits}
+										uncompletedHabits={uncompletedHabits}
+										setUncompletedHabits={setUncompletedHabits}
 									/>
 								))}
 						</View>
 					</View>
 				) : (
-					<Text style={{ color: theme.colors.text }} className="text-center">
-						Aucune habitude trouvée. (Refresh pour les afficher)
+					<Text style={{ color: theme.colors.text }} className="text-center mt-6">
+						Aucune habitude trouvée. Ajoutez-en une !
 					</Text>
 				)}
 

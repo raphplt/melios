@@ -7,9 +7,12 @@ import {
 	setDoc,
 	updateDoc,
 	arrayUnion,
+	getDoc,
+	CollectionReference,
 } from "firebase/firestore";
 import { db } from ".";
 import { auth } from ".";
+import { onAuthStateChanged } from "firebase/auth";
 
 export const setMemberHabit = async (habit: any) => {
 	try {
@@ -25,7 +28,6 @@ export const setMemberHabit = async (habit: any) => {
 
 		if (!querySnapshot.empty) {
 			const memberDoc = querySnapshot.docs[0];
-			console.log("habit : ", habit);
 
 			// Vérifier si l'habitude existe déjà
 			const existingHabit = memberDoc
@@ -63,41 +65,36 @@ export const setMemberHabit = async (habit: any) => {
 	}
 };
 
-
 export const getMemberHabits = async () => {
 	try {
-		// Récupérer l'uid de l'utilisateur connecté via auth
-		const uid: any = auth.currentUser?.uid;
+		const authPromise = new Promise<string>((resolve, reject) => {
+			const unsubscribe = onAuthStateChanged(auth, (user) => {
+				if (user) {
+					resolve(user.uid);
+				} else {
+					reject(new Error("User not authenticated"));
+				}
+				unsubscribe();
+			});
+		});
 
-		// Référence à la collection 'members'
-		const membersCollectionRef = collection(db, "members");
+		const uid = await authPromise;
 
-		// Créer une requête pour récupérer le membre avec le champ 'uid' correspondant
-		if (uid === undefined) {
-			return [];
-		}
-		const querySnapshot = await getDocs(
-			query(membersCollectionRef, where("uid", "==", uid))
-		);
+		// Utilisation de CollectionReference pour la référence à la collection
+		const membersCollectionRef: CollectionReference = collection(db, "members");
 
-		if (!querySnapshot.empty) {
-			// Le membre existe, récupérer le premier document correspondant (il devrait y en avoir qu'un)
-			const memberDoc = querySnapshot.docs[0];
+		// Continuer avec la récupération des habitudes
+		const memberDocRef = doc(membersCollectionRef, uid);
+		const memberDocSnapshot = await getDoc(memberDocRef);
 
-			// Récupérer le tableau "habits" du document membre
-			const habits = memberDoc.data().habits;
-
-			// Renvoyer le tableau "habits"
+		if (memberDocSnapshot.exists()) {
+			const habits = memberDocSnapshot.data().habits;
 			return habits;
 		} else {
-			// Si le membre n'existe pas, renvoyer un tableau vide
 			return [];
 		}
 	} catch (error) {
-		console.error(
-			"Erreur lors de la récupération du document dans la collection 'members': ",
-			error
-		);
+		console.error("Erreur lors de la récupération des habitudes : ", error);
 		throw error;
 	}
 };
@@ -118,17 +115,6 @@ export const getMemberHabit = async (habitId: any) => {
 			const habits = memberDoc.data().habits;
 
 			const habit = habits.find((habit: any) => habit.id === habitId);
-
-			// const date = moment().format("DD-MM-YYYY");
-
-			// if (!habit.logs[date]) {
-			// 	habit.logs.push({ date: date, done: false });
-
-			// 	// Add current date to habit logs
-			// 	await updateDoc(memberDoc.ref, {
-			// 		habits: habits,
-			// 	});
-			// }
 
 			return habit;
 		} else {

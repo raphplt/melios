@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "./ThemContext";
 import { View, Text } from "./Themed";
-import { Image } from "react-native";
 import moment from "moment";
+import { Image } from "react-native";
 
 export default function TopStats({ habits }: any) {
 	const { theme } = useContext(ThemeContext);
-	const [scoreHabits, setScoreHabits] = useState<any>(0);
+	const [scoreHabits, setScoreHabits] = useState(0);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
+	const [lastDaysCompleted, setLastDaysCompleted] = useState(0);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -18,23 +19,47 @@ export default function TopStats({ habits }: any) {
 	}, []);
 
 	useEffect(() => {
-		// setScoreHabits(0);
-		for (const habit of habits) {
+		let score = 0;
+
+		habits.forEach((habit: any) => {
 			if (habit.logs) {
-				if (
-					habit.logs[habit.logs.length - 1] &&
-					habit.logs[habit.logs.length - 1].date === date &&
-					habit.logs[habit.logs.length - 1].done === true
-				) {
-					setScoreHabits((scoreHabits: any) => scoreHabits + 1);
+				const lastLog = habit.logs[habit.logs.length - 1];
+
+				if (lastLog && lastLog.date === date && lastLog.done === true) {
+					score += 1;
 				}
+			}
+		});
+
+		setScoreHabits(Math.floor((score / habits.length) * 100));
+	}, [habits, date]);
+
+	useEffect(() => {
+		let lastDaysCompleted = 0;
+		const days = 7;
+
+		for (let i = 0; i < days; i++) {
+			const date = moment().subtract(i, "days").format("YYYY-MM-DD");
+
+			let score = 0;
+
+			habits.forEach((habit: any) => {
+				if (habit.logs) {
+					const lastLog = habit.logs[habit.logs.length - 1];
+
+					if (lastLog && lastLog.date === date && lastLog.done === true) {
+						score += 1;
+					}
+				}
+			});
+
+			if (score === habits.length) {
+				lastDaysCompleted += 1;
 			}
 		}
 
-		setScoreHabits(
-			(scoreHabits: any) => Math.floor(scoreHabits / habits.length) * 10
-		);
-	}, []);
+		setLastDaysCompleted(lastDaysCompleted);
+	}, [habits, date]);
 
 	return (
 		<View
@@ -43,14 +68,14 @@ export default function TopStats({ habits }: any) {
 		>
 			<View
 				style={{ backgroundColor: theme.colors.backgroundSecondary }}
-				className="flex items-center flex-col"
+				className="flex items-center justify-center flex-col"
 			>
 				<Image
 					source={require("../assets/images/icons/flamme.png")}
 					style={{ width: 50, height: 50, resizeMode: "contain" }}
 				/>
 				<Text style={{ color: theme.colors.text }} className="text-xl mt-1">
-					{scoreHabits} / {habits.length}
+					{scoreHabits} %
 				</Text>
 			</View>
 
@@ -59,11 +84,8 @@ export default function TopStats({ habits }: any) {
 				className="w-2/3 flex flex-col gap-2"
 			>
 				<Text style={{ color: theme.colors.text }} className="text-xl">
-					5 jours d'affilés
+					{lastDaysCompleted} jours d'affilés
 				</Text>
-				{/* <Text style={{ color: theme.colors.text }} className="text-lg">
-					{habits.length} habitudes
-				</Text> */}
 				<View className="flex flex-row gap-4 bg-slate-100 rounded-lg w-fit items-center justify-center">
 					<Image
 						source={require("../assets/images/icons/trophy.png")}

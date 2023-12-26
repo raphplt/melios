@@ -4,7 +4,6 @@ import { Text } from "react-native";
 import { ThemeContext } from "./ThemContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabitLog } from "../db/member";
-import { getMemberHabit } from "../db/member";
 import moment from "moment";
 
 export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
