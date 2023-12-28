@@ -48,7 +48,6 @@ export default function Account() {
 						{auth.currentUser?.email}
 					</Text>
 
-
 					<Pressable
 						onPress={handleLogout}
 						className="mx-auto bg-red-500 py-2 px-4 rounded-md w-3/4"
@@ -71,24 +70,24 @@ export default function Account() {
 					</Text>
 					<Pressable
 						onPress={() => navigation.navigate("register")}
-						className=" bg-blue-500 py-2 px-4 rounded-md w-1/2 mx-auto mb-4 mt-4"
+						className=" bg-blue-500 py-2 px-4 rounded-md w-2/3 mx-auto mb-4 mt-4"
 					>
 						<Text
 							style={{ color: theme.colors.text }}
 							className="text-xl text-center"
 						>
-							Register
+							Inscription
 						</Text>
 					</Pressable>
 					<Pressable
 						onPress={() => navigation.navigate("login")}
-						className="mx-auto bg-green-500 py-2 px-4 rounded-md w-1/2"
+						className="mx-auto bg-green-500 py-2 px-4 rounded-md w-2/3"
 					>
 						<Text
 							style={{ color: theme.colors.text }}
 							className="text-xl text-center"
 						>
-							Login
+							Connexion
 						</Text>
 					</Pressable>
 				</View>

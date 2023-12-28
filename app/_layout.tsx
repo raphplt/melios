@@ -1,11 +1,16 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, useColorScheme } from "react-native";
+import { StatusBar, useColorScheme } from "react-native";
 import { ThemeContext } from "../components/ThemContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
+import { isUserConnected } from "../db/users";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Register from "./register";
+import Index from "./(navbar)";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -19,6 +24,8 @@ export {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const Stack = createStackNavigator();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
@@ -46,6 +53,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
 	const colorScheme = useColorScheme();
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [theme, setTheme] = useState(
 		colorScheme === "dark" ? DarkTheme : DefaultTheme
 	);
@@ -54,22 +62,47 @@ function RootLayoutNav() {
 		setTheme(theme === DefaultTheme ? DarkTheme : DefaultTheme);
 	};
 
+	useEffect(() => {
+		(async () => {
+			const user = await isUserConnected();
+			if (user) {
+				setIsAuthenticated(true);
+			}
+		})();
+	}, []);
+
 	return (
-		<ThemeContext.Provider value={{ theme, toggleTheme }}>
-			<ThemeProvider value={theme}>
-				<Stack>
-					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
-					{/* <Stack.Screen name="modal" options={{ presentation: "modal" }} /> */}
-					{/* <Stack.Screen name="login" options={{ presentation: "modal" }} /> */}
-					{/* <Stack.Screen name="register" options={{ presentation: "modal" }} /> */}
-					<Stack.Screen
-						name="select"
-						options={{
-							title: "Habitudes",
-						}}
-					/>
-				</Stack>
-			</ThemeProvider>
-		</ThemeContext.Provider>
+		<>
+			<StatusBar
+				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
+				backgroundColor={
+					theme === DarkTheme
+						? DarkTheme.colors.background
+						: DefaultTheme.colors.background
+				}
+			/>
+
+			<ThemeContext.Provider value={{ theme, toggleTheme }}>
+				<ThemeProvider value={theme}>
+					<Stack.Navigator>
+						{isAuthenticated ? (
+							<Stack.Screen
+								name="(navbar)"
+								component={Index}
+								options={{ headerShown: false }}
+							/>
+						) : (
+							<Stack.Screen
+								name="register"
+								component={Register}
+								options={{
+									headerShown: false,
+								}}
+							/>
+						)}
+					</Stack.Navigator>
+				</ThemeProvider>
+			</ThemeContext.Provider>
+		</>
 	);
 }

@@ -19,7 +19,10 @@ export default function Select() {
 				const data = await getAllHabits();
 				setHabitsData(data);
 			} catch (error) {
-				console.error("Erreur lors de la récupération des habitudes : ", error);
+				console.log(
+					"Select - Erreur lors de la récupération des habitudes : ",
+					error
+				);
 			}
 		};
 

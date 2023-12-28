@@ -3,6 +3,7 @@ import { ThemeContext } from "./ThemContext";
 import { View, Text } from "./Themed";
 import moment from "moment";
 import { Image } from "react-native";
+import { Link } from "expo-router";
 
 export default function TopStats({ habits }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -20,7 +21,7 @@ export default function TopStats({ habits }: any) {
 
 	useEffect(() => {
 		let score = 0;
-
+		if (habits.length === 0) return setScoreHabits(0);
 		habits.forEach((habit: any) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
@@ -36,13 +37,13 @@ export default function TopStats({ habits }: any) {
 
 	useEffect(() => {
 		let lastDaysCompleted = 0;
+		if (habits.length === 0) return setLastDaysCompleted(0);
 		const days = 7;
 
 		for (let i = 0; i < days; i++) {
 			const date = moment().subtract(i, "days").format("YYYY-MM-DD");
 
 			let score = 0;
-
 			habits.forEach((habit: any) => {
 				if (habit.logs) {
 					const lastLog = habit.logs[habit.logs.length - 1];
@@ -64,7 +65,7 @@ export default function TopStats({ habits }: any) {
 	return (
 		<View
 			style={{ backgroundColor: theme.colors.backgroundSecondary }}
-			className="pb-3 pt-2 flex items-center justify-around flex-row rounded-b-xl"
+			className="pb-3 pt-14 flex items-center justify-around flex-row rounded-b-xl"
 		>
 			<View
 				style={{ backgroundColor: theme.colors.backgroundSecondary }}
@@ -86,7 +87,7 @@ export default function TopStats({ habits }: any) {
 				<Text style={{ color: theme.colors.text }} className="text-xl">
 					{lastDaysCompleted} jours d'affilés
 				</Text>
-				<View className="flex flex-row gap-4 bg-slate-100 rounded-lg w-fit items-center justify-center">
+				<View className="flex bg-white flex-row justify-evenly py-2 rounded-xl">
 					<Image
 						source={require("../assets/images/icons/trophy.png")}
 						style={{ width: 25, height: 25 }}

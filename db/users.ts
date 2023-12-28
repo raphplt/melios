@@ -2,6 +2,7 @@ import {
 	getAuth,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from ".";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
@@ -47,13 +48,38 @@ export const loginUser = async (email: string, password: string) => {
 		const user = userCredential.user;
 		console.log(user);
 		return user;
-	} catch (error : any) {
+	} catch (error: any) {
 		console.error("Erreur lors de la connexion : ", error, error.code);
 		if (error.code === "auth/user-not-found") {
-			return {error : "L'utilisateur n'existe pas."};
+			return { error: "L'utilisateur n'existe pas." };
 		}
 		if (error.code === "auth/invalid-credential") {
-			return {error: "Le couple email/mot de passe est invalide."};
+			return { error: "Le couple email/mot de passe est invalide." };
 		}
+	}
+};
+
+export const isUserConnected = async () => {
+	try {
+		const authPromise = new Promise<string>((resolve, reject) => {
+			const unsubscribe = onAuthStateChanged(auth, (user) => {
+				if (user) {
+					resolve(user.uid);
+				} else {
+					reject(new Error("User not authenticated"));
+				}
+				unsubscribe();
+			});
+		});
+
+		const uid = await authPromise;
+		console.log("User is connected with uid: ", uid);
+		return uid;
+	} catch (error) {
+		console.log(
+			"Member - Erreur lors de la récupération des habitudes : ",
+			error
+		);
+		return null;
 	}
 };

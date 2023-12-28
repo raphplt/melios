@@ -94,7 +94,10 @@ export const getMemberHabits = async () => {
 			return [];
 		}
 	} catch (error) {
-		console.error("Erreur lors de la récupération des habitudes : ", error);
+		console.log(
+			"Member - Erreur lors de la récupération des habitudes : ",
+			error
+		);
 		throw error;
 	}
 };
