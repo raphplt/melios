@@ -66,7 +66,7 @@ export default function MultipleChoice(props: any) {
 			<Pressable
 				className="bg-blue-500 text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12"
 				onPress={() => {
-					props.setAnswers(selectedAnswers); // Update to use selectedAnswers
+					props.setAnswers([...props.answers, { [props.slug]: selectedAnswers }]); // Update to use selectedAnswers
 					props.goToNextQuestion();
 				}}
 			>

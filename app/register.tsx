@@ -16,9 +16,11 @@ export default function Register() {
 
 	const goToNextQuestion = () => {
 		if (currentQuestionIndex < Questions.length - 1) {
+			console.log("ANSWERS:", answers);
 			setCurrentQuestionIndex(currentQuestionIndex + 1);
 		} else {
 			console.log("All questions answered:", answers);
+
 			// Add logic to handle validation or navigation
 		}
 	};
@@ -43,7 +45,7 @@ export default function Register() {
 				style={{ color: theme.colors.text }}
 				className="text-center text-2xl mt-24"
 			>
-				Inscription
+				Inscription {currentQuestionIndex + 1}/{Questions.length}
 			</Text>
 
 			{currentQuestionIndex > 0 && (
@@ -59,39 +61,50 @@ export default function Register() {
 					/>
 				</Pressable>
 			)}
+			{currentQuestionIndex - 1 < Questions.length ? (
+				<View className="flex flex-col gap-6 mx-auto justify-center items-center w-11/12 mb-6 mt-12">
+					{Questions[currentQuestionIndex].questionType &&
+						Questions[currentQuestionIndex].questionType === "MultipleChoice" && (
+							<MultipleChoice
+								question={Questions[currentQuestionIndex].question}
+								answers={Questions[currentQuestionIndex].answers}
+								setAnswers={setAnswers}
+								slug={Questions[currentQuestionIndex].slug}
+								goToNextQuestion={goToNextQuestion}
+							/>
+						)}
 
-			<View className="flex flex-col gap-6 mx-auto justify-center items-center w-full mb-6 mt-12">
-				{Questions[currentQuestionIndex].questionType &&
-					Questions[currentQuestionIndex].questionType === "MultipleChoice" && (
-						<MultipleChoice
-							question={Questions[currentQuestionIndex].question}
-							answers={Questions[currentQuestionIndex].answers}
-							setAnswers={setAnswers}
-							goToNextQuestion={goToNextQuestion}
-						/>
-					)}
+					{Questions[currentQuestionIndex].questionType &&
+						Questions[currentQuestionIndex].questionType === "SingleChoice" && (
+							<SingleChoice
+								question={Questions[currentQuestionIndex].question}
+								answers={Questions[currentQuestionIndex].answers}
+								slug={Questions[currentQuestionIndex].slug}
+								setAnswers={setAnswers}
+								goToNextQuestion={goToNextQuestion}
+								singleChoice={true}
+							/>
+						)}
 
-				{Questions[currentQuestionIndex].questionType &&
-					Questions[currentQuestionIndex].questionType === "SingleChoice" && (
-						<SingleChoice
-							question={Questions[currentQuestionIndex].question}
-							answers={Questions[currentQuestionIndex].answers}
-							setAnswers={setAnswers}
-							goToNextQuestion={goToNextQuestion}
-							singleChoice={true}
-						/>
-					)}
-
-				{Questions[currentQuestionIndex].questionType &&
-					Questions[currentQuestionIndex].questionType === "Text" && (
-						<InputText
-							question={Questions[currentQuestionIndex].question}
-							answers={Questions[currentQuestionIndex].answers}
-							setAnswers={setAnswers}
-							goToNextQuestion={goToNextQuestion}
-						/>
-					)}
-			</View>
+					{Questions[currentQuestionIndex].questionType &&
+						Questions[currentQuestionIndex].questionType === "Text" && (
+							<InputText
+								question={Questions[currentQuestionIndex].question}
+								answers={Questions[currentQuestionIndex].answers}
+								slug={Questions[currentQuestionIndex].slug}
+								setAnswers={setAnswers}
+								goToNextQuestion={goToNextQuestion}
+							/>
+						)}
+				</View>
+			) : (
+				<Text
+					style={{ color: theme.colors.text }}
+					className="text-center text-2xl mt-24"
+				>
+					Fin du questionnaire
+				</Text>
+			)}
 		</View>
 	);
 }

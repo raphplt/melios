@@ -17,7 +17,7 @@ export default function SingleChoice(props: any) {
 				<Pressable
 					key={index}
 					onPress={() => {
-						props.setAnswers([...props.answers, answer]);
+						props.setAnswers([...props.answers, { [props.slug]: answer }]);
 						props.goToNextQuestion();
 					}}
 					style={({ pressed }) => [

@@ -25,7 +25,7 @@ export default function InputText(props: any) {
 	};
 
 	return (
-		<View>
+		<View className="w-3/4 mx-auto">
 			<Text
 				style={{ color: theme.colors.text }}
 				className="text-xl text-center mb-4"
@@ -47,7 +47,7 @@ export default function InputText(props: any) {
 				}`}
 				onPress={() => {
 					if (!isEmpty) {
-						props.setAnswers(text);
+						props.setAnswers([...props.answers, { [props.slug]: text }]);
 						props.goToNextQuestion();
 					} else {
 						setShowError(true);
