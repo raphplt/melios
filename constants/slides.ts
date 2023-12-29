@@ -43,7 +43,7 @@ export const Questions = [
 		tips: "Vous pourrez changer votre temps accordé aux habitudes plus tard",
 	},
 	{
-		question: "Quel est votre pseudo ?",
+		question: "Quel est votre nom ?",
 		answers: [],
 		questionType: "Text",
 	},

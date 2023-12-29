@@ -9,7 +9,7 @@ export default function SingleChoice(props: any) {
 		<View>
 			<Text
 				style={{ color: theme.colors.text }}
-				className="text-xl text-center mb-4"
+				className="text-xl text-center mb-4 "
 			>
 				{props.question}
 			</Text>
