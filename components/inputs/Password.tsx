@@ -1,15 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, TextInput, Text, Pressable } from "react-native";
+import { View, TextInput, Button, Text, Pressable } from "react-native";
 import { ThemeContext } from "../ThemContext";
 
-export default function InputText(props: any) {
+export default function InputPassword(props: any) {
 	const { theme } = useContext(ThemeContext);
-	const [text, setText] = useState("");
+	const [password, setPassword] = useState("");
 	const [isEmpty, setIsEmpty] = useState(true);
 	const [showError, setShowError] = useState(false);
 
 	const resetText = () => {
-		setText("");
+		setPassword("");
 		setIsEmpty(true);
 		setShowError(false);
 	};
@@ -18,9 +18,8 @@ export default function InputText(props: any) {
 		resetText();
 	}, [props.question]);
 
-	// Fonction pour gérer le changement de texte
-	const handleTextChange = (inputText: string) => {
-		setText(inputText);
+	const handlePasswordChange = (inputText: string) => {
+		setPassword(inputText);
 		setIsEmpty(inputText.trim() === "");
 	};
 
@@ -38,8 +37,8 @@ export default function InputText(props: any) {
 					color: theme.colors.text,
 					backgroundColor: theme.colors.backgroundSecondary,
 				}}
-				onChangeText={handleTextChange}
-				value={text}
+				onChangeText={handlePasswordChange}
+				value={password}
 			/>
 			<Pressable
 				className={`bg-blue-500 text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12 ${
@@ -47,7 +46,7 @@ export default function InputText(props: any) {
 				}`}
 				onPress={() => {
 					if (!isEmpty) {
-						props.goToNextQuestion(text);
+						props.goToNextQuestion(password);
 					} else {
 						setShowError(true);
 					}
@@ -55,7 +54,7 @@ export default function InputText(props: any) {
 				disabled={isEmpty}
 			>
 				<Text style={{ color: theme.colors.text }} className="text-lg text-center">
-					Continuer
+					Finir
 				</Text>
 			</Pressable>
 			{showError && (

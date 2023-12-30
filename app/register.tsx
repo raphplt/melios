@@ -8,37 +8,46 @@ import MultipleChoice from "../components/inputs/MultipleChoice";
 import InputText from "../components/inputs/Text";
 import SingleChoice from "../components/inputs/SingleChoice";
 import { AntDesign } from "@expo/vector-icons";
+import InputPassword from "../components/inputs/Password";
 
 export default function Register() {
 	const { theme } = useContext(ThemeContext);
-	const [answers, setAnswers]: any = useState([]);
+	const [form, setForm]: any = useState([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+	const navigation: any = useNavigation();
 
-	const goToNextQuestion = () => {
+	const goToNextQuestion = async (answer: any) => {
 		if (currentQuestionIndex < Questions.length - 1) {
-			console.log("ANSWERS:", answers);
-			setCurrentQuestionIndex(currentQuestionIndex + 1);
-		} else {
-			console.log("All questions answered:", answers);
+			setForm((prevForm: any) => {
+				const updatedForm = [
+					...prevForm,
+					{ [Questions[currentQuestionIndex].slug]: answer },
+				];
+				console.log("Next question, actual form : ", updatedForm);
+				return updatedForm;
+			});
 
-			// Add logic to handle validation or navigation
+			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+		} else {
+			
+			try {
+				await setForm(async (prevForm: any) => {
+					const updatedForm = [
+						...prevForm,
+						{ [Questions[currentQuestionIndex].slug]: answer },
+					];
+					
+					
+					await createUser(updatedForm).then(() => {
+						navigation.navigate("select");
+					});
+				});
+			} catch (error) {
+				console.error("Erreur lors de la création de l'utilisateur : ", error);
+			}
 		}
 	};
 
-	const navigation: any = useNavigation();
-
-	// const register = async () => {
-	// 	if (password === passwordConfirm) {
-	// 		try {
-	// 			await createUser(email, password);
-	// 			navigation.navigate("index");
-	// 		} catch (error) {
-	// 			console.error("Erreur lors de la création de l'utilisateur : ", error);
-	// 		}
-	// 	} else {
-	// 		console.log("Les mots de passe ne sont pas identiques");
-	// 	}
-	// };
 	return (
 		<View style={{ backgroundColor: theme.colors.background }}>
 			<Text
@@ -50,7 +59,10 @@ export default function Register() {
 
 			{currentQuestionIndex > 0 && (
 				<Pressable
-					onPress={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
+					onPress={() => {
+						setCurrentQuestionIndex(currentQuestionIndex - 1);
+						form.pop();
+					}}
 					className="absolute top-0 left-0 mt-24 ml-10"
 				>
 					<AntDesign
@@ -68,7 +80,8 @@ export default function Register() {
 							<MultipleChoice
 								question={Questions[currentQuestionIndex].question}
 								answers={Questions[currentQuestionIndex].answers}
-								setAnswers={setAnswers}
+								form={form}
+								setForm={setForm}
 								slug={Questions[currentQuestionIndex].slug}
 								goToNextQuestion={goToNextQuestion}
 							/>
@@ -80,7 +93,8 @@ export default function Register() {
 								question={Questions[currentQuestionIndex].question}
 								answers={Questions[currentQuestionIndex].answers}
 								slug={Questions[currentQuestionIndex].slug}
-								setAnswers={setAnswers}
+								form={form}
+								setForm={setForm}
 								goToNextQuestion={goToNextQuestion}
 								singleChoice={true}
 							/>
@@ -92,7 +106,19 @@ export default function Register() {
 								question={Questions[currentQuestionIndex].question}
 								answers={Questions[currentQuestionIndex].answers}
 								slug={Questions[currentQuestionIndex].slug}
-								setAnswers={setAnswers}
+								form={form}
+								setForm={setForm}
+								goToNextQuestion={goToNextQuestion}
+							/>
+						)}
+					{Questions[currentQuestionIndex].questionType &&
+						Questions[currentQuestionIndex].questionType === "Password" && (
+							<InputPassword
+								question={Questions[currentQuestionIndex].question}
+								answers={Questions[currentQuestionIndex].answers}
+								slug={Questions[currentQuestionIndex].slug}
+								form={form}
+								setForm={setForm}
 								goToNextQuestion={goToNextQuestion}
 							/>
 						)}

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { View, Text, Button, Pressable } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { ThemeContext } from "../ThemContext";
 
 export default function SingleChoice(props: any) {
@@ -17,8 +17,7 @@ export default function SingleChoice(props: any) {
 				<Pressable
 					key={index}
 					onPress={() => {
-						props.setAnswers([...props.answers, { [props.slug]: answer }]);
-						props.goToNextQuestion();
+						props.goToNextQuestion(answer);
 					}}
 					style={({ pressed }) => [
 						{

@@ -54,7 +54,7 @@ export const Questions = [
 	},
 	{
 		question: "Quel est votre adresse mail ?",
-		slug: "mail",
+		slug: "email",
 		answers: [],
 		questionType: "Text",
 	},
@@ -62,6 +62,6 @@ export const Questions = [
 		question: "Quel est votre mot de passe ?",
 		slug: "password",
 		answers: [],
-		questionType: "Text",
+		questionType: "Password",
 	},
 ];

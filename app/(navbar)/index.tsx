@@ -11,7 +11,6 @@ import {
 import TopStats from "../../components/TopStats";
 import {
 	DarkTheme,
-	DefaultTheme,
 	ThemeProvider,
 	useNavigation,
 } from "@react-navigation/native";

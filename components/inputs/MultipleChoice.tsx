@@ -16,7 +16,7 @@ export default function MultipleChoice(props: any) {
 			setSelectedAnswers((prevSelected: any) => [...prevSelected, answer]);
 		}
 	};
-
+	
 	return (
 		<View>
 			<Text
@@ -66,8 +66,7 @@ export default function MultipleChoice(props: any) {
 			<Pressable
 				className="bg-blue-500 text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12"
 				onPress={() => {
-					props.setAnswers([...props.answers, { [props.slug]: selectedAnswers }]); // Update to use selectedAnswers
-					props.goToNextQuestion();
+					props.goToNextQuestion(selectedAnswers);
 				}}
 			>
 				<Text style={{ color: theme.colors.text }} className="text-lg text-center">

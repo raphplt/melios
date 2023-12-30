@@ -1,28 +1,17 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import React, { useEffect, useState } from "react";
+import { StatusBar, useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen } from "expo-router";
-import { useEffect, useState } from "react";
-import { StatusBar, useColorScheme } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeContext } from "../components/ThemContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import { isUserConnected } from "../db/users";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import Register from "./register";
-import Index from "./(navbar)";
+import TabLayout from "./(navbar)/_layout";
+export { ErrorBoundary } from "expo-router";
 
-export {
-	// Catch any errors thrown by the Layout component.
-	ErrorBoundary,
-} from "expo-router";
-
-// export const unstable_settings = {
-// 	// Ensure that reloading on `/modal` keeps a back button present.
-// 	initialRouteName: "(navbar)",
-// };
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
@@ -33,7 +22,6 @@ export default function RootLayout() {
 		...FontAwesome.font,
 	});
 
-	// Expo Router uses Error Boundaries to catch errors in the navigation tree.
 	useEffect(() => {
 		if (error) throw error;
 	}, [error]);
@@ -44,22 +32,15 @@ export default function RootLayout() {
 		}
 	}, [loaded]);
 
-	if (!loaded) {
-		return null;
-	}
-
-	return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-	const colorScheme = useColorScheme();
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [theme, setTheme] = useState(
-		colorScheme === "dark" ? DarkTheme : DefaultTheme
+		useColorScheme() === "dark" ? DarkTheme : DefaultTheme
 	);
 
 	const toggleTheme = () => {
-		setTheme(theme === DefaultTheme ? DarkTheme : DefaultTheme);
+		setTheme((prevTheme) =>
+			prevTheme === DefaultTheme ? DarkTheme : DefaultTheme
+		);
 	};
 
 	useEffect(() => {
@@ -84,14 +65,10 @@ function RootLayoutNav() {
 
 			<ThemeContext.Provider value={{ theme, toggleTheme }}>
 				<ThemeProvider value={theme}>
-					<Stack.Navigator>
-						{isAuthenticated ? (
-							<Stack.Screen
-								name="(navbar)"
-								component={Index}
-								options={{ headerShown: false }}
-							/>
-						) : (
+					{isAuthenticated ? (
+						<TabLayout />
+					) : (
+						<Stack.Navigator>
 							<Stack.Screen
 								name="register"
 								component={Register}
@@ -99,8 +76,8 @@ function RootLayoutNav() {
 									headerShown: false,
 								}}
 							/>
-						)}
-					</Stack.Navigator>
+						</Stack.Navigator>
+					)}
 				</ThemeProvider>
 			</ThemeContext.Provider>
 		</>

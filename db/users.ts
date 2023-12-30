@@ -5,11 +5,18 @@ import {
 	onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from ".";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from ".";
 
-export const createUser = async (email: string, password: string) => {
+export const createUser = async (form: any) => {
 	try {
+		const email =
+			form.find((item: any) => item.hasOwnProperty("email"))?.email || "";
+		const password =
+			form.find((item: any) => item.hasOwnProperty("password"))?.password || "";
+
+		console.log("Email:", email);
+		console.log("Mot de passe:", password);
 		const userCredential = await createUserWithEmailAndPassword(
 			auth,
 			email,
@@ -22,6 +29,12 @@ export const createUser = async (email: string, password: string) => {
 		const newMemberRef = await addDoc(membersCollectionRef, {
 			uid: user.uid,
 			habits: [],
+			objectifs: form.objectifs,
+			aspects: form.aspects,
+			motivation: form.motivation,
+			temps: form.temps,
+			nom: form.nom,
+			email: form.email,
 		});
 
 		console.log("Document written with ID: ", newMemberRef.id);
