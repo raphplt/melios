@@ -23,21 +23,32 @@ export const createUser = async (form: any) => {
 			password
 		);
 		const user = userCredential.user;
-		console.log(user);
+		console.log("User created : ", user);
 
 		const membersCollectionRef = collection(db, "members");
+
+		const objectifs =
+			form.find((item: any) => item.hasOwnProperty("objectifs"))?.objectifs || "";
+		const aspects =
+			form.find((item: any) => item.hasOwnProperty("aspects"))?.aspects || "";
+		const motivation =
+			form.find((item: any) => item.hasOwnProperty("motivation"))?.motivation ||
+			"";
+		const temps =
+			form.find((item: any) => item.hasOwnProperty("temps"))?.temps || "";
+		const nom = form.find((item: any) => item.hasOwnProperty("nom"))?.nom || "";
+
 		const newMemberRef = await addDoc(membersCollectionRef, {
 			uid: user.uid,
 			habits: [],
-			objectifs: form.objectifs,
-			aspects: form.aspects,
-			motivation: form.motivation,
-			temps: form.temps,
-			nom: form.nom,
-			email: form.email,
+			objectifs: objectifs,
+			aspects: aspects,
+			motivation: motivation,
+			temps: temps,
+			nom: nom,
 		});
-
 		console.log("Document written with ID: ", newMemberRef.id);
+
 	} catch (error) {
 		console.error("Erreur lors de la création de l'utilisateur : ", error);
 	}

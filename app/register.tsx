@@ -49,7 +49,10 @@ export default function Register() {
 	};
 
 	return (
-		<View style={{ backgroundColor: theme.colors.background }}>
+		<View
+			style={{ backgroundColor: theme.colors.background }}
+			className="h-[100vh]"
+		>
 			<Text
 				style={{ color: theme.colors.text }}
 				className="text-center text-2xl mt-24"
@@ -131,6 +134,17 @@ export default function Register() {
 					Fin du questionnaire
 				</Text>
 			)}
+
+			<Pressable
+				onPress={() => {
+					navigation.navigate("login");
+				}}
+				className="absolute mx-auto w-fit left-24 right-24 bottom-0"
+			>
+				<Text style={{ color: theme.colors.text }} className="text-center">
+					ou Me connecter
+				</Text>
+			</Pressable>
 		</View>
 	);
 }

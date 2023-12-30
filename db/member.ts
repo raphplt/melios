@@ -80,17 +80,24 @@ export const getMemberHabits = async () => {
 
 		const uid = await authPromise;
 
-		// Utilisation de CollectionReference pour la référence à la collection
-		const membersCollectionRef: CollectionReference = collection(db, "members");
+		const membersCollectionRef = collection(db, "members");
 
-		// Continuer avec la récupération des habitudes
-		const memberDocRef = doc(membersCollectionRef, uid);
-		const memberDocSnapshot = await getDoc(memberDocRef);
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", uid))
+		);
 
-		if (memberDocSnapshot.exists()) {
-			const habits = memberDocSnapshot.data().habits;
-			return habits;
+		if (querySnapshot.docs.length > 0) {
+			const memberDocRef = querySnapshot.docs[0].ref;
+			const memberDocSnapshot = await getDoc(memberDocRef);
+
+			if (memberDocSnapshot.exists()) {
+				const habits = memberDocSnapshot.data().habits;
+				return habits;
+			} else {
+				return [];
+			}
 		} else {
+			console.log("Membre non trouvé.");
 			return [];
 		}
 	} catch (error) {
@@ -152,7 +159,9 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 			if (habitIndex !== -1) {
 				const habit = habits[habitIndex];
 
-				const existingLogIndex = habit.logs.findIndex((log: any ) => log.date === date);
+				const existingLogIndex = habit.logs.findIndex(
+					(log: any) => log.date === date
+				);
 
 				if (existingLogIndex !== -1) {
 					// Mettre à jour le log existant
@@ -170,6 +179,56 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 		} else {
 			// Si le membre n'existe pas, renvoyer un tableau vide
 			return [];
+		}
+	} catch (error) {
+		console.error(
+			"Erreur lors de la récupération du document dans la collection 'members': ",
+			error
+		);
+		throw error;
+	}
+};
+
+export const getMemberInfos = async () => {
+	try {
+		try {
+			const authPromise = new Promise<string>((resolve, reject) => {
+				const unsubscribe = onAuthStateChanged(auth, (user) => {
+					if (user) {
+						resolve(user.uid);
+					} else {
+						reject(new Error("User not authenticated"));
+					}
+					unsubscribe();
+				});
+			});
+
+			const uid = await authPromise;
+
+			const membersCollectionRef = collection(db, "members");
+
+			const querySnapshot = await getDocs(
+				query(membersCollectionRef, where("uid", "==", uid))
+			);
+
+			if (!querySnapshot.empty) {
+				const memberDoc = querySnapshot.docs[0];
+
+				const memberInfos = {
+					id: memberDoc.id,
+					...memberDoc.data(),
+				};
+
+				return memberInfos;
+			} else {
+				return [];
+			}
+		} catch (error) {
+			console.error(
+				"Erreur lors de la récupération du document dans la collection 'members':  ",
+				error
+			);
+			throw error;
 		}
 	} catch (error) {
 		console.error(

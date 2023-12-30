@@ -21,7 +21,7 @@ export default function TopStats({ habits }: any) {
 
 	useEffect(() => {
 		let score = 0;
-		if (habits.length === 0) return setScoreHabits(0);
+		if (habits && habits.length === 0) return setScoreHabits(0);
 		habits.forEach((habit: any) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
@@ -32,7 +32,7 @@ export default function TopStats({ habits }: any) {
 			}
 		});
 
-		setScoreHabits(Math.floor((score / habits.length) * 100));
+		if (habits.length) setScoreHabits(Math.floor((score / habits.length) * 100));
 	}, [habits, date]);
 
 	useEffect(() => {

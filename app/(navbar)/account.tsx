@@ -1,26 +1,48 @@
 import { Text, View } from "../../components/Themed";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import ToggleButton from "../../components/Switch";
 import { onAuthStateChanged } from "firebase/auth";
-import { Button, Pressable, TouchableOpacity } from "react-native";
+import { Pressable, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { disconnectUser } from "../../db/users";
 import { auth } from "../../db";
+import { getMemberInfos } from "../../db/member";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 	const [isSignedIn, setIsSignedIn] = useState(false);
+	const [memberInfos, setMemberInfos] = useState<any>([]);
+	const isMounted = useRef(true);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		// Vérifiez si l'utilisateur est connecté lorsque le composant est monté
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			setIsSignedIn(!!user);
 		});
 
-		// Nettoyez l'abonnement lorsque le composant est démonté
 		return () => unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const data = await getMemberInfos();
+				setMemberInfos(data);
+				setLoading(false);
+				console.log("Account - Member infos : ", JSON.stringify(memberInfos));
+			} catch (error) {
+				handleError(error);
+				setMemberInfos([]);
+				setLoading(false);
+			}
+		})();
+
+		return () => {
+			isMounted.current = false;
+		};
 	}, []);
 
 	const handleToggleTheme = () => {
@@ -34,18 +56,36 @@ export default function Account() {
 
 	const navigation: any = useNavigation();
 
+	const handleError = (error: any) => {
+		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
+	};
+
 	return (
-		<View
+		<ScrollView
 			className="h-[100vh]"
 			style={{ backgroundColor: theme.colors.background }}
 		>
 			{isSignedIn ? (
 				<View style={{ backgroundColor: theme.colors.background }}>
+					<Image
+						source={require("../../assets/images/pfp.jpg")}
+						className="rounded-full mx-auto mt-4"
+						style={{ width: 200, height: 200 }}
+					/>
+
 					<Text
 						className=" ml-6 mb-4 text-xl mt-3"
 						style={{ color: theme.colors.text }}
 					>
 						{auth.currentUser?.email}
+					</Text>
+					<Text
+						className=" ml-6 mb-4 text-xl mt-3"
+						style={{ color: theme.colors.text }}
+					>
+						{/* {JSON.stringify(memberInfos)} */}
+						{memberInfos?.nom}
+						{/* {JSON.stringify(memberInfos?.temps)} */}
 					</Text>
 
 					<Pressable
@@ -107,6 +147,6 @@ export default function Account() {
 					value={isDarkTheme}
 				/>
 			</View>
-		</View>
+		</ScrollView>
 	);
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StatusBar, useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeContext } from "../components/ThemContext";
@@ -14,7 +14,7 @@ export { ErrorBoundary } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
@@ -46,6 +46,7 @@ export default function RootLayout() {
 	useEffect(() => {
 		(async () => {
 			const user = await isUserConnected();
+			console.log("user", user);
 			if (user) {
 				setIsAuthenticated(true);
 			}
@@ -66,17 +67,19 @@ export default function RootLayout() {
 			<ThemeContext.Provider value={{ theme, toggleTheme }}>
 				<ThemeProvider value={theme}>
 					{isAuthenticated ? (
-						<TabLayout />
+						<Stack>
+							<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+						</Stack>
 					) : (
-						<Stack.Navigator>
+						<Stack screenOptions={{ headerShown: false }}>
 							<Stack.Screen
 								name="register"
-								component={Register}
+								// component={Register}
 								options={{
 									headerShown: false,
 								}}
 							/>
-						</Stack.Navigator>
+						</Stack>
 					)}
 				</ThemeProvider>
 			</ThemeContext.Provider>

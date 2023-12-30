@@ -1,6 +1,6 @@
 import { useNavigation } from "expo-router";
 import { useContext, useState, useEffect } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Pressable } from "react-native";
 import { ThemeContext } from "../components/ThemContext";
 import { getAllHabits } from "../db/habits";
 import { ThemeProvider } from "@react-navigation/native";
@@ -47,6 +47,19 @@ export default function Select() {
 					))}
 				</View>
 				<View />
+				<Pressable
+					className="w-10/12 mx-auto mt-6"
+					style={{
+						backgroundColor: theme.colors.primary,
+						paddingVertical: 10,
+						borderRadius: 10,
+					}}
+					onPress={() => navigation.navigate("index")}
+				>
+					<Text className="text-center text-xl" style={{ color: theme.colors.text }}>
+						Valider
+					</Text>
+				</Pressable>
 			</ScrollView>
 		</ThemeProvider>
 	);

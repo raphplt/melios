@@ -17,6 +17,7 @@
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/stack": "^6.3.20",
+    "eas": "^0.1.0",
     "expo": "~49.0.15",
     "expo-checkbox": "~2.4.0",
     "expo-font": "~11.4.0",

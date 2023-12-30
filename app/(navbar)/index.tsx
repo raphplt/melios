@@ -58,9 +58,10 @@ export default function Index() {
 		(async () => {
 			try {
 				const data = await getMemberHabits();
+				console.log("Index - Data : ", data);
 				if (isMounted.current) {
 					setUserHabits(data);
-
+					console.log("Index - Member habits : ", userHabits);
 					setLoading(false);
 				}
 			} catch (error) {
@@ -76,6 +77,7 @@ export default function Index() {
 	}, []);
 
 	useEffect(() => {
+
 		const completedHabits = userHabits.filter((habit: any) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
