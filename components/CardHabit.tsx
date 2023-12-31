@@ -36,7 +36,11 @@ export default function CardHabit({ habit, navigation }: any) {
 				<Text style={{ color: theme.colors.text }}>{habit.img}</Text>
 			</View>
 			<View>
-				<Checkbox value={toggleCheckBox} onValueChange={setHabit} />
+				<Checkbox
+					value={toggleCheckBox}
+					onValueChange={setHabit}
+					color={theme.colors.primary}
+				/>
 			</View>
 		</View>
 	);

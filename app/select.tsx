@@ -5,7 +5,7 @@ import { ThemeContext } from "../components/ThemContext";
 import { getAllHabits } from "../db/habits";
 import { ThemeProvider } from "@react-navigation/native";
 import CardHabit from "../components/CardHabit";
-import TopStats from "../components/TopStats";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Select() {
 	const { theme } = useContext(ThemeContext);
@@ -32,12 +32,18 @@ export default function Select() {
 	return (
 		<ThemeProvider value={theme}>
 			<ScrollView>
-				<Text
-					className="text-xl w-10/12 text-center mx-auto mt-6"
-					style={{ color: theme.colors.text }}
+				<View
+					className="flex flex-row items-center w-10/12 mx-auto rounded-xl py-2 px-3 mt-4"
+					style={{ backgroundColor: theme.colors.primary }}
 				>
-					Choisissez vos habitudes
-				</Text>
+					<Ionicons name="bulb" size={24} color="white" />
+					<Text
+						className="text-[16px] w-10/12  mx-auto text-left"
+						style={{ color: theme.colors.text }}
+					>
+						Vous pouvez sélectionner jusqu'à 20 habitudes
+					</Text>
+				</View>
 				<View
 					className="flex flex-col mt-6"
 					style={{ backgroundColor: theme.colors.background }}

@@ -58,7 +58,11 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 				<Text style={{ color: theme.colors.text }}>{habit.img}</Text>
 			</View>
 			<View>
-				<Checkbox value={toggleCheckBox} onValueChange={setHabitDone} />
+				<Checkbox
+					value={toggleCheckBox}
+					onValueChange={setHabitDone}
+					color={theme.colors.primary}
+				/>
 			</View>
 		</View>
 	);

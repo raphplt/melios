@@ -1,6 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
-import { useColorScheme } from "react-native";
+import { View, useColorScheme } from "react-native";
 import { useContext, useState } from "react";
 import { DarkTheme, DefaultTheme } from "../../constants/Theme";
 import { ThemeContext } from "../../components/ThemContext";
@@ -45,6 +45,17 @@ export default function TabLayout() {
 				name="account"
 				options={{
 					title: "Compte",
+					headerBackground(props) {
+						return (
+							<View
+								style={{
+									flex: 1,
+									backgroundColor: theme.colors.backgroundSecondary,
+								}}
+								className="rounded-b-xl"
+							/>
+						);
+					},
 					tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
 				}}
 			/>

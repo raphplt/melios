@@ -58,10 +58,8 @@ export default function Index() {
 		(async () => {
 			try {
 				const data = await getMemberHabits();
-				console.log("Index - Data : ", data);
 				if (isMounted.current) {
 					setUserHabits(data);
-					console.log("Index - Member habits : ", userHabits);
 					setLoading(false);
 				}
 			} catch (error) {
@@ -77,7 +75,6 @@ export default function Index() {
 	}, []);
 
 	useEffect(() => {
-
 		const completedHabits = userHabits.filter((habit: any) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
@@ -177,12 +174,12 @@ export default function Index() {
 							style={{ backgroundColor: theme.colors.background }}
 						>
 							<View
-								className="flex flex-row flex-wrap justify-start"
+								className="flex flex-row flex-wrap justify-star mb-2"
 								style={{ backgroundColor: theme.colors.background }}
 							>
 								<Text
 									style={{ color: theme.colors.text }}
-									className="w-10/12 mx-auto text-lg"
+									className="w-10/12 mx-auto text-lg mb-2"
 								>
 									A faire aujourd'hui : {uncompletedHabits.length}
 								</Text>
@@ -209,12 +206,12 @@ export default function Index() {
 									))}
 							</View>
 							<View
-								className="flex flex-row flex-wrap justify-start"
+								className="flex flex-row flex-wrap justify-start mb-2"
 								style={{ backgroundColor: theme.colors.background }}
 							>
 								<Text
 									style={{ color: theme.colors.text }}
-									className="w-10/12 mx-auto text-lg"
+									className="w-10/12 mx-auto text-lg mb-2"
 								>
 									Déjà réalisées : {completedHabits.length}
 								</Text>

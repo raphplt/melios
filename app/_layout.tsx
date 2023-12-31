@@ -10,6 +10,7 @@ import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import { isUserConnected } from "../db/users";
 import Register from "./register";
 import TabLayout from "./(navbar)/_layout";
+import Select from "./select";
 export { ErrorBoundary } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
@@ -69,6 +70,12 @@ export default function RootLayout() {
 					{isAuthenticated ? (
 						<Stack>
 							<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+							<Stack.Screen
+								name="select"
+								options={{
+									title: "Choix des habitudes",
+								}}
+							/>
 						</Stack>
 					) : (
 						<Stack screenOptions={{ headerShown: false }}>
