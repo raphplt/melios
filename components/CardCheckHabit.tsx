@@ -1,15 +1,35 @@
 import { useContext, useEffect, useState } from "react";
-import { View, Image } from "react-native";
+import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import { ThemeContext } from "./ThemContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabitLog } from "../db/member";
 import moment from "moment";
+import { getHabitById } from "../db/habits";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
+	const [habitInfos, setHabitInfos] = useState<any>({});
+	const colorDifficulties: any = {
+		1: "#FFEE59",
+		2: "#FF7A00",
+		3: "#FA6F6F",
+	};
+
+	const navigation: any = useNavigation();
+
+	useEffect(() => {
+		async function getHabitInfos() {
+			const result = await getHabitById(habit.id);
+			setHabitInfos(result);
+			console.log(result);
+		}
+		getHabitInfos();
+	}, []);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -44,19 +64,34 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 
 	return (
 		<View className="w-11/12 mx-auto  my-2 flex flex-row items-center justify-evenly">
-			<View
-				className="flex flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
-				style={{ backgroundColor: theme.colors.backgroundSecondary }}
+			<Pressable
+				onPress={() =>
+					navigation.navigate("habitDetail", {
+						habit: habit,
+						habitInfos: habitInfos,
+					})
+				}
 			>
-				<Image source={habit.image} className="ml-3" />
-				<Text
-					style={{ color: theme.colors.text }}
-					className="ml-2 text-[16px] line-clamp-2 w-3/4"
+				<View
+					className="flex flex-row justify-around py-2 rounded-xl basis-4/5  border-[1px]"
+					style={{
+						borderColor: theme.colors.primary,
+						backgroundColor: theme.colors.background,
+					}}
 				>
-					{habit.name}
-				</Text>
-				<Text style={{ color: theme.colors.text }}>{habit.img}</Text>
-			</View>
+					<Text
+						style={{ color: theme.colors.text }}
+						className="ml-2 text-[16px] line-clamp-2 w-3/4"
+					>
+						{habit.name}
+					</Text>
+					<Ionicons
+						name="flame"
+						size={24}
+						color={colorDifficulties[habitInfos.difficulty]}
+					/>
+				</View>
+			</Pressable>
 			<View>
 				<Checkbox
 					value={toggleCheckBox}

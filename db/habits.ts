@@ -33,6 +33,20 @@ export const getAllHabits = async () => {
 	}
 };
 
+// Fonction pour récupérer un document de la collection "habits" par son id
+export const getHabitById = async (id : any) => {
+	try {
+		const habits = await getAllHabits();
+		return habits.find((habit: any) => habit.id === id);
+	} catch (error) {
+		console.error(
+			"Erreur lors de la récupération d'un document de la collection 'habits' par son id: ",
+			error
+		);
+		throw error;
+	}
+};
+
 // export const importHabits = async () => {
 // 	try {
 // 		const habitsCollection = collection(db, "habits");

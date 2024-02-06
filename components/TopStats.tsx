@@ -3,7 +3,7 @@ import { ThemeContext } from "./ThemContext";
 import { View, Text } from "./Themed";
 import moment from "moment";
 import { Image } from "react-native";
-import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TopStats({ habits }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -84,26 +84,14 @@ export default function TopStats({ habits }: any) {
 				style={{ backgroundColor: theme.colors.backgroundSecondary }}
 				className="w-2/3 flex flex-col gap-2"
 			>
-				<Text style={{ color: theme.colors.text }} className="text-xl">
+				<Text style={{ color: theme.colors.text }} className="text-lg">
 					{lastDaysCompleted} jours d'affilés
 				</Text>
 				<View className="flex bg-white flex-row justify-evenly py-2 rounded-xl">
-					<Image
-						source={require("../assets/images/icons/trophy.png")}
-						style={{ width: 25, height: 25 }}
-					/>
-					<Image
-						source={require("../assets/images/icons/trophy.png")}
-						style={{ width: 25, height: 25 }}
-					/>
-					<Image
-						source={require("../assets/images/icons/trophy.png")}
-						style={{ width: 25, height: 25 }}
-					/>
-					<Image
-						source={require("../assets/images/icons/trophy.png")}
-						style={{ width: 25, height: 25 }}
-					/>
+					<Ionicons name="trophy-sharp" size={24} color="black" />
+					<Ionicons name="trophy-sharp" size={24} color="black" />
+					<Ionicons name="trophy-sharp" size={24} color="black" />
+					<Ionicons name="trophy-sharp" size={24} color="black" />
 				</View>
 			</View>
 		</View>

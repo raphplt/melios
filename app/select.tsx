@@ -37,10 +37,7 @@ export default function Select() {
 					style={{ backgroundColor: theme.colors.primary }}
 				>
 					<Ionicons name="bulb" size={24} color="white" />
-					<Text
-						className="text-[16px] w-10/12  mx-auto text-left"
-						style={{ color: theme.colors.text }}
-					>
+					<Text className="text-[16px] w-10/12  mx-auto text-left text-white">
 						Vous pouvez sélectionner jusqu'à 20 habitudes
 					</Text>
 				</View>
@@ -53,20 +50,22 @@ export default function Select() {
 					))}
 				</View>
 				<View />
-				<Pressable
-					className="w-10/12 mx-auto mt-6"
-					style={{
-						backgroundColor: theme.colors.primary,
-						paddingVertical: 10,
-						borderRadius: 10,
-					}}
-					onPress={() => navigation.navigate("index")}
-				>
-					<Text className="text-center text-xl" style={{ color: theme.colors.text }}>
+			</ScrollView>
+			<Pressable
+				className="w-10/12 mx-auto mt-6 fixed bottom-3"
+				style={{
+					backgroundColor: theme.colors.primary,
+					paddingVertical: 10,
+					borderRadius: 10,
+				}}
+				onPress={() => navigation.navigate("index")}
+			>
+				<View className="flex items-center justify-center">
+					<Text className="text-center text-lg text-white ">
 						Valider
 					</Text>
-				</Pressable>
-			</ScrollView>
+				</View>
+			</Pressable>
 		</ThemeProvider>
 	);
 }
