@@ -87,11 +87,14 @@ export default function TopStats({ habits }: any) {
 				<Text style={{ color: theme.colors.text }} className="text-lg">
 					{lastDaysCompleted} jours d'affilés
 				</Text>
-				<View className="flex bg-white flex-row justify-evenly py-2 rounded-xl">
-					<Ionicons name="trophy-sharp" size={24} color="black" />
-					<Ionicons name="trophy-sharp" size={24} color="black" />
-					<Ionicons name="trophy-sharp" size={24} color="black" />
-					<Ionicons name="trophy-sharp" size={24} color="black" />
+				<View
+					className="flex  flex-row justify-evenly py-2 rounded-xl"
+					style={{ backgroundColor: theme.colors.background }}
+				>
+					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
 				</View>
 			</View>
 		</View>

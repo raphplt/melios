@@ -184,26 +184,17 @@ export default function Index() {
 									A faire aujourd'hui : {uncompletedHabits.length}
 								</Text>
 
-								{userHabits
-									.filter(
-										(habit: any) =>
-											habit.logs.length === 0 ||
-											(habit.logs.length > 0 &&
-												habit.logs[habit.logs.length - 1] &&
-												(habit.logs[habit.logs.length - 1].date !== date ||
-													habit.logs[habit.logs.length - 1].done === false))
-									)
-									.map((filteredHabit: any) => (
-										<CardCheckHabit
-											key={filteredHabit.id}
-											habit={filteredHabit}
-											onHabitStatusChange={handleHabitStatusChange}
-											completedHabits={completedHabits}
-											setCompletedHabits={setCompletedHabits}
-											uncompletedHabits={uncompletedHabits}
-											setUncompletedHabits={setUncompletedHabits}
-										/>
-									))}
+								{uncompletedHabits.map((filteredHabit: any) => (
+									<CardCheckHabit
+										key={filteredHabit.id}
+										habit={filteredHabit}
+										onHabitStatusChange={handleHabitStatusChange}
+										completedHabits={completedHabits}
+										setCompletedHabits={setCompletedHabits}
+										uncompletedHabits={uncompletedHabits}
+										setUncompletedHabits={setUncompletedHabits}
+									/>
+								))}
 							</View>
 							<View
 								className="flex flex-row flex-wrap justify-start mb-2"
@@ -216,25 +207,17 @@ export default function Index() {
 									Déjà réalisées : {completedHabits.length}
 								</Text>
 
-								{userHabits
-									.filter(
-										(habit: any) =>
-											habit.logs &&
-											habit.logs[habit.logs.length - 1] &&
-											habit.logs[habit.logs.length - 1].date === date &&
-											habit.logs[habit.logs.length - 1].done === true
-									)
-									.map((filteredHabit: any) => (
-										<CardCheckHabit
-											key={filteredHabit.id}
-											habit={filteredHabit}
-											onHabitStatusChange={handleHabitStatusChange}
-											completedHabits={completedHabits}
-											setCompletedHabits={setCompletedHabits}
-											uncompletedHabits={uncompletedHabits}
-											setUncompletedHabits={setUncompletedHabits}
-										/>
-									))}
+								{completedHabits.map((filteredHabit: any) => (
+									<CardCheckHabit
+										key={filteredHabit.id}
+										habit={filteredHabit}
+										onHabitStatusChange={handleHabitStatusChange}
+										completedHabits={completedHabits}
+										setCompletedHabits={setCompletedHabits}
+										uncompletedHabits={uncompletedHabits}
+										setUncompletedHabits={setUncompletedHabits}
+									/>
+								))}
 							</View>
 						</View>
 					) : (

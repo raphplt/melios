@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import { ThemeContext } from "./ThemContext";
@@ -43,16 +43,13 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 		await setMemberHabitLog(habit.id, date, true);
 		setToggleCheckBox(!toggleCheckBox);
 
+		// Call the callback function to update habit status in parent
 		onHabitStatusChange(habit.id, true);
-	};
 
-	useEffect(() => {
+		// Update completed/uncompleted habits directly
 		if (habit.logs) {
-			if (
-				habit.logs[habit.logs.length - 1] &&
-				habit.logs[habit.logs.length - 1].date === date &&
-				habit.logs[habit.logs.length - 1].done === true
-			) {
+			const lastLog = habit.logs[habit.logs.length - 1];
+			if (lastLog && lastLog.date === date && lastLog.done === true) {
 				setToggleCheckBox(true);
 			} else {
 				setToggleCheckBox(false);
@@ -60,7 +57,24 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 		} else {
 			setToggleCheckBox(false);
 		}
-	}, []);
+	};
+
+	useEffect(
+		() => {
+			if (habit.logs) {
+				const lastLog = habit.logs[habit.logs.length - 1];
+				if (lastLog && lastLog.date === date && lastLog.done === true) {
+					setToggleCheckBox(true);
+				} else {
+					setToggleCheckBox(false);
+				}
+			} else {
+				setToggleCheckBox(false);
+			}
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
 
 	return (
 		<View className="w-11/12 mx-auto  my-2 flex flex-row items-center justify-evenly">
@@ -73,10 +87,10 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 				}
 			>
 				<View
-					className="flex flex-row justify-around py-2 rounded-xl basis-4/5  border-[1px]"
+					className="flex items-center flex-row justify-around py-2 rounded-xl basis-4/5 border-[1px]"
 					style={{
 						borderColor: theme.colors.primary,
-						backgroundColor: theme.colors.background,
+						backgroundColor: theme.colors.backgroundSecondary,
 					}}
 				>
 					<Text
@@ -88,7 +102,7 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 					<Ionicons
 						name="flame"
 						size={24}
-						color={colorDifficulties[habitInfos.difficulty]}
+						color={colorDifficulties[habitInfos.difficulty] || theme.colors.text}
 					/>
 				</View>
 			</Pressable>
