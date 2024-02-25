@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import { Text, View } from "../../components/Themed";
 import { getMemberHabits } from "../../db/member";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function Progression() {
 	const { theme } = useContext(ThemeContext);
@@ -41,11 +42,24 @@ export default function Progression() {
 			>
 				Voir ma progression
 			</Text>
+			<Text
+				className="text-center mb-4 text-lg mt-3"
+				style={{ color: theme.colors.text }}
+			>
+				{userHabits && userHabits.length} habitudes
+			</Text>
 			<View />
 			{/* <EditScreenInfo path="app/(tabs)/two.tsx" /> */}
-			<Text style={{ color: theme.colors.text }} className="text-lg mt-8">
-				{JSON.stringify(userHabits)}
-			</Text>
+			<ScrollView className="flex flex-col gap-5">
+				{userHabits &&
+					userHabits.map((habit: any) => {
+						return (
+							<Text key={habit.id} style={{ color: theme.colors.text }}>
+								{habit.name}
+							</Text>
+						);
+					})}
+			</ScrollView>
 		</View>
 	);
 }
