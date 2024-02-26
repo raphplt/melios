@@ -5,6 +5,7 @@ export type Theme = {
 		background: string;
 		card: string;
 		text: string;
+		textSecondary: string;
 		border: string;
 		notification: string;
 		activeSwitch: string;

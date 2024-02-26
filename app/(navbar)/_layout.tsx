@@ -31,6 +31,12 @@ export default function TabLayout() {
 				name="progression"
 				options={{
 					title: "Progression",
+					headerStyle: {
+						backgroundColor: theme.colors.backgroundSecondary,
+						borderBottomLeftRadius: 10,
+						borderBottomRightRadius: 10,
+					},
+
 					tabBarIcon: ({ color }) => <TabBarIcon name="bar-chart" color={color} />,
 				}}
 			/>

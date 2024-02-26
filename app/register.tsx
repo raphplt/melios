@@ -23,7 +23,6 @@ export default function Register() {
 					...prevForm,
 					{ [Questions[currentQuestionIndex].slug]: answer },
 				];
-				console.log("Next question, actual form : ", updatedForm);
 				return updatedForm;
 			});
 

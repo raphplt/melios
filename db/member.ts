@@ -18,7 +18,6 @@ export const setMemberHabit = async (habit: any) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
-		console.log("uid : ", uid);
 
 		const membersCollectionRef = collection(db, "members");
 

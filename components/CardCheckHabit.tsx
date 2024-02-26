@@ -26,7 +26,6 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 		async function getHabitInfos() {
 			const result = await getHabitById(habit.id);
 			setHabitInfos(result);
-			console.log(result);
 		}
 		getHabitInfos();
 	}, []);

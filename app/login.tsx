@@ -15,8 +15,6 @@ export default function Login() {
 
 	const login = async () => {
 		try {
-			console.log("Tentative de connexion avec l'email : ", email);
-			console.log("Tentative de connexion avec le mot de passe : ", password);
 			const user: any = await loginUser(email, password);
 
 			if (user.error) {

@@ -47,7 +47,6 @@ export default function RootLayout() {
 	useEffect(() => {
 		(async () => {
 			const user = await isUserConnected();
-			console.log("user", user);
 			if (user) {
 				setIsAuthenticated(true);
 			}
