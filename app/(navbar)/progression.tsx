@@ -15,6 +15,7 @@ export default function Progression() {
 	const [scoreHabits, setScoreHabits] = useState(0);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitLastDaysCompleted, setHabitLastDaysCompleted]: any = useState([]);
+	const [allHabits, setAllHabits] = useState<any>([]);
 
 	// Update date every second
 	useEffect(() => {
@@ -69,7 +70,7 @@ export default function Progression() {
 
 	// Calculate last days completed
 	useEffect(() => {
-		let lastDayCompletion = [];
+		let habitCompletion: any = {};
 		if (habits.length === 0) return setHabitLastDaysCompleted([]);
 		let days = 7;
 
@@ -81,26 +82,22 @@ export default function Progression() {
 			days = 365;
 		}
 
-		for (let i = 0; i < days; i++) {
-			const date = moment().subtract(i, "days").format("YYYY-MM-DD");
-
-			let score = 0;
-			habits.forEach((habit: any) => {
+		habits.forEach((habit: any) => {
+			habitCompletion[habit.name] = 0; // Initialize each habit with 0 completions
+			for (let i = 0; i < days; i++) {
+				const date = moment().subtract(i, "days").format("YYYY-MM-DD");
 				if (habit.logs) {
-					const lastLog = habit.logs[habit.logs.length - 1];
-					console.log(lastLog, habit.name);
-
-					if (lastLog && lastLog.date === date && lastLog.done === true) {
-						score += 1;
+					const logsForDay = habit.logs.filter(
+						(log: any) => log.date === date && log.done === true
+					);
+					if (logsForDay.length > 0) {
+						habitCompletion[habit.name] += 1; // Increment the completion count for the habit
 					}
 				}
-			});
-
-			if (score === habits.length) {
-				lastDayCompletion.push(date);
 			}
-		}
-		setHabitLastDaysCompleted(lastDayCompletion);
+		});
+
+		setHabitLastDaysCompleted(habitCompletion);
 	}, [habits, date, activeButton]);
 
 	const handlePress = (button: string) => {
@@ -182,25 +179,43 @@ export default function Progression() {
 					<Text>complétés</Text>
 				</View>
 			)}
-			<ScrollView className="flex flex-col gap-5">
-				<Text>{habitLastDaysCompleted.length} jours complétés</Text>
-				{habitLastDaysCompleted &&
-					habitLastDaysCompleted.map((date: any, index: any) => {
-						return (
-							<View
-								key={index}
-								className="flex flex-row justify-between mx-5"
-								style={{ backgroundColor: theme.colors.backgroundSecondary }}
-							>
-								<Text style={{ color: theme.colors.text }} className="text-lg">
-									{date}
-								</Text>
-								<Text style={{ color: theme.colors.text }} className="text-lg">
-									100%
-								</Text>
-							</View>
-						);
-					})}
+			<ScrollView className="flex flex-col mt-2">
+				<Text className="ml-6 text-lg">
+					{habitLastDaysCompleted.length}Jours complétés
+				</Text>
+
+				{
+					// Display habits
+					habits
+						.sort((a: any, b: any) => {
+							const aCompletion = habitLastDaysCompleted[a.name] || 0;
+							const bCompletion = habitLastDaysCompleted[b.name] || 0;
+							return bCompletion - aCompletion;
+						})
+						.map((habit: any, index: number) => {
+							return (
+								<View
+									key={index}
+									className="flex flex-row items-center justify-between px-5 my-2 py-3 mx-auto w-11/12 rounded-xl"
+									style={{
+										backgroundColor: theme.colors.backgroundSecondary,
+									}}
+								>
+									<Text style={{ color: theme.colors.text }}>{habit.name}</Text>
+									<Text style={{ color: theme.colors.text }}>
+										{habitLastDaysCompleted[habit.name]} /{" "}
+										{activeButton === "Jour"
+											? 1
+											: activeButton === "Semaine"
+											? 7
+											: activeButton === "Mois"
+											? 30
+											: 365}
+									</Text>
+								</View>
+							);
+						})
+				}
 			</ScrollView>
 		</View>
 	);
