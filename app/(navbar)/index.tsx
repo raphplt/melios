@@ -138,97 +138,95 @@ export default function Index() {
 						: theme.colors.backgroundSecondary
 				}
 			/>
-			<ThemeProvider value={theme}>
-				<ScrollView
-					className="mb-8"
-					refreshControl={
-						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					}
+			<ScrollView
+				className="mb-8"
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+			>
+				<View style={{ backgroundColor: theme.colors.background }}>
+					<TopStats habits={userHabits} />
+				</View>
+				<View
+					style={{ backgroundColor: theme.colors.background }}
+					className="flex justify-between flex-row items-center mt-4 w-10/12 mx-auto"
 				>
-					<View style={{ backgroundColor: theme.colors.background }}>
-						<TopStats habits={userHabits} />
-					</View>
-					<View
-						style={{ backgroundColor: theme.colors.background }}
-						className="flex justify-between flex-row items-center mt-4 w-10/12 mx-auto"
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-center text-xl"
 					>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-center text-xl"
-						>
-							Mes habitudes
-						</Text>
-						<Pressable
-							onPress={() => navigation.navigate("select")}
-							className="bg-blue-500 rounded-full p-2"
-						>
-							<Ionicons name="add" size={24} color="white" />
-						</Pressable>
-					</View>
+						Mes habitudes
+					</Text>
+					<Pressable
+						onPress={() => navigation.navigate("select")}
+						className="bg-blue-500 rounded-full p-2"
+					>
+						<Ionicons name="add" size={24} color="white" />
+					</Pressable>
+				</View>
 
-					{userHabits.length > 0 ? (
+				{userHabits.length > 0 ? (
+					<View
+						className="flex flex-row flex-wrap justify-center mt-4"
+						style={{ backgroundColor: theme.colors.background }}
+					>
 						<View
-							className="flex flex-row flex-wrap justify-center mt-4"
+							className="flex flex-row flex-wrap justify-star mb-2"
 							style={{ backgroundColor: theme.colors.background }}
 						>
-							<View
-								className="flex flex-row flex-wrap justify-star mb-2"
-								style={{ backgroundColor: theme.colors.background }}
+							<Text
+								style={{ color: theme.colors.text }}
+								className="w-10/12 mx-auto text-lg mb-2"
 							>
-								<Text
-									style={{ color: theme.colors.text }}
-									className="w-10/12 mx-auto text-lg mb-2"
-								>
-									A faire aujourd'hui : {uncompletedHabits.length}
-								</Text>
+								A faire aujourd'hui : {uncompletedHabits.length}
+							</Text>
 
-								{uncompletedHabits.map((filteredHabit: any) => (
-									<CardCheckHabit
-										key={filteredHabit.id}
-										habit={filteredHabit}
-										onHabitStatusChange={handleHabitStatusChange}
-										completedHabits={completedHabits}
-										setCompletedHabits={setCompletedHabits}
-										uncompletedHabits={uncompletedHabits}
-										setUncompletedHabits={setUncompletedHabits}
-									/>
-								))}
-							</View>
-							<View
-								className="flex flex-row flex-wrap justify-start mb-2"
-								style={{ backgroundColor: theme.colors.background }}
-							>
-								<Text
-									style={{ color: theme.colors.text }}
-									className="w-10/12 mx-auto text-lg mb-2"
-								>
-									Déjà réalisées : {completedHabits.length}
-								</Text>
-
-								{completedHabits.map((filteredHabit: any) => (
-									<CardCheckHabit
-										key={filteredHabit.id}
-										habit={filteredHabit}
-										onHabitStatusChange={handleHabitStatusChange}
-										completedHabits={completedHabits}
-										setCompletedHabits={setCompletedHabits}
-										uncompletedHabits={uncompletedHabits}
-										setUncompletedHabits={setUncompletedHabits}
-									/>
-								))}
-							</View>
+							{uncompletedHabits.map((filteredHabit: any) => (
+								<CardCheckHabit
+									key={filteredHabit.id}
+									habit={filteredHabit}
+									onHabitStatusChange={handleHabitStatusChange}
+									completedHabits={completedHabits}
+									setCompletedHabits={setCompletedHabits}
+									uncompletedHabits={uncompletedHabits}
+									setUncompletedHabits={setUncompletedHabits}
+								/>
+							))}
 						</View>
-					) : (
-						<Text style={{ color: theme.colors.text }} className="text-center mt-48">
-							Aucune habitude trouvée. Ajoutez-en une !
-						</Text>
-					)}
+						<View
+							className="flex flex-row flex-wrap justify-start mb-2"
+							style={{ backgroundColor: theme.colors.background }}
+						>
+							<Text
+								style={{ color: theme.colors.text }}
+								className="w-10/12 mx-auto text-lg mb-2"
+							>
+								Déjà réalisées : {completedHabits.length}
+							</Text>
 
-					<View />
-				</ScrollView>
-			</ThemeProvider>
+							{completedHabits.map((filteredHabit: any) => (
+								<CardCheckHabit
+									key={filteredHabit.id}
+									habit={filteredHabit}
+									onHabitStatusChange={handleHabitStatusChange}
+									completedHabits={completedHabits}
+									setCompletedHabits={setCompletedHabits}
+									uncompletedHabits={uncompletedHabits}
+									setUncompletedHabits={setUncompletedHabits}
+								/>
+							))}
+						</View>
+					</View>
+				) : (
+					<Text style={{ color: theme.colors.text }} className="text-center mt-48">
+						Aucune habitude trouvée. Ajoutez-en une !
+					</Text>
+				)}
+
+				<View />
+			</ScrollView>
 		</>
 	);
 }

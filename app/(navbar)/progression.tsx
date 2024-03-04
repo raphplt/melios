@@ -5,6 +5,9 @@ import { getMemberHabits } from "../../db/member";
 import { ScrollView } from "react-native-gesture-handler";
 import { Pressable } from "react-native";
 import moment from "moment";
+import { RefreshControl } from "react-native";
+import HabitsCompleted from "../../components/progresssion/HabitsCompleted";
+import { HabitCard } from "../../components/progresssion/HabitCard";
 
 export default function Progression() {
 	const { theme } = useContext(ThemeContext);
@@ -15,7 +18,7 @@ export default function Progression() {
 	const [scoreHabits, setScoreHabits] = useState(0);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitLastDaysCompleted, setHabitLastDaysCompleted]: any = useState([]);
-	const [allHabits, setAllHabits] = useState<any>([]);
+	const [refreshing, setRefreshing] = useState(false);
 
 	// Update date every second
 	useEffect(() => {
@@ -47,6 +50,20 @@ export default function Progression() {
 		};
 	}, []);
 
+	const onRefresh = async () => {
+		setRefreshing(true);
+		try {
+			const data = await getMemberHabits();
+			if (isMounted.current) {
+				setHabits(data);
+			}
+		} catch (error) {
+			handleError(error);
+		} finally {
+			setRefreshing(false);
+		}
+	};
+
 	// Calculate score for habits
 	useEffect(() => {
 		let score = 0;
@@ -74,7 +91,9 @@ export default function Progression() {
 		if (habits.length === 0) return setHabitLastDaysCompleted([]);
 		let days = 7;
 
-		if (activeButton === "Semaine") {
+		if (activeButton === "Jour") {
+			days = 1;
+		} else if (activeButton === "Semaine") {
 			days = 7;
 		} else if (activeButton === "Mois") {
 			days = 30;
@@ -106,9 +125,14 @@ export default function Progression() {
 	};
 
 	return (
-		<View style={{ backgroundColor: theme.colors.background }}>
+		<ScrollView
+			style={{ backgroundColor: theme.colors.background }}
+			refreshControl={
+				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+			}
+		>
 			<View
-				className="flex mt-3 items-center  mx-auto justify-between flex-row"
+				className="flex mt-3 items-center mx-auto justify-between flex-row"
 				style={{ backgroundColor: theme.colors.background }}
 			>
 				<Pressable
@@ -160,63 +184,27 @@ export default function Progression() {
 					<Text style={{ color: theme.colors.text }}>Année</Text>
 				</Pressable>
 			</View>
-
-			<Text
-				className="text-center mb-4 text-lg mt-3"
-				style={{ color: theme.colors.text }}
+			<View
+				className="flex items-center justify-around flex-row mb-3"
+				style={{ backgroundColor: theme.colors.background }}
 			>
-				{habits && habits.length} habitudes
-			</Text>
-			<View />
-			{activeButton === "Jour" && (
-				<View
-					style={{ backgroundColor: theme.colors.backgroundSecondary }}
-					className="flex items-center justify-center w-36 h-36 rounded-xl mx-auto mt-5"
-				>
-					<Text style={{ color: theme.colors.text }} className="text-3xl mt-1">
-						{scoreHabits} %
-					</Text>
-					<Text>complétés</Text>
-				</View>
-			)}
+				<HabitCard statistic={scoreHabits} text=" complétées" theme={theme} />
+				<HabitCard statistic={"+ 35"} text=" qu'hier" theme={theme} />
+			</View>
 			<ScrollView className="flex flex-col mt-2">
-				<Text className="ml-6 text-lg">
-					{habitLastDaysCompleted.length}Jours complétés
+				<Text className="ml-6 text-lg" style={{ color: theme.colors.text }}>
+					{/* {Object.keys(habitLastDaysCompleted).length || 0} /{" "}
+					{habits && habits.length} */}
+					Habitudes complétés
 				</Text>
 
-				{
-					// Display habits
-					habits
-						.sort((a: any, b: any) => {
-							const aCompletion = habitLastDaysCompleted[a.name] || 0;
-							const bCompletion = habitLastDaysCompleted[b.name] || 0;
-							return bCompletion - aCompletion;
-						})
-						.map((habit: any, index: number) => {
-							return (
-								<View
-									key={index}
-									className="flex flex-row items-center justify-between px-5 my-2 py-3 mx-auto w-11/12 rounded-xl"
-									style={{
-										backgroundColor: theme.colors.backgroundSecondary,
-									}}
-								>
-									<Text style={{ color: theme.colors.text }}>{habit.name}</Text>
-									<Text style={{ color: theme.colors.text }}>
-										{habitLastDaysCompleted[habit.name]} /{" "}
-										{activeButton === "Jour"
-											? 1
-											: activeButton === "Semaine"
-											? 7
-											: activeButton === "Mois"
-											? 30
-											: 365}
-									</Text>
-								</View>
-							);
-						})
-				}
+				<HabitsCompleted
+					habits={habits}
+					habitLastDaysCompleted={habitLastDaysCompleted}
+					activeButton={activeButton}
+					theme={theme}
+				/>
 			</ScrollView>
-		</View>
+		</ScrollView>
 	);
 }
