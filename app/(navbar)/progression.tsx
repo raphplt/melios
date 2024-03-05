@@ -2,12 +2,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import { Text, View } from "../../components/Themed";
 import { getMemberHabits } from "../../db/member";
-import { ScrollView } from "react-native-gesture-handler";
 import { Pressable } from "react-native";
 import moment from "moment";
-import { RefreshControl } from "react-native";
-import HabitsCompleted from "../../components/progresssion/HabitsCompleted";
-import { HabitCard } from "../../components/progresssion/HabitCard";
+import { RefreshControl, ScrollView } from "react-native";
+import HabitsCompleted from "../../components/progression/HabitsCompleted";
+import { HabitCard } from "../../components/progression/HabitCard";
 
 export default function Progression() {
 	const { theme } = useContext(ThemeContext);
@@ -54,10 +53,10 @@ export default function Progression() {
 		setRefreshing(true);
 		try {
 			const data = await getMemberHabits();
-			if (isMounted.current) {
-				setHabits(data);
-			}
+			setHabits(data);
+			setLoading(false);
 		} catch (error) {
+			setHabits([]);
 			handleError(error);
 		} finally {
 			setRefreshing(false);
@@ -125,86 +124,88 @@ export default function Progression() {
 	};
 
 	return (
-		<ScrollView
-			style={{ backgroundColor: theme.colors.background }}
-			refreshControl={
-				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-			}
-		>
-			<View
-				className="flex mt-3 items-center mx-auto justify-between flex-row"
+		<>
+			<ScrollView
 				style={{ backgroundColor: theme.colors.background }}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
 			>
-				<Pressable
-					onPress={() => handlePress("Jour")}
-					className="px-5 py-2 m-2 rounded-xl"
-					style={{
-						backgroundColor:
-							activeButton === "Jour"
-								? theme.colors.primary
-								: theme.colors.backgroundSecondary,
-					}}
+				<View
+					className="flex mt-3 items-center mx-auto justify-between flex-row"
+					style={{ backgroundColor: theme.colors.background }}
 				>
-					<Text style={{ color: theme.colors.textSecondary }}>Jour</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => handlePress("Semaine")}
-					className="px-5 py-2 m-2 rounded-xl"
-					style={{
-						backgroundColor:
-							activeButton === "Semaine"
-								? theme.colors.primary
-								: theme.colors.backgroundSecondary,
-					}}
+					<Pressable
+						onPress={() => handlePress("Jour")}
+						className="px-5 py-2 m-2 rounded-xl"
+						style={{
+							backgroundColor:
+								activeButton === "Jour"
+									? theme.colors.primary
+									: theme.colors.backgroundSecondary,
+						}}
+					>
+						<Text style={{ color: theme.colors.textSecondary }}>Jour</Text>
+					</Pressable>
+					<Pressable
+						onPress={() => handlePress("Semaine")}
+						className="px-5 py-2 m-2 rounded-xl"
+						style={{
+							backgroundColor:
+								activeButton === "Semaine"
+									? theme.colors.primary
+									: theme.colors.backgroundSecondary,
+						}}
+					>
+						<Text style={{ color: theme.colors.text }}>Semaine</Text>
+					</Pressable>
+					<Pressable
+						onPress={() => handlePress("Mois")}
+						className="px-5 py-2 m-2 rounded-xl"
+						style={{
+							backgroundColor:
+								activeButton === "Mois"
+									? theme.colors.primary
+									: theme.colors.backgroundSecondary,
+						}}
+					>
+						<Text style={{ color: theme.colors.text }}>Mois</Text>
+					</Pressable>
+					<Pressable
+						onPress={() => handlePress("Année")}
+						className="px-5 py-2 m-2 rounded-xl"
+						style={{
+							backgroundColor:
+								activeButton === "Année"
+									? theme.colors.primary
+									: theme.colors.backgroundSecondary,
+						}}
+					>
+						<Text style={{ color: theme.colors.text }}>Année</Text>
+					</Pressable>
+				</View>
+				<View
+					className="flex items-center justify-around flex-row mb-3"
+					style={{ backgroundColor: theme.colors.background }}
 				>
-					<Text style={{ color: theme.colors.text }}>Semaine</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => handlePress("Mois")}
-					className="px-5 py-2 m-2 rounded-xl"
-					style={{
-						backgroundColor:
-							activeButton === "Mois"
-								? theme.colors.primary
-								: theme.colors.backgroundSecondary,
-					}}
-				>
-					<Text style={{ color: theme.colors.text }}>Mois</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => handlePress("Année")}
-					className="px-5 py-2 m-2 rounded-xl"
-					style={{
-						backgroundColor:
-							activeButton === "Année"
-								? theme.colors.primary
-								: theme.colors.backgroundSecondary,
-					}}
-				>
-					<Text style={{ color: theme.colors.text }}>Année</Text>
-				</Pressable>
-			</View>
-			<View
-				className="flex items-center justify-around flex-row mb-3"
-				style={{ backgroundColor: theme.colors.background }}
-			>
-				<HabitCard statistic={scoreHabits} text=" complétées" theme={theme} />
-				<HabitCard statistic={"+ 35"} text=" qu'hier" theme={theme} />
-			</View>
-			<ScrollView className="flex flex-col mt-2">
-				<Text className="ml-6 text-lg" style={{ color: theme.colors.text }}>
-					{/* {Object.keys(habitLastDaysCompleted).length || 0} /{" "}
+					<HabitCard statistic={scoreHabits} text=" complétées" theme={theme} />
+					<HabitCard statistic={"+ 35"} text=" qu'hier" theme={theme} />
+				</View>
+				<ScrollView className="flex flex-col mt-2">
+					<Text className="ml-6 text-lg" style={{ color: theme.colors.text }}>
+						{/* {Object.keys(habitLastDaysCompleted).length || 0} /{" "}
 					{habits && habits.length} */}
-					Habitudes complétés
-				</Text>
+						Habitudes complétés
+					</Text>
 
-				<HabitsCompleted
-					habits={habits}
-					habitLastDaysCompleted={habitLastDaysCompleted}
-					activeButton={activeButton}
-					theme={theme}
-				/>
+					<HabitsCompleted
+						habits={habits}
+						habitLastDaysCompleted={habitLastDaysCompleted}
+						activeButton={activeButton}
+						theme={theme}
+					/>
+				</ScrollView>
 			</ScrollView>
-		</ScrollView>
+		</>
 	);
 }

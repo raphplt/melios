@@ -9,11 +9,7 @@ import {
 	StatusBar,
 } from "react-native";
 import TopStats from "../../components/TopStats";
-import {
-	DarkTheme,
-	ThemeProvider,
-	useNavigation,
-} from "@react-navigation/native";
+import { DarkTheme, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "react-native";
 import { getMemberHabits } from "../../db/member";

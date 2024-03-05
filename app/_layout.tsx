@@ -4,13 +4,10 @@ import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { createStackNavigator } from "@react-navigation/stack";
 import { ThemeContext } from "../components/ThemContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import { isUserConnected } from "../db/users";
-import Register from "./register";
-import TabLayout from "./(navbar)/_layout";
-import Select from "./select";
+
 export { ErrorBoundary } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();

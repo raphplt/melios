@@ -36,14 +36,16 @@ export default function HabitsCompleted({
 					return (
 						<View
 							key={index}
-							className="flex flex-row items-center justify-between px-5 my-2 py-3 mx-auto w-11/12 rounded-xl"
+							className="drop-shadow-md flex flex-row items-center justify-between px-5 my-2 py-3 mx-auto w-11/12 rounded-xl"
 							style={{
 								backgroundColor:
-									habitLastDaysCompleted[habit.name] >= dateLength ? "green" : "red",
+									habitLastDaysCompleted[habit.name] >= dateLength
+										? "#c9ffc9"
+										: "#ffc9c9",
 							}}
 						>
-							<Text style={{ color: theme.colors.text }}>{habit.name}</Text>
-							<Text style={{ color: theme.colors.text }}>
+							<Text className="text-black">{habit.name}</Text>
+							<Text>
 								{habitLastDaysCompleted[habit.name]} /{" "}
 								{activeButton === "Jour"
 									? 1
