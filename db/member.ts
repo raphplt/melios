@@ -8,7 +8,7 @@ import {
 	updateDoc,
 	arrayUnion,
 	getDoc,
-	CollectionReference,
+	arrayRemove,
 } from "firebase/firestore";
 import { db } from ".";
 import { auth } from ".";
@@ -17,7 +17,6 @@ import { onAuthStateChanged } from "firebase/auth";
 export const setMemberHabit = async (habit: any) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
-
 
 		const membersCollectionRef = collection(db, "members");
 
@@ -46,7 +45,10 @@ export const setMemberHabit = async (habit: any) => {
 
 				console.log("Document membre mis à jour avec succès");
 			} else {
-				console.log("L'habitude existe déjà pour ce membre");
+				await updateDoc(memberDoc.ref, {
+					habits: arrayRemove(existingHabit),
+				});
+				console.log("L'habitude a été supprimée avec succès");
 			}
 		} else {
 			await setDoc(doc(membersCollectionRef, uid), {

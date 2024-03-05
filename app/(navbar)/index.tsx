@@ -104,13 +104,21 @@ export default function Index() {
 		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
 	};
 
-	const handleHabitStatusChange = (habitId: any, done: boolean) => {
-		// Update the userHabits state based on the status change
-		setUserHabits((prevHabits: any) =>
-			prevHabits.map((habit: any) =>
-				habit.id === habitId ? { ...habit, done } : habit
-			)
-		);
+	const handleHabitStatusChange = (habit: any, done: boolean) => {
+		if (done) {
+			console.log("habit", habit);
+			// Si l'habitude est terminée, ajoutez-la à completedHabits et supprimez-la de uncompletedHabits
+			setCompletedHabits((prevHabits) => [...prevHabits, habit] as any);
+			setUncompletedHabits((prevHabits) =>
+				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
+			);
+		} else {
+			// Si l'habitude n'est pas terminée, ajoutez-la à uncompletedHabits et supprimez-la de completedHabits
+			setUncompletedHabits((prevHabits) => [...prevHabits, habit] as any);
+			setCompletedHabits((prevHabits) =>
+				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
+			);
+		}
 	};
 
 	if (loading) {
@@ -174,9 +182,17 @@ export default function Index() {
 						>
 							<Text
 								style={{ color: theme.colors.text }}
-								className="w-10/12 mx-auto text-lg mb-2"
+								className="mx-auto text-lg mb-2"
 							>
-								A faire aujourd'hui : {uncompletedHabits.length}
+								{uncompletedHabits.length > 0 ? (
+									<Text>A faire aujourd'hui : {uncompletedHabits.length}</Text>
+								) : (
+									<View className=" bg-green-300 rounded-lg py-2 px-4">
+										<Text className="">
+											Félicitations, vous avez terminé toutes vos habitudes !
+										</Text>
+									</View>
+								)}
 							</Text>
 
 							{uncompletedHabits.map((filteredHabit: any) => (

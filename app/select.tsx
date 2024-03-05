@@ -38,7 +38,7 @@ export default function Select() {
 				>
 					<Ionicons name="bulb" size={24} color="white" />
 					<Text className="text-[16px] w-10/12  mx-auto text-left text-white">
-						Vous pouvez sélectionner jusqu'à 20 habitudes
+						Vous pouvez sélectionner jusqu'à 20 habitudes.
 					</Text>
 				</View>
 				<View
@@ -61,9 +61,7 @@ export default function Select() {
 				onPress={() => navigation.navigate("index")}
 			>
 				<View className="flex items-center justify-center">
-					<Text className="text-center text-lg text-white ">
-						Valider
-					</Text>
+					<Text className="text-center text-lg text-white ">Valider</Text>
 				</View>
 			</Pressable>
 		</ThemeProvider>

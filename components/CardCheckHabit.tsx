@@ -43,7 +43,9 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 		setToggleCheckBox(!toggleCheckBox);
 
 		// Call the callback function to update habit status in parent
-		onHabitStatusChange(habit.id, true);
+		onHabitStatusChange(habit, true);
+		setToggleCheckBox(true);
+
 
 		// Update completed/uncompleted habits directly
 		if (habit.logs) {
