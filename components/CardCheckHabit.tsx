@@ -15,9 +15,10 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
 	const colorDifficulties: any = {
-		1: "#FFEE59",
-		2: "#FF7A00",
-		3: "#FA6F6F",
+		1: "#77DD77",
+		2: "#FDFD96",
+		3: "#FFB347",
+		4: "#FF6961",
 	};
 
 	const navigation: any = useNavigation();
@@ -45,7 +46,6 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 		// Call the callback function to update habit status in parent
 		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);
-
 
 		// Update completed/uncompleted habits directly
 		if (habit.logs) {
@@ -90,7 +90,8 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 				<View
 					className="flex items-center flex-row justify-around py-2 rounded-xl basis-4/5 border-[1px]"
 					style={{
-						borderColor: theme.colors.primary,
+						borderColor:
+							colorDifficulties[habitInfos.difficulty] || theme.colors.text,
 						backgroundColor: theme.colors.backgroundSecondary,
 					}}
 				>

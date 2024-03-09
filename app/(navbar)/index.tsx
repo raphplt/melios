@@ -15,6 +15,7 @@ import { Text } from "react-native";
 import { getMemberHabits } from "../../db/member";
 import CardCheckHabit from "../../components/CardCheckHabit";
 import moment from "moment";
+import ActivitiesContainer from "../../components/ActivitiesContainer";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -237,7 +238,7 @@ export default function Index() {
 					</Text>
 				)}
 
-				<View />
+				<ActivitiesContainer />
 			</ScrollView>
 		</>
 	);
