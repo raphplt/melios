@@ -39,7 +39,9 @@
     "react-native-screens": "~3.22.0",
     "react-native-web": "~0.19.6",
     "react-navigation": "^5.0.0",
-    "tinycolor2": "^1.6.0"
+    "tinycolor2": "^1.6.0",
+    "expo-notifications": "~0.20.1",
+    "expo-device": "~5.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

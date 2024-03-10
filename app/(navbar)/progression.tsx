@@ -143,7 +143,6 @@ export default function Progression() {
 				}
 			}
 		});
-		console.log(habitToday, habitYesterday);
 		if (habitYesterday > 0 && habitToday > 0) {
 			setComparedToYesterday(Math.floor((habitToday / habitYesterday) * 100));
 		} else if (habitYesterday === 0 && habitToday > 0) {

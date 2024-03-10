@@ -70,7 +70,6 @@ export const loginUser = async (email: string, password: string) => {
 			password
 		);
 		const user = userCredential.user;
-		console.log(user);
 		return user;
 	} catch (error: any) {
 		console.error("Erreur lors de la connexion : ", error, error.code);

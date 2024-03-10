@@ -45,6 +45,14 @@ export default function HabitsCompleted({
 										: theme.colors.backgroundSecondary,
 							}}
 						>
+							{activeButton !== "Jour" && (
+								<View
+									className=" absolute top-0 bottom-0 rounded-xl left-0 bg-green-300 opacity-50"
+									style={{
+										width: `${(habitLastDaysCompleted[habit.name] / dateLength) * 100}%`,
+									}}
+								/>
+							)}
 							<Text
 								style={{
 									color:

@@ -107,7 +107,6 @@ export default function Index() {
 
 	const handleHabitStatusChange = (habit: any, done: boolean) => {
 		if (done) {
-			console.log("habit", habit);
 			// Si l'habitude est terminée, ajoutez-la à completedHabits et supprimez-la de uncompletedHabits
 			setCompletedHabits((prevHabits) => [...prevHabits, habit] as any);
 			setUncompletedHabits((prevHabits) =>
