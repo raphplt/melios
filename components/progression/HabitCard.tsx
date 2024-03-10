@@ -7,6 +7,7 @@ export const HabitCard = ({ statistic, text, theme }: any) => {
 			className="flex items-center justify-center w-36 h-36 rounded-xl mx-auto mt-5"
 		>
 			<Text style={{ color: theme.colors.text }} className="text-3xl mt-1">
+				{text == "vs hier" && (statistic > 0 ? "+" : "-")}
 				{statistic} %
 			</Text>
 			<Text style={{ color: theme.colors.text }}>{text}</Text>

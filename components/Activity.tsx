@@ -33,17 +33,17 @@ export default function Activity({ habit }: any) {
 				className="h-14 rounded-t-xl"
 			>
 				<View>
-					<Text className=" text-lg italic font-semibold text-gray-900 right-2 top-0 absolute">
+					<Text className=" text-lg italic font-semibold text-gray-900 right-2 top-2 absolute">
 						{habitInfos.duration}''
 					</Text>
 				</View>
-				<Text className="italic font-semibold text-gray-900 w-32 ml-2">
+				<Text className="italic font-semibold text-gray-900 w-32 ml-3 mt-3">
 					{habitInfos.category}
 				</Text>
 			</View>
-			<View className="flex flex-col justify-between items-center mt-2 h-2/3">
+			<View className="flex flex-col justify-around items-center mt-2 h-2/3">
 				<Text
-					className="text-lg italic font-semibold text-gray-900 text-center"
+					className="text-lg w-10/12 mx-auto font-semibold text-gray-900 text-center"
 					style={{
 						color: theme.colors.text,
 					}}

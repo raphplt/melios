@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HabitsCompleted({
 	habits,
@@ -41,20 +42,40 @@ export default function HabitsCompleted({
 								backgroundColor:
 									habitLastDaysCompleted[habit.name] >= dateLength
 										? "#c9ffc9"
-										: "#ffc9c9",
+										: theme.colors.backgroundSecondary,
 							}}
 						>
-							<Text className="text-black">{habit.name}</Text>
-							<Text>
-								{habitLastDaysCompleted[habit.name]} /{" "}
-								{activeButton === "Jour"
-									? 1
-									: activeButton === "Semaine"
-									? 7
-									: activeButton === "Mois"
-									? 30
-									: 365}
+							<Text
+								style={{
+									color:
+										habitLastDaysCompleted[habit.name] >= dateLength
+											? "black"
+											: theme.colors.text,
+								}}
+							>
+								{habit.name}
 							</Text>
+							<View>
+								{activeButton === "Jour" ? (
+									habitLastDaysCompleted[habit.name] ? (
+										<Ionicons name="checkmark" size={24} color="black" />
+									) : (
+										<Ionicons name="close" size={24} color="white" />
+									)
+								) : (
+									<Text
+										style={{
+											color:
+												habitLastDaysCompleted[habit.name] >= dateLength
+													? "black"
+													: theme.colors.text,
+										}}
+									>
+										{habitLastDaysCompleted[habit.name]} /{" "}
+										{activeButton === "Semaine" ? 7 : activeButton === "Mois" ? 30 : 365}
+									</Text>
+								)}
+							</View>
 						</View>
 					);
 				})}

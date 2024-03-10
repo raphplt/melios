@@ -18,6 +18,7 @@ export default function Progression() {
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitLastDaysCompleted, setHabitLastDaysCompleted]: any = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
+	const [comparedToYesterday, setComparedToYesterday] = useState(0);
 
 	// Update date every second
 	useEffect(() => {
@@ -119,9 +120,40 @@ export default function Progression() {
 	}, [habits, date, activeButton]);
 
 	const handlePress = (button: string) => {
-		// New function
 		setActiveButton(button);
 	};
+
+	useEffect(() => {
+		let habitToday = 0;
+		let habitYesterday = 0;
+		if (habits.length === 0) return setComparedToYesterday(0);
+
+		habits.forEach((habit: any) => {
+			if (habit.logs) {
+				const lastLog = habit.logs[habit.logs.length - 1];
+				if (lastLog && lastLog.date === date && lastLog.done === true) {
+					habitToday += 1;
+				}
+				const yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
+				const logsForYesterday = habit.logs.filter(
+					(log: any) => log.date === yesterday && log.done === true
+				);
+				if (logsForYesterday.length > 0) {
+					habitYesterday += 1;
+				}
+			}
+		});
+		console.log(habitToday, habitYesterday);
+		if (habitYesterday > 0 && habitToday > 0) {
+			setComparedToYesterday(Math.floor((habitToday / habitYesterday) * 100));
+		} else if (habitYesterday === 0 && habitToday > 0) {
+			setComparedToYesterday(100);
+		} else if (habitYesterday === 0 && habitToday === 0) {
+			setComparedToYesterday(0);
+		} else if (habitYesterday > 0 && habitToday === 0) {
+			setComparedToYesterday(0);
+		}
+	}, [habits, date]);
 
 	return (
 		<>
@@ -189,7 +221,7 @@ export default function Progression() {
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					<HabitCard statistic={scoreHabits} text=" complétées" theme={theme} />
-					<HabitCard statistic={"+ 35"} text=" qu'hier" theme={theme} />
+					<HabitCard statistic={comparedToYesterday} text="vs hier" theme={theme} />
 				</View>
 				<ScrollView className="flex flex-col mt-2">
 					<Text className="ml-6 text-lg" style={{ color: theme.colors.text }}>
