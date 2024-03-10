@@ -1,4 +1,11 @@
 {
-	"cSpell.words": ["Ionicons", "Pressable", "tinycolor"],
+	"cSpell.words": [
+		"firestore",
+		"Firestore",
+		"Ionicons",
+		"melios",
+		"Pressable",
+		"tinycolor"
+	],
 	"cSpell.language": "fr, en-GB, en-US"
 }

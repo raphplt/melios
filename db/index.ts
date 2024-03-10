@@ -5,15 +5,16 @@ import { initializeAuth } from "firebase/auth"; // Import Auth
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getReactNativePersistence } from "firebase/auth";
 
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-	apiKey: "AIzaSyAgc4HVGcNWUU--NLCQWV-NFS67Wyg-NQk",
-	authDomain: "melios-4a03d.firebaseapp.com",
-	projectId: "melios-4a03d",
-	storageBucket: "melios-4a03d.appspot.com",
-	messagingSenderId: "709212823740",
-	appId: "1:709212823740:web:560ee68488c5803d05b0b9",
-	measurementId: "G-98S1QD8H2L",
+	apiKey: process.env.EXPO_PUBLIC_API_KEY,
+	authDomain: process.env.EXPO_PUBLIC_AUTH_DOMAIN,
+	projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+	storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
+	messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
+	appId: process.env.EXPO_PUBLIC_APP_ID,
+	measurementId: process.env.EXPO_PUBLIC_MEASUREMENT_ID,
 };
 // Initialize Firebase
 export let app = initializeApp(firebaseConfig);
@@ -26,7 +27,7 @@ export const auth = initializeAuth(app, {
 	persistence: getReactNativePersistence(AsyncStorage),
 });
 
-// Configurez la persistance lors de l'initialisation de l'application
+// Export the initialized app and firestore connection
 try {
 	console.log("Initializing Firebase...");
 	app = initializeApp(firebaseConfig);

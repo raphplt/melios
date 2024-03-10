@@ -9,7 +9,7 @@ export default function ActivitiesContainer({ userHabits }: any) {
 	return (
 		<View className="mt-6">
 			<Text
-				className="text-2xl font-bold mb-2"
+				className="text-2xl font-bold mb-3 w-10/12 mx-auto"
 				style={{
 					color: theme.colors.text,
 				}}
@@ -18,7 +18,7 @@ export default function ActivitiesContainer({ userHabits }: any) {
 			</Text>
 			<ScrollView
 				horizontal={true}
-				// className="flex flex-row justify-between"
+				className="ml-6"
 				style={{
 					backgroundColor: theme.colors.background,
 				}}
