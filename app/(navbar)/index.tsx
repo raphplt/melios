@@ -183,10 +183,10 @@ export default function Index() {
 						>
 							<Text
 								style={{ color: theme.colors.text }}
-								className="mx-auto text-lg mb-2"
+								className="w-10/12 mx-auto font-bold text-lg mb-2"
 							>
 								{uncompletedHabits.length > 0 ? (
-									<Text>A faire aujourd'hui : {uncompletedHabits.length}</Text>
+									<Text>Restantes : {uncompletedHabits.length}</Text>
 								) : (
 									<View className=" bg-green-300 rounded-lg py-2 px-4">
 										<Text className="">
@@ -214,7 +214,7 @@ export default function Index() {
 						>
 							<Text
 								style={{ color: theme.colors.text }}
-								className="w-10/12 mx-auto text-lg mb-2"
+								className="w-10/12 mx-auto text-lg mb-2 font-bold"
 							>
 								Déjà réalisées : {completedHabits.length}
 							</Text>
@@ -238,7 +238,7 @@ export default function Index() {
 					</Text>
 				)}
 
-				<ActivitiesContainer />
+				<ActivitiesContainer userHabits={userHabits} />
 			</ScrollView>
 		</>
 	);
