@@ -44,6 +44,11 @@ export default function TabLayout() {
 				name="recompenses"
 				options={{
 					title: "Récompenses",
+					headerStyle: {
+						backgroundColor: theme.colors.backgroundSecondary,
+						borderBottomLeftRadius: 10,
+						borderBottomRightRadius: 10,
+					},
 					tabBarIcon: ({ color }) => <TabBarIcon name="trophy" color={color} />,
 				}}
 			/>

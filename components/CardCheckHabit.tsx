@@ -8,6 +8,7 @@ import moment from "moment";
 import { getHabitById } from "../db/habits";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { setRewards } from "../db/rewards";
 
 export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -41,7 +42,7 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 
 	const setHabitDone = async () => {
 		await setMemberHabitLog(habit.id, date, true);
-		setToggleCheckBox(!toggleCheckBox);
+		await setRewards(habitInfos.difficulty);
 
 		// Call the callback function to update habit status in parent
 		onHabitStatusChange(habit, true);
@@ -113,6 +114,9 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
 					color={theme.colors.primary}
+					disabled={
+						habit.logs ? habit.logs[habit.logs.length - 1]?.date === date : false
+					}
 				/>
 			</View>
 		</View>
