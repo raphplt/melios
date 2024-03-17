@@ -10,7 +10,8 @@ import { auth, db } from ".";
 
 export const getRewards = async () => {
 	try {
-		const uid: any = auth.currentUser?.uid;
+		const uid: any = auth.currentUser?.uid || null;
+		console.log("uid", uid);
 
 		const rewardsCollectionRef = collection(db, "rewards");
 
@@ -28,10 +29,11 @@ export const getRewards = async () => {
 
 			return rewards;
 		} else {
-			await addDoc(collection(db, "rewards"), {
-				uid: uid,
-				points: 0,
-			});
+			if (uid)
+				await addDoc(collection(db, "rewards"), {
+					uid: uid,
+					points: 0,
+				});
 		}
 	} catch (error) {
 		console.error("Erreur lors de la récupération des récompenses : ", error);

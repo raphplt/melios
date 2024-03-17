@@ -1,9 +1,11 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
-import { View, useColorScheme } from "react-native";
-import { useContext, useState } from "react";
-import { DarkTheme, DefaultTheme } from "../../constants/Theme";
+import { Text, View } from "react-native";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
+import Melios from "../../components/Svg/Melios";
+import { getRewards } from "../../db/rewards";
+import Points from "../../components/Points";
 
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -20,10 +22,24 @@ export default function TabLayout() {
 			<Tabs.Screen
 				name="index"
 				options={{
-					title: "Accueil",
-
-					headerShown: false,
-
+					headerTitleStyle: {
+						display: "none",
+					},
+					headerStyle: {
+						backgroundColor: theme.colors.backgroundSecondary,
+						borderBottomLeftRadius: 10,
+						borderBottomRightRadius: 10,
+					},
+					headerLeft: () => (
+						<View
+							style={{
+								marginLeft: 15,
+							}}
+						>
+							<Melios />
+						</View>
+					),
+					headerRight: () => <Points />,
 					tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
 				}}
 			/>

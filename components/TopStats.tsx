@@ -1,15 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "./ThemContext";
 import { View, Text } from "./Themed";
 import moment from "moment";
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { getRewards } from "../db/rewards";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function TopStats({ habits }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [scoreHabits, setScoreHabits] = useState(0);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [lastDaysCompleted, setLastDaysCompleted] = useState(0);
+	const [rewards, setRewards]: any = useState([]);
+	const [loading, setLoading] = useState(true);
+	const isMounted = useRef(true);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -17,6 +22,25 @@ export default function TopStats({ habits }: any) {
 		}, 1000);
 
 		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const data: any = await getRewards();
+				if (isMounted.current) {
+					setRewards(data[0]);
+					setLoading(false);
+				}
+			} catch (error) {
+				setLoading(false);
+				console.error("Erreur lors de la récupération des récompenses : ", error);
+			}
+		})();
+
+		return () => {
+			isMounted.current = false;
+		};
 	}, []);
 
 	useEffect(() => {
@@ -64,11 +88,11 @@ export default function TopStats({ habits }: any) {
 
 	return (
 		<View
-			style={{ backgroundColor: theme.colors.backgroundSecondary }}
-			className="pb-3 pt-14 flex items-center justify-around flex-row rounded-b-xl"
+			style={{ backgroundColor: theme.colors.primary }}
+			className="flex items-center justify-around flex-row mt-6 w-[95%] py-3 mx-auto rounded-xl"
 		>
 			<View
-				style={{ backgroundColor: theme.colors.backgroundSecondary }}
+				style={{ backgroundColor: theme.colors.primary }}
 				className="flex items-center justify-center flex-col"
 			>
 				<Image
@@ -81,12 +105,13 @@ export default function TopStats({ habits }: any) {
 			</View>
 
 			<View
-				style={{ backgroundColor: theme.colors.backgroundSecondary }}
+				style={{ backgroundColor: theme.colors.primary }}
 				className="w-2/3 flex flex-col gap-2"
 			>
 				<Text style={{ color: theme.colors.text }} className="text-lg">
 					{lastDaysCompleted} jours d'affilés
 				</Text>
+
 				<View
 					className="flex  flex-row justify-evenly py-2 rounded-xl"
 					style={{ backgroundColor: theme.colors.background }}

@@ -41,7 +41,8 @@
     "react-navigation": "^5.0.0",
     "tinycolor2": "^1.6.0",
     "expo-notifications": "~0.20.1",
-    "expo-device": "~5.4.0"
+    "expo-device": "~5.4.0",
+    "react-native-svg": "13.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

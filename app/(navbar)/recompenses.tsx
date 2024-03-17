@@ -19,7 +19,7 @@ export default function TabTwoScreen() {
 			try {
 				const data: any = await getRewards();
 				if (isMounted.current) {
-					setRewards(data);
+					setRewards(data[0]);
 					setLoading(false);
 				}
 			} catch (error) {
@@ -37,7 +37,7 @@ export default function TabTwoScreen() {
 		setRefreshing(true);
 		try {
 			const data: any = await getRewards();
-			if (data) {
+			if (isMounted.current) {
 				setRewards(data[0]);
 			}
 		} catch (error) {
