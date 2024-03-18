@@ -10,7 +10,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { setRewards } from "../db/rewards";
 
-export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
+export default function CardCheckHabit({
+	habit,
+	onHabitStatusChange,
+	completed,
+}: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
@@ -97,7 +101,10 @@ export default function CardCheckHabit({ habit, onHabitStatusChange }: any) {
 					}}
 				>
 					<Text
-						style={{ color: theme.colors.text }}
+						style={{
+							color: theme.colors.text,
+							textDecorationLine: completed ? "line-through" : "none",
+						}}
 						className="ml-2 text-[16px] line-clamp-2 w-3/4"
 					>
 						{habit.name}

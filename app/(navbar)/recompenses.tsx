@@ -4,6 +4,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import { getRewards } from "../../db/rewards";
 import { ScrollView } from "react-native-gesture-handler";
+import { Image } from "react-native";
+import Points from "../../components/Points";
 
 export default function TabTwoScreen() {
 	const { theme } = useContext(ThemeContext);
@@ -75,15 +77,52 @@ export default function TabTwoScreen() {
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
 			>
-				<Text
-					className="text-center mb-4 text-xl mt-3"
+				<View
+					className="flex flex-row justify-between my-4 rounded-xl text-white py-3 px-3 w-11/12 mx-auto"
 					style={{
-						color: theme.colors.text,
+						backgroundColor: theme.colors.primary,
 					}}
 				>
-					Mes points : {rewards ? rewards.points : 0}
-				</Text>
-				<View />
+					<Text
+						className="text-center text-xl"
+						style={{
+							color: theme.colors.text,
+						}}
+					>
+						Mes points :
+					</Text>
+					<Text
+						className="text-center text-xl "
+						style={{
+							color: theme.colors.text,
+						}}
+					>
+						<Points />
+					</Text>
+				</View>
+
+				<View
+					className="flex flex-col items-center justify-center"
+					style={{
+						backgroundColor: theme.colors.background,
+					}}
+				>
+					<Image
+						source={require("../../assets/images/brands/brand1.png")}
+						style={{ alignSelf: "center" }}
+						className="my-2"
+					/>
+					<Image
+						source={require("../../assets/images/brands/brand2.png")}
+						style={{ alignSelf: "center" }}
+						className="my-2"
+					/>
+					<Image
+						source={require("../../assets/images/brands/brand3.png")}
+						className="my-2"
+						style={{ alignSelf: "center" }}
+					/>
+				</View>
 				{/* <EditScreenInfo path="app/(tabs)/two.tsx" /> */}
 			</ScrollView>
 		</>

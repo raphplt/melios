@@ -220,6 +220,7 @@ export default function Index() {
 
 							{completedHabits.map((filteredHabit: any) => (
 								<CardCheckHabit
+									completed={true}
 									key={filteredHabit.id}
 									habit={filteredHabit}
 									onHabitStatusChange={handleHabitStatusChange}

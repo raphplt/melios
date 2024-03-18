@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { View, TextInput, Button, Text } from "react-native";
+import { View, TextInput, Pressable, Text } from "react-native";
 import { loginUser } from "../db/users";
 import { ThemeContext } from "../components/ThemContext";
 import { useNavigation } from "expo-router";
@@ -62,7 +62,19 @@ export default function Login() {
 					className="text-lg w-10/12 mx-auto border-2 rounded-xl pl-2 py-1"
 				/>
 			</View>
-			<Button onPress={login} title="Se connecter" />
+			<Pressable
+				onPress={login}
+				style={{
+					backgroundColor: theme.colors.primary,
+					borderRadius: 10,
+					padding: 10,
+					marginTop: 20,
+				}}
+			>
+				<Text style={{ color: theme.colors.text }} className="text-xl">
+					Se connecter
+				</Text>
+			</Pressable>
 			<Text className="text-center text-xl mt-6 text-red-400">{error}</Text>
 		</View>
 	);

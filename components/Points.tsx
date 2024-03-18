@@ -35,9 +35,7 @@ export default function Points() {
 	return (
 		<View
 			className="flex items-center justify-center flex-row gap-x-2 mr-4"
-			style={{
-				backgroundColor: theme.colors.backgroundSecondary,
-			}}
+			style={{}}
 		>
 			<Text
 				style={{
