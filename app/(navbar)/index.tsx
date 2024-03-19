@@ -143,7 +143,7 @@ export default function Index() {
 				}
 			/>
 			<ScrollView
-				className="mb-8"
+				className=""
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}

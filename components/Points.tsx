@@ -45,7 +45,7 @@ export default function Points() {
 			>
 				{rewards.points || 0}
 			</Text>
-			<FontAwesome5 name="coins" size={24} color={theme.colors.text} />
+			<FontAwesome5 name="coins" size={20} color={theme.colors.text} />
 		</View>
 	);
 }

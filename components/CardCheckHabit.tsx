@@ -83,7 +83,7 @@ export default function CardCheckHabit({
 	);
 
 	return (
-		<View className="w-11/12 mx-auto  my-2 flex flex-row items-center justify-evenly">
+		<View className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly">
 			<Pressable
 				onPress={() =>
 					navigation.navigate("habitDetail", {

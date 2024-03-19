@@ -21,10 +21,10 @@ export default function Activity({ habit }: any) {
 
 	return lighterColor ? (
 		<View
+			className="h-64 w-40 mx-2 rounded-xl"
 			style={{
 				backgroundColor: theme.colors.backgroundSecondary,
 			}}
-			className="h-64 w-40 mx-1 rounded-xl"
 		>
 			<View
 				style={{

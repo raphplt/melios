@@ -5,7 +5,7 @@ import moment from "moment";
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getRewards } from "../db/rewards";
-import { FontAwesome5 } from "@expo/vector-icons";
+import Points from "./Points";
 
 export default function TopStats({ habits }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -108,9 +108,15 @@ export default function TopStats({ habits }: any) {
 				style={{ backgroundColor: theme.colors.primary }}
 				className="w-2/3 flex flex-col gap-2"
 			>
-				<Text style={{ color: theme.colors.text }} className="text-lg">
-					{lastDaysCompleted} jours d'affilés
-				</Text>
+				<View
+					style={{ backgroundColor: theme.colors.primary }}
+					className="flex items-center flex-row justify-between"
+				>
+					<Text style={{ color: theme.colors.text }} className="text-xl">
+						{lastDaysCompleted} jours d'affilés
+					</Text>
+					<Points />
+				</View>
 
 				<View
 					className="flex  flex-row justify-evenly py-2 rounded-xl"
