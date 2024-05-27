@@ -54,7 +54,7 @@ export default function InputText(props: any) {
 				}}
 				disabled={isEmpty}
 			>
-				<Text style={{ color: theme.colors.text }} className="text-lg text-center">
+				<Text style={{ color: theme.colors.textSecondary }} className="text-center">
 					Continuer
 				</Text>
 			</Pressable>

@@ -1,4 +1,4 @@
-import { Switch, View, Text, TouchableOpacity } from "react-native";
+import { Switch, Text, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "./ThemContext";
 

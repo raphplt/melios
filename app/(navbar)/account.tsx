@@ -12,7 +12,8 @@ import {
 import { disconnectUser } from "../../db/users";
 import { auth } from "../../db";
 import { getMemberInfos } from "../../db/member";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -48,9 +49,11 @@ export default function Account() {
 		};
 	}, []);
 
-	const handleToggleTheme = () => {
+	const handleToggleTheme = async () => {
 		toggleTheme();
-		setIsDarkTheme((prevState) => !prevState);
+		const newTheme = !isDarkTheme;
+		setIsDarkTheme(newTheme);
+		await AsyncStorage.setItem("theme", newTheme ? "dark" : "light");
 	};
 
 	const handleLogout = async () => {
@@ -148,9 +151,11 @@ export default function Account() {
 						</View>
 					)}
 					<Text
-						className=" ml-6 mb-4 text-xl mt-3"
+						className="w-10/12 mx-auto mb-4 text-xl mt-12"
 						style={{ color: theme.colors.text }}
-					></Text>
+					>
+						Paramètres
+					</Text>
 					<View />
 					<View
 						className="w-11/12 mx-auto"

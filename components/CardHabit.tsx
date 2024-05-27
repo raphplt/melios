@@ -24,7 +24,7 @@ export default function CardHabit({ habit, navigation }: any) {
 	}, []);
 
 	return (
-		<View className="w-11/12 mx-auto  my-2 flex flex-row items-center justify-evenly">
+		<View className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly">
 			<View
 				className="flex flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
 				style={{ backgroundColor: theme.colors.backgroundSecondary }}

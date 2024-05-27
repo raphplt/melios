@@ -69,7 +69,10 @@ export default function MultipleChoice(props: any) {
 					props.goToNextQuestion(selectedAnswers);
 				}}
 			>
-				<Text style={{ color: theme.colors.text }} className="text-lg text-center">
+				<Text
+					style={{ color: theme.colors.textSecondary }}
+					className="text-lg text-center"
+				>
 					Continuer
 				</Text>
 			</Pressable>

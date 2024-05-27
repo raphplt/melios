@@ -102,7 +102,7 @@ export default function Progression() {
 		}
 
 		habits.forEach((habit: any) => {
-			habitCompletion[habit.name] = 0; // Initialize each habit with 0 completions
+			habitCompletion[habit.name] = 0;
 			for (let i = 0; i < days; i++) {
 				const date = moment().subtract(i, "days").format("YYYY-MM-DD");
 				if (habit.logs) {
@@ -110,7 +110,7 @@ export default function Progression() {
 						(log: any) => log.date === date && log.done === true
 					);
 					if (logsForDay.length > 0) {
-						habitCompletion[habit.name] += 1; // Increment the completion count for the habit
+						habitCompletion[habit.name] += 1;
 					}
 				}
 			}
@@ -176,7 +176,7 @@ export default function Progression() {
 									: theme.colors.backgroundSecondary,
 						}}
 					>
-						<Text style={{ color: theme.colors.textSecondary }}>Jour</Text>
+						<Text style={{ color: theme.colors.text }}>Jour</Text>
 					</Pressable>
 					<Pressable
 						onPress={() => handlePress("Semaine")}
@@ -223,12 +223,6 @@ export default function Progression() {
 					<HabitCard statistic={comparedToYesterday} text="vs hier" theme={theme} />
 				</View>
 				<ScrollView className="flex flex-col mt-2">
-					<Text className="ml-6 text-lg" style={{ color: theme.colors.text }}>
-						{/* {Object.keys(habitLastDaysCompleted).length || 0} /{" "}
-					{habits && habits.length} */}
-						Habitudes complétés
-					</Text>
-
 					<HabitsCompleted
 						habits={habits}
 						habitLastDaysCompleted={habitLastDaysCompleted}

@@ -7,6 +7,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { ThemeContext } from "../components/ThemContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import { isUserConnected } from "../db/users";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -31,14 +32,24 @@ export default function RootLayout() {
 	}, [loaded]);
 
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
 	const [theme, setTheme] = useState(
 		useColorScheme() === "dark" ? DarkTheme : DefaultTheme
 	);
 
+	useEffect(() => {
+		(async () => {
+			const savedTheme = await AsyncStorage.getItem("theme");
+			setTheme(savedTheme === "dark" ? DarkTheme : DefaultTheme);
+		})();
+	}, []);
+
 	const toggleTheme = () => {
-		setTheme((prevTheme) =>
-			prevTheme === DefaultTheme ? DarkTheme : DefaultTheme
-		);
+		setTheme((prevTheme) => {
+			const newTheme = prevTheme === DefaultTheme ? DarkTheme : DefaultTheme;
+			AsyncStorage.setItem("theme", newTheme === DarkTheme ? "dark" : "light");
+			return newTheme;
+		});
 	};
 
 	useEffect(() => {
@@ -46,7 +57,15 @@ export default function RootLayout() {
 			const user = await isUserConnected();
 			if (user) {
 				setIsAuthenticated(true);
+				await AsyncStorage.setItem("isAuthenticated", "true");
 			}
+		})();
+	}, []);
+
+	useEffect(() => {
+		(async () => {
+			const savedAuthState = await AsyncStorage.getItem("isAuthenticated");
+			setIsAuthenticated(savedAuthState === "true");
 		})();
 	}, []);
 
@@ -72,14 +91,19 @@ export default function RootLayout() {
 									title: "Choix des habitudes",
 								}}
 							/>
+							<Stack.Screen
+								name="habitDetail"
+								options={{
+									title: "Détail de l'habitude",
+								}}
+							/>
 						</Stack>
 					) : (
-						<Stack screenOptions={{ headerShown: false }}>
+						<Stack>
 							<Stack.Screen
 								name="register"
-								// component={Register}
 								options={{
-									headerShown: false,
+									title: "Inscription",
 								}}
 							/>
 						</Stack>

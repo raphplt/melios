@@ -10,7 +10,6 @@ export const getAllHabits = async () => {
 		const storedHabits = await AsyncStorage.getItem(LOCAL_STORAGE_KEY);
 
 		if (storedHabits) {
-			console.log("Récupération des habitudes depuis le local storage...");
 			return JSON.parse(storedHabits);
 		}
 

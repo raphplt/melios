@@ -23,7 +23,9 @@ export default function Activity({ habit }: any) {
 		<View
 			className="h-64 w-40 mx-2 rounded-xl"
 			style={{
-				backgroundColor: theme.colors.backgroundSecondary,
+				backgroundColor: theme.colors.background,
+				borderColor: theme.colors.border,
+				borderWidth: 1,
 			}}
 		>
 			<View
@@ -33,7 +35,14 @@ export default function Activity({ habit }: any) {
 				className="h-14 rounded-t-xl"
 			>
 				<View>
-					<Text className=" text-lg italic font-semibold text-gray-900 right-2 top-2 absolute">
+					<Text
+						className=" text-lg italic font-semibold text-gray-900 right-2 top-2 absolute rounded-2xl px-2 border-[1px]"
+						style={{
+							color: theme.colors.textSecondary,
+							backgroundColor: theme.colors.text,
+							borderColor: theme.colors.border,
+						}}
+					>
 						{habitInfos.duration}''
 					</Text>
 				</View>
@@ -43,7 +52,7 @@ export default function Activity({ habit }: any) {
 			</View>
 			<View className="flex flex-col justify-around items-center mt-2 h-2/3">
 				<Text
-					className="text-lg w-10/12 mx-auto font-semibold text-gray-900 text-center"
+					className="text-md w-10/12 mx-auto font-semibold text-gray-900 text-center"
 					style={{
 						color: theme.colors.text,
 					}}
@@ -52,7 +61,7 @@ export default function Activity({ habit }: any) {
 				</Text>
 				<FontAwesome
 					name="arrow-circle-right"
-					size={24}
+					size={30}
 					color={theme.colors.text}
 				/>
 			</View>

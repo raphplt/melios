@@ -39,6 +39,8 @@ export default function HabitsCompleted({
 							key={index}
 							className="drop-shadow-md flex flex-row items-center justify-between px-5 my-2 py-3 mx-auto w-11/12 rounded-xl"
 							style={{
+								borderColor: theme.colors.border,
+								borderWidth: 1,
 								backgroundColor:
 									habitLastDaysCompleted[habit.name] >= dateLength
 										? "#c9ffc9"

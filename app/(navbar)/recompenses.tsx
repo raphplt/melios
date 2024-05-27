@@ -3,7 +3,7 @@ import { Text, View } from "../../components/Themed";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import { getRewards } from "../../db/rewards";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native";
 import { Image } from "react-native";
 import Points from "../../components/Points";
 

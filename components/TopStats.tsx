@@ -88,31 +88,34 @@ export default function TopStats({ habits }: any) {
 
 	return (
 		<View
-			style={{ backgroundColor: theme.colors.primary }}
-			className="flex items-center justify-around flex-row mt-6 w-[95%] py-3 mx-auto rounded-xl"
+			style={{ backgroundColor: theme.colors.backgroundTertiary }}
+			className="flex items-center justify-around flex-row mt-3 w-[95%] py-3 mx-auto rounded-xl"
 		>
 			<View
-				style={{ backgroundColor: theme.colors.primary }}
+				style={{ backgroundColor: theme.colors.backgroundTertiary }}
 				className="flex items-center justify-center flex-col"
 			>
 				<Image
 					source={require("../assets/images/icons/flamme.png")}
 					style={{ width: 50, height: 50, resizeMode: "contain" }}
 				/>
-				<Text style={{ color: theme.colors.text }} className="text-xl mt-1">
+				<Text
+					style={{ color: theme.colors.textSecondary }}
+					className="text-xl mt-1"
+				>
 					{scoreHabits} %
 				</Text>
 			</View>
 
 			<View
-				style={{ backgroundColor: theme.colors.primary }}
+				style={{ backgroundColor: theme.colors.backgroundTertiary }}
 				className="w-2/3 flex flex-col gap-2"
 			>
 				<View
-					style={{ backgroundColor: theme.colors.primary }}
+					style={{ backgroundColor: theme.colors.backgroundTertiary }}
 					className="flex items-center flex-row justify-between"
 				>
-					<Text style={{ color: theme.colors.text }} className="text-xl">
+					<Text style={{ color: theme.colors.textSecondary }} className="text-lg">
 						{lastDaysCompleted} jours d'affilés
 					</Text>
 					<Points />

@@ -13,5 +13,6 @@ export type Theme = {
 		activeThumb: string;
 		inactiveThumb: string;
 		backgroundSecondary: string;
+		backgroundTertiary: string;
 	};
 };

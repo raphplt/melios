@@ -11,7 +11,6 @@ import { auth, db } from ".";
 export const getRewards = async () => {
 	try {
 		const uid: any = auth.currentUser?.uid || null;
-		console.log("uid", uid);
 
 		const rewardsCollectionRef = collection(db, "rewards");
 

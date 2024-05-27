@@ -8,13 +8,13 @@ export default function ActivitiesContainer({ userHabits }: any) {
 
 	return (
 		<View
-			className=" mt-8 py-4 mb-24 pb-10"
+			className="mt-8 py-4 mb-24 pb-10 rounded-t-2xl"
 			style={{
-				backgroundColor: theme.colors.primary,
+				backgroundColor: theme.colors.backgroundSecondary,
 			}}
 		>
 			<Text
-				className="text-2xl font-bold mb-3 w-10/12 mx-auto"
+				className="text-lg font-bold mb-3 w-10/12 mx-auto"
 				style={{
 					color: theme.colors.text,
 				}}

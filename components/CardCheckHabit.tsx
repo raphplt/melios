@@ -9,9 +9,10 @@ import { getHabitById } from "../db/habits";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { setRewards } from "../db/rewards";
+import { Link } from "expo-router";
 
 export default function CardCheckHabit({
-	habit,
+	habit = [],
 	onHabitStatusChange,
 	completed,
 }: any) {
@@ -20,10 +21,10 @@ export default function CardCheckHabit({
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
 	const colorDifficulties: any = {
-		1: "#77DD77",
-		2: "#FDFD96",
-		3: "#FFB347",
-		4: "#FF6961",
+		1: "#00A600",
+		2: "#0080ff",
+		3: "#FFA500",
+		4: "#FF0000",
 	};
 
 	const navigation: any = useNavigation();
@@ -48,11 +49,9 @@ export default function CardCheckHabit({
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards(habitInfos.difficulty);
 
-		// Call the callback function to update habit status in parent
 		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);
 
-		// Update completed/uncompleted habits directly
 		if (habit.logs) {
 			const lastLog = habit.logs[habit.logs.length - 1];
 			if (lastLog && lastLog.date === date && lastLog.done === true) {
@@ -65,35 +64,32 @@ export default function CardCheckHabit({
 		}
 	};
 
-	useEffect(
-		() => {
-			if (habit.logs) {
-				const lastLog = habit.logs[habit.logs.length - 1];
-				if (lastLog && lastLog.date === date && lastLog.done === true) {
-					setToggleCheckBox(true);
-				} else {
-					setToggleCheckBox(false);
-				}
+	useEffect(() => {
+		if (habit.logs) {
+			const lastLog = habit.logs[habit.logs.length - 1];
+			if (lastLog && lastLog.date === date && lastLog.done === true) {
+				setToggleCheckBox(true);
 			} else {
 				setToggleCheckBox(false);
 			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
-	);
+		} else {
+			setToggleCheckBox(false);
+		}
+	}, []);
 
 	return (
 		<View className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly">
 			<Pressable
-				onPress={() =>
+				onPress={() => {
+					console.log("habitInfos 1 ", habitInfos, typeof habitInfos);
 					navigation.navigate("habitDetail", {
-						habit: habit,
-						habitInfos: habitInfos,
-					})
-				}
+						habit: habit.name,
+						habitInfos: JSON.stringify(habitInfos),
+					});
+				}}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-xl basis-4/5 border-[1px]"
+					className="flex items-center flex-row justify-around py-2 rounded-2xl basis-4/5 border-[1px]"
 					style={{
 						borderColor:
 							colorDifficulties[habitInfos.difficulty] || theme.colors.text,
@@ -105,7 +101,7 @@ export default function CardCheckHabit({
 							color: theme.colors.text,
 							textDecorationLine: completed ? "line-through" : "none",
 						}}
-						className="ml-2 text-[16px] line-clamp-2 w-3/4"
+						className="ml-2 text-[14px] line-clamp-2 w-3/4"
 					>
 						{habit.name}
 					</Text>
@@ -120,7 +116,7 @@ export default function CardCheckHabit({
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
-					color={theme.colors.primary}
+					color={colorDifficulties[habitInfos.difficulty] || theme.colors.primary}
 					disabled={
 						habit.logs ? habit.logs[habit.logs.length - 1]?.date === date : false
 					}

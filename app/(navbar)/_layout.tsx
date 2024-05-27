@@ -36,7 +36,7 @@ export default function TabLayout() {
 								marginLeft: 15,
 							}}
 						>
-							<Melios />
+							<Melios fill={theme.colors.text} />
 						</View>
 					),
 					headerRight: () => (

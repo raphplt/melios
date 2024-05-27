@@ -107,13 +107,11 @@ export default function Index() {
 
 	const handleHabitStatusChange = (habit: any, done: boolean) => {
 		if (done) {
-			// Si l'habitude est terminée, ajoutez-la à completedHabits et supprimez-la de uncompletedHabits
 			setCompletedHabits((prevHabits) => [...prevHabits, habit] as any);
 			setUncompletedHabits((prevHabits) =>
 				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
 			);
 		} else {
-			// Si l'habitude n'est pas terminée, ajoutez-la à uncompletedHabits et supprimez-la de completedHabits
 			setUncompletedHabits((prevHabits) => [...prevHabits, habit] as any);
 			setCompletedHabits((prevHabits) =>
 				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
@@ -153,16 +151,8 @@ export default function Index() {
 				</View>
 				<View
 					style={{ backgroundColor: theme.colors.background }}
-					className="flex justify-between flex-row items-center mt-4 w-10/12 mx-auto"
+					className="flex justify-end flex-row items-center mt-4 w-10/12 mx-auto"
 				>
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="text-center text-xl"
-					>
-						Mes habitudes
-					</Text>
 					<Pressable
 						onPress={() => navigation.navigate("select")}
 						className="bg-blue-500 rounded-full p-2"
@@ -173,7 +163,7 @@ export default function Index() {
 
 				{userHabits.length > 0 ? (
 					<View
-						className="flex flex-row flex-wrap justify-center mt-4"
+						className="flex flex-row flex-wrap justify-center mt-2"
 						style={{ backgroundColor: theme.colors.background }}
 					>
 						<View

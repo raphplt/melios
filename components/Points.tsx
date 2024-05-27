@@ -39,13 +39,13 @@ export default function Points() {
 		>
 			<Text
 				style={{
-					color: theme.colors.text,
+					color: theme.colors.textSecondary,
 					fontSize: 20,
 				}}
 			>
 				{rewards.points || 0}
 			</Text>
-			<FontAwesome5 name="coins" size={20} color={theme.colors.text} />
+			<FontAwesome5 name="coins" size={20} color={theme.colors.textSecondary} />
 		</View>
 	);
 }
