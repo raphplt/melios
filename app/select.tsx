@@ -71,7 +71,7 @@ export default function Select() {
 					paddingVertical: 10,
 					borderRadius: 10,
 				}}
-				onPress={() => navigation.navigate("index")}
+				onPress={() => navigation.navigate("(navbar)")}
 			>
 				<View className="flex items-center justify-center">
 					<Text className="text-center text-lg text-white ">Valider</Text>

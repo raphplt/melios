@@ -53,13 +53,13 @@ export const Questions = [
 		questionType: "Text",
 	},
 	{
-		question: "Quel est votre adresse mail ?",
+		question: "Votre adresse email",
 		slug: "email",
 		answers: [],
 		questionType: "Text",
 	},
 	{
-		question: "Quel est votre mot de passe ?",
+		question: "Choisir un mot de passe",
 		slug: "password",
 		answers: [],
 		questionType: "Password",

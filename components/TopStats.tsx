@@ -6,6 +6,7 @@ import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getRewards } from "../db/rewards";
 import Points from "./Points";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function TopStats({ habits }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -34,7 +35,10 @@ export default function TopStats({ habits }: any) {
 				}
 			} catch (error) {
 				setLoading(false);
-				console.error("Erreur lors de la récupération des récompenses : ", error);
+				console.log(
+					"Erreur lors de la récupération des récompenses on TopStats: ",
+					error
+				);
 			}
 		})();
 
@@ -87,50 +91,47 @@ export default function TopStats({ habits }: any) {
 	}, [habits, date]);
 
 	return (
-		<View
-			style={{ backgroundColor: theme.colors.backgroundTertiary }}
-			className="flex items-center justify-around flex-row mt-3 w-[95%] py-3 mx-auto rounded-xl"
-		>
-			<View
-				style={{ backgroundColor: theme.colors.backgroundTertiary }}
-				className="flex items-center justify-center flex-col"
+		<View className="bg-transparent">
+			<LinearGradient
+				colors={["rgb(128, 183, 255)", "rgb(10, 132, 255)"]}
+				style={{
+					borderColor: theme.colors.border,
+					borderWidth: 1,
+				}}
+				className="flex items-center justify-around flex-row mt-3 w-[95%] py-3 mx-auto rounded-xl"
 			>
-				<Image
-					source={require("../assets/images/icons/flamme.png")}
-					style={{ width: 50, height: 50, resizeMode: "contain" }}
-				/>
-				<Text
-					style={{ color: theme.colors.textSecondary }}
-					className="text-xl mt-1"
-				>
-					{scoreHabits} %
-				</Text>
-			</View>
-
-			<View
-				style={{ backgroundColor: theme.colors.backgroundTertiary }}
-				className="w-2/3 flex flex-col gap-2"
-			>
-				<View
-					style={{ backgroundColor: theme.colors.backgroundTertiary }}
-					className="flex items-center flex-row justify-between"
-				>
-					<Text style={{ color: theme.colors.textSecondary }} className="text-lg">
-						{lastDaysCompleted} jours d'affilés
+				<View className="flex items-center justify-center flex-col bg-transparent">
+					<Image
+						source={require("../assets/images/icons/flamme.png")}
+						style={{ width: 50, height: 50, resizeMode: "contain" }}
+					/>
+					<Text
+						style={{ color: theme.colors.textSecondary }}
+						className="text-xl mt-1"
+					>
+						{scoreHabits} %
 					</Text>
-					<Points />
 				</View>
 
-				<View
-					className="flex  flex-row justify-evenly py-2 rounded-xl"
-					style={{ backgroundColor: theme.colors.background }}
-				>
-					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
-					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
-					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
-					<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+				<View className="w-2/3 flex flex-col gap-2 bg-transparent">
+					<View className="flex items-center flex-row justify-between bg-transparent">
+						<Text style={{ color: theme.colors.textSecondary }} className="text-lg">
+							{lastDaysCompleted} jours d'affilés
+						</Text>
+						<Points />
+					</View>
+
+					<View
+						className="flex  flex-row justify-evenly py-2 rounded-xl"
+						style={{ backgroundColor: theme.colors.background }}
+					>
+						<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+						<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+						<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+						<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
+					</View>
 				</View>
-			</View>
+			</LinearGradient>
 		</View>
 	);
 }

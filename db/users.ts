@@ -3,10 +3,12 @@ import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	onAuthStateChanged,
+	fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { auth } from ".";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from ".";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const createUser = async (form: any) => {
 	try {
@@ -47,8 +49,9 @@ export const createUser = async (form: any) => {
 			temps: temps,
 			nom: nom,
 		});
-		console.log("Document written with ID: ", newMemberRef.id);
 
+		await AsyncStorage.setItem("user", JSON.stringify(user));
+		console.log("Document written with ID: ", newMemberRef.id);
 	} catch (error) {
 		console.error("Erreur lors de la création de l'utilisateur : ", error);
 	}
@@ -57,6 +60,7 @@ export const createUser = async (form: any) => {
 export const disconnectUser = async () => {
 	try {
 		await getAuth().signOut();
+		await AsyncStorage.removeItem("user");
 	} catch (error) {
 		console.error("Erreur lors de la déconnexion : ", error);
 	}
@@ -70,6 +74,9 @@ export const loginUser = async (email: string, password: string) => {
 			password
 		);
 		const user = userCredential.user;
+
+		await AsyncStorage.setItem("user", JSON.stringify(user));
+
 		return user;
 	} catch (error: any) {
 		console.error("Erreur lors de la connexion : ", error, error.code);
@@ -105,4 +112,10 @@ export const isUserConnected = async () => {
 		);
 		return null;
 	}
+};
+
+export const checkEmailExists = async (email: string) => {
+	const auth = getAuth();
+	const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+	return signInMethods.length > 0;
 };

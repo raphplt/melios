@@ -69,6 +69,8 @@ export default function RootLayout() {
 		})();
 	}, []);
 
+	
+
 	return (
 		<>
 			<StatusBar
@@ -104,6 +106,13 @@ export default function RootLayout() {
 								name="register"
 								options={{
 									title: "Inscription",
+								}}
+							/>
+							<Stack.Screen
+								name="login"
+								options={{
+									title: "Connexion",
+									headerShown: false,
 								}}
 							/>
 						</Stack>

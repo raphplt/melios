@@ -26,7 +26,7 @@ export default function TabTwoScreen() {
 				}
 			} catch (error) {
 				setLoading(false);
-				console.error("Erreur lors de la récupération des récompenses : ", error);
+				console.log("Erreur lors de la récupération des récompenses : ", error);
 			}
 		})();
 
@@ -43,7 +43,7 @@ export default function TabTwoScreen() {
 				setRewards(data[0]);
 			}
 		} catch (error) {
-			console.error("Erreur lors de la récupération des récompenses : ", error);
+			console.log("Erreur lors de la récupération des récompenses : ", error);
 		} finally {
 			setRefreshing(false);
 		}
@@ -78,18 +78,18 @@ export default function TabTwoScreen() {
 				}
 			>
 				<View
-					className="flex flex-row justify-between my-4 rounded-xl text-white py-3 px-3 w-11/12 mx-auto"
+					className="flex flex-row justify-between my-4 mx-auto rounded-xl text-white py-3 px-3 w-11/12"
 					style={{
 						backgroundColor: theme.colors.primary,
 					}}
 				>
 					<Text
-						className="text-center text-xl"
+						className="text-center text-lg"
 						style={{
-							color: theme.colors.text,
+							color: theme.colors.textSecondary,
 						}}
 					>
-						Mes points :
+						Mes points
 					</Text>
 					<Text
 						className="text-center text-xl "

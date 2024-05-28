@@ -1,12 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, TextInput, Button, Text, Pressable } from "react-native";
 import { ThemeContext } from "../ThemContext";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function InputPassword(props: any) {
 	const { theme } = useContext(ThemeContext);
 	const [password, setPassword] = useState("");
 	const [isEmpty, setIsEmpty] = useState(true);
 	const [showError, setShowError] = useState(false);
+	const [showPassword, setShowPassword] = useState(false); // Nouvelle variable d'état
 
 	const resetText = () => {
 		setPassword("");
@@ -20,7 +22,7 @@ export default function InputPassword(props: any) {
 
 	const handlePasswordChange = (inputText: string) => {
 		setPassword(inputText);
-		setIsEmpty(inputText.trim() === "");
+		setIsEmpty(inputText.trim().length < 6);
 	};
 
 	return (
@@ -31,15 +33,39 @@ export default function InputPassword(props: any) {
 			>
 				{props.question}
 			</Text>
-			<TextInput
-				className="rounded-lg my-3 py-2 px-3 text-lg"
-				style={{
-					color: theme.colors.text,
-					backgroundColor: theme.colors.backgroundSecondary,
-				}}
-				onChangeText={handlePasswordChange}
-				value={password}
-			/>
+			<View
+				style={{ flexDirection: "row", alignItems: "center", position: "relative" }}
+			>
+				<TextInput
+					style={{
+						flex: 1,
+						color: theme.colors.text,
+						backgroundColor: theme.colors.backgroundSecondary,
+						borderRadius: 10,
+						paddingHorizontal: 10,
+						paddingVertical: 5,
+						fontSize: 16,
+					}}
+					onChangeText={handlePasswordChange}
+					value={password}
+					secureTextEntry={!showPassword}
+				/>
+				<Pressable
+					onPress={() => setShowPassword(!showPassword)}
+					style={{
+						position: "absolute",
+						right: 10,
+						padding: 5,
+					}}
+				>
+					<FontAwesome5
+						name={showPassword ? "eye-slash" : "eye"}
+						size={20}
+						color={theme.colors.text}
+					/>
+				</Pressable>
+			</View>
+
 			<Pressable
 				className={`bg-blue-500 text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12 ${
 					isEmpty ? "opacity-50" : ""
@@ -53,13 +79,16 @@ export default function InputPassword(props: any) {
 				}}
 				disabled={isEmpty}
 			>
-				<Text style={{ color: theme.colors.text }} className="text-lg text-center">
-					Finir
+				<Text
+					style={{ color: theme.colors.textSecondary }}
+					className="text-lg text-center"
+				>
+					Créer mon compte
 				</Text>
 			</Pressable>
 			{showError && (
 				<Text style={{ color: "red", textAlign: "center" }}>
-					Le champ ne peut pas être vide.
+					Le mot de passe doit comporter au moins 6 caractères.
 				</Text>
 			)}
 		</View>

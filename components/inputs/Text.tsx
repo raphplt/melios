@@ -42,7 +42,7 @@ export default function InputText(props: any) {
 				value={text}
 			/>
 			<Pressable
-				className={`bg-blue-500 text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12 ${
+				className={`bg-blue-500 text-white font-bold py-3 px-4 rounded-2xl my-3 mt-12 ${
 					isEmpty ? "opacity-50" : ""
 				}`}
 				onPress={() => {
