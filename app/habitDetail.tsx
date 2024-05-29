@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { View, Text } from "react-native";
 import { ThemeContext } from "../components/ThemContext";
-import { useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -20,17 +20,33 @@ export default function HabitDetail() {
 			console.error("Failed to parse habitInfos:", error);
 		}
 	}
-
-	if (habitInfos) {
-		console.log(
-			"habitInfos",
-			JSON.stringify(habitInfos, null, 2),
-			typeof habitInfos
-		);
-	}
+	const isPresented = router.canGoBack();
 
 	return (
-		<ScrollView>
+		<ScrollView
+			style={{
+				backgroundColor: theme.colors.background,
+				paddingTop: 20,
+				flex: 1,
+			}}
+			className="max-h-[50vh] mx-auto rounded-t-2xl border-2 border-gray-500 overflow-y-auto bottom-0 absolute"
+		>
+			{isPresented && (
+				<Link href={"../"}>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginTop: 10,
+							marginLeft: 10,
+						}}
+					>
+						<Ionicons name="chevron-back" size={24} color={theme.colors.text} />
+						<Text style={{ color: theme.colors.text, fontSize: 16 }}>Retour</Text>
+					</View>
+				</Link>
+			)}
+
 			<View className="flex flex-col items-center justify-center mt-12">
 				<Text
 					style={{
@@ -46,12 +62,12 @@ export default function HabitDetail() {
 
 				<Text
 					style={{ color: theme.colors.text }}
-					className="text-[16px] my-10 text-center w-10/12 mx-auto"
+					className="text-[16px] my-6 text-center w-10/12 mx-auto"
 				>
 					“ {habitInfos.description} ”
 				</Text>
 				<View
-					className="flex flex-col items-center justify-between w-11/12 mx-auto my-5 px-12"
+					className="flex flex-col items-center justify-between w-11/12 mx-auto my-2 px-12"
 					style={{
 						backgroundColor: theme.colors.backgroundSecondary,
 						borderColor: theme.colors.border,
@@ -65,7 +81,7 @@ export default function HabitDetail() {
 							justifyContent: "space-between",
 							width: "100%",
 							alignItems: "center",
-							marginVertical: 15,
+							marginVertical: 5,
 						}}
 					>
 						<Ionicons name="time" size={24} color="black" />
@@ -79,7 +95,7 @@ export default function HabitDetail() {
 							justifyContent: "space-between",
 							width: "100%",
 							alignItems: "center",
-							marginVertical: 15,
+							marginVertical: 5,
 						}}
 					>
 						<MaterialIcons name="category" size={24} color="black" />
@@ -93,7 +109,21 @@ export default function HabitDetail() {
 							justifyContent: "space-between",
 							width: "100%",
 							alignItems: "center",
-							marginVertical: 15,
+							marginVertical: 5,
+						}}
+					>
+						<AntDesign name="clockcircleo" size={24} color="black" />
+						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
+							{habitInfos.moment}
+						</Text>
+					</View>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-between",
+							width: "100%",
+							alignItems: "center",
+							marginVertical: 5,
 						}}
 					>
 						<AntDesign name="linechart" size={24} color="black" />

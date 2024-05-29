@@ -103,7 +103,7 @@ export default function CardCheckHabit({
 						}}
 						className="ml-2 text-[14px] line-clamp-2 w-3/4"
 					>
-						{habit.name}
+						{habitInfos.moment}h - {habit.name}
 					</Text>
 					<Ionicons
 						name="flame"

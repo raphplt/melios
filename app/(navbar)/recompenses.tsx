@@ -7,7 +7,7 @@ import { ScrollView } from "react-native";
 import { Image } from "react-native";
 import Points from "../../components/Points";
 
-export default function TabTwoScreen() {
+export default function Recompenses() {
 	const { theme } = useContext(ThemeContext);
 
 	const isMounted = useRef(true);

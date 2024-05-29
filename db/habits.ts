@@ -1,16 +1,26 @@
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+	addDoc,
+	collection,
+	doc,
+	getDocs,
+	query,
+	updateDoc,
+	where,
+} from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LOCAL_STORAGE_KEY = "habitsData";
 
 // Fonction pour récupérer tous les documents de la collection "habits"
-export const getAllHabits = async () => {
+export const getAllHabits = async (forceRefresh = false) => {
 	try {
-		const storedHabits = await AsyncStorage.getItem(LOCAL_STORAGE_KEY);
+		if (!forceRefresh) {
+			const storedHabits = await AsyncStorage.getItem(LOCAL_STORAGE_KEY);
 
-		if (storedHabits) {
-			return JSON.parse(storedHabits);
+			if (storedHabits) {
+				return JSON.parse(storedHabits);
+			}
 		}
 
 		const habitsCollection = collection(db, "habits");
@@ -33,7 +43,7 @@ export const getAllHabits = async () => {
 };
 
 // Fonction pour récupérer un document de la collection "habits" par son id
-export const getHabitById = async (id : any) => {
+export const getHabitById = async (id: any) => {
 	try {
 		const habits = await getAllHabits();
 		return habits.find((habit: any) => habit.id === id);
@@ -61,4 +71,21 @@ export const getHabitById = async (id : any) => {
 // 		);
 // 		throw error;
 // 	}
+// };
+
+// export const updateHabitsByName = async () => {
+// 	const habitsCollection = collection(db, "habits");
+
+// 	await Promise.all(
+// 		exempleJSON.map(async (habit) => {
+// 			const q = query(habitsCollection, where("name", "==", habit.name));
+// 			const querySnapshot = await getDocs(q);
+
+// 			if (!querySnapshot.empty) {
+// 				const habitDoc = doc(habitsCollection, querySnapshot.docs[0].id);
+// 				await updateDoc(habitDoc, { moment: habit.moment });
+// 				console.log(`Document ${habit.name} updated`);
+// 			}
+// 		})
+// 	);
 // };

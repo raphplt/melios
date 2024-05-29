@@ -91,12 +91,15 @@ export default function RootLayout() {
 								name="select"
 								options={{
 									title: "Choix des habitudes",
+									animation: "fade",
 								}}
 							/>
 							<Stack.Screen
 								name="habitDetail"
 								options={{
 									title: "Détail de l'habitude",
+									presentation: "transparentModal",
+									headerShown: false,
 								}}
 							/>
 						</Stack>

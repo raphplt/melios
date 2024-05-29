@@ -65,7 +65,7 @@ export default function Index() {
 				setWelcomeMessage(`Bonsoir, ${username} !`);
 			}
 		})();
-	}, []);
+	}, [memberInfos.nom]);
 
 	const onRefresh = async () => {
 		setRefreshing(true);
@@ -194,6 +194,7 @@ export default function Index() {
 					<Text style={{ color: theme.colors.text }} className="text-lg font-bold">
 						{welcomeMessage}
 					</Text>
+
 					<Pressable
 						onPress={() => navigation.navigate("select")}
 						className="bg-blue-500 rounded-full p-2"
