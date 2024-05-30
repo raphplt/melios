@@ -103,7 +103,6 @@ export const isUserConnected = async () => {
 		});
 
 		const uid = await authPromise;
-		console.log("User is connected with uid: ", uid);
 		return uid;
 	} catch (error) {
 		console.log(

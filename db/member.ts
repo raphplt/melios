@@ -13,6 +13,7 @@ import {
 import { db } from ".";
 import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const setMemberHabit = async (habit: any) => {
 	try {
@@ -37,6 +38,7 @@ export const setMemberHabit = async (habit: any) => {
 					id: habit.id,
 					name: habit.name,
 					logs: [],
+					moment: habit.moment,
 				};
 
 				await updateDoc(memberDoc.ref, {

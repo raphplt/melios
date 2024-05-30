@@ -27,10 +27,17 @@ export default function CardHabit({ habit, navigation }: any) {
 		<View className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly">
 			<View
 				className="flex flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
-				style={{ backgroundColor: theme.colors.backgroundSecondary }}
+				style={{
+					backgroundColor: theme.colors.backgroundSecondary,
+					borderColor: habit.color || theme.colors.text,
+					borderWidth: 1,
+				}}
 			>
-				<Image source={habit.image} className="ml-3" />
-				<Text style={{ color: theme.colors.text }} className="ml-2 text-[16px]">
+				<Image source={habit.image} className="ml-2" />
+				<Text
+					style={{ color: theme.colors.text }}
+					className="ml-2 text-[16px] line-clamp-2 w-3/4"
+				>
 					{habit.name}
 				</Text>
 				<Text style={{ color: theme.colors.text }}>{habit.img}</Text>

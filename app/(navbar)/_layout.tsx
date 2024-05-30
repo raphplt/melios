@@ -1,5 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
+import { Tabs, useNavigation } from "expo-router";
 import { Pressable, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../components/ThemContext";
@@ -15,6 +15,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
 	const { theme } = useContext(ThemeContext);
+	const navigation: any = useNavigation();
 
 	return (
 		<Tabs>
@@ -42,7 +43,7 @@ export default function TabLayout() {
 					headerRight: () => (
 						<Pressable
 							onPress={() => {
-								console.log("Pressable");
+								navigation.navigate("account");
 							}}
 						>
 							<Feather

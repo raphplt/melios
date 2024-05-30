@@ -20,12 +20,6 @@ export default function CardCheckHabit({
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
-	const colorDifficulties: any = {
-		1: "#00A600",
-		2: "#0080ff",
-		3: "#FFA500",
-		4: "#FF0000",
-	};
 
 	const navigation: any = useNavigation();
 
@@ -91,8 +85,7 @@ export default function CardCheckHabit({
 				<View
 					className="flex items-center flex-row justify-around py-2 rounded-2xl basis-4/5 border-[1px]"
 					style={{
-						borderColor:
-							colorDifficulties[habitInfos.difficulty] || theme.colors.text,
+						borderColor: habitInfos.color || theme.colors.text,
 						backgroundColor: theme.colors.backgroundSecondary,
 					}}
 				>
@@ -108,7 +101,7 @@ export default function CardCheckHabit({
 					<Ionicons
 						name="flame"
 						size={24}
-						color={colorDifficulties[habitInfos.difficulty] || theme.colors.text}
+						color={habitInfos.color || theme.colors.text}
 					/>
 				</View>
 			</Pressable>
@@ -116,7 +109,7 @@ export default function CardCheckHabit({
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
-					color={colorDifficulties[habitInfos.difficulty] || theme.colors.primary}
+					color={habitInfos.color || theme.colors.primary}
 					disabled={
 						habit.logs ? habit.logs[habit.logs.length - 1]?.date === date : false
 					}
