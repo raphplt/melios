@@ -22,6 +22,7 @@ export default function Account() {
 	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const isMounted = useRef(true);
 	const [loading, setLoading] = useState(true);
+	const [notifications, setNotifications] = useState(false);
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -54,6 +55,11 @@ export default function Account() {
 		const newTheme = !isDarkTheme;
 		setIsDarkTheme(newTheme);
 		await AsyncStorage.setItem("theme", newTheme ? "dark" : "light");
+	};
+
+	const handleToggleNotifications = async () => {
+		setNotifications(!notifications);
+		await AsyncStorage.setItem("notifications", notifications ? "true" : "false");
 	};
 
 	const handleLogout = async () => {
@@ -171,6 +177,11 @@ export default function Account() {
 							title="Mode sombre"
 							onToggle={handleToggleTheme}
 							value={isDarkTheme}
+						/>
+						<ToggleButton
+							title="Notifications"
+							onToggle={handleToggleNotifications}
+							value={notifications}
 						/>
 					</View>
 				</ScrollView>

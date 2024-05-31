@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "../ThemContext";
 import Checkbox from "expo-checkbox";
-import { setMemberHabitLog } from "../db/member";
+import { setMemberHabitLog } from "../../db/member";
 import moment from "moment";
-import { getHabitById } from "../db/habits";
+import { getHabitById } from "../../db/habits";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { setRewards } from "../db/rewards";
-import { Link } from "expo-router";
+import { setRewards } from "../../db/rewards";
+import Animated, {
+	useSharedValue,
+	useAnimatedStyle,
+	withTiming,
+	withSpring,
+} from "react-native-reanimated";
 
 export default function CardCheckHabit({
 	habit = [],
@@ -22,6 +27,13 @@ export default function CardCheckHabit({
 	const [habitInfos, setHabitInfos] = useState<any>({});
 
 	const navigation: any = useNavigation();
+	const translateX = useSharedValue(0);
+
+	const animatedStyles = useAnimatedStyle(() => {
+		return {
+			transform: [{ translateX: translateX.value }],
+		};
+	});
 
 	useEffect(() => {
 		async function getHabitInfos() {
@@ -40,6 +52,8 @@ export default function CardCheckHabit({
 	}, []);
 
 	const setHabitDone = async () => {
+		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
+
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards(habitInfos.difficulty);
 
@@ -72,10 +86,13 @@ export default function CardCheckHabit({
 	}, []);
 
 	return (
-		<View className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly">
+		<Animated.View
+			style={[animatedStyles]}
+			className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly "
+		>
 			<Pressable
+				className="px-2"
 				onPress={() => {
-					console.log("habitInfos 1 ", habitInfos, typeof habitInfos);
 					navigation.navigate("habitDetail", {
 						habit: habit.name,
 						habitInfos: JSON.stringify(habitInfos),
@@ -83,21 +100,35 @@ export default function CardCheckHabit({
 				}}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-2xl basis-4/5 border-[1px]"
+					className="flex items-center flex-row justify-around py-2 rounded-xl "
 					style={{
-						borderColor: habitInfos.color || theme.colors.text,
-						backgroundColor: theme.colors.backgroundSecondary,
+						borderColor: theme.colors.border,
+						borderWidth: 1,
+						backgroundColor: theme.colors.cardBackground,
 					}}
 				>
-					<Text
-						style={{
-							color: theme.colors.text,
-							textDecorationLine: completed ? "line-through" : "none",
-						}}
-						className="ml-2 text-[14px] line-clamp-2 w-3/4"
-					>
-						{habitInfos.moment}h - {habit.name}
-					</Text>
+					<View className="flex flex-row">
+						<Text
+							className="font-semibold"
+							style={{
+								marginLeft: 5,
+								color: theme.colors.text,
+							}}
+						>
+							{habit.moment}h
+						</Text>
+
+						<Text
+							style={{
+								color: theme.colors.text,
+								textDecorationLine: completed ? "line-through" : "none",
+								marginLeft: 6,
+							}}
+							className="text-[14px]  w-3/4"
+						>
+							{habit.name}
+						</Text>
+					</View>
 					<Ionicons
 						name="flame"
 						size={24}
@@ -105,7 +136,7 @@ export default function CardCheckHabit({
 					/>
 				</View>
 			</Pressable>
-			<View>
+			<View className="flex items-center justify-center px-2">
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
@@ -115,6 +146,6 @@ export default function CardCheckHabit({
 					}
 				/>
 			</View>
-		</View>
+		</Animated.View>
 	);
 }

@@ -7,6 +7,7 @@ import moment from "moment";
 import { RefreshControl, ScrollView } from "react-native";
 import HabitsCompleted from "../../components/progression/HabitsCompleted";
 import { HabitCard } from "../../components/progression/HabitCard";
+import SetTime from "../../components/progression/SetTime";
 
 export default function Progression() {
 	const { theme } = useContext(ThemeContext);
@@ -166,62 +167,36 @@ export default function Progression() {
 					className="flex mt-3 items-center mx-auto justify-between flex-row"
 					style={{ backgroundColor: theme.colors.background }}
 				>
-					<Pressable
-						onPress={() => handlePress("Jour")}
-						className="px-5 py-2 m-2 rounded-xl"
-						style={{
-							backgroundColor:
-								activeButton === "Jour"
-									? theme.colors.primary
-									: theme.colors.backgroundSecondary,
-						}}
-					>
-						<Text style={{ color: theme.colors.text }}>Jour</Text>
-					</Pressable>
-					<Pressable
-						onPress={() => handlePress("Semaine")}
-						className="px-5 py-2 m-2 rounded-xl"
-						style={{
-							backgroundColor:
-								activeButton === "Semaine"
-									? theme.colors.primary
-									: theme.colors.backgroundSecondary,
-						}}
-					>
-						<Text style={{ color: theme.colors.text }}>Semaine</Text>
-					</Pressable>
-					<Pressable
-						onPress={() => handlePress("Mois")}
-						className="px-5 py-2 m-2 rounded-xl"
-						style={{
-							backgroundColor:
-								activeButton === "Mois"
-									? theme.colors.primary
-									: theme.colors.backgroundSecondary,
-						}}
-					>
-						<Text style={{ color: theme.colors.text }}>Mois</Text>
-					</Pressable>
-					<Pressable
-						onPress={() => handlePress("Année")}
-						className="px-5 py-2 m-2 rounded-xl"
-						style={{
-							backgroundColor:
-								activeButton === "Année"
-									? theme.colors.primary
-									: theme.colors.backgroundSecondary,
-						}}
-					>
-						<Text style={{ color: theme.colors.text }}>Année</Text>
-					</Pressable>
+					<SetTime
+						text="Jour"
+						handlePress={handlePress}
+						activeButton={activeButton}
+					/>
+					<SetTime
+						text="Semaine"
+						handlePress={handlePress}
+						activeButton={activeButton}
+					/>
+					<SetTime
+						text="Mois"
+						handlePress={handlePress}
+						activeButton={activeButton}
+					/>
+					<SetTime
+						text="Année"
+						handlePress={handlePress}
+						activeButton={activeButton}
+					/>
 				</View>
-				<View
-					className="flex items-center justify-around flex-row mb-3"
-					style={{ backgroundColor: theme.colors.background }}
-				>
-					<HabitCard statistic={scoreHabits} text=" complétées" theme={theme} />
-					<HabitCard statistic={comparedToYesterday} text="vs hier" theme={theme} />
-				</View>
+				{activeButton === "Jour" && (
+					<View
+						className="flex items-center justify-around flex-row mb-3"
+						style={{ backgroundColor: theme.colors.background }}
+					>
+						<HabitCard statistic={scoreHabits} text="complétées" theme={theme} />
+						<HabitCard statistic={comparedToYesterday} text="vs hier" theme={theme} />
+					</View>
+				)}
 				<ScrollView className="flex flex-col mt-2">
 					<HabitsCompleted
 						habits={habits}

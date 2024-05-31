@@ -20,7 +20,6 @@ export default function Register() {
 
 	const goToNextQuestion = async (answer: any) => {
 		if (Questions[currentQuestionIndex].slug === "email") {
-			console.log("answer", answer);
 			const emailExists = await checkEmailExists(answer);
 			if (emailExists) {
 				Alert.alert("Erreur", "Cette adresse e-mail est déjà utilisée.", [
@@ -153,7 +152,10 @@ export default function Register() {
 				}}
 				className="bg-gray-200 p-2 rounded-xl mt-4 w-1/3 mx-auto border-[1px] border-gray-300"
 			>
-				<Text style={{ color: theme.colors.text }} className="text-center text-md">
+				<Text
+					style={{ color: theme.colors.textSecondary }}
+					className="text-center text-md"
+				>
 					ou Me connecter
 				</Text>
 			</Pressable>

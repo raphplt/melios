@@ -14,10 +14,12 @@ import { DarkTheme, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "react-native";
 import { getMemberHabits, getMemberInfos } from "../../db/member";
-import CardCheckHabit from "../../components/CardCheckHabit";
+import CardCheckHabit from "../../components/habits/CardCheckHabit";
 import moment from "moment";
 import ActivitiesContainer from "../../components/ActivitiesContainer";
 import { Entypo } from "@expo/vector-icons";
+import Background from "../../components/Svg/Background";
+import TopRow from "../../components/habits/TopRow";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -172,14 +174,16 @@ export default function Index() {
 		);
 	}
 
+	const missedHabitsCount = uncompletedHabits.filter(
+		(habit: any) => habit.moment < hours
+	).length;
+
 	return (
 		<>
 			<StatusBar
 				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
 				backgroundColor={
-					theme === DarkTheme
-						? theme.colors.backgroundSecondary
-						: theme.colors.backgroundSecondary
+					theme === DarkTheme ? theme.colors.background : theme.colors.background
 				}
 			/>
 			<ScrollView
@@ -188,14 +192,15 @@ export default function Index() {
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
 			>
-				<View style={{ backgroundColor: theme.colors.background }}>
+				<Background />
+				<View style={{ backgroundColor: "transparent" }}>
 					<TopStats habits={userHabits} />
 				</View>
 				<View
-					style={{ backgroundColor: theme.colors.background }}
+					style={{ backgroundColor: "transparent" }}
 					className="flex justify-between flex-row items-center mt-4 w-10/12 mx-auto"
 				>
-					<Text style={{ color: theme.colors.text }} className="text-lg font-bold">
+					<Text style={{ color: theme.colors.text }} className="text-xl font-bold">
 						{welcomeMessage}
 					</Text>
 
@@ -210,53 +215,46 @@ export default function Index() {
 				{userHabits.length > 0 ? (
 					<View
 						className="flex flex-row flex-wrap justify-center mt-2"
-						style={{ backgroundColor: theme.colors.background }}
+						style={{ backgroundColor: "transparent" }}
 					>
 						<View
-							className="flex flex-row flex-wrap justify-start py-3 mb-2"
-							style={{ backgroundColor: theme.colors.background }}
+							className="flex flex-row flex-wrap justify-start py-2 mb-2"
+							style={{ backgroundColor: "transparent" }}
 						>
-							<View className="mx-auto">
-								{uncompletedHabits.length > 0 &&
-								uncompletedHabits.filter((habit: any) => habit.moment > hours).length >
-									0 ? (
-									<Text
-										style={{ color: theme.colors.text }}
-										className="w-10/12 mx-auto text-[16px] font-semibold mb-2"
-									>
-										<View className="flex items-center justify-center flex-row">
-											<View>
-												<Ionicons name="time" size={24} color={theme.colors.text} />
-											</View>
-											<Text className="ml-3 font-semibold text-[16px]">
-												Prochaines habitudes
-											</Text>
-										</View>
-									</Text>
-								) : (
-									<View className="border-green-500 bg-green-100 border-2 rounded-lg flex-col flex items-center justify-center mx-auto w-full py-2 px-4">
-										<View className="flex flex-row items-center justify-center">
-											<View className="mx-2">
-												<Entypo name="trophy" size={24} color="black" />
-											</View>
-											<Text
-												className="mx-2 font-semibold text-lg"
-												style={{ color: theme.colors.text }}
-											>
-												Félicitations !
-											</Text>
+							{uncompletedHabits.length > 0 &&
+							uncompletedHabits.filter((habit: any) => habit.moment > hours).length >
+								0 ? (
+								<TopRow
+									icon="close-circle"
+									color="#FFD31A"
+									text="Prochaines habitudes"
+									number={
+										uncompletedHabits.filter((habit: any) => habit.moment >= hours).length
+									}
+								/>
+							) : (
+								<View className="border-green-500 bg-green-100 border-2 rounded-lg flex-col flex items-center justify-center mx-auto w-full py-2 px-4">
+									<View className="flex flex-row items-center justify-center">
+										<View className="mx-2">
+											<Entypo name="trophy" size={24} color="black" />
 										</View>
 										<Text
+											className="mx-2 font-semibold text-lg"
 											style={{ color: theme.colors.text }}
-											className="text-center w-3/4 mx-auto mt-2"
 										>
-											{completedHabits.length === userHabits.length
-												? `Vous avez validé toutes vos habitudes pour aujourd'hui !`
-												: `Vous n'avez pas d'habitudes à valider pour le moment.`}
+											Félicitations !
 										</Text>
 									</View>
-								)}
-							</View>
+									<Text
+										style={{ color: theme.colors.text }}
+										className="text-center w-3/4 mx-auto mt-2"
+									>
+										{completedHabits.length === userHabits.length
+											? `Vous avez validé toutes vos habitudes pour aujourd'hui !`
+											: `Vous n'avez pas d'habitudes à valider pour le moment.`}
+									</Text>
+								</View>
+							)}
 
 							{uncompletedHabits
 								.filter((habit: any) => habit.moment >= hours)
@@ -269,22 +267,15 @@ export default function Index() {
 								))}
 						</View>
 						<View
-							className="flex flex-row flex-wrap justify-start py-3 mb-2"
-							style={{ backgroundColor: theme.colors.background }}
+							className="flex flex-row flex-wrap justify-start py-2 mb-2"
+							style={{ backgroundColor: "transparent" }}
 						>
-							<Text
-								style={{ color: theme.colors.text }}
-								className="w-10/12 mx-auto text-[16px] font-semibold mb-2"
-							>
-								<View className="flex items-center justify-center flex-row">
-									<View>
-										<Ionicons name="checkmark-done" size={24} color={theme.colors.text} />
-									</View>
-									<Text className="ml-3 font-semibold text-[16px]">
-										Validées : {completedHabits.length}
-									</Text>
-								</View>
-							</Text>
+							<TopRow
+								icon="checkmark-circle"
+								color="#22C55E"
+								text="Validées"
+								number={completedHabits.length}
+							/>
 
 							{completedHabits.map((filteredHabit: any) => (
 								<CardCheckHabit
@@ -299,38 +290,44 @@ export default function Index() {
 							uncompletedHabits.filter((habit: any) => habit.moment < hours).length >
 								0 && (
 								<View
-									className="flex flex-row flex-wrap justify-start py-3 mb-2"
-									style={{ backgroundColor: theme.colors.background }}
+									className="flex flex-row flex-wrap justify-start py-2 mb-2"
+									style={{ backgroundColor: "transparent" }}
 								>
-									<Text
-										style={{ color: theme.colors.text }}
-										className="w-10/12 mx-auto text-[16px] font-semibold mb-2"
-									>
-										<Pressable onPress={() => setShowMissingHabits(!showMissingHabits)}>
-											<View className="flex items-center justify-center flex-row">
-												{showMissingHabits ? (
-													<Ionicons name="chevron-up" size={24} color={theme.colors.text} />
-												) : (
-													<Ionicons
-														name="chevron-down"
-														size={24}
-														color={theme.colors.text}
-													/>
-												)}
-												<Text className="ml-3 font-semibold text-[16px]">Manquées</Text>
-											</View>
-										</Pressable>
-									</Text>
+									<TopRow
+										icon="close-circle"
+										color="#C54922"
+										text="Manquées"
+										number={missedHabitsCount}
+									/>
+
 									{showMissingHabits ? (
-										uncompletedHabits
-											.filter((habit: any) => habit.moment < hours)
-											.map((filteredHabit: any) => (
-												<CardCheckHabit
-													key={filteredHabit.id}
-													habit={filteredHabit}
-													onHabitStatusChange={handleHabitStatusChange}
-												/>
-											))
+										<View
+											style={{ backgroundColor: "transparent" }}
+											className=" flex flex-col w-full"
+										>
+											{uncompletedHabits
+												.filter((habit: any) => habit.moment < hours)
+												.map((filteredHabit: any) => (
+													<CardCheckHabit
+														key={filteredHabit.id}
+														habit={filteredHabit}
+														onHabitStatusChange={handleHabitStatusChange}
+													/>
+												))}
+											<Pressable
+												onPress={() => setShowMissingHabits(false)}
+												className="rounded-2xl p-1 mt-2 px-6 mx-auto w-10/12"
+												style={{
+													borderColor: theme.colors.text,
+													borderWidth: 1,
+													backgroundColor: theme.colors.cardBackground,
+												}}
+											>
+												<Text style={{ color: theme.colors.text }} className="text-center">
+													Cacher les habitudes manquées
+												</Text>
+											</Pressable>
+										</View>
 									) : (
 										<Pressable
 											onPress={() => setShowMissingHabits(true)}
@@ -338,7 +335,7 @@ export default function Index() {
 											style={{
 												borderColor: theme.colors.text,
 												borderWidth: 1,
-												backgroundColor: theme.colors.backgroundSecondary,
+												backgroundColor: theme.colors.cardBackground,
 											}}
 										>
 											<Text style={{ color: theme.colors.text }} className="text-center">

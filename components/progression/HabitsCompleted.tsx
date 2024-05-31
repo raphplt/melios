@@ -37,13 +37,16 @@ export default function HabitsCompleted({
 					return (
 						<View
 							key={index}
-							className="drop-shadow-md flex flex-row items-center justify-between px-5 my-2 py-3 mx-auto w-11/12 rounded-xl"
+							className="drop-shadow-md flex flex-row items-center justify-between px-5 my-2 py-2 mx-auto w-11/12 rounded-xl"
 							style={{
-								borderColor: theme.colors.border,
+								borderColor:
+									habitLastDaysCompleted[habit.name] >= dateLength
+										? "#22C55E"
+										: theme.colors.border,
 								borderWidth: 1,
 								backgroundColor:
 									habitLastDaysCompleted[habit.name] >= dateLength
-										? "#c9ffc9"
+										? "#DCFCE7"
 										: theme.colors.backgroundSecondary,
 							}}
 						>
@@ -70,7 +73,7 @@ export default function HabitsCompleted({
 									habitLastDaysCompleted[habit.name] ? (
 										<Ionicons name="checkmark" size={24} color="black" />
 									) : (
-										<Ionicons name="close" size={24} color="white" />
+										<Ionicons name="close" size={24} color={theme.colors.text} />
 									)
 								) : (
 									<Text

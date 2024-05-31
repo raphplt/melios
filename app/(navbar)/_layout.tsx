@@ -27,7 +27,7 @@ export default function TabLayout() {
 						display: "none",
 					},
 					headerStyle: {
-						backgroundColor: theme.colors.backgroundSecondary,
+						backgroundColor: theme.colors.background,
 						borderBottomLeftRadius: 10,
 						borderBottomRightRadius: 10,
 					},
@@ -63,7 +63,7 @@ export default function TabLayout() {
 				options={{
 					title: "Progression",
 					headerStyle: {
-						backgroundColor: theme.colors.backgroundSecondary,
+						backgroundColor: theme.colors.background,
 						borderBottomLeftRadius: 10,
 						borderBottomRightRadius: 10,
 					},
@@ -76,7 +76,7 @@ export default function TabLayout() {
 				options={{
 					title: "Récompenses",
 					headerStyle: {
-						backgroundColor: theme.colors.backgroundSecondary,
+						backgroundColor: theme.colors.background,
 						borderBottomLeftRadius: 10,
 						borderBottomRightRadius: 10,
 					},
@@ -92,7 +92,7 @@ export default function TabLayout() {
 							<View
 								style={{
 									flex: 1,
-									backgroundColor: theme.colors.backgroundSecondary,
+									backgroundColor: theme.colors.background,
 								}}
 								className="rounded-b-xl"
 							/>

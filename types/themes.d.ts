@@ -14,5 +14,7 @@ export type Theme = {
 		inactiveThumb: string;
 		backgroundSecondary: string;
 		backgroundTertiary: string;
+		cardBackground: string;
+		coins: string;
 	};
 };

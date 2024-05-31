@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "../ThemContext";
 import Checkbox from "expo-checkbox";
-import { setMemberHabit } from "../db/member";
-import { getMemberHabit } from "../db/member";
+import { setMemberHabit } from "../../db/member";
+import { getMemberHabit } from "../../db/member";
 
 export default function CardHabit({ habit, navigation }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -24,16 +24,19 @@ export default function CardHabit({ habit, navigation }: any) {
 	}, []);
 
 	return (
-		<View className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly">
+		<View className="w-full mx-auto my-2 flex flex-row items-center justify-evenly">
 			<View
-				className="flex flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
+				className="flex items-center flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
 				style={{
-					backgroundColor: theme.colors.backgroundSecondary,
+					backgroundColor: theme.colors.cardBackground,
 					borderColor: habit.color || theme.colors.text,
 					borderWidth: 1,
 				}}
 			>
-				<Image source={habit.image} className="ml-2" />
+				{/* <Image source={habit.image} className="ml-2" /> */}
+				<Text className="font-semibold" style={{ marginLeft: 15 }}>
+					{habit.moment}h
+				</Text>
 				<Text
 					style={{ color: theme.colors.text }}
 					className="ml-2 text-[16px] line-clamp-2 w-3/4"
@@ -46,7 +49,7 @@ export default function CardHabit({ habit, navigation }: any) {
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabit}
-					color={theme.colors.primary}
+					color={habit.color || theme.colors.primary}
 				/>
 			</View>
 		</View>
