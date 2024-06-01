@@ -35,7 +35,7 @@ export const getRewards = async () => {
 				});
 		}
 	} catch (error) {
-		console.error("Erreur lors de la récupération des récompenses : ", error);
+		console.log("Erreur lors de la récupération des récompenses : ", error);
 		throw error;
 	}
 };
@@ -63,7 +63,7 @@ export const setRewards = async (points: any) => {
 			});
 		}
 	} catch (error) {
-		console.error("Erreur lors de la récupération des récompenses : ", error);
+		console.log("Erreur lors de la récupération des récompenses : ", error);
 		throw error;
 	}
 };

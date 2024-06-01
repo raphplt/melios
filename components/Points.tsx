@@ -21,7 +21,7 @@ export default function Points() {
 				}
 			} catch (error) {
 				setLoading(false);
-				console.error("Erreur lors de la récupération des récompenses : ", error);
+				console.log("Erreur lors de la récupération des récompenses : ", error);
 			}
 		})();
 

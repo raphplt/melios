@@ -13,7 +13,6 @@ import { loginUser } from "../db/users";
 import { ThemeContext } from "../components/ThemContext";
 import { useNavigation } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { UserContext } from "../constants/UserContext";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);

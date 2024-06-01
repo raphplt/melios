@@ -1,5 +1,15 @@
 export const Questions = [
 	{
+		question: "Bienvenue sur Melios ! Êtes-vous prêt à commencer votre aventure?",
+		slug: "welcome",
+		answers: [
+			{ answer: "Oui, je suis prêt !", value: 1 },
+			{ answer: "Non, pas encore.", value: 2 },
+		],
+		questionType: "SingleChoice",
+		tips: "Vous pouvez changer d'avis à tout moment",
+	},
+	{
 		question: "Quels sont vos objectifs ?",
 		slug: "objectifs",
 		answers: [

@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { View, TextInput, Button, Text, Pressable } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Text, Pressable, BackHandler, Alert } from "react-native";
 import { createUser } from "../db/users";
 import { ThemeContext } from "../components/ThemContext";
 import { useNavigation } from "expo-router";
@@ -10,7 +10,6 @@ import SingleChoice from "../components/inputs/SingleChoice";
 import { AntDesign } from "@expo/vector-icons";
 import InputPassword from "../components/inputs/Password";
 import { checkEmailExists } from "../db/users";
-import { Alert } from "react-native";
 
 export default function Register() {
 	const { theme } = useContext(ThemeContext);
@@ -31,38 +30,62 @@ export default function Register() {
 			}
 		}
 
-		if (currentQuestionIndex < Questions.length - 1) {
-			setForm((prevForm: any) => {
-				const updatedForm = [
-					...prevForm,
-					{ [Questions[currentQuestionIndex].slug]: answer },
-				];
-				return updatedForm;
-			});
+		if (Questions[currentQuestionIndex].slug === "welcome") {
+			if (answer.value === 2) {
+				return;
+			}
+		}
 
+		if (currentQuestionIndex < Questions.length - 1) {
+			setForm((prevForm: any) => [
+				...prevForm,
+				{ [Questions[currentQuestionIndex].slug]: answer },
+			]);
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 		} else {
 			try {
-				await setForm(async (prevForm: any) => {
-					const updatedForm = [
-						...prevForm,
-						{ [Questions[currentQuestionIndex].slug]: answer },
-					];
-
-					await createUser(updatedForm).then(() => {
-						navigation.navigate("select");
-					});
-				});
+				const updatedForm = [
+					...form,
+					{ [Questions[currentQuestionIndex].slug]: answer },
+				];
+				const user = await createUser(updatedForm);
+				if (user) {
+					console.log("Redirection");
+					navigation.navigate("(navbar)");
+				}
 			} catch (error) {
 				console.error("Erreur lors de la création de l'utilisateur : ", error);
 			}
 		}
 	};
 
+	const goBack = () => {
+		if (currentQuestionIndex > 0) {
+			setCurrentQuestionIndex(currentQuestionIndex - 1);
+			form.pop();
+			return true;
+		}
+
+		Alert.alert("Quitter", "Voulez-vous quitter l'application ?", [
+			{ text: "Non" },
+			{ text: "Oui", onPress: () => BackHandler.exitApp() },
+		]);
+
+		return true;
+	};
+
+	useEffect(() => {
+		BackHandler.addEventListener("hardwareBackPress", goBack);
+
+		return () => {
+			BackHandler.removeEventListener("hardwareBackPress", goBack);
+		};
+	}, [currentQuestionIndex, form]);
+
 	return (
 		<View
 			style={{ backgroundColor: theme.colors.background }}
-			className="h-[100vh] flex flex-col justify-evenly items-center w-full"
+			className="h-[100vh] flex flex-col justify-evenly items-center w-screen"
 		>
 			{currentQuestionIndex > 0 && (
 				<Pressable
@@ -70,7 +93,7 @@ export default function Register() {
 						setCurrentQuestionIndex(currentQuestionIndex - 1);
 						form.pop();
 					}}
-					className="absolute top-0 left-0 mt-8 ml-10"
+					className="absolute top-12 left-0 mt-8 ml-8 flex flex-row items-center"
 				>
 					<AntDesign
 						name="left"
@@ -78,10 +101,16 @@ export default function Register() {
 						color={theme.colors.text}
 						style={{ textAlign: "center" }}
 					/>
+					<Text
+						style={{ color: theme.colors.text }}
+						className="text-center text-md font-semibold ml-2"
+					>
+						Précédent
+					</Text>
 				</Pressable>
 			)}
 			{currentQuestionIndex - 1 < Questions.length ? (
-				<View className="flex flex-col gap-6 mx-auto justify-center items-center w-11/12 mb-6 ">
+				<View className="flex flex-col ">
 					{Questions[currentQuestionIndex].questionType &&
 						Questions[currentQuestionIndex].questionType === "MultipleChoice" && (
 							<MultipleChoice

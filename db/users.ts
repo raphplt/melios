@@ -17,15 +17,15 @@ export const createUser = async (form: any) => {
 		const password =
 			form.find((item: any) => item.hasOwnProperty("password"))?.password || "";
 
-		console.log("Email:", email);
-		console.log("Mot de passe:", password);
 		const userCredential = await createUserWithEmailAndPassword(
 			auth,
 			email,
 			password
 		);
 		const user = userCredential.user;
-		console.log("User created : ", user);
+
+		await AsyncStorage.setItem("user", JSON.stringify(user));
+		await AsyncStorage.setItem("isAuthenticated", "true");
 
 		const membersCollectionRef = collection(db, "members");
 
@@ -40,7 +40,7 @@ export const createUser = async (form: any) => {
 			form.find((item: any) => item.hasOwnProperty("temps"))?.temps || "";
 		const nom = form.find((item: any) => item.hasOwnProperty("nom"))?.nom || "";
 
-		const newMemberRef = await addDoc(membersCollectionRef, {
+		await addDoc(membersCollectionRef, {
 			uid: user.uid,
 			habits: [],
 			objectifs: objectifs,
@@ -50,13 +50,12 @@ export const createUser = async (form: any) => {
 			nom: nom,
 		});
 
-		await AsyncStorage.setItem("user", JSON.stringify(user));
-
-		console.log("Document written with ID: ", newMemberRef.id);
+		return user;
 	} catch (error) {
 		console.error("Erreur lors de la création de l'utilisateur : ", error);
 	}
 };
+
 
 export const disconnectUser = async () => {
 	try {

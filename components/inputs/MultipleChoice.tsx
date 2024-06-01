@@ -18,10 +18,10 @@ export default function MultipleChoice(props: any) {
 	};
 	
 	return (
-		<View>
+		<View className="w-screen">
 			<Text
 				style={{ color: theme.colors.text }}
-				className="text-xl text-center mb-4"
+				className="text-xl text-center mb-4 w-11/12 mx-auto"
 			>
 				{props.question}
 			</Text>
@@ -34,13 +34,15 @@ export default function MultipleChoice(props: any) {
 							backgroundColor: pressed
 								? theme.colors.cardBackground
 								: theme.colors.backgroundSecondary,
-							borderColor: theme.colors.text,
+							borderColor: theme.colors.border,
 							borderWidth: 1,
-							borderRadius: 20,
+							borderRadius: 15,
 							flexDirection: "row",
 							alignItems: "center",
 							padding: 10,
 							marginVertical: 7,
+							width: "90%",
+							alignSelf: "center",
 						},
 					]}
 				>
@@ -50,21 +52,21 @@ export default function MultipleChoice(props: any) {
 							height: 20,
 							borderRadius: 10,
 							backgroundColor: selectedAnswers.includes(answer)
-								? theme.colors.activeSwitch
+								? theme.colors.primary
 								: theme.colors.inactiveSwitch,
 							marginRight: 10,
 							borderWidth: 1,
-							borderColor: theme.colors.text,
+							borderColor: theme.colors.primary,
 						}}
 					/>
-					<Text style={{ color: theme.colors.text }} className="text-lg">
+					<Text style={{ color: theme.colors.text }} className="text-[1">
 						{answer.answer}
 					</Text>
 				</Pressable>
 			))}
 
 			<Pressable
-				className=" text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12"
+				className=" text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12 w-11/12 mx-auto"
 				style={{ backgroundColor: theme.colors.primary }}
 				onPress={() => {
 					props.goToNextQuestion(selectedAnswers);

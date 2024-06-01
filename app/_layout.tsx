@@ -84,13 +84,15 @@ export default function RootLayout() {
 				<ThemeProvider value={theme}>
 					{isAuthenticated ? (
 						<Stack>
-							<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+							<Stack.Screen name="(navbar)" />
+
 							<Stack.Screen
 								name="select"
 								options={{
 									title: "Choix des habitudes",
 									animation: "fade",
 									presentation: "transparentModal",
+									headerShown: true,
 								}}
 							/>
 							<Stack.Screen

@@ -6,14 +6,18 @@ import { FontAwesome5 } from "@expo/vector-icons";
 export default function InputPassword(props: any) {
 	const { theme } = useContext(ThemeContext);
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [isEmpty, setIsEmpty] = useState(true);
 	const [showError, setShowError] = useState(false);
-	const [showPassword, setShowPassword] = useState(false); 
+	const [showPassword, setShowPassword] = useState(false);
+	const [passwordsMatch, setPasswordsMatch] = useState(true);
 
 	const resetText = () => {
 		setPassword("");
+		setConfirmPassword("");
 		setIsEmpty(true);
 		setShowError(false);
+		setPasswordsMatch(true);
 	};
 
 	useEffect(() => {
@@ -22,11 +26,17 @@ export default function InputPassword(props: any) {
 
 	const handlePasswordChange = (inputText: string) => {
 		setPassword(inputText);
-		setIsEmpty(inputText.trim().length < 6);
+		setIsEmpty(inputText.trim().length < 6 || inputText !== confirmPassword);
+	};
+
+	const handleConfirmPasswordChange = (inputText: string) => {
+		setConfirmPassword(inputText);
+		setPasswordsMatch(inputText === password);
+		setIsEmpty(password.trim().length < 6 || inputText !== password);
 	};
 
 	return (
-		<View className="w-3/4 mx-auto">
+		<View className="w-screen">
 			<Text
 				style={{ color: theme.colors.text }}
 				className="text-xl text-center mb-4"
@@ -37,18 +47,50 @@ export default function InputPassword(props: any) {
 				style={{ flexDirection: "row", alignItems: "center", position: "relative" }}
 			>
 				<TextInput
+					placeholderTextColor={"#333333"}
+					className="text-lg w-10/12 mx-auto pl-2 py-5 pb-1 border-b-2 "
 					style={{
-						flex: 1,
 						color: theme.colors.text,
-						backgroundColor: theme.colors.backgroundSecondary,
-						borderRadius: 10,
-						paddingHorizontal: 10,
-						paddingVertical: 5,
-						fontSize: 16,
 					}}
 					onChangeText={handlePasswordChange}
 					value={password}
 					secureTextEntry={!showPassword}
+					placeholder="Mot de passe"
+				/>
+				<Pressable
+					onPress={() => setShowPassword(!showPassword)}
+					style={{
+						position: "absolute",
+						right: 10,
+						padding: 5,
+					}}
+				>
+					<FontAwesome5
+						name={showPassword ? "eye-slash" : "eye"}
+						size={20}
+						color={theme.colors.text}
+					/>
+				</Pressable>
+			</View>
+
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					position: "relative",
+					marginTop: 10,
+				}}
+			>
+				<TextInput
+					placeholderTextColor={"#333333"}
+					className="text-lg w-10/12 mx-auto pl-2 py-5 pb-1 border-b-2 "
+					style={{
+						color: theme.colors.text,
+					}}
+					onChangeText={handleConfirmPasswordChange}
+					value={confirmPassword}
+					secureTextEntry={!showPassword}
+					placeholder="Confirmer le mot de passe"
 				/>
 				<Pressable
 					onPress={() => setShowPassword(!showPassword)}
@@ -67,11 +109,12 @@ export default function InputPassword(props: any) {
 			</View>
 
 			<Pressable
-				className={`bg-blue-500 text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12 ${
+				className={`text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12 w-11/12 mx-auto ${
 					isEmpty ? "opacity-50" : ""
 				}`}
+				style={{ backgroundColor: theme.colors.primary }}
 				onPress={() => {
-					if (!isEmpty) {
+					if (!isEmpty && passwordsMatch) {
 						props.goToNextQuestion(password);
 					} else {
 						setShowError(true);
@@ -88,7 +131,9 @@ export default function InputPassword(props: any) {
 			</Pressable>
 			{showError && (
 				<Text style={{ color: "red", textAlign: "center" }}>
-					Le mot de passe doit comporter au moins 6 caractères.
+					{!passwordsMatch
+						? "Les mots de passe ne correspondent pas."
+						: "Le mot de passe doit comporter au moins 6 caractères."}
 				</Text>
 			)}
 		</View>
