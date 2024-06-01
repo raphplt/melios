@@ -20,6 +20,7 @@ import ActivitiesContainer from "../../components/ActivitiesContainer";
 import { Entypo } from "@expo/vector-icons";
 import Background from "../../components/Svg/Background";
 import TopRow from "../../components/habits/TopRow";
+import { UserContext } from "../../constants/Context";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -35,6 +36,9 @@ export default function Index() {
 	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const [welcomeMessage, setWelcomeMessage] = useState("");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
+	const { user }: any = useContext(UserContext);
+
+	console.log("User:", user);
 
 	useEffect(() => {
 		(async () => {
@@ -59,13 +63,13 @@ export default function Index() {
 			const username = memberInfos.nom;
 			const time = new Date().getHours();
 			if (time < 12) {
-				setWelcomeMessage(`Bonjour, ${username} !`);
+				setWelcomeMessage(`Bonjour${username ? ", " + username : ""} !`);
 			}
 			if (time >= 12 && time < 18) {
-				setWelcomeMessage(`Bon après-midi, ${username} !`);
+				setWelcomeMessage(`Bon après-midi${username ? ", " + username : ""} !`);
 			}
 			if (time >= 18) {
-				setWelcomeMessage(`Bonsoir, ${username} !`);
+				setWelcomeMessage(`Bonsoir${username ? ", " + username : ""} !`);
 			}
 		})();
 	}, [memberInfos.nom]);
@@ -75,6 +79,8 @@ export default function Index() {
 		try {
 			setShowMissingHabits(false);
 			const data = await getMemberHabits();
+			const memberInfos = await getMemberInfos();
+			setMemberInfos(memberInfos);
 			setUserHabits(data);
 		} catch (error) {
 			handleError(error);
@@ -110,7 +116,7 @@ export default function Index() {
 		return () => {
 			isMounted.current = false;
 		};
-	}, []);
+	}, [memberInfos]);
 
 	useEffect(() => {
 		const completedHabits = userHabits

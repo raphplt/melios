@@ -51,6 +51,7 @@ export const createUser = async (form: any) => {
 		});
 
 		await AsyncStorage.setItem("user", JSON.stringify(user));
+
 		console.log("Document written with ID: ", newMemberRef.id);
 	} catch (error) {
 		console.error("Erreur lors de la création de l'utilisateur : ", error);
@@ -61,6 +62,8 @@ export const disconnectUser = async () => {
 	try {
 		await getAuth().signOut();
 		await AsyncStorage.removeItem("user");
+		await AsyncStorage.removeItem("isAuthenticated");
+		await AsyncStorage.removeItem("habitsData");
 	} catch (error) {
 		console.error("Erreur lors de la déconnexion : ", error);
 	}
@@ -76,6 +79,7 @@ export const loginUser = async (email: string, password: string) => {
 		const user = userCredential.user;
 
 		await AsyncStorage.setItem("user", JSON.stringify(user));
+		await AsyncStorage.setItem("isAuthenticated", "true");
 
 		return user;
 	} catch (error: any) {

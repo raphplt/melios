@@ -134,7 +134,7 @@ export const getMemberHabit = async (habitId: any) => {
 			return [];
 		}
 	} catch (error) {
-		console.error(
+		console.log(
 			"Erreur lors de la récupération du document dans la collection 'members': ",
 			error
 		);
@@ -184,7 +184,7 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 			return [];
 		}
 	} catch (error) {
-		console.error(
+		console.log(
 			"Erreur lors de la récupération du document dans la collection 'members': ",
 			error
 		);
@@ -227,14 +227,14 @@ export const getMemberInfos = async () => {
 				return [];
 			}
 		} catch (error) {
-			console.error(
+			console.log(
 				"Erreur lors de la récupération du document dans la collection 'members':  ",
 				error
 			);
 			throw error;
 		}
 	} catch (error) {
-		console.error(
+		console.log(
 			"Erreur lors de la récupération du document dans la collection 'members': ",
 			error
 		);

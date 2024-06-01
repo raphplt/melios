@@ -1,18 +1,13 @@
 {
-	"build": {
-		"preview": {
+	"cli": {
+		"version": ">= 0.34.0"
+	},
+	"submit": {
+		"production": {
 			"android": {
-				"buildType": "apk"
+				"serviceAccountKeyPath": "google-service-account-file/melios-4a03d-44ca4cc6331d.json",
+				"track": "internal"
 			}
-		},
-		"preview2": {
-			"android": {
-				"gradleCommand": ":app:assembleRelease"
-			}
-		},
-		"preview3": {
-			"developmentClient": true
-		},
-		"production": {}
+		}
 	}
 }

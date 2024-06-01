@@ -4,6 +4,7 @@ import { loginUser } from "../db/users";
 import { ThemeContext } from "../components/ThemContext";
 import { useNavigation } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { UserContext } from "../constants/Context";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -22,6 +23,8 @@ export default function Login() {
 				setError(user.error);
 				return;
 			} else {
+				// const { setUser }: any = useContext(UserContext);
+				// setUser(user);
 				navigation.navigate("(navbar)");
 			}
 		} catch (error) {

@@ -105,6 +105,8 @@ export default function RootLayout() {
 						</Stack>
 					) : (
 						<Stack>
+							<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+
 							<Stack.Screen
 								name="register"
 								options={{
