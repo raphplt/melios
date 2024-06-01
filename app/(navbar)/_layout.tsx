@@ -4,7 +4,7 @@ import { Pressable, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import Melios from "../../components/Svg/Melios";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -46,10 +46,10 @@ export default function TabLayout() {
 								navigation.navigate("account");
 							}}
 						>
-							<Feather
-								name="settings"
+							<AntDesign
+								name="user"
 								size={24}
-								color={theme.colors.text}
+								color="black"
 								style={{ marginRight: 15 }}
 							/>
 						</Pressable>

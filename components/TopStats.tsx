@@ -107,7 +107,7 @@ export default function TopStats({ habits }: any) {
 					/>
 					<Text
 						style={{ color: theme.colors.textSecondary }}
-						className="text-xl mt-1"
+						className="text-xl mt-1 font-semibold"
 					>
 						{scoreHabits} %
 					</Text>

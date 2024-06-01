@@ -8,6 +8,7 @@ import {
 	ActivityIndicator,
 	StatusBar,
 	Image,
+	Animated,
 } from "react-native";
 import TopStats from "../../components/TopStats";
 import { DarkTheme, useNavigation } from "@react-navigation/native";
@@ -21,6 +22,7 @@ import { Entypo } from "@expo/vector-icons";
 import Background from "../../components/Svg/Background";
 import TopRow from "../../components/habits/TopRow";
 import { UserContext } from "../../constants/Context";
+import ButtonViewMore from "../../components/ButtonViewMore";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -37,8 +39,8 @@ export default function Index() {
 	const [welcomeMessage, setWelcomeMessage] = useState("");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const { user }: any = useContext(UserContext);
-
-	console.log("User:", user);
+	const [showMoreValidate, setShowMoreValidate] = useState(3);
+	const rotation = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
 		(async () => {
@@ -82,6 +84,7 @@ export default function Index() {
 			const memberInfos = await getMemberInfos();
 			setMemberInfos(memberInfos);
 			setUserHabits(data);
+			setShowMoreValidate(3);
 		} catch (error) {
 			handleError(error);
 		} finally {
@@ -102,10 +105,10 @@ export default function Index() {
 		(async () => {
 			try {
 				const data = await getMemberHabits();
-				if (isMounted.current) {
-					setUserHabits(data);
-					setLoading(false);
-				}
+				// if (isMounted.current) {
+				setUserHabits(data);
+				setLoading(false);
+				// }
 			} catch (error) {
 				handleError(error);
 				setUserHabits([]);
@@ -169,6 +172,27 @@ export default function Index() {
 		}
 	};
 
+	const handlePressIn = () => {
+		Animated.timing(rotation, {
+			toValue: 1,
+			duration: 300,
+			useNativeDriver: true,
+		}).start();
+	};
+
+	const handlePressOut = () => {
+		Animated.timing(rotation, {
+			toValue: 0,
+			duration: 300,
+			useNativeDriver: true,
+		}).start();
+	};
+
+	const rotate = rotation.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
+	});
+
 	if (loading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -184,6 +208,14 @@ export default function Index() {
 		(habit: any) => habit.moment < hours
 	).length;
 
+	const updateShowValidate = () => {
+		if (showMoreValidate < completedHabits.length) {
+			setShowMoreValidate((prev) => prev + 5);
+		} else {
+			setShowMoreValidate(3);
+		}
+	};
+
 	return (
 		<>
 			<StatusBar
@@ -193,7 +225,8 @@ export default function Index() {
 				}
 			/>
 			<ScrollView
-				className=""
+				className=" overflow-y-hidden"
+				showsVerticalScrollIndicator={false}
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
@@ -209,13 +242,21 @@ export default function Index() {
 					<Text style={{ color: theme.colors.text }} className="text-xl font-bold">
 						{welcomeMessage}
 					</Text>
-
-					<Pressable
-						onPress={() => navigation.navigate("select")}
-						className="bg-blue-500 rounded-full p-2"
-					>
-						<Ionicons name="add" size={24} color="white" />
-					</Pressable>
+					<Animated.View style={{ transform: [{ rotate }] }}>
+						<Pressable
+							onPressIn={handlePressIn}
+							onPressOut={handlePressOut}
+							onPress={() => {
+								navigation.navigate("select");
+							}}
+							className="rounded-full p-2"
+							style={{
+								backgroundColor: theme.colors.primary,
+							}}
+						>
+							<Ionicons name="add" size={24} color="white" />
+						</Pressable>
+					</Animated.View>
 				</View>
 
 				{userHabits.length > 0 ? (
@@ -232,7 +273,7 @@ export default function Index() {
 								0 ? (
 								<TopRow
 									icon="close-circle"
-									color="#FFD31A"
+									color="#F6AF3B"
 									text="Prochaines habitudes"
 									number={
 										uncompletedHabits.filter((habit: any) => habit.moment >= hours).length
@@ -264,6 +305,7 @@ export default function Index() {
 
 							{uncompletedHabits
 								.filter((habit: any) => habit.moment >= hours)
+
 								.map((filteredHabit: any) => (
 									<CardCheckHabit
 										key={filteredHabit.id}
@@ -282,15 +324,30 @@ export default function Index() {
 								text="Validées"
 								number={completedHabits.length}
 							/>
+							<View className="w-full mx-auto">
+								{[
+									...new Map(
+										completedHabits.map((item: any) => [item.id, item])
+									).values(),
+								]
+									.slice(0, showMoreValidate)
+									.map((filteredHabit: any) => (
+										<CardCheckHabit
+											completed={true}
+											key={filteredHabit.id}
+											habit={filteredHabit}
+											onHabitStatusChange={handleHabitStatusChange}
+											disabled={true}
+										/>
+									))}
 
-							{completedHabits.map((filteredHabit: any) => (
-								<CardCheckHabit
-									completed={true}
-									key={filteredHabit.id}
-									habit={filteredHabit}
-									onHabitStatusChange={handleHabitStatusChange}
+								<ButtonViewMore
+									onPress={updateShowValidate}
+									text={
+										showMoreValidate < completedHabits.length ? "Voir plus" : "Voir moins"
+									}
 								/>
-							))}
+							</View>
 						</View>
 						{uncompletedHabits.length > 0 &&
 							uncompletedHabits.filter((habit: any) => habit.moment < hours).length >
@@ -320,34 +377,16 @@ export default function Index() {
 														onHabitStatusChange={handleHabitStatusChange}
 													/>
 												))}
-											<Pressable
+											<ButtonViewMore
 												onPress={() => setShowMissingHabits(false)}
-												className="rounded-2xl p-1 mt-2 px-6 mx-auto w-10/12"
-												style={{
-													borderColor: theme.colors.text,
-													borderWidth: 1,
-													backgroundColor: theme.colors.cardBackground,
-												}}
-											>
-												<Text style={{ color: theme.colors.text }} className="text-center">
-													Cacher les habitudes manquées
-												</Text>
-											</Pressable>
+												text="Cacher les habitudes manquées"
+											/>
 										</View>
 									) : (
-										<Pressable
+										<ButtonViewMore
 											onPress={() => setShowMissingHabits(true)}
-											className="rounded-2xl p-1 mt-2 px-6 mx-auto w-10/12"
-											style={{
-												borderColor: theme.colors.text,
-												borderWidth: 1,
-												backgroundColor: theme.colors.cardBackground,
-											}}
-										>
-											<Text style={{ color: theme.colors.text }} className="text-center">
-												Afficher les habitudes manquées
-											</Text>
-										</Pressable>
+											text="Voir les habitudes manquées"
+										/>
 									)}
 								</View>
 							)}

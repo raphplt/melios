@@ -1,5 +1,5 @@
 import { useNavigation } from "expo-router";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import {
 	View,
 	Text,
@@ -7,6 +7,7 @@ import {
 	Pressable,
 	ActivityIndicator,
 	TextInput,
+	Animated,
 } from "react-native";
 import { ThemeContext } from "../components/ThemContext";
 import { getAllHabits } from "../db/habits";
@@ -14,6 +15,7 @@ import { ThemeProvider } from "@react-navigation/native";
 import CardHabit from "../components/habits/CardHabit";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { Easing } from "react-native-reanimated";
 
 const groupHabitsByCategory = (habits: any) => {
 	return habits.reduce((acc: any, habit: any) => {
@@ -33,6 +35,7 @@ export default function Select() {
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
+	const translateY = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
 		const fetchHabitsData = async () => {
@@ -56,16 +59,30 @@ export default function Select() {
 	);
 	const groupedHabits = groupHabitsByCategory(filteredHabits);
 
+	const handleNavigation = () => {
+		Animated.timing(translateY, {
+			toValue: -1000,
+			duration: 400,
+			easing: Easing.linear,
+			useNativeDriver: true,
+		}).start(() => {
+			navigation.navigate("(navbar)");
+		});
+	};
+
 	return (
-		<ThemeProvider value={theme}>
+		<Animated.View style={{ flex: 1, transform: [{ translateY }] }}>
 			{loading && (
-				<View className="flex items-center justify-center h-screen">
+				<View
+					className="flex items-center justify-center h-screen"
+					style={{ backgroundColor: theme.colors.background }}
+				>
 					<ActivityIndicator size="large" color={theme.colors.primary} />
 				</View>
 			)}
-			<ScrollView>
+			<ScrollView style={{ backgroundColor: theme.colors.background }}>
 				<View
-					className="flex flex-row items-center w-10/12 mx-auto rounded-xl py-2 px-3 mt-4"
+					className="flex flex-row items-center w-11/12 mx-auto rounded-xl py-2 px-3 mt-4"
 					style={{
 						backgroundColor: "#3B82F6",
 						borderColor: theme.colors.border,
@@ -73,13 +90,19 @@ export default function Select() {
 					}}
 				>
 					<Ionicons name="bulb" size={24} color="white" />
-					<Text className="text-[16px] w-10/12  mx-auto text-left text-white">
+					<Text className="text-[15px] w-10/12  mx-auto text-left text-white">
 						Vous pouvez sélectionner jusqu'à 20 habitudes.
 					</Text>
 				</View>
 				<View className="flex flex-row items-center w-full mx-auto rounded-xl py-1 px-3 mt-4">
 					<TextInput
-						style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+						style={{
+							height: 40,
+							borderColor: "gray",
+							borderWidth: 1,
+							color: theme.colors.text,
+							backgroundColor: theme.colors.cardBackground,
+						}}
 						onChangeText={(text) => setSearch(text)}
 						value={search}
 						className="w-11/12 mx-auto pl-3 rounded-xl"
@@ -113,7 +136,7 @@ export default function Select() {
 					paddingVertical: 10,
 					borderRadius: 10,
 				}}
-				onPress={() => navigation.navigate("(navbar)")}
+				onPress={handleNavigation}
 			>
 				<View className="flex items-center justify-center flex-row gap-2">
 					<View>
@@ -122,6 +145,6 @@ export default function Select() {
 					<Text className="text-center text-lg text-white ">Valider</Text>
 				</View>
 			</Pressable>
-		</ThemeProvider>
+		</Animated.View>
 	);
 }

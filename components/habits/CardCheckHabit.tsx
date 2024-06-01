@@ -20,6 +20,7 @@ export default function CardCheckHabit({
 	habit = [],
 	onHabitStatusChange,
 	completed,
+	disabled = false,
 }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -94,7 +95,7 @@ export default function CardCheckHabit({
 				className="px-2"
 				onPress={() => {
 					navigation.navigate("habitDetail", {
-						habit: habit.name,
+						habit: JSON.stringify(habit),
 						habitInfos: JSON.stringify(habitInfos),
 					});
 				}}
@@ -141,9 +142,7 @@ export default function CardCheckHabit({
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
 					color={habitInfos.color || theme.colors.primary}
-					disabled={
-						habit.logs ? habit.logs[habit.logs.length - 1]?.date === date : false
-					}
+					disabled={disabled}
 				/>
 			</View>
 		</Animated.View>

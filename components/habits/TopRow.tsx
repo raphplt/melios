@@ -9,16 +9,14 @@ export default function TopRow({ icon, color, text, number }: any) {
 	const { theme } = useContext(ThemeContext);
 	return (
 		<View className="flex items-center justify-start flex-row w-10/12 bg-transparent mx-auto my-2">
-			{/* <Ionicons name={icon} size={24} color={theme.colors.text} /> */}
 			<View
-				className="flex items-center justify-center rounded-full w-6 h-6 mr-2"
+				className="flex items-center justify-center rounded-full w-8 h-8 mr-2"
 				style={{
 					backgroundColor: color,
 					borderColor: theme.colors.border,
-					borderWidth: 1,
 				}}
 			>
-				<Text className="font-semibold text-[12px] text-white">
+				<Text className="font-semibold text-[15px] text-white">
 					{number > 0 && `${number}`}
 				</Text>
 			</View>

@@ -92,6 +92,7 @@ export default function RootLayout() {
 								options={{
 									title: "Choix des habitudes",
 									animation: "fade",
+									presentation: "transparentModal",
 								}}
 							/>
 							<Stack.Screen
