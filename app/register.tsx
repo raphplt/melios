@@ -64,13 +64,6 @@ export default function Register() {
 			style={{ backgroundColor: theme.colors.background }}
 			className="h-[100vh] flex flex-col justify-evenly items-center w-full"
 		>
-			{/* <Text
-				style={{ color: theme.colors.text }}
-				className="text-center text-2xl mt-24"
-			>
-				Inscription {currentQuestionIndex + 1}/{Questions.length}
-			</Text> */}
-
 			{currentQuestionIndex > 0 && (
 				<Pressable
 					onPress={() => {
@@ -150,13 +143,20 @@ export default function Register() {
 				onPress={() => {
 					navigation.navigate("login");
 				}}
-				className="bg-gray-200 p-2 rounded-xl mt-4 w-1/3 mx-auto border-[1px] border-gray-300"
+				style={{
+					borderWidth: 1,
+					borderColor: theme.colors.primary,
+					backgroundColor: theme.colors.cardBackground,
+				}}
+				className=" p-2 rounded-xl mt-4 w-1/3 mx-auto absolute bottom-0 mb-8 border-[1px]"
 			>
 				<Text
-					style={{ color: theme.colors.textSecondary }}
-					className="text-center text-md"
+					style={{
+						color: theme.colors.primary,
+					}}
+					className="text-center text-md font-semibold"
 				>
-					ou Me connecter
+					Ou Se connecter
 				</Text>
 			</Pressable>
 		</View>

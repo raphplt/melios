@@ -33,7 +33,6 @@ export default function CardHabit({ habit, navigation }: any) {
 					borderWidth: 1,
 				}}
 			>
-				{/* <Image source={habit.image} className="ml-2" /> */}
 				<Text className="font-semibold" style={{ marginLeft: 15 }}>
 					{habit.moment}h
 				</Text>

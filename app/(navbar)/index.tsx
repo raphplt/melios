@@ -21,7 +21,7 @@ import ActivitiesContainer from "../../components/ActivitiesContainer";
 import { Entypo } from "@expo/vector-icons";
 import Background from "../../components/Svg/Background";
 import TopRow from "../../components/habits/TopRow";
-import { UserContext } from "../../constants/Context";
+import { UserContext } from "../../constants/UserContext";
 import ButtonViewMore from "../../components/ButtonViewMore";
 
 export default function Index() {

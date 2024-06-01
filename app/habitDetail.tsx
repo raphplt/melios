@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, useRef } from "react";
-import { View, Text, Animated, Pressable } from "react-native";
+import { View, Text, Animated, Pressable, PanResponder } from "react-native";
 import { ThemeContext } from "../components/ThemContext";
 import { Link, useLocalSearchParams, router } from "expo-router";
 import { ScrollView } from "react-native";
@@ -95,15 +95,27 @@ export default function HabitDetail() {
 	const rgb = hexToRgb(habitInfos.color);
 	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` : "#FFFFFF";
 
+	const panResponder = useRef(
+		PanResponder.create({
+			onStartShouldSetPanResponder: () => true,
+			onPanResponderMove: (_, gestureState) => {
+				if (gestureState.dy > 0) {
+					router.back();
+				}
+			},
+		})
+	).current;
+
 	return (
-		<Animated.ScrollView
+		<Animated.View
+			{...panResponder.panHandlers}
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 				paddingTop: 20,
 				flex: 1,
 				transform: [{ translateY }],
 			}}
-			className="h-[95vh] mx-auto rounded-t-2xl border-2 border-gray-500 overflow-y-auto bottom-0 absolute"
+			className="h-[95vh] w-full mx-auto rounded-t-2xl border-2 border-gray-500 overflow-y-auto bottom-0 absolute"
 		>
 			{isPresented && (
 				<Pressable
@@ -249,6 +261,6 @@ export default function HabitDetail() {
 						))}
 				</View>
 			</View>
-		</Animated.ScrollView>
+		</Animated.View>
 	);
 }

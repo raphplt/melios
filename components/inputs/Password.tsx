@@ -8,7 +8,7 @@ export default function InputPassword(props: any) {
 	const [password, setPassword] = useState("");
 	const [isEmpty, setIsEmpty] = useState(true);
 	const [showError, setShowError] = useState(false);
-	const [showPassword, setShowPassword] = useState(false); // Nouvelle variable d'état
+	const [showPassword, setShowPassword] = useState(false); 
 
 	const resetText = () => {
 		setPassword("");

@@ -32,7 +32,7 @@ export default function MultipleChoice(props: any) {
 					style={({ pressed }) => [
 						{
 							backgroundColor: pressed
-								? theme.colors.background
+								? theme.colors.cardBackground
 								: theme.colors.backgroundSecondary,
 							borderColor: theme.colors.text,
 							borderWidth: 1,
@@ -64,7 +64,8 @@ export default function MultipleChoice(props: any) {
 			))}
 
 			<Pressable
-				className="bg-blue-500 text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12"
+				className=" text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12"
+				style={{ backgroundColor: theme.colors.primary }}
 				onPress={() => {
 					props.goToNextQuestion(selectedAnswers);
 				}}

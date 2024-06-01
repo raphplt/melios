@@ -1,10 +1,11 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs, useNavigation } from "expo-router";
-import { Pressable, View } from "react-native";
-import { useContext } from "react";
+import { Pressable, Text, View } from "react-native";
+import { useContext, useEffect } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import Melios from "../../components/Svg/Melios";
 import { AntDesign } from "@expo/vector-icons";
+import { useSession } from "../../constants/UserContext";
 
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -14,8 +15,25 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
+	const { user, isLoading }: any = useSession();
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
+
+	useEffect(() => {
+		if (!isLoading && !user) {
+			navigation.navigate("login");
+		}
+	}, [isLoading, user]);
+
+	if (isLoading) {
+		return (
+			<View className="flex-1 items-center justify-center h-screen">
+				<Text className="text-2xl font-bold text-center text-gray-700">
+					Loading...
+				</Text>
+			</View>
+		);
+	}
 
 	return (
 		<Tabs>

@@ -3,7 +3,7 @@ import { Theme } from "../types/themes";
 const DefaultTheme: Theme = {
 	dark: false,
 	colors: {
-		primary: "rgb(0, 122, 255)",
+		primary: "rgb(8, 32, 159)",
 		background: "#ffffff",
 		card: "#ffffff",
 		text: "rgb(28, 28, 30)",
@@ -24,7 +24,7 @@ const DefaultTheme: Theme = {
 const DarkTheme: Theme = {
 	dark: true,
 	colors: {
-		primary: "rgb(10, 132, 255)",
+		primary: "rgb(8, 32, 159)",
 		background: "#222222",
 		card: "#222222",
 		text: "rgb(229, 229, 231)",

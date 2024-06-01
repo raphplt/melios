@@ -32,6 +32,7 @@ export default function Select() {
 	const [habitsData, setHabitsData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState("");
+	const [deleteAdvice, setDeleteAdvice] = useState(false);
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
@@ -80,32 +81,55 @@ export default function Select() {
 					<ActivityIndicator size="large" color={theme.colors.primary} />
 				</View>
 			)}
-			<ScrollView style={{ backgroundColor: theme.colors.background }}>
+			<ScrollView
+				style={{ backgroundColor: theme.colors.background }}
+				className="h-screen"
+			>
+				{!deleteAdvice && (
+					<View
+						className="flex flex-row items-center w-11/12 mx-auto rounded-xl py-2 px-3 mt-4"
+						style={{
+							backgroundColor: "#FFC67C",
+							borderColor: theme.colors.border,
+							borderWidth: 1,
+						}}
+					>
+						<Ionicons name="bulb" size={24} style={{ color: theme.colors.text }} />
+						<Text
+							className="text-[15px] w-10/12  mx-auto text-left font-semibold "
+							style={{ color: theme.colors.text }}
+						>
+							Vous pouvez sélectionner jusqu'à 20 habitudes.
+						</Text>
+						<Pressable
+							onPress={() => setDeleteAdvice(true)}
+							style={{ position: "absolute", right: 10 }}
+						>
+							<Ionicons name="close" size={24} style={{ color: theme.colors.text }} />
+						</Pressable>
+					</View>
+				)}
 				<View
-					className="flex flex-row items-center w-11/12 mx-auto rounded-xl py-2 px-3 mt-4"
+					className="flex flex-row items-center w-11/12 mx-auto rounded-xl py-1 px-3 mt-4"
 					style={{
-						backgroundColor: "#3B82F6",
+						backgroundColor: theme.colors.cardBackground,
 						borderColor: theme.colors.border,
 						borderWidth: 1,
 					}}
 				>
-					<Ionicons name="bulb" size={24} color="white" />
-					<Text className="text-[15px] w-10/12  mx-auto text-left text-white">
-						Vous pouvez sélectionner jusqu'à 20 habitudes.
-					</Text>
-				</View>
-				<View className="flex flex-row items-center w-full mx-auto rounded-xl py-1 px-3 mt-4">
+					<Ionicons
+						name="search"
+						size={24}
+						style={{ color: theme.colors.text, marginRight: 10 }}
+					/>
 					<TextInput
 						style={{
+							flex: 1,
 							height: 40,
-							borderColor: "gray",
-							borderWidth: 1,
 							color: theme.colors.text,
-							backgroundColor: theme.colors.cardBackground,
 						}}
 						onChangeText={(text) => setSearch(text)}
 						value={search}
-						className="w-11/12 mx-auto pl-3 rounded-xl"
 						placeholder="Rechercher une habitude"
 					/>
 				</View>
@@ -129,22 +153,23 @@ export default function Select() {
 				</View>
 				<View />
 			</ScrollView>
-			<Pressable
-				className="w-10/12 mx-auto mt-6 fixed bottom-3"
-				style={{
-					backgroundColor: theme.colors.primary,
-					paddingVertical: 10,
-					borderRadius: 10,
-				}}
-				onPress={handleNavigation}
+			<View
+				className="w-full h-fit mx-auto fixed bottom-0 py-2 pt-4"
+				style={{ backgroundColor: theme.colors.background }}
 			>
-				<View className="flex items-center justify-center flex-row gap-2">
+				<Pressable
+					style={{
+						backgroundColor: theme.colors.primary,
+					}}
+					onPress={handleNavigation}
+					className="flex flex-row gap-x-2 items-center justify-center w-10/12 mx-auto rounded-xl py-2"
+				>
 					<View>
 						<AntDesign name="checkcircleo" size={20} color="white" />
 					</View>
 					<Text className="text-center text-lg text-white ">Valider</Text>
-				</View>
-			</Pressable>
+				</Pressable>
+			</View>
 		</Animated.View>
 	);
 }

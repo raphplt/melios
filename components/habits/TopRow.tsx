@@ -10,13 +10,14 @@ export default function TopRow({ icon, color, text, number }: any) {
 	return (
 		<View className="flex items-center justify-start flex-row w-10/12 bg-transparent mx-auto my-2">
 			<View
-				className="flex items-center justify-center rounded-full w-8 h-8 mr-2"
+				className="flex items-center justify-center rounded-full w-7 h-7 mr-2"
 				style={{
 					backgroundColor: color,
 					borderColor: theme.colors.border,
+					borderWidth: 1,
 				}}
 			>
-				<Text className="font-semibold text-[15px] text-white">
+				<Text className="font-semibold text-[14px] text-white">
 					{number > 0 && `${number}`}
 				</Text>
 			</View>
