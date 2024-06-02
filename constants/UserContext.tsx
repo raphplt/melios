@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { User, getAuth } from "firebase/auth";
+import { User } from "firebase/auth";
 import { auth } from "../db";
 
 export const UserContext = createContext<any>({});
@@ -14,7 +14,7 @@ export const SessionProvider = ({ children }: any) => {
 				setUser(user);
 				setIsLoading(false);
 			} else {
-				setUser(undefined);
+				setUser(null);
 				setIsLoading(false);
 			}
 		});
@@ -31,7 +31,6 @@ export const SessionProvider = ({ children }: any) => {
 
 export function useSession() {
 	const value = useContext(UserContext);
-
 	if (value === undefined) {
 		throw new Error("useSession must be used within a SessionProvider");
 	}

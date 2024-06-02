@@ -10,7 +10,7 @@ const DefaultTheme: Theme = {
 		textSecondary: "#F8F9FF",
 		border: "rgb(213, 213, 221)",
 		notification: "rgb(255, 59, 48)",
-		activeSwitch: "rgb(0, 122, 255)",
+		activeSwitch: "rgb(8, 32, 159)",
 		inactiveSwitch: "rgb(230, 230, 230)",
 		activeThumb: "rgb(255, 255, 255)",
 		inactiveThumb: "rgb(0, 122, 255)",

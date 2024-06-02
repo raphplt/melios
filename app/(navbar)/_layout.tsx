@@ -19,8 +19,6 @@ export default function TabLayout() {
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
 
-	console.log("user", user);
-
 	useEffect(() => {
 		if (!isLoading && !user) {
 			navigation.navigate("login");

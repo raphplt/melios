@@ -13,36 +13,40 @@ import { loginUser } from "../db/users";
 import { ThemeContext } from "../components/ThemContext";
 import { useNavigation } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
-
+import { useSession } from "../constants/UserContext";
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
-	const [userLocal, setUseLocal] = useState(null);
 
 	const navigation: any = useNavigation();
+	const { user, isLoading } = useSession();
 
 	useEffect(() => {
-		navigation.addListener("beforeRemove", (e: any) => {
-			if (!userLocal) {
+		return navigation.addListener("beforeRemove", (e: any) => {
+			if (!user) {
+				// Prevent default behavior of leaving the screen
 				e.preventDefault();
 			}
 		});
-	}, [navigation, userLocal]);
+	}, [navigation, user]);
 
+	useEffect(() => {
+		if (!isLoading && user) {
+			navigation.navigate("(navbar)");
+		}
+	}, [isLoading, user, navigation]);
 	const login = async () => {
 		try {
 			const snapshot: any = await loginUser(email, password);
-			setUseLocal(snapshot);
 
 			if (snapshot.error) {
 				setError(snapshot.error);
 				return;
 			} else {
 				console.log("Utilisateur connecté avec succès.");
-				navigation.navigate("(navbar)");
 			}
 		} catch (error) {
 			setError("Erreur lors de la connexion.");
@@ -68,7 +72,7 @@ export default function Login() {
 					<Text style={{ color: theme.colors.text }} className="text-3xl font-bold">
 						Connexion à Melios
 					</Text>
-					<View className="flex flex-col   justify-center items-center w-full mt-10 mx-auto">
+					<View className="flex flex-col justify-center items-center w-full mt-10 mx-auto">
 						<TextInput
 							onChangeText={setEmail}
 							value={email}
@@ -76,9 +80,7 @@ export default function Login() {
 							keyboardType="email-address"
 							autoCapitalize="none"
 							autoComplete="email"
-							style={{
-								color: theme.colors.text,
-							}}
+							style={{ color: theme.colors.text }}
 							placeholderTextColor={"#333333"}
 							className="text-lg w-10/12 mx-auto pl-2 py-5 pb-1 border-b-2 "
 						/>
@@ -88,9 +90,7 @@ export default function Login() {
 								value={password}
 								placeholder="Mot de passe"
 								secureTextEntry={!showPassword}
-								style={{
-									color: theme.colors.text,
-								}}
+								style={{ color: theme.colors.text }}
 								placeholderTextColor={"#333333"}
 								className="text-lg pl-2"
 							/>
@@ -132,9 +132,7 @@ export default function Login() {
 					>
 						<Text
 							className="text-center text-md font-semibold"
-							style={{
-								color: theme.colors.primary,
-							}}
+							style={{ color: theme.colors.primary }}
 						>
 							Ou S'inscrire
 						</Text>

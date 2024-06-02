@@ -14,6 +14,7 @@ import { auth } from "../../db";
 import { getMemberInfos } from "../../db/member";
 import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -99,29 +100,32 @@ export default function Account() {
 									style={{ width: 150, height: 150 }}
 								/>
 								<View
-									className="mx-auto flex flex-col gap-5"
+									className="mx-auto flex flex-col gap-5 max-w-[50%]"
 									style={{ backgroundColor: theme.colors.background }}
 								>
 									<Text
 										className=" ml-6 mb-4 text-xl mt-3"
 										style={{ color: theme.colors.text }}
 									>
-										{auth.currentUser?.email}
+										{memberInfos?.nom}
 									</Text>
 									<Text
-										className=" ml-6 mb-4 text-xl mt-3"
+										className=" ml-6 mb-4 text-lg mt-3"
 										style={{ color: theme.colors.text }}
 									>
-										{memberInfos?.nom}
+										{auth.currentUser?.email}
 									</Text>
 								</View>
 							</View>
 
 							<Pressable
 								onPress={handleLogout}
-								className="mx-auto bg-red-500 py-2 px-4 rounded-xl w-3/5"
+								className="mx-auto bg-red-500 py-2 px-4 rounded-xl w-3/5 flex items-center justify-center flex-row"
 							>
-								<Text className="text-lg text-center text-white">Déconnexion</Text>
+								<View className="mx-2 bg-transparent">
+									<AntDesign name="logout" size={20} color="white" className="mx-2" />
+								</View>
+								<Text className="text-lg text-center text- mx-2">Déconnexion</Text>
 							</Pressable>
 						</View>
 					) : (

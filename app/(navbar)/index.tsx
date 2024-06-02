@@ -40,8 +40,7 @@ export default function Index() {
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const [showMoreValidate, setShowMoreValidate] = useState(3);
 	const rotation = useRef(new Animated.Value(0)).current;
-
-
+	const { user } = useContext(UserContext);
 
 	useEffect(() => {
 		(async () => {
@@ -51,7 +50,7 @@ export default function Index() {
 				setLoading(false);
 			} catch (error) {
 				handleError(error);
-				setMemberInfos([]);
+				setMemberInfos(null);
 				setLoading(false);
 			}
 		})();
@@ -63,7 +62,7 @@ export default function Index() {
 
 	useEffect(() => {
 		(async () => {
-			const username = memberInfos.nom;
+			const username = memberInfos && memberInfos.nom;
 			const time = new Date().getHours();
 			if (time < 12) {
 				setWelcomeMessage(`Bonjour${username ? ", " + username : ""} !`);
@@ -75,7 +74,7 @@ export default function Index() {
 				setWelcomeMessage(`Bonsoir${username ? ", " + username : ""} !`);
 			}
 		})();
-	}, [memberInfos.nom]);
+	}, [memberInfos]);
 
 	const onRefresh = async () => {
 		setRefreshing(true);
@@ -217,6 +216,8 @@ export default function Index() {
 		}
 	};
 
+	!user && navigation.navigate("login");
+
 	return (
 		<>
 			<StatusBar
@@ -236,6 +237,7 @@ export default function Index() {
 				<View style={{ backgroundColor: "transparent" }}>
 					<TopStats habits={userHabits} />
 				</View>
+
 				<View
 					style={{ backgroundColor: "transparent" }}
 					className="flex justify-between flex-row items-center mt-4 w-10/12 mx-auto"
@@ -323,7 +325,7 @@ export default function Index() {
 								icon="checkmark-circle"
 								color="#22C55E"
 								text="Validées"
-								number={completedHabits.length}
+								number={completedHabits ? completedHabits.length : 0}
 							/>
 							<View className="w-full mx-auto">
 								{[
@@ -342,12 +344,16 @@ export default function Index() {
 										/>
 									))}
 
-								<ButtonViewMore
-									onPress={updateShowValidate}
-									text={
-										showMoreValidate < completedHabits.length ? "Voir plus" : "Voir moins"
-									}
-								/>
+								{completedHabits.length > 3 ? (
+									<ButtonViewMore
+										onPress={updateShowValidate}
+										text={
+											showMoreValidate < completedHabits.length
+												? "Voir plus"
+												: "Voir moins"
+										}
+									/>
+								) : null}
 							</View>
 						</View>
 						{uncompletedHabits.length > 0 &&

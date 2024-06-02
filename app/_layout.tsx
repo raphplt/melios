@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { StatusBar, Text, View, useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { ThemeContext } from "../components/ThemContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
@@ -48,7 +48,15 @@ function MainNavigator() {
 		});
 	};
 
-	const { user, isLoading }: any = useSession();
+	const { user, isLoading: isSessionLoading }: any = useSession();
+
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		if (!isSessionLoading) {
+			setIsLoading(false);
+		}
+	}, [isSessionLoading]);
 
 	if (isLoading || !loaded) {
 		return (
@@ -63,54 +71,69 @@ function MainNavigator() {
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
 			<ThemeProvider value={theme}>
-				{user ? (
-					<Stack>
-						<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
-						<Stack.Screen
-							name="select"
-							options={{
-								title: "Choix des habitudes",
-								animation: "fade",
-								presentation: "transparentModal",
-								headerShown: true,
-								headerShadowVisible: false,
-							}}
-						/>
-						<Stack.Screen
-							name="habitDetail"
-							options={{
-								title: "Détail de l'habitude",
-								presentation: "transparentModal",
-								headerShown: false,
-							}}
-						/>
-					</Stack>
-				) : (
-					<Stack>
-						<Stack.Screen
-							name="register"
-							options={{
-								title: "Inscription",
-								headerShown: false,
-								gestureEnabled: false,
-							}}
-						/>
-						<Stack.Screen
-							name="login"
-							options={{
-								title: "Connexion",
-								headerShown: false,
-								gestureEnabled: false,
-							}}
-						/>
-					</Stack>
-				)}
+				<Stack>
+					<Stack.Screen
+						name="select"
+						options={{
+							title: "Choix des habitudes",
+							animation: "fade",
+							presentation: "transparentModal",
+							headerShown: true,
+							headerShadowVisible: false,
+						}}
+					/>
+					<Stack.Screen
+						name="habitDetail"
+						options={{
+							title: "Détail de l'habitude",
+							presentation: "transparentModal",
+							headerShown: false,
+						}}
+					/>
+					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+					<Stack.Screen
+						name="login"
+						options={{
+							title: "Connexion",
+							headerShown: false,
+							gestureEnabled: false,
+						}}
+					/>
+					<Stack.Screen
+						name="register"
+						options={{
+							title: "Inscription",
+							headerShown: false,
+							gestureEnabled: false,
+						}}
+					/>
+				</Stack>
 			</ThemeProvider>
 		</ThemeContext.Provider>
 	);
 }
 
 export default function RootLayout() {
+	const { user, isLoading: isSessionLoading }: any = useSession();
+	const navigation: any = useNavigation();
+	const [isNavigationReady, setIsNavigationReady] = useState(false);
+
+	useEffect(() => {
+		return navigation.addListener("ready", () => {
+			setIsNavigationReady(true);
+		});
+	}, [navigation]);
+
+	useEffect(() => {
+		if (!isSessionLoading && !user && isNavigationReady) {
+			console.log("Utilisateur non connecté.");
+			navigation.navigate("login");
+		} else {
+			console.log(user, isSessionLoading, isNavigationReady);
+			console.log("Utilisateur connecté.");
+		}
+	}, [isSessionLoading, user, isNavigationReady]);
+
 	return (
 		<SessionProvider>
 			<MainNavigator />
