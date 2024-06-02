@@ -126,12 +126,8 @@ export default function RootLayout() {
 
 	useEffect(() => {
 		if (!isSessionLoading && !user && isNavigationReady) {
-			console.log("Utilisateur non connecté.");
 			navigation.navigate("login");
-		} else {
-			console.log(user, isSessionLoading, isNavigationReady);
-			console.log("Utilisateur connecté.");
-		}
+		} 
 	}, [isSessionLoading, user, isNavigationReady]);
 
 	return (
