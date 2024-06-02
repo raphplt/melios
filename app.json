@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "melios",
 		"slug": "melios",
-		"version": "1.0.1",
+		"version": "1.0.3",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
 		"scheme": "app",
@@ -17,7 +17,8 @@
 			"supportsTablet": true
 		},
 		"android": {
-			"versionCode": 3,
+			"versionCode": 4,
+			"icon": "./assets/images/icon.png",
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/images/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
