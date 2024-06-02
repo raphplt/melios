@@ -72,6 +72,7 @@ function MainNavigator() {
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
 			<ThemeProvider value={theme}>
 				<Stack>
+					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
 					<Stack.Screen
 						name="select"
 						options={{
@@ -90,7 +91,6 @@ function MainNavigator() {
 							headerShown: false,
 						}}
 					/>
-					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
 					<Stack.Screen
 						name="login"
 						options={{

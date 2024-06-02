@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemContext";
 import { Text, View } from "../../components/Themed";
 import { getMemberHabits } from "../../db/member";
@@ -8,6 +8,9 @@ import { RefreshControl, ScrollView } from "react-native";
 import HabitsCompleted from "../../components/progression/HabitsCompleted";
 import { HabitCard } from "../../components/progression/HabitCard";
 import SetTime from "../../components/progression/SetTime";
+import { LineChart } from "react-native-chart-kit";
+import { Dimensions } from "react-native";
+import Graph from "../../components/progression/Graph";
 
 export default function Progression() {
 	const { theme } = useContext(ThemeContext);
@@ -155,6 +158,21 @@ export default function Progression() {
 		}
 	}, [habits, date]);
 
+	const getTitle = () => {
+		switch (activeButton) {
+			case "Jour":
+				return "Complétion sur les dernières 24 heures";
+			case "Semaine":
+				return "Complétion sur les 7 derniers jours";
+			case "Mois":
+				return "Complétion sur les 30 derniers jours";
+			case "Année":
+				return "Complétion sur l'année écoulée";
+			default:
+				return "Complétion sur les 7 derniers jours";
+		}
+	};
+
 	return (
 		<>
 			<ScrollView
@@ -188,16 +206,47 @@ export default function Progression() {
 						activeButton={activeButton}
 					/>
 				</View>
-				{activeButton === "Jour" && (
-					<View
-						className="flex items-center justify-around flex-row mb-3"
-						style={{ backgroundColor: theme.colors.background }}
+
+				<View
+					style={{ backgroundColor: theme.colors.background, alignItems: "center" }}
+				>
+					<Text
+						className="w-10/12 mt-4 mb-2 text-[16px] font-semibold"
+						style={{ color: theme.colors.text }}
 					>
-						<HabitCard statistic={scoreHabits} text="complétées" theme={theme} />
-						<HabitCard statistic={comparedToYesterday} text="vs hier" theme={theme} />
+						{getTitle()}
+					</Text>
+					<Graph habits={habitLastDaysCompleted} />
+				</View>
+				{activeButton === "Jour" && (
+					<View style={{ backgroundColor: theme.colors.background }}>
+						<Text
+							style={{ color: theme.colors.text }}
+							className=" w-10/12 mx-auto mt-4 text-[16px] font-semibold mb-2"
+						>
+							Statistiques du jour
+						</Text>
+						<View
+							className="flex items-center justify-between flex-row mb-3 w-[90%] mx-auto mt-2"
+							style={{ backgroundColor: theme.colors.background }}
+						>
+							<HabitCard statistic={scoreHabits} text="complétées" theme={theme} />
+							<HabitCard
+								statistic={comparedToYesterday}
+								text="vs hier"
+								theme={theme}
+							/>
+						</View>
 					</View>
 				)}
-				<ScrollView className="flex flex-col mt-2">
+				<View
+					style={{
+						height: 1,
+						width: "80%",
+					}}
+					className="mx-auto my-2 mt-2"
+				/>
+				<ScrollView className="flex flex-col mt-2 mb-4">
 					<HabitsCompleted
 						habits={habits}
 						habitLastDaysCompleted={habitLastDaysCompleted}

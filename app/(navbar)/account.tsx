@@ -97,7 +97,7 @@ export default function Account() {
 								<Image
 									source={require("../../assets/images/pfp.jpg")}
 									className="rounded-full mx-auto mt-4"
-									style={{ width: 150, height: 150 }}
+									style={{ width: 120, height: 120 }}
 								/>
 								<View
 									className="mx-auto flex flex-col gap-5 max-w-[50%]"
@@ -120,7 +120,7 @@ export default function Account() {
 
 							<Pressable
 								onPress={handleLogout}
-								className="mx-auto bg-red-500 py-2 px-4 rounded-xl w-3/5 flex items-center justify-center flex-row"
+								className="mx-auto bg-red-500 py-1 border-red-500 border-[1px] px-3 rounded-lg w-3/5 flex items-center justify-center flex-row"
 							>
 								<View className="mx-2 bg-transparent">
 									<AntDesign name="logout" size={20} color="white" className="mx-2" />
@@ -131,7 +131,7 @@ export default function Account() {
 					) : (
 						<View style={{ backgroundColor: theme.colors.background }}>
 							<Text
-								className=" ml-6 mb-4 text-xl mt-6 italic text-center"
+								className=" ml-6 mb-4 text-xl mt-6  text-center"
 								style={{ color: theme.colors.text }}
 							>
 								Non connecté
@@ -166,11 +166,18 @@ export default function Account() {
 							</Pressable>
 						</View>
 					)}
+					<View
+						style={{
+							height: 1,
+							width: "80%",
+						}}
+						className="mx-auto my-6 mt-12"
+					/>
 					<Text
-						className="w-10/12 mx-auto mb-4 text-xl mt-12"
+						className="w-10/12 mx-auto mb-4 text-lg font-semibold"
 						style={{ color: theme.colors.text }}
 					>
-						Paramètres
+						Paramètres supplémentaires
 					</Text>
 					<View />
 					<View
@@ -189,6 +196,17 @@ export default function Account() {
 						/>
 					</View>
 				</ScrollView>
+				<View
+					className="w-full mx-auto mt-12 absolute bottom-0 pt-1"
+					style={{ backgroundColor: theme.colors.backgroundSecondary }}
+				>
+					<Text
+						className=" text-center  text-sm"
+						style={{ color: theme.colors.text }}
+					>
+						Melios v1.0.0 - © 2024 Melios. Tous droits réservés.
+					</Text>
+				</View>
 			</ThemeProvider>
 		</>
 	);

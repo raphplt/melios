@@ -13,7 +13,7 @@ const DefaultTheme: Theme = {
 		activeSwitch: "rgb(8, 32, 159)",
 		inactiveSwitch: "rgb(230, 230, 230)",
 		activeThumb: "rgb(255, 255, 255)",
-		inactiveThumb: "rgb(0, 122, 255)",
+		inactiveThumb: "rgb(8, 32, 159)",
 		backgroundSecondary: "rgb(230, 230, 230)",
 		backgroundTertiary: "rgb(128, 183, 255)",
 		cardBackground: "#F6F6F6",

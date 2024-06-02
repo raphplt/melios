@@ -16,15 +16,15 @@ export const HabitCard = ({ statistic, text, theme }: any) => {
 				setFillColor("#FFD31A");
 			}
 			if (50 < statistic && statistic <= 75) {
-				setFillColor("#9DF1BA");
+				setFillColor("#90EE90");
 			}
 			if (75 < statistic && statistic <= 100) {
-				setFillColor("#22C55E");
+				setFillColor("#7CFC00");
 			}
 		} else if (text == "vs hier") {
 			if (statistic > 0) {
-				setFillColorLastDays("#9DF1BA");
-			} else setFillColorLastDays("#C54922");
+				setFillColorLastDays("#90EE90");
+			} else setFillColorLastDays(`${theme.colors.cardBackground}`);
 		}
 	}, [statistic]);
 
@@ -35,7 +35,7 @@ export const HabitCard = ({ statistic, text, theme }: any) => {
 				borderWidth: 1,
 				borderColor: theme.colors.border,
 			}}
-			className="flex items-center justify-center w-36 h-36 rounded-lg mx-auto mt-5"
+			className="flex items-center justify-center w-36 h-36 rounded-lg "
 		>
 			<View
 				style={{

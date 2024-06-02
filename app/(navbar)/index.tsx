@@ -39,6 +39,7 @@ export default function Index() {
 	const [welcomeMessage, setWelcomeMessage] = useState("");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const [showMoreValidate, setShowMoreValidate] = useState(3);
+	const [showMoreNext, setShowMoreNext] = useState(3);
 	const rotation = useRef(new Animated.Value(0)).current;
 	const { user } = useContext(UserContext);
 
@@ -85,6 +86,7 @@ export default function Index() {
 			setMemberInfos(memberInfos);
 			setUserHabits(data);
 			setShowMoreValidate(3);
+			setShowMoreNext(3);
 		} catch (error) {
 			handleError(error);
 		} finally {
@@ -216,6 +218,14 @@ export default function Index() {
 		}
 	};
 
+	const updateShowNext = () => {
+		if (showMoreNext < uncompletedHabits.length) {
+			setShowMoreNext((prev) => prev + 5);
+		} else {
+			setShowMoreNext(3);
+		}
+	};
+
 	!user && navigation.navigate("login");
 
 	return (
@@ -308,7 +318,7 @@ export default function Index() {
 
 							{uncompletedHabits
 								.filter((habit: any) => habit.moment >= hours)
-
+								.slice(0, showMoreNext)
 								.map((filteredHabit: any) => (
 									<CardCheckHabit
 										key={filteredHabit.id}
@@ -316,6 +326,14 @@ export default function Index() {
 										onHabitStatusChange={handleHabitStatusChange}
 									/>
 								))}
+							{uncompletedHabits.length > 3 ? (
+								<ButtonViewMore
+									onPress={updateShowNext}
+									text={
+										showMoreNext < uncompletedHabits.length ? "Voir plus" : "Voir moins"
+									}
+								/>
+							) : null}
 						</View>
 						<View
 							className="flex flex-row flex-wrap justify-start py-2 mb-2"
