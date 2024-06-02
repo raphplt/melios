@@ -1,18 +1,22 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { getAuth } from "firebase/auth";
+import { User, getAuth } from "firebase/auth";
+import { auth } from "../db";
 
-export const UserContext: any = createContext({});
+export const UserContext = createContext<any>({});
 
 export const SessionProvider = ({ children }: any) => {
-	const [user, setUser]: any = useState(null);
+	const [user, setUser]: any = useState<User>();
 	const [isLoading, setIsLoading]: any = useState(true);
-	const auth = getAuth();
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
-			console.log("UserProvider - user: ", user);
-			setUser(user);
-			setIsLoading(false);
+			if (user) {
+				setUser(user);
+				setIsLoading(false);
+			} else {
+				setUser(undefined);
+				setIsLoading(false);
+			}
 		});
 
 		return () => unsubscribe();
@@ -27,6 +31,7 @@ export const SessionProvider = ({ children }: any) => {
 
 export function useSession() {
 	const value = useContext(UserContext);
+
 	if (value === undefined) {
 		throw new Error("useSession must be used within a SessionProvider");
 	}

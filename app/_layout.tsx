@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { StatusBar, Text, View, useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -7,13 +7,13 @@ import { FontAwesome } from "@expo/vector-icons";
 import { ThemeContext } from "../components/ThemContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SessionProvider } from "../constants/UserContext";
+import { SessionProvider, useSession } from "../constants/UserContext"; // Utiliser useSession
 
 export { ErrorBoundary } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function MainNavigator() {
 	const [loaded, error] = useFonts({
 		SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
 		...FontAwesome.font,
@@ -28,9 +28,6 @@ export default function RootLayout() {
 			SplashScreen.hideAsync();
 		}
 	}, [loaded]);
-
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
 
 	const [theme, setTheme] = useState(
 		useColorScheme() === "dark" ? DarkTheme : DefaultTheme
@@ -51,15 +48,9 @@ export default function RootLayout() {
 		});
 	};
 
-	useEffect(() => {
-		(async () => {
-			const savedAuthState = await AsyncStorage.getItem("isAuthenticated");
-			setIsAuthenticated(savedAuthState === "true");
-			setIsLoading(false);
-		})();
-	}, []);
+	const { user, isLoading }: any = useSession();
 
-	if (isLoading) {
+	if (isLoading || !loaded) {
 		return (
 			<View className="flex-1 items-center justify-center h-screen">
 				<Text className="text-2xl font-bold text-center text-gray-700">
@@ -70,66 +61,59 @@ export default function RootLayout() {
 	}
 
 	return (
-		<SessionProvider>
-			<StatusBar
-				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
-				backgroundColor={
-					theme === DarkTheme
-						? DarkTheme.colors.background
-						: DefaultTheme.colors.background
-				}
-			/>
-
-			<ThemeContext.Provider value={{ theme, toggleTheme }}>
-				<ThemeProvider value={theme}>
-					{isAuthenticated ? (
-						<Stack>
-							<Stack.Screen name="(navbar)" />
-
-							<Stack.Screen
-								name="select"
-								options={{
-									title: "Choix des habitudes",
-									animation: "fade",
-									presentation: "transparentModal",
-									headerShown: true,
-								}}
-							/>
-							<Stack.Screen
-								name="habitDetail"
-								options={{
-									title: "Détail de l'habitude",
-									presentation: "transparentModal",
-									headerShown: false,
-								}}
-							/>
-						</Stack>
-					) : (
-						<Stack
-							screenOptions={{
+		<ThemeContext.Provider value={{ theme, toggleTheme }}>
+			<ThemeProvider value={theme}>
+				{user ? (
+					<Stack>
+						<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+						<Stack.Screen
+							name="select"
+							options={{
+								title: "Choix des habitudes",
+								animation: "fade",
+								presentation: "transparentModal",
+								headerShown: true,
+								headerShadowVisible: false,
+							}}
+						/>
+						<Stack.Screen
+							name="habitDetail"
+							options={{
+								title: "Détail de l'habitude",
+								presentation: "transparentModal",
 								headerShown: false,
 							}}
-						>
-							<Stack.Screen
-								name="register"
-								options={{
-									title: "Inscription",
-									headerShown: false,
-									gestureEnabled: false,
-								}}
-							/>
-							<Stack.Screen
-								name="login"
-								options={{
-									title: "Connexion",
-									headerShown: false,
-									gestureEnabled: false,
-								}}
-							/>
-						</Stack>
-					)}
-				</ThemeProvider>
-			</ThemeContext.Provider>
+						/>
+					</Stack>
+				) : (
+					<Stack>
+						<Stack.Screen
+							name="register"
+							options={{
+								title: "Inscription",
+								headerShown: false,
+								gestureEnabled: false,
+							}}
+						/>
+						<Stack.Screen
+							name="login"
+							options={{
+								title: "Connexion",
+								headerShown: false,
+								gestureEnabled: false,
+							}}
+						/>
+					</Stack>
+				)}
+			</ThemeProvider>
+		</ThemeContext.Provider>
+	);
+}
+
+export default function RootLayout() {
+	return (
+		<SessionProvider>
+			<MainNavigator />
 		</SessionProvider>
 	);
 }

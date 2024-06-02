@@ -38,9 +38,10 @@ export default function Index() {
 	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const [welcomeMessage, setWelcomeMessage] = useState("");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
-	const { user }: any = useContext(UserContext);
 	const [showMoreValidate, setShowMoreValidate] = useState(3);
 	const rotation = useRef(new Animated.Value(0)).current;
+
+
 
 	useEffect(() => {
 		(async () => {

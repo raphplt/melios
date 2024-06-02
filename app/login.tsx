@@ -20,25 +20,25 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
-	const [user, setUser] = useState(null);
+	const [userLocal, setUseLocal] = useState(null);
 
 	const navigation: any = useNavigation();
 
 	useEffect(() => {
 		navigation.addListener("beforeRemove", (e: any) => {
-			if (!user) {
+			if (!userLocal) {
 				e.preventDefault();
 			}
 		});
-	}, [navigation, user]);
+	}, [navigation, userLocal]);
 
 	const login = async () => {
 		try {
-			const user: any = await loginUser(email, password);
-			setUser(user);
+			const snapshot: any = await loginUser(email, password);
+			setUseLocal(snapshot);
 
-			if (user.error) {
-				setError(user.error);
+			if (snapshot.error) {
+				setError(snapshot.error);
 				return;
 			} else {
 				console.log("Utilisateur connecté avec succès.");

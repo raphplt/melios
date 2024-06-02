@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { ThemeContext } from "../ThemContext";
 import Checkbox from "expo-checkbox";
@@ -23,34 +23,51 @@ export default function CardHabit({ habit, navigation }: any) {
 		})();
 	}, []);
 
+	function hexToRgb(hex: string) {
+		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result
+			? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16),
+			  }
+			: null;
+	}
+
+	const rgb = hexToRgb(habit.color);
+	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` : "#FFFFFF";
+
 	return (
-		<View className="w-full mx-auto my-2 flex flex-row items-center justify-evenly">
-			<View
-				className="flex items-center flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
-				style={{
-					backgroundColor: theme.colors.cardBackground,
-					borderColor: habit.color || theme.colors.text,
-					borderWidth: 1,
-				}}
-			>
-				<Text className="font-semibold" style={{ marginLeft: 15 }}>
-					{habit.moment}h
-				</Text>
-				<Text
-					style={{ color: theme.colors.text }}
-					className="ml-2 text-[16px] line-clamp-2 w-3/4"
+		<TouchableOpacity onPress={setHabit}>
+			<View className="w-full mx-auto my-2 flex flex-row items-center justify-evenly">
+				<View
+					className="flex items-center flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
+					style={{
+						backgroundColor: rgba,
+						borderColor: habit.color || theme.colors.text,
+						borderWidth: 1,
+					}}
 				>
-					{habit.name}
-				</Text>
-				<Text style={{ color: theme.colors.text }}>{habit.img}</Text>
+					<Text className="font-semibold" style={{ marginLeft: 15 }}>
+						{habit.moment}h
+					</Text>
+					<Text
+						style={{ color: theme.colors.text }}
+						className="ml-2 text-[16px] line-clamp-2 w-3/4"
+					>
+						{habit.name}
+					</Text>
+					<Text style={{ color: theme.colors.text }}>{habit.img}</Text>
+				</View>
+				<View>
+					<Checkbox
+						value={toggleCheckBox}
+						// disabled
+						onValueChange={setHabit}
+						color={habit.color || theme.colors.primary}
+					/>
+				</View>
 			</View>
-			<View>
-				<Checkbox
-					value={toggleCheckBox}
-					onValueChange={setHabit}
-					color={habit.color || theme.colors.primary}
-				/>
-			</View>
-		</View>
+		</TouchableOpacity>
 	);
 }
