@@ -10,21 +10,21 @@ export const HabitCard = ({ statistic, text, theme }: any) => {
 		if (text == "complétées") {
 			setFillPercentage(`${statistic}%`);
 			if (0 <= statistic && statistic <= 25) {
-				setFillColor("#C54922");
+				setFillColor(theme.colors.redPrimary);
 			}
 			if (25 < statistic && statistic <= 50) {
-				setFillColor("#FFD31A");
+				setFillColor(theme.colors.yellowSecondary);
 			}
 			if (50 < statistic && statistic <= 75) {
-				setFillColor("#90EE90");
+				setFillColor(theme.colors.greenSecondary);
 			}
 			if (75 < statistic && statistic <= 100) {
-				setFillColor("#7CFC00");
+				setFillColor(theme.colors.greenPrimary);
 			}
 		} else if (text == "vs hier") {
 			if (statistic > 0) {
-				setFillColorLastDays("#90EE90");
-			} else setFillColorLastDays(`${theme.colors.cardBackground}`);
+				setFillColorLastDays(theme.colors.greenSecondary);
+			} else setFillColorLastDays(`${theme.colors.redSecondary}`);
 		}
 	}, [statistic]);
 
@@ -48,11 +48,11 @@ export const HabitCard = ({ statistic, text, theme }: any) => {
 					borderBottomRightRadius: 10,
 				}}
 			></View>
-			<Text style={{ color: theme.colors.text }} className="text-3xl mt-1">
+			<Text style={{ color: "black" }} className="text-3xl mt-1">
 				{text == "vs hier" && (statistic > 0 ? "+" : "-")}
 				{statistic} %
 			</Text>
-			<Text style={{ color: theme.colors.text }}>{text}</Text>
+			<Text style={{ color: "black" }}>{text}</Text>
 		</View>
 	);
 };

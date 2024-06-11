@@ -53,7 +53,7 @@ export default function MultipleChoice(props: any) {
 							borderRadius: 10,
 							backgroundColor: selectedAnswers.includes(answer)
 								? theme.colors.primary
-								: theme.colors.inactiveSwitch,
+								: theme.colors.inprimary,
 							marginRight: 10,
 							borderWidth: 1,
 							borderColor: theme.colors.primary,

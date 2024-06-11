@@ -61,7 +61,7 @@ export default function HabitDetail() {
 		const last7Days: any = [];
 		for (let i = 7; i >= 1; i--) {
 			const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-			const log = habit.logs.find((log: any) => log.date === day);
+			const log = habit?.logs?.find((log: any) => log.date === day);
 			last7Days.push({
 				date: day,
 				done: log ? log.done : false,
@@ -95,20 +95,8 @@ export default function HabitDetail() {
 	const rgb = hexToRgb(habitInfos.color);
 	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` : "#FFFFFF";
 
-	const panResponder = useRef(
-		PanResponder.create({
-			onStartShouldSetPanResponder: () => true,
-			onPanResponderMove: (_, gestureState) => {
-				if (gestureState.dy > 0) {
-					router.back();
-				}
-			},
-		})
-	).current;
-
 	return (
 		<Animated.View
-			{...panResponder.panHandlers}
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 				paddingTop: 20,
@@ -167,14 +155,7 @@ export default function HabitDetail() {
 							{habitInfos.duration} minutes
 						</Text>
 					</View>
-					<View
-						style={{
-							height: 1,
-							width: "100%",
-							backgroundColor: "#000",
-							marginVertical: 5,
-						}}
-					/>
+
 					<View
 						style={{
 							flexDirection: "row",
@@ -189,14 +170,7 @@ export default function HabitDetail() {
 							{habitInfos.category}
 						</Text>
 					</View>
-					<View
-						style={{
-							height: 1,
-							width: "100%",
-							backgroundColor: "#000",
-							marginVertical: 5,
-						}}
-					/>
+
 					<View
 						style={{
 							flexDirection: "row",
@@ -211,14 +185,7 @@ export default function HabitDetail() {
 							à {habitInfos.moment} heure
 						</Text>
 					</View>
-					<View
-						style={{
-							height: 1,
-							width: "100%",
-							backgroundColor: "#000",
-							marginVertical: 5,
-						}}
-					/>
+
 					<View
 						style={{
 							flexDirection: "row",

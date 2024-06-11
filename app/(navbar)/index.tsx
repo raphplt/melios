@@ -286,27 +286,34 @@ export default function Index() {
 								0 ? (
 								<TopRow
 									icon="close-circle"
-									color="#F6AF3B"
+									color={theme.colors.yellowPrimary}
 									text="Prochaines habitudes"
 									number={
 										uncompletedHabits.filter((habit: any) => habit.moment >= hours).length
 									}
 								/>
 							) : (
-								<View className="border-green-500 bg-green-100 border-2 rounded-lg flex-col flex items-center justify-center mx-auto w-full py-2 px-4">
-									<View className="flex flex-row items-center justify-center">
+								<View
+									style={{
+										backgroundColor: theme.colors.greenSecondary,
+										borderColor: theme.colors.greenPrimary,
+										borderWidth: 2,
+									}}
+									className="rounded-lg flex-col flex items-center justify-center mx-auto w-[95%] py-2 px-4"
+								>
+									<View className="flex flex-row items-center justify-center w-10/12 mx-auto">
 										<View className="mx-2">
 											<Entypo name="trophy" size={24} color="black" />
 										</View>
 										<Text
 											className="mx-2 font-semibold text-lg"
-											style={{ color: theme.colors.text }}
+											style={{ color: "black" }}
 										>
 											Félicitations !
 										</Text>
 									</View>
 									<Text
-										style={{ color: theme.colors.text }}
+										style={{ color: "black" }}
 										className="text-center w-3/4 mx-auto mt-2"
 									>
 										{completedHabits.length === userHabits.length
@@ -326,7 +333,8 @@ export default function Index() {
 										onHabitStatusChange={handleHabitStatusChange}
 									/>
 								))}
-							{uncompletedHabits.length > 3 ? (
+							{uncompletedHabits.filter((habit: any) => habit.moment >= hours).length >
+							3 ? (
 								<ButtonViewMore
 									onPress={updateShowNext}
 									text={
@@ -341,7 +349,7 @@ export default function Index() {
 						>
 							<TopRow
 								icon="checkmark-circle"
-								color="#22C55E"
+								color={theme.colors.greenPrimary}
 								text="Validées"
 								number={completedHabits ? completedHabits.length : 0}
 							/>
@@ -383,7 +391,7 @@ export default function Index() {
 								>
 									<TopRow
 										icon="close-circle"
-										color="#C54922"
+										color={theme.colors.redPrimary}
 										text="Manquées"
 										number={missedHabitsCount}
 									/>

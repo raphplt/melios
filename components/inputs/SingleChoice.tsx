@@ -43,7 +43,7 @@ export default function SingleChoice(props: any) {
 							backgroundColor:
 								selectedAnswer === answer
 									? theme.colors.primary
-									: theme.colors.inactiveSwitch,
+									: theme.colors.inprimary,
 							marginRight: 10,
 							borderWidth: 1,
 							borderColor: theme.colors.primary,

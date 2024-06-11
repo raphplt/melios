@@ -89,7 +89,7 @@ export default function CardCheckHabit({
 	return (
 		<Animated.View
 			style={[animatedStyles]}
-			className="w-11/12 mx-auto my-2 flex flex-row items-center justify-evenly "
+			className="w-[90%] mx-auto my-2 flex flex-row items-center justify-evenly "
 		>
 			<Pressable
 				className="px-2"
@@ -101,18 +101,25 @@ export default function CardCheckHabit({
 				}}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-xl "
+					className="flex items-center flex-row justify-around py-2 rounded-xl"
 					style={{
 						borderColor: theme.colors.border,
 						borderWidth: 1,
 						backgroundColor: theme.colors.cardBackground,
 					}}
 				>
+					<View
+						className="absolute py-2 left-[8px] w-[4px] h-full rounded-xl"
+						style={{
+							backgroundColor: habitInfos.color || theme.colors.primary,
+						}}
+					></View>
 					<View className="flex flex-row">
 						<Text
 							className="font-semibold"
+							numberOfLines={1}
 							style={{
-								marginLeft: 5,
+								marginLeft: 14,
 								color: theme.colors.text,
 							}}
 						>
@@ -125,7 +132,9 @@ export default function CardCheckHabit({
 								textDecorationLine: completed ? "line-through" : "none",
 								marginLeft: 6,
 							}}
-							className="text-[14px]  w-3/4"
+							className="text-[14px] w-3/4 "
+							numberOfLines={1}
+							ellipsizeMode="tail"
 						>
 							{habit.name}
 						</Text>

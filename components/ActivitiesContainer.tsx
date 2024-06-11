@@ -16,7 +16,7 @@ export default function ActivitiesContainer({ userHabits }: any) {
 			<Text
 				className="text-lg font-bold mb-3 w-10/12 mx-auto"
 				style={{
-					color: theme.colors.textSecondary,
+					color: "white",
 				}}
 			>
 				Activités à faire

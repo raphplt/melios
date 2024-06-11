@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Text } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { ThemeContext } from "../ThemContext";
 import { View } from "react-native";
@@ -9,7 +9,7 @@ export default function Graph({ habits }: any) {
 
 	return (
 		<View>
-			{habits && Object.keys(habits).length > 0 && (
+			{habits && Object.keys(habits).length > 0 ? (
 				<LineChart
 					data={{
 						labels: Object.keys(habits).map((name) =>
@@ -48,6 +48,16 @@ export default function Graph({ habits }: any) {
 						borderRadius: 12,
 					}}
 				/>
+			) : (
+				<View
+					style={{
+						alignItems: "center",
+						justifyContent: "center",
+						height: 220,
+					}}
+				>
+					<Text style={{ color: theme.colors.text }}>No data</Text>
+				</View>
 			)}
 		</View>
 	);

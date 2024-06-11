@@ -68,10 +68,7 @@ export default function HabitsCompleted({
 								)}
 								<Text
 									style={{
-										color:
-											habitLastDaysCompleted[habit.name] >= dateLength
-												? "black"
-												: theme.colors.text,
+										color: theme.colors.text,
 									}}
 								>
 									{habit.name}
@@ -79,17 +76,14 @@ export default function HabitsCompleted({
 								<View>
 									{activeButton === "Jour" ? (
 										habitLastDaysCompleted[habit.name] ? (
-											<Ionicons name="checkmark" size={24} color="black" />
+											<Ionicons name="checkmark" size={24} color={theme.colors.text} />
 										) : (
 											<Ionicons name="close" size={24} color={theme.colors.text} />
 										)
 									) : (
 										<Text
 											style={{
-												color:
-													habitLastDaysCompleted[habit.name] >= dateLength
-														? "black"
-														: theme.colors.text,
+												color: theme.colors.text,
 											}}
 										>
 											{habitLastDaysCompleted[habit.name]} /{" "}

@@ -20,10 +20,10 @@ function ToggleButton({ title, onToggle, value }: any) {
 				value={value}
 				onValueChange={onToggle}
 				trackColor={{
-					false: theme.colors.inactiveSwitch,
-					true: theme.colors.activeSwitch,
+					false: theme.colors.textSecondary,
+					true: theme.colors.primary,
 				}}
-				thumbColor={value ? theme.colors.activeThumb : theme.colors.inactiveThumb}
+				thumbColor={value ? theme.colors.textSecondary : theme.colors.primary}
 			/>
 		</TouchableOpacity>
 	);
