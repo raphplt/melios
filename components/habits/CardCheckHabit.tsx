@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabitLog } from "../../db/member";
 import moment from "moment";
@@ -111,7 +111,7 @@ export default function CardCheckHabit({
 					<View
 						className="absolute py-2 left-[8px] w-[4px] h-full rounded-xl"
 						style={{
-							backgroundColor: habitInfos.color || theme.colors.primary,
+							backgroundColor: habitInfos.category?.color || theme.colors.primary,
 						}}
 					></View>
 					<View className="flex flex-row">
@@ -142,7 +142,7 @@ export default function CardCheckHabit({
 					<Ionicons
 						name="flame"
 						size={24}
-						color={habitInfos.color || theme.colors.text}
+						color={habitInfos.category?.color || theme.colors.text}
 					/>
 				</View>
 			</Pressable>
@@ -150,7 +150,7 @@ export default function CardCheckHabit({
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
-					color={habitInfos.color || theme.colors.primary}
+					color={habitInfos.category?.color || theme.colors.primary}
 					disabled={disabled}
 				/>
 			</View>

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import Svg, { Path } from "react-native-svg";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 
 export default function Melios({ ...props }) {
 	return (

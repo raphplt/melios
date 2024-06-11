@@ -1,6 +1,6 @@
 import { Switch, Text, TouchableOpacity } from "react-native";
 import { useContext } from "react";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "./ThemeContext";
 
 function ToggleButton({ title, onToggle, value }: any) {
 	const { theme } = useContext(ThemeContext);

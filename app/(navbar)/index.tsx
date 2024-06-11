@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../components/ThemContext";
+import { ThemeContext } from "../../components/ThemeContext";
 import {
 	View,
 	ScrollView,
@@ -9,6 +9,7 @@ import {
 	StatusBar,
 	Image,
 	Animated,
+	Button,
 } from "react-native";
 import TopStats from "../../components/TopStats";
 import { DarkTheme, useNavigation } from "@react-navigation/native";

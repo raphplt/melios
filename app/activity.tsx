@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { View, Text } from "react-native";
-import { ThemeContext } from "../components/ThemContext";
+import { ThemeContext } from "../components/ThemeContext";
 
 export default function Activité() {
 	const { theme } = useContext(ThemeContext);

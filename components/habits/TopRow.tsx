@@ -3,7 +3,7 @@ import { View } from "../Themed";
 import { Text } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useContext } from "react";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 
 export default function TopRow({ icon, color, text, number }: any) {
 	const { theme } = useContext(ThemeContext);

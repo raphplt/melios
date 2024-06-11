@@ -4,7 +4,7 @@ import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { ThemeContext } from "../components/ThemContext";
+import { ThemeContext } from "../components/ThemeContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SessionProvider, useSession } from "../constants/UserContext"; // Utiliser useSession

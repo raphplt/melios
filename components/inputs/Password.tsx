@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, TextInput, Button, Text, Pressable } from "react-native";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function InputPassword(props: any) {

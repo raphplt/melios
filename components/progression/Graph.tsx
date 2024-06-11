@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Dimensions, Text } from "react-native";
+import { ActivityIndicator, Dimensions, Text } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 import { View } from "react-native";
 
 export default function Graph({ habits }: any) {
@@ -56,7 +56,8 @@ export default function Graph({ habits }: any) {
 						height: 220,
 					}}
 				>
-					<Text style={{ color: theme.colors.text }}>No data</Text>
+					<ActivityIndicator size="large" color={"#007aff"} />
+					<Text style={{ color: theme.colors.text }}>Chargement du graphique</Text>
 				</View>
 			)}
 		</View>

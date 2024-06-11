@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { getRewards } from "../db/rewards";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "./ThemeContext";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function Points() {

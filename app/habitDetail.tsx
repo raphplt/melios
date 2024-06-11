@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import { View, Text, Animated, Pressable, PanResponder } from "react-native";
-import { ThemeContext } from "../components/ThemContext";
+import { ThemeContext } from "../components/ThemeContext";
 import { Link, useLocalSearchParams, router } from "expo-router";
 import { ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -92,7 +92,7 @@ export default function HabitDetail() {
 			: null;
 	}
 
-	const rgb = hexToRgb(habitInfos.color);
+	const rgb = hexToRgb(habitInfos.category?.color);
 	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` : "#FFFFFF";
 
 	return (
@@ -119,7 +119,7 @@ export default function HabitDetail() {
 					style={{
 						color: habitInfos.black,
 						backgroundColor: rgba,
-						borderColor: habitInfos.color,
+						borderColor: habitInfos.category?.color,
 						borderWidth: 1,
 					}}
 					className="text-lg py-2 px-6 rounded-lg w-10/12 mx-auto text-center font-semibold"
@@ -137,7 +137,7 @@ export default function HabitDetail() {
 					className="flex flex-col items-center justify-between w-11/12 mx-auto my-5 py-2 px-12 rounded-lg"
 					style={{
 						backgroundColor: theme.colors.background,
-						borderColor: habitInfos.color,
+						borderColor: habitInfos.category?.color,
 						borderWidth: 1,
 					}}
 				>
@@ -167,7 +167,7 @@ export default function HabitDetail() {
 					>
 						<MaterialIcons name="category" size={24} color="black" />
 						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
-							{habitInfos.category}
+							{habitInfos.category.category}
 						</Text>
 					</View>
 

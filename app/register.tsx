@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable, BackHandler, Alert } from "react-native";
 import { createUser } from "../db/users";
-import { ThemeContext } from "../components/ThemContext";
+import { ThemeContext } from "../components/ThemeContext";
 import { useNavigation } from "expo-router";
 import { Questions } from "../constants/slides";
 import MultipleChoice from "../components/inputs/MultipleChoice";

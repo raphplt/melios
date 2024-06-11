@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "./ThemeContext";
 import { View, Text } from "./Themed";
 import moment from "moment";
 import { Image } from "react-native";

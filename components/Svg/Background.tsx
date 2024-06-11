@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 import { View } from "react-native";
 
 export default function Background({ ...props }) {

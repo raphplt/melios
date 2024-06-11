@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs, useNavigation } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { useContext, useEffect } from "react";
-import { ThemeContext } from "../../components/ThemContext";
+import { ThemeContext } from "../../components/ThemeContext";
 import Melios from "../../components/Svg/Melios";
 import { AntDesign } from "@expo/vector-icons";
 import { useSession } from "../../constants/UserContext";

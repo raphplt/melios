@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../components/ThemContext";
+import { ThemeContext } from "../../components/ThemeContext";
 import { Text, View } from "../../components/Themed";
 import { getMemberHabits } from "../../db/member";
 import { Pressable } from "react-native";

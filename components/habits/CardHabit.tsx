@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabit } from "../../db/member";
 import { getMemberHabit } from "../../db/member";
@@ -34,7 +34,7 @@ export default function CardHabit({ habit, navigation }: any) {
 			: null;
 	}
 
-	const rgb = hexToRgb(habit.color);
+	const rgb = hexToRgb(habit.category.color);
 	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` : "#FFFFFF";
 
 	return (
@@ -44,7 +44,7 @@ export default function CardHabit({ habit, navigation }: any) {
 					className="flex items-center flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
 					style={{
 						backgroundColor: rgba,
-						borderColor: habit.color || theme.colors.text,
+						borderColor: habit.category.color || theme.colors.text,
 						borderWidth: 1,
 					}}
 				>
@@ -64,7 +64,7 @@ export default function CardHabit({ habit, navigation }: any) {
 						value={toggleCheckBox}
 						// disabled
 						onValueChange={setHabit}
-						color={habit.color || theme.colors.primary}
+						color={habit.category.color || theme.colors.primary}
 					/>
 				</View>
 			</View>

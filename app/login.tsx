@@ -10,7 +10,7 @@ import {
 	Platform,
 } from "react-native";
 import { loginUser } from "../db/users";
-import { ThemeContext } from "../components/ThemContext";
+import { ThemeContext } from "../components/ThemeContext";
 import { useNavigation } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSession } from "../constants/UserContext";

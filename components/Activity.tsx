@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "./ThemeContext";
 import { getHabitById } from "../db/habits";
 import tinycolor from "tinycolor2";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 
 export default function Activity({ habit }: any) {
@@ -20,7 +20,9 @@ export default function Activity({ habit }: any) {
 		getHabitInfos();
 	}, []);
 
-	const lighterColor = tinycolor(habitInfos.color).lighten(30).toString();
+	const lighterColor = tinycolor(habitInfos.category?.color)
+		.lighten(30)
+		.toString();
 
 	return lighterColor ? (
 		<View
@@ -58,7 +60,7 @@ export default function Activity({ habit }: any) {
 						</Text>
 					</View>
 					<Text className="italic font-semibold text-gray-900 w-1/2 ml-3 mt-2">
-						{habitInfos.category}
+						{habitInfos.category?.category}
 					</Text>
 				</View>
 				<View className="flex flex-col justify-around items-center mt-2 h-2/3">
@@ -70,10 +72,11 @@ export default function Activity({ habit }: any) {
 					>
 						{habitInfos.name}
 					</Text>
-					<FontAwesome
-						name="arrow-circle-right"
-						size={30}
-						color={theme.colors.text}
+					<FontAwesome6
+						name={habitInfos.category?.icon || "question"}
+						size={32}
+						color={habitInfos.category?.color || theme.colors.text}
+						style={{ marginRight: 10 }}
 					/>
 				</View>
 			</Pressable>

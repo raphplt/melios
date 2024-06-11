@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Pressable, Text } from "react-native";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "./ThemeContext";
 
 export default function ButtonViewMore({ onPress, text }: any) {
 	const { theme } = useContext(ThemeContext);

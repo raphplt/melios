@@ -1,6 +1,6 @@
 import { Text, View } from "../../components/Themed";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../components/ThemContext";
+import { ThemeContext } from "../../components/ThemeContext";
 import ToggleButton from "../../components/Switch";
 import { onAuthStateChanged } from "firebase/auth";
 import { Pressable, Image, StatusBar } from "react-native";

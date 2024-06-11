@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, TextInput, Text, Pressable } from "react-native";
-import { ThemeContext } from "../ThemContext";
+import { ThemeContext } from "../ThemeContext";
 
 export default function InputText(props: any) {
 	const { theme } = useContext(ThemeContext);

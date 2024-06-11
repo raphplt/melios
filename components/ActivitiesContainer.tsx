@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import Activity from "./Activity";
-import { ThemeContext } from "./ThemContext";
+import { ThemeContext } from "./ThemeContext";
 import { ScrollView, View, Text } from "react-native";
 
 export default function ActivitiesContainer({ userHabits }: any) {
