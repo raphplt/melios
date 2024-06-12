@@ -35,13 +35,13 @@ export default function CardHabit({ habit, navigation }: any) {
 	}
 
 	const rgb = hexToRgb(habit.category.color);
-	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` : "#FFFFFF";
+	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.05)` : "#FFFFFF";
 
 	return (
 		<TouchableOpacity onPress={setHabit}>
 			<View className="w-full mx-auto my-2 flex flex-row items-center justify-evenly">
 				<View
-					className="flex items-center flex-row bg-gray-200 py-2 rounded-xl basis-4/5"
+					className="flex items-center flex-row bg-gray-200 py-2 rounded-lg basis-4/5"
 					style={{
 						backgroundColor: rgba,
 						borderColor: habit.category.color || theme.colors.text,
@@ -53,7 +53,7 @@ export default function CardHabit({ habit, navigation }: any) {
 					</Text>
 					<Text
 						style={{ color: theme.colors.text }}
-						className="ml-2 text-[16px] line-clamp-2 w-3/4"
+						className="ml-2 text-[15px] line-clamp-2 w-3/4"
 					>
 						{habit.name}
 					</Text>

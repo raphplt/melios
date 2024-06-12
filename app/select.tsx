@@ -7,6 +7,8 @@ import {
 	TextInput,
 	Animated,
 	FlatList,
+	Button,
+	ScrollView,
 } from "react-native";
 import { useNavigation } from "expo-router";
 import { ThemeContext } from "../components/ThemeContext";
@@ -15,12 +17,14 @@ import CardHabit from "../components/habits/CardHabit";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { Easing } from "react-native-reanimated";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import ButtonViewMore from "../components/ButtonViewMore";
 
 export default function Select() {
 	const [habitsData, setHabitsData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState("");
 	const [deleteAdvice, setDeleteAdvice] = useState(false);
+	const [displayedHabitsCount, setDisplayedHabitsCount]: any = useState({});
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
@@ -32,6 +36,12 @@ export default function Select() {
 				const data = await getHabitsWithCategories();
 				setHabitsData(data);
 				setLoading(false);
+				const initialDisplayedCounts = data.reduce((acc: any, habit: any) => {
+					const category = habit.category?.category || "Autres";
+					acc[category] = 5;
+					return acc;
+				}, {});
+				setDisplayedHabitsCount(initialDisplayedCounts);
 			} catch (error) {
 				console.log(
 					"Select - Erreur lors de la récupération des habitudes : ",
@@ -42,7 +52,6 @@ export default function Select() {
 
 		fetchHabitsData();
 	}, []);
-
 	const groupedHabits = habitsData.reduce((acc: any, habit: any) => {
 		const category = habit.category?.category || "Autres";
 		if (!acc[category]) {
@@ -78,25 +87,63 @@ export default function Select() {
 
 	const renderCategory = ({ item }: any) => (
 		<View key={item.category} className="mt-3">
-			<View
-				className="w-[90%] mx-auto"
-				style={{ flexDirection: "row", alignItems: "center", marginBottom: 5 }}
+			<Pressable
+				className="w-11/12 mx-auto flex flex-row items-center justify-between py-1 px-2 rounded-lg mb-2 mt-4 drop-shadow-lg"
+				style={{
+					backgroundColor: theme.colors.cardBackground,
+					borderColor: item.color,
+					borderWidth: 1,
+				}}
+				onPress={() =>
+					setDisplayedHabitsCount((prevState: any) => ({
+						...prevState,
+						[item.category]: prevState[item.category] > 0 ? 0 : 5,
+					}))
+				}
 			>
-				<FontAwesome6
-					name={item.icon}
-					size={24}
-					color={item.color}
-					style={{ marginRight: 10 }}
-				/>
-				<Text className="text-lg font-bold" style={{ color: theme.colors.text }}>
-					{item.category}
-				</Text>
-			</View>
+				<View
+					className="flex flex-row items-center "
+					style={{ backgroundColor: theme.colors.cardBackground }}
+				>
+					<FontAwesome6
+						name={item.icon}
+						size={20}
+						color={item.color}
+						style={{ marginRight: 5, marginLeft: 5 }}
+					/>
+					<Text
+						className="text-lg font-semibold px-1 italic"
+						style={{ color: item.color }}
+					>
+						{item.category}
+					</Text>
+				</View>
+				<View>
+					{displayedHabitsCount[item.category] === 5 ? (
+						<AntDesign name="caretup" size={24} color={item.color} />
+					) : (
+						<AntDesign name="caretdown" size={24} color={item.color} />
+					)}
+				</View>
+			</Pressable>
 			<FlatList
-				data={item.habits}
+				data={item.habits.slice(0, displayedHabitsCount[item.category])}
 				renderItem={renderHabit}
 				keyExtractor={(habit) => habit.id}
 				nestedScrollEnabled
+				ListFooterComponent={
+					item.habits.length > displayedHabitsCount[item.category] ? (
+						<ButtonViewMore
+							text="Voir plus"
+							onPress={() =>
+								setDisplayedHabitsCount((prevState: any) => ({
+									...prevState,
+									[item.category]: prevState[item.category] + 5,
+								}))
+							}
+						/>
+					) : null
+				}
 			/>
 		</View>
 	);
@@ -167,6 +214,22 @@ export default function Select() {
 									placeholder="Rechercher une habitude"
 								/>
 							</View>
+							<ScrollView
+								horizontal={true}
+								showsHorizontalScrollIndicator={false}
+								className="mt-3 ml-4"
+							>
+								{categories &&
+									categories.map((category: any) => (
+										<View
+											key={category.category}
+											className="flex py-2 px-4 rounded-xl mx-1"
+											style={{ backgroundColor: category.color || "black" }}
+										>
+											<Text className="text-white">{category.category}</Text>
+										</View>
+									))}
+							</ScrollView>
 						</>
 					}
 				/>

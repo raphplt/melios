@@ -79,7 +79,6 @@ export const getHabitById = async (id: any) => {
 		const habit = habits.find((habit: any) => habit.id === id);
 		if (habit) {
 			const category = await getCategoryById(habit.category);
-			console.log("category", category);
 			return { ...habit, category };
 		}
 		return null;
