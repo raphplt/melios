@@ -12,7 +12,6 @@ import { setRewards } from "../../db/rewards";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
-	withTiming,
 	withSpring,
 } from "react-native-reanimated";
 

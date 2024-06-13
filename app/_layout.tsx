@@ -48,7 +48,7 @@ function MainNavigator() {
 		});
 	};
 
-	const { user, isLoading: isSessionLoading }: any = useSession();
+	const { isLoading: isSessionLoading }: any = useSession();
 
 	const [isLoading, setIsLoading] = useState(true);
 
