@@ -352,7 +352,7 @@ export default function Index() {
 								icon="checkmark-circle"
 								color={theme.colors.greenPrimary}
 								text="Validées"
-								number={completedHabits ? completedHabits.length : 0}
+								number={completedHabits.length}
 							/>
 							<View className="w-full mx-auto">
 								{[

@@ -17,9 +17,7 @@ export default function TopRow({ icon, color, text, number }: any) {
 					borderWidth: 1,
 				}}
 			>
-				<Text className="font-semibold text-[14px] text-white">
-					{number > 0 && `${number}`}
-				</Text>
+				<Text className="font-semibold text-[14px] text-white">{`${number}`}</Text>
 			</View>
 			<Text
 				className="font-semibold text-[16px]"

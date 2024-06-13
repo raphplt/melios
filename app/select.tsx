@@ -7,7 +7,6 @@ import {
 	TextInput,
 	Animated,
 	FlatList,
-	Button,
 	ScrollView,
 } from "react-native";
 import { useNavigation } from "expo-router";
@@ -15,7 +14,6 @@ import { ThemeContext } from "../components/ThemeContext";
 import { getHabitsWithCategories } from "../db/fetch";
 import CardHabit from "../components/habits/CardHabit";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import { Easing } from "react-native-reanimated";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ButtonViewMore from "../components/ButtonViewMore";
 
@@ -25,10 +23,12 @@ export default function Select() {
 	const [search, setSearch] = useState("");
 	const [deleteAdvice, setDeleteAdvice] = useState(false);
 	const [displayedHabitsCount, setDisplayedHabitsCount]: any = useState({});
+	const [selectedCategory, setSelectedCategory] = useState(null);
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
 	const translateY = useRef(new Animated.Value(0)).current;
+	const scrollViewRef: any = useRef(null);
 
 	useEffect(() => {
 		const fetchHabitsData = async () => {
@@ -52,7 +52,16 @@ export default function Select() {
 
 		fetchHabitsData();
 	}, []);
-	const groupedHabits = habitsData.reduce((acc: any, habit: any) => {
+
+	const filteredHabitsData = habitsData.filter((habit: any) => {
+		const categoryMatch = selectedCategory
+			? habit.category?.category === selectedCategory
+			: true;
+		const searchMatch = habit.name.toLowerCase().includes(search.toLowerCase());
+		return categoryMatch && searchMatch;
+	});
+
+	const groupedHabits = filteredHabitsData.reduce((acc: any, habit: any) => {
 		const category = habit.category?.category || "Autres";
 		if (!acc[category]) {
 			acc[category] = {
@@ -71,10 +80,8 @@ export default function Select() {
 	}));
 
 	const handleNavigation = () => {
-		Animated.timing(translateY, {
+		Animated.spring(translateY, {
 			toValue: -1000,
-			duration: 400,
-			easing: Easing.linear,
 			useNativeDriver: true,
 		}).start(() => {
 			navigation.navigate("(navbar)");
@@ -102,7 +109,7 @@ export default function Select() {
 				}
 			>
 				<View
-					className="flex flex-row items-center "
+					className="flex flex-row items-center"
 					style={{ backgroundColor: theme.colors.cardBackground }}
 				>
 					<FontAwesome6
@@ -148,17 +155,26 @@ export default function Select() {
 		</View>
 	);
 
+	const handleCategoryPress = (category: any) => {
+		setSelectedCategory(category === selectedCategory ? null : category);
+		setTimeout(() => {
+			scrollViewRef.current?.scrollTo({
+				x: 0,
+				animated: true,
+			});
+		}, 100);
+	};
+
 	return (
 		<Animated.View style={{ flex: 1, transform: [{ translateY }] }}>
-			{loading && (
+			{loading ? (
 				<View
 					className="flex items-center justify-center h-screen"
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					<ActivityIndicator size="large" color={theme.colors.primary} />
 				</View>
-			)}
-			{!loading && (
+			) : (
 				<FlatList
 					style={{ backgroundColor: theme.colors.background }}
 					data={categories}
@@ -177,7 +193,7 @@ export default function Select() {
 								>
 									<Ionicons name="bulb" size={24} style={{ color: theme.colors.text }} />
 									<Text
-										className="text-[15px] w-10/12 mx-auto text-left font-semibold "
+										className="text-[15px] w-10/12 mx-auto text-left font-semibold"
 										style={{ color: theme.colors.text }}
 									>
 										Vous pouvez sélectionner jusqu'à 20 habitudes.
@@ -213,22 +229,37 @@ export default function Select() {
 									value={search}
 									placeholder="Rechercher une habitude"
 								/>
+								{search.length > 0 && (
+									<Pressable onPress={() => setSearch("")}>
+										<Ionicons
+											name="close-circle"
+											size={24}
+											style={{ color: theme.colors.text }}
+										/>
+									</Pressable>
+								)}
 							</View>
 							<ScrollView
-								horizontal={true}
+								ref={scrollViewRef}
+								horizontal
 								showsHorizontalScrollIndicator={false}
 								className="mt-3 ml-4"
 							>
-								{categories &&
-									categories.map((category: any) => (
-										<View
-											key={category.category}
-											className="flex py-2 px-4 rounded-xl mx-1"
-											style={{ backgroundColor: category.color || "black" }}
-										>
-											<Text className="text-white">{category.category}</Text>
-										</View>
-									))}
+								{categories.map((category) => (
+									<Pressable
+										key={category.category}
+										className="flex py-2 px-4 rounded-xl mx-1"
+										style={{
+											backgroundColor:
+												selectedCategory === category.category
+													? theme.colors.primary
+													: category.color || "black",
+										}}
+										onPress={() => handleCategoryPress(category.category)}
+									>
+										<Text className="text-white">{category.category}</Text>
+									</Pressable>
+								))}
 							</ScrollView>
 						</>
 					}
@@ -246,7 +277,7 @@ export default function Select() {
 					<View>
 						<AntDesign name="checkcircleo" size={20} color="white" />
 					</View>
-					<Text className="text-center text-lg text-white ">Valider</Text>
+					<Text className="text-center text-lg text-white">Valider</Text>
 				</Pressable>
 			</View>
 		</Animated.View>
