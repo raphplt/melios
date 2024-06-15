@@ -73,6 +73,8 @@ export default function Account() {
 		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
 	};
 
+	loading && <Text>Loading...</Text>;
+
 	return (
 		<>
 			<StatusBar
@@ -198,13 +200,13 @@ export default function Account() {
 				</ScrollView>
 				<View
 					className="w-full mx-auto mt-12 absolute bottom-0 pt-1"
-					style={{ backgroundColor: theme.colors.backgroundSecondary }}
+					style={{ backgroundColor: theme.colors.background }}
 				>
 					<Text
 						className=" text-center  text-sm"
 						style={{ color: theme.colors.text }}
 					>
-						Melios v1.0.0 - © 2024 Melios. Tous droits réservés.
+						Melios v1.0.4 - © 2024 Melios. Tous droits réservés.
 					</Text>
 				</View>
 			</ThemeProvider>

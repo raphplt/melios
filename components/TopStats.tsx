@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
 import { View, Text } from "./Themed";
 import moment from "moment";
-import { Image } from "react-native";
+import { Image, ImageBackground } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getRewards } from "../db/rewards";
 import Points from "./Points";
@@ -91,14 +91,15 @@ export default function TopStats({ habits }: any) {
 	}, [habits, date]);
 
 	return (
-		<View className="bg-transparent">
-			<LinearGradient
-				colors={["rgb(128, 183, 255)", "rgb(10, 132, 255)"]}
+		<View className="bg-transparent ">
+			<ImageBackground
+				source={require("../assets/images/illustrations/temple_night.jpg")}
+				className="flex items-center justify-around mx-auto flex-row"
 				style={{
-					borderColor: theme.colors.border,
-					borderWidth: 1,
+					width: "100%",
+					height: 200,
+					backgroundColor: theme.colors.background,
 				}}
-				className="flex items-center justify-around flex-row mt-3 w-[95%] py-3 mx-auto rounded-xl"
 			>
 				<View className="flex items-center justify-center flex-col bg-transparent">
 					<Image
@@ -113,7 +114,7 @@ export default function TopStats({ habits }: any) {
 					</Text>
 				</View>
 
-				<View className="w-2/3 flex flex-col gap-2 bg-transparent">
+				<View className="w-2/3 flex flex-col gap-y-2 bg-transparent">
 					<View className="flex items-center flex-row justify-between bg-transparent">
 						<Text style={{ color: theme.colors.textSecondary }} className="text-lg">
 							{lastDaysCompleted} jours d'affilés
@@ -131,7 +132,7 @@ export default function TopStats({ habits }: any) {
 						<Ionicons name="trophy-sharp" size={24} color={theme.colors.text} />
 					</View>
 				</View>
-			</LinearGradient>
+			</ImageBackground>
 		</View>
 	);
 }

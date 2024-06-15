@@ -14,6 +14,7 @@ import Animated, {
 	useAnimatedStyle,
 	withSpring,
 } from "react-native-reanimated";
+import { useData } from "../../constants/DataContext";
 
 export default function CardCheckHabit({
 	habit = [],
@@ -25,6 +26,7 @@ export default function CardCheckHabit({
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
+	const { points, setPoints } = useData();
 
 	const navigation: any = useNavigation();
 	const translateX = useSharedValue(0);
@@ -56,6 +58,7 @@ export default function CardCheckHabit({
 
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards(habitInfos.difficulty);
+		setPoints(points + habitInfos.difficulty);
 
 		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);

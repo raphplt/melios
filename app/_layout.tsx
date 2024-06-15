@@ -8,6 +8,7 @@ import { ThemeContext } from "../components/ThemeContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SessionProvider, useSession } from "../constants/UserContext"; // Utiliser useSession
+import { DataProvider } from "../constants/DataContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -88,7 +89,7 @@ function MainNavigator() {
 						options={{
 							title: "Détail de l'habitude",
 							presentation: "transparentModal",
-							headerShown: false,
+							// headerShown: false,
 						}}
 					/>
 					<Stack.Screen
@@ -127,12 +128,14 @@ export default function RootLayout() {
 	useEffect(() => {
 		if (!isSessionLoading && !user && isNavigationReady) {
 			navigation.navigate("login");
-		} 
+		}
 	}, [isSessionLoading, user, isNavigationReady]);
 
 	return (
 		<SessionProvider>
-			<MainNavigator />
+			<DataProvider>
+				<MainNavigator />
+			</DataProvider>
 		</SessionProvider>
 	);
 }

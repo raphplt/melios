@@ -6,6 +6,7 @@ import { ThemeContext } from "../../components/ThemeContext";
 import Melios from "../../components/Svg/Melios";
 import { AntDesign } from "@expo/vector-icons";
 import { useSession } from "../../constants/UserContext";
+import Points from "../../components/Points";
 
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -59,18 +60,21 @@ export default function TabLayout() {
 						</View>
 					),
 					headerRight: () => (
-						<Pressable
-							onPress={() => {
-								navigation.navigate("account");
-							}}
-						>
-							<AntDesign
-								name="user"
-								size={24}
-								color="black"
-								style={{ marginRight: 15 }}
-							/>
-						</Pressable>
+						<View className="flex flex-row items-center">
+							<Points />
+							<Pressable
+								onPress={() => {
+									navigation.navigate("account");
+								}}
+							>
+								<AntDesign
+									name="user"
+									size={24}
+									color="black"
+									style={{ marginRight: 15 }}
+								/>
+							</Pressable>
+						</View>
 					),
 
 					tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,

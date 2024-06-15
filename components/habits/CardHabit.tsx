@@ -57,7 +57,6 @@ export default function CardHabit({ habit, navigation }: any) {
 					>
 						{habit.name}
 					</Text>
-					<Text style={{ color: theme.colors.text }}>{habit.img}</Text>
 				</View>
 				<View>
 					<Checkbox

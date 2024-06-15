@@ -3,7 +3,7 @@ import { View, Text, Animated, Pressable, PanResponder } from "react-native";
 import { ThemeContext } from "../components/ThemeContext";
 import { Link, useLocalSearchParams, router } from "expo-router";
 import { ScrollView } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Easing } from "react-native-reanimated";
@@ -98,104 +98,85 @@ export default function HabitDetail() {
 	return (
 		<Animated.View
 			style={{
-				backgroundColor: theme.colors.cardBackground,
+				backgroundColor: theme.colors.background,
 				paddingTop: 20,
 				flex: 1,
-				transform: [{ translateY }],
+				// transform: [{ translateY }],
 			}}
-			className="h-[95vh] w-full mx-auto rounded-t-2xl border-2 border-gray-500 overflow-y-auto bottom-0 absolute"
+			className="h-screen w-full mx-auto  border-gray-500 overflow-y-auto top-0 absolute"
 		>
-			{isPresented && (
-				<Pressable
-					className="flex flex-row items-center justify-center gap-2 py-3 px-4"
-					onPress={handleBack}
-				>
-					<AntDesign name="arrowdown" size={24} color="black" />
-				</Pressable>
-			)}
-
-			<View className="flex flex-col items-center justify-center mt-12">
-				<Text
+			<View className="flex flex-col items-center justify-center mt-4">
+				<View
+					className="py-2 px-6 rounded-xl w-11/12 mx-auto flex items-center flex-row justify-center"
 					style={{
-						color: habitInfos.black,
 						backgroundColor: rgba,
 						borderColor: habitInfos.category?.color,
-						borderWidth: 1,
-					}}
-					className="text-lg py-2 px-6 rounded-lg w-10/12 mx-auto text-center font-semibold"
-				>
-					{habitInfos.name}
-				</Text>
-
-				<Text
-					style={{ color: theme.colors.text }}
-					className="text-[16px] my-6 text-center w-10/12 mx-auto"
-				>
-					“ {habitInfos.description} ”
-				</Text>
-				<View
-					className="flex flex-col items-center justify-between w-11/12 mx-auto my-5 py-2 px-12 rounded-lg"
-					style={{
-						backgroundColor: theme.colors.background,
-						borderColor: habitInfos.category?.color,
-						borderWidth: 1,
+						borderWidth: 2,
 					}}
 				>
-					<View
+					<FontAwesome6
+						name={habitInfos.category?.icon || "question"}
+						size={24}
+						color={habitInfos.category?.color || theme.colors.text}
+						style={{ marginRight: 10 }}
+					/>
+					<Text
 						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							width: "100%",
-							alignItems: "center",
-							marginVertical: 5,
+							color: habitInfos.category?.color,
 						}}
+						className="text-lg  text-center font-semibold"
 					>
-						<Ionicons name="time" size={24} color="black" />
+						{habitInfos.name}
+					</Text>
+				</View>
+				<View>
+					<Text>{habitInfos.duration} minutes</Text>
+					<Pressable>
+						<Text>Commencer l'habitude</Text>
+					</Pressable>
+				</View>
+
+				<View
+					className="flex flex-col items-center justify-between w-11/12 mx-auto py-2  rounded-lg mt-6"
+					style={{
+						backgroundColor: theme.colors.cardBackground,
+						borderColor: habitInfos.category?.color,
+						borderWidth: 2,
+					}}
+				>
+					<Text
+						style={{
+							color: theme.colors.text,
+							borderBottomWidth: 2,
+							borderBottomColor: habitInfos.category?.color || theme.colors.border,
+						}}
+						className="text-[16px] text-center font-semibold pb-2 w-11/12 mx-auto"
+					>
+						“{habitInfos.description}”
+					</Text>
+					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
+						<Ionicons name="time" size={24} color={theme.colors.text} />
 						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
 							{habitInfos.duration} minutes
 						</Text>
 					</View>
 
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							width: "100%",
-							alignItems: "center",
-							marginVertical: 5,
-						}}
-					>
-						<MaterialIcons name="category" size={24} color="black" />
+					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
+						<MaterialIcons name="category" size={24} color={theme.colors.text} />
 						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
 							{habitInfos.category.category}
 						</Text>
 					</View>
 
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							width: "100%",
-							alignItems: "center",
-							marginVertical: 5,
-						}}
-					>
-						<AntDesign name="clockcircleo" size={24} color="black" />
+					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
+						<AntDesign name="clockcircleo" size={24} color={theme.colors.text} />
 						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
 							à {habitInfos.moment} heure
 						</Text>
 					</View>
 
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							width: "100%",
-							alignItems: "center",
-							marginVertical: 5,
-						}}
-					>
-						<AntDesign name="linechart" size={24} color="black" />
+					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
+						<AntDesign name="linechart" size={24} color={theme.colors.text} />
 						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
 							{difficulty}
 						</Text>
@@ -204,7 +185,7 @@ export default function HabitDetail() {
 
 				<Text
 					style={{ color: theme.colors.text }}
-					className="text-[16px] mt-6 text-center w-10/12 mx-auto font-semibold"
+					className="text-[16px] mt-4 text-center w-10/12 mx-auto font-semibold"
 				>
 					Derniers jours
 				</Text>

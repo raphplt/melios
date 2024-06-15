@@ -2,10 +2,12 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { getRewards } from "../db/rewards";
 import { ThemeContext } from "./ThemeContext";
-import { FontAwesome5 } from "@expo/vector-icons";
+import Coin from "./Svg/Coin";
+import { DataContext, useData } from "../constants/DataContext";
 
 export default function Points() {
 	const { theme } = useContext(ThemeContext);
+	const { points, setPoints } = useData();
 
 	const [rewards, setRewards]: any = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -34,18 +36,21 @@ export default function Points() {
 
 	return (
 		<View
-			className="flex items-center justify-center flex-row gap-x-2 mr-4"
-			style={{}}
+			className="flex items-center justify-center flex-row mr-4 py-1 px-4 rounded-full"
+			style={{
+				backgroundColor: theme.colors.primary,
+			}}
 		>
 			<Text
 				style={{
-					color: theme.colors.textSecondary,
+					color: "#DBBB16",
 					fontSize: 20,
 				}}
+				className="font-bold mr-3"
 			>
-				{rewards.points || 0}
+				{points}
 			</Text>
-			<FontAwesome5 name="coins" size={20} color={theme.colors.textSecondary} />
+			<Coin />
 		</View>
 	);
 }

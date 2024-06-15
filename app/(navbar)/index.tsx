@@ -2,16 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemeContext";
 import {
 	View,
-	ScrollView,
 	RefreshControl,
 	Pressable,
 	ActivityIndicator,
 	StatusBar,
 	Image,
 	Animated,
-	Button,
 } from "react-native";
-import TopStats from "../../components/TopStats";
 import { DarkTheme, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "react-native";
@@ -24,6 +21,7 @@ import Background from "../../components/Svg/Background";
 import TopRow from "../../components/habits/TopRow";
 import { UserContext } from "../../constants/UserContext";
 import ButtonViewMore from "../../components/ButtonViewMore";
+import ParallaxScrollView from "../../components/ParallaxScrollView";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -43,6 +41,7 @@ export default function Index() {
 	const [showMoreNext, setShowMoreNext] = useState(3);
 	const rotation = useRef(new Animated.Value(0)).current;
 	const { user } = useContext(UserContext);
+	
 
 	useEffect(() => {
 		(async () => {
@@ -227,6 +226,12 @@ export default function Index() {
 		}
 	};
 
+	const currentHour = new Date().getHours();
+	const imageSource =
+		currentHour >= 7 && currentHour < 20
+			? require("../../assets/images/illustrations/temple_day.jpg")
+			: require("../../assets/images/illustrations/temple_night.jpg");
+
 	!user && navigation.navigate("login");
 
 	return (
@@ -237,17 +242,30 @@ export default function Index() {
 					theme === DarkTheme ? theme.colors.background : theme.colors.background
 				}
 			/>
-			<ScrollView
+			{/* <ScrollView
 				className=" overflow-y-hidden"
 				showsVerticalScrollIndicator={false}
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
+			> */}
+			<ParallaxScrollView
+				habits={userHabits}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+				headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+				headerImage={
+					<Image
+						source={imageSource}
+						style={{ width: "100%", height: 250, resizeMode: "cover" }}
+					/>
+				}
 			>
 				<Background />
-				<View style={{ backgroundColor: "transparent" }}>
+				{/* <View style={{ backgroundColor: "transparent" }}>
 					<TopStats habits={userHabits} />
-				</View>
+				</View> */}
 
 				<View
 					style={{ backgroundColor: "transparent" }}
@@ -283,8 +301,8 @@ export default function Index() {
 							style={{ backgroundColor: "transparent" }}
 						>
 							{uncompletedHabits.length > 0 &&
-							uncompletedHabits.filter((habit: any) => habit.moment > hours).length >
-								0 ? (
+							uncompletedHabits.filter((habit: any) => habit.moment + 1 > hours)
+								.length > 0 ? (
 								<TopRow
 									icon="close-circle"
 									color={theme.colors.yellowPrimary}
@@ -437,7 +455,9 @@ export default function Index() {
 					</View>
 				)}
 				{userHabits.length > 0 && <ActivitiesContainer userHabits={userHabits} />}
-			</ScrollView>
+			</ParallaxScrollView>
+
+			{/* </ScrollView> */}
 		</>
 	);
 }
