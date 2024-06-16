@@ -56,7 +56,7 @@ export default function Graph({ habits }: any) {
 						height: 220,
 					}}
 				>
-					<ActivityIndicator size="large" color={"#007aff"} />
+					<ActivityIndicator size="large" color={theme.colors.primary} />
 					<Text style={{ color: theme.colors.text }}>Chargement du graphique</Text>
 				</View>
 			)}

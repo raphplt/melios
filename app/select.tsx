@@ -24,6 +24,7 @@ export default function Select() {
 	const [deleteAdvice, setDeleteAdvice] = useState(false);
 	const [displayedHabitsCount, setDisplayedHabitsCount]: any = useState({});
 	const [selectedCategory, setSelectedCategory] = useState(null);
+	
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
@@ -57,7 +58,16 @@ export default function Select() {
 		const categoryMatch = selectedCategory
 			? habit.category?.category === selectedCategory
 			: true;
-		const searchMatch = habit.name.toLowerCase().includes(search.toLowerCase());
+		const searchMatch = habit.name
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "")
+			.toLowerCase()
+			.includes(
+				search
+					.normalize("NFD")
+					.replace(/[\u0300-\u036f]/g, "")
+					.toLowerCase()
+			);
 		return categoryMatch && searchMatch;
 	});
 
@@ -145,7 +155,7 @@ export default function Select() {
 							onPress={() =>
 								setDisplayedHabitsCount((prevState: any) => ({
 									...prevState,
-									[item.category]: prevState[item.category] + 5,
+									[item.category]: prevState[item.category] + 10,
 								}))
 							}
 						/>

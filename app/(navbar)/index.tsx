@@ -41,7 +41,6 @@ export default function Index() {
 	const [showMoreNext, setShowMoreNext] = useState(3);
 	const rotation = useRef(new Animated.Value(0)).current;
 	const { user } = useContext(UserContext);
-	
 
 	useEffect(() => {
 		(async () => {
@@ -198,7 +197,7 @@ export default function Index() {
 	if (loading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<ActivityIndicator size="large" color={"#007aff"} />
+				<ActivityIndicator size="large" color={theme.colors.primary} />
 				<Text style={{ color: theme.colors.text }} className="text-lg mt-8">
 					Chargement des habitudes...
 				</Text>

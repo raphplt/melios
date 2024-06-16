@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
-import { StatusBar, Text, View, useColorScheme } from "react-native";
+import {
+	ActivityIndicator,
+	StatusBar,
+	Text,
+	View,
+	useColorScheme,
+} from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
@@ -62,9 +68,7 @@ function MainNavigator() {
 	if (isLoading || !loaded) {
 		return (
 			<View className="flex-1 items-center justify-center h-screen">
-				<Text className="text-2xl font-bold text-center text-gray-700">
-					Loading...
-				</Text>
+				<ActivityIndicator size="large" color={theme.colors.primary} />
 			</View>
 		);
 	}

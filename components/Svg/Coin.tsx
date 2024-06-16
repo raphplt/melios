@@ -6,7 +6,7 @@ import { View } from "react-native";
 export default function Coin({ ...props }) {
 	const theme = useContext(ThemeContext);
 	return (
-		<Svg width="30" height="30" viewBox="0 0 250 250" fill="none">
+		<Svg width="26" height="26" viewBox="0 0 250 250" fill="none">
 			<Circle
 				cx="125"
 				cy="125"

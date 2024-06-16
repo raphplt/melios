@@ -32,7 +32,7 @@ export default function Points() {
 		};
 	}, []);
 
-	loading && <ActivityIndicator size="large" color="#0000ff" />;
+	loading && <ActivityIndicator size="large" color={theme.colors.primary} />;
 
 	return (
 		<View
@@ -44,7 +44,7 @@ export default function Points() {
 			<Text
 				style={{
 					color: "#DBBB16",
-					fontSize: 20,
+					fontSize: 18,
 				}}
 				className="font-bold mr-3"
 			>
