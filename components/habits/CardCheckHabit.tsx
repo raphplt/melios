@@ -64,9 +64,12 @@ export default function CardCheckHabit({
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 
 		await setMemberHabitLog(habit.id, date, true);
-		await setRewards("odyssee", habitInfos.reward);
+		await setRewards("odyssee", habitInfos.reward * habitInfos.difficulty);
 
-		setPoints({ ...points, odyssee: points.odyssee + habitInfos.reward });
+		setPoints({
+			...points,
+			odyssee: points.odyssee + habitInfos.reward * habitInfos.difficulty,
+		});
 
 		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);

@@ -1,62 +1,20 @@
 import { useContext, useEffect, useState, useRef } from "react";
-import { View, Text, Animated, Pressable, PanResponder } from "react-native";
+import { View, Text, Animated, Pressable, AppState } from "react-native";
 import { ThemeContext } from "../components/ThemeContext";
-import { Link, useLocalSearchParams, router } from "expo-router";
-import { ScrollView } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Easing } from "react-native-reanimated";
 import moment from "moment";
 import Checkbox from "expo-checkbox";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLocalSearchParams } from "expo-router";
 
 export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
 	const [difficulty, setDifficulty] = useState("");
 	const translateY = useRef(new Animated.Value(1000)).current;
 	const [lastDays, setLastDays] = useState([]);
-
-	// Timer
-	const [timerSeconds, setTimerSeconds] = useState(0);
-	const [isTimerActive, setIsTimerActive] = useState(false);
-	const timerRef: any = useRef(null);
-
-	const startTimer = () => {
-		if (!isTimerActive) {
-			const durationSeconds = habitInfos.duration * 60;
-			setTimerSeconds(durationSeconds);
-			setIsTimerActive(true);
-			timerRef.current = setInterval(() => {
-				setTimerSeconds((prevSeconds) => {
-					if (prevSeconds <= 1) {
-						clearInterval(timerRef.current);
-						setIsTimerActive(false);
-						return 0;
-					}
-					return prevSeconds - 1;
-				});
-			}, 1000);
-		}
-	};
-
-	const stopTimer = () => {
-		clearInterval(timerRef.current);
-		setIsTimerActive(false);
-	};
-
-	useEffect(() => {
-		return () => {
-			if (timerRef.current) {
-				clearInterval(timerRef.current);
-			}
-		};
-	}, []);
-
-	const formatTime = (seconds: any) => {
-		const minutes = Math.floor(seconds / 60);
-		const remainingSeconds = seconds % 60;
-		return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-	};
 
 	const params = useLocalSearchParams();
 	let { habit = "", habitInfos = "" }: any = params;
@@ -111,7 +69,101 @@ export default function HabitDetail() {
 		setLastDays(last7Days);
 	}, [habit]);
 
-	function hexToRgb(hex: string) {
+	// Timer
+	const [timerSeconds, setTimerSeconds] = useState(0);
+	const [isTimerActive, setIsTimerActive] = useState(false);
+	const timerRef: any = useRef(null);
+
+	const startTimer = () => {
+		if (!isTimerActive) {
+			const durationSeconds = habitInfos.duration * 60;
+			setTimerSeconds(durationSeconds);
+			setIsTimerActive(true);
+			timerRef.current = setInterval(() => {
+				setTimerSeconds((prevSeconds) => {
+					if (prevSeconds <= 1) {
+						clearInterval(timerRef.current);
+						setIsTimerActive(false);
+						return 0;
+					}
+					return prevSeconds - 1;
+				});
+			}, 1000);
+		}
+	};
+
+	const saveTimerState = async (seconds: any) => {
+		try {
+			await AsyncStorage.setItem("timerSeconds", seconds.toString());
+		} catch (error) {
+			console.error("Failed to save timer state:", error);
+		}
+	};
+
+	const restoreTimerState = async () => {
+		try {
+			const savedSeconds = await AsyncStorage.getItem("timerSeconds");
+			if (savedSeconds !== null) {
+				setTimerSeconds(parseInt(savedSeconds, 10));
+			}
+		} catch (error) {
+			console.error("Failed to restore timer state:", error);
+		}
+	};
+
+	const handleAppStateChange = (nextAppState: any) => {
+		if (nextAppState === "background") {
+			saveTimerState(timerSeconds);
+		} else if (nextAppState === "active") {
+			restoreTimerState();
+		}
+	};
+
+	useEffect(() => {
+		const listener = AppState.addEventListener("change", handleAppStateChange);
+
+		// Initial call to restore the state when the app is started
+		restoreTimerState();
+
+		return () => {
+			listener.remove();
+		};
+	}, []);
+
+	useEffect(() => {
+		if (isTimerActive) {
+			const durationSeconds = habitInfos.duration * 60;
+			setTimerSeconds(durationSeconds);
+			timerRef.current = setInterval(() => {
+				setTimerSeconds((prevSeconds) => {
+					if (prevSeconds <= 1) {
+						clearInterval(timerRef.current);
+						setIsTimerActive(false);
+						return 0;
+					}
+					return prevSeconds - 1;
+				});
+			}, 1000);
+		}
+		return () => {
+			if (timerRef.current) {
+				clearInterval(timerRef.current);
+			}
+		};
+	}, [isTimerActive]);
+
+	const stopTimer = () => {
+		clearInterval(timerRef.current);
+		setIsTimerActive(false);
+	};
+
+	const formatTime = (seconds: any) => {
+		const minutes = Math.floor(seconds / 60);
+		const remainingSeconds = seconds % 60;
+		return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+	};
+
+	function hexToRgb(hex: any) {
 		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result
 			? {
@@ -133,7 +185,7 @@ export default function HabitDetail() {
 				flex: 1,
 				// transform: [{ translateY }],
 			}}
-			className="h-screen w-full mx-auto  border-gray-500 overflow-y-auto top-0 absolute"
+			className="h-screen w-full mx-auto border-gray-500 overflow-y-auto top-0 absolute"
 		>
 			<View className="flex flex-col items-center justify-center mt-4">
 				<View
@@ -154,16 +206,16 @@ export default function HabitDetail() {
 						style={{
 							color: habitInfos.category?.color,
 						}}
-						className="text-lg  text-center font-semibold"
+						className="text-lg text-center font-semibold"
 					>
 						{habitInfos.name}
 					</Text>
 				</View>
-				<View>
+				<View className="py-12">
 					{!isTimerActive ? (
 						<Pressable
 							onPress={startTimer}
-							className="py-2 px-6 rounded-xl w-11/12 mx-auto "
+							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
 							style={{
 								backgroundColor: theme.colors.primary,
 								borderColor: theme.colors.primary,
@@ -171,23 +223,43 @@ export default function HabitDetail() {
 								marginTop: 10,
 							}}
 						>
+							<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
 							<Text
-								className="text-lg text-center font-semibold"
+								className="text-lg text-center font-semibold ml-2"
 								style={{ color: theme.colors.textSecondary }}
 							>
 								Commencer l'habitude
 							</Text>
 						</Pressable>
 					) : (
-						<Pressable onPress={stopTimer}>
-							<Text>Arrêter l'habitude</Text>
+						<Pressable
+							onPress={stopTimer}
+							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
+							style={{
+								backgroundColor: theme.colors.primary,
+								borderColor: theme.colors.primary,
+								borderWidth: 2,
+								marginTop: 10,
+							}}
+						>
+							<Ionicons name="pause" size={24} color={theme.colors.textSecondary} />
+							<Text
+								className="text-lg text-center font-semibold ml-2"
+								style={{ color: theme.colors.textSecondary }}
+							>
+								Arrêter l'habitude
+							</Text>
 						</Pressable>
 					)}
-					{isTimerActive && <Text>{formatTime(timerSeconds)}</Text>}
+					{isTimerActive && (
+						<Text className="text-[50px] text-center font-semibold mt-4">
+							{formatTime(timerSeconds)}
+						</Text>
+					)}
 				</View>
 
 				<View
-					className="flex flex-col items-center justify-between w-11/12 mx-auto py-2  rounded-lg mt-6"
+					className="flex flex-col items-center justify-between w-11/12 mx-auto py-2 rounded-lg mt-6"
 					style={{
 						backgroundColor: theme.colors.cardBackground,
 						borderColor: habitInfos.category?.color,
