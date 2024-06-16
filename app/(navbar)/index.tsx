@@ -41,6 +41,7 @@ export default function Index() {
 	const [showMoreNext, setShowMoreNext] = useState(3);
 	const rotation = useRef(new Animated.Value(0)).current;
 	const { user } = useContext(UserContext);
+	
 
 	useEffect(() => {
 		(async () => {
@@ -304,7 +305,9 @@ export default function Index() {
 								.length > 0 ? (
 								<TopRow
 									icon="close-circle"
-									color={theme.colors.yellowPrimary}
+									color={theme.colors.blueSecondary}
+									borderColor={theme.colors.bluePrimary}
+									textColor={theme.colors.bluePrimary}
 									text="Prochaines habitudes"
 									number={
 										uncompletedHabits.filter((habit: any) => habit.moment >= hours).length
@@ -367,7 +370,9 @@ export default function Index() {
 						>
 							<TopRow
 								icon="checkmark-circle"
-								color={theme.colors.greenPrimary}
+								color={theme.colors.greenSecondary}
+								borderColor={theme.colors.greenPrimary}
+								textColor={theme.colors.greenPrimary}
 								text="Validées"
 								number={completedHabits.length}
 							/>
@@ -409,7 +414,9 @@ export default function Index() {
 								>
 									<TopRow
 										icon="close-circle"
-										color={theme.colors.redPrimary}
+										color={theme.colors.redSecondary}
+										borderColor={theme.colors.redPrimary}
+										textColor={theme.colors.redPrimary}
 										text="Manquées"
 										number={missedHabitsCount}
 									/>

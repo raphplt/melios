@@ -66,6 +66,7 @@ export default function TabLayout() {
 								onPress={() => {
 									navigation.navigate("account");
 								}}
+								className="ml-3"
 							>
 								<AntDesign
 									name="user"

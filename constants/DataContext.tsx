@@ -7,7 +7,10 @@ export const DataContext = createContext<any>({});
 export const DataProvider = ({ children }: any) => {
 	const { isLoading: isSessionLoading } = useSession();
 	const [todayHabits, setTodayHabits]: any = useState();
-	const [points, setPoints]: any = useState(0);
+	const [points, setPoints]: any = useState({
+		rewards: 0, // Changé de 'rewards' à 'points'
+		odyssee: 0,
+	});
 	const [isLoading, setIsLoading]: any = useState(true);
 
 	useEffect(() => {
@@ -16,8 +19,12 @@ export const DataProvider = ({ children }: any) => {
 				try {
 					const data: any = await getRewards();
 					console.log("data", data);
-					setPoints(data[0]?.points);
-					setIsLoading(false); 
+
+					setPoints({
+						rewards: data[0]?.rewards ?? 0,
+						odyssee: data[0]?.odyssee ?? 0,
+					});
+					setIsLoading(false);
 				} catch (error) {
 					console.log("Erreur lors de la récupération des récompenses : ", error);
 					setIsLoading(false);

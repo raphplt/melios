@@ -40,7 +40,10 @@ export const getRewards = async () => {
 	}
 };
 
-export const setRewards = async (points: any) => {
+export const setRewards = async (
+	type: "odyssee" | "rewards",
+	points: number
+) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -52,15 +55,27 @@ export const setRewards = async (points: any) => {
 
 		if (!querySnapshot.empty) {
 			const rewardDoc = querySnapshot.docs[0];
+			let updateData = {};
 
-			await updateDoc(rewardDoc.ref, {
-				points: querySnapshot.docs[0].data().points + points,
-			});
+			if (type === "odyssee") {
+				updateData = { odyssee: (rewardDoc.data().odyssee || 0) + points };
+			} else {
+				// 'rewards'
+				updateData = { rewards: (rewardDoc.data().rewards || 0) + points };
+			}
+
+			await updateDoc(rewardDoc.ref, updateData);
 		} else {
-			await addDoc(collection(db, "rewards"), {
-				uid: uid,
-				points: points,
-			});
+			let newData: any = { uid: uid };
+
+			if (type === "odyssee") {
+				newData["odyssee"] = points;
+			} else {
+				// 'rewards'
+				newData["rewards"] = points;
+			}
+
+			await addDoc(collection(db, "rewards"), newData);
 		}
 	} catch (error) {
 		console.log("Erreur lors de la récupération des récompenses : ", error);

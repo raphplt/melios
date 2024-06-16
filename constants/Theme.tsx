@@ -13,16 +13,16 @@ const DefaultTheme: Theme = {
 		backgroundSecondary: "rgb(230, 230, 230)",
 		backgroundTertiary: "rgb(128, 183, 255)",
 		cardBackground: "#F6F6F6",
-		greenPrimary: "#47A86C",
-		greenSecondary: "#BEE9CE",
-		yellowPrimary: "#DBBB16",
-		yellowSecondary: "#FDF3C5",
-		redPrimary: "#C95355",
-		redSecondary: "#E9BEBF",
-		bluePrimary: "#499DBD",
-		blueSecondary: "#C9E4F5",
-		purplePrimary: "#A16AE8",
-		purpleSecondary: "#D3BEE9",
+		greenPrimary: "#41976C", // Légèrement plus sombre
+		greenSecondary: "#D3ECE0", // Légèrement plus clair
+		yellowPrimary: "#D1A916", // Légèrement plus sombre
+		yellowSecondary: "#FEF9E7", // Légèrement plus clair
+		redPrimary: "#B84E4A", // Légèrement plus sombre
+		redSecondary: "#F5DADA", // Légèrement plus clair
+		bluePrimary: "#448BAD", // Légèrement plus sombre
+		blueSecondary: "#D9EEF6", // Légèrement plus clair
+		purplePrimary: "#955CD3", // Légèrement plus sombre
+		purpleSecondary: "#EADFF2", // Légèrement plus clair
 	},
 };
 

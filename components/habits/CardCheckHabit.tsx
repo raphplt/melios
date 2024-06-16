@@ -27,7 +27,13 @@ export default function CardCheckHabit({
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
 	const { points, setPoints } = useData();
-
+	const difficulties: any = [
+		{ 1: "#6D9886" },
+		{ 2: "#79A3B1" },
+		{ 3: "#FFA07A" },
+		{ 4: "#FF6347" },
+		{ 5: "#C71585" },
+	];
 	const navigation: any = useNavigation();
 	const translateX = useSharedValue(0);
 
@@ -53,12 +59,14 @@ export default function CardCheckHabit({
 		return () => clearInterval(interval);
 	}, []);
 
+	// Function to set habit as done
 	const setHabitDone = async () => {
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 
 		await setMemberHabitLog(habit.id, date, true);
-		await setRewards(habitInfos.difficulty);
-		setPoints(points + habitInfos.difficulty);
+		await setRewards("odyssee", habitInfos.reward);
+
+		setPoints({ ...points, odyssee: points.odyssee + habitInfos.reward });
 
 		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);
@@ -103,7 +111,7 @@ export default function CardCheckHabit({
 				}}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-xl"
+					className="flex items-center flex-row justify-around py-2 rounded-xl w-[99%]"
 					style={{
 						borderColor: theme.colors.border,
 						borderWidth: 1,
@@ -144,7 +152,11 @@ export default function CardCheckHabit({
 					<Ionicons
 						name="flame"
 						size={24}
-						color={habitInfos.category?.color || theme.colors.text}
+						color={
+							habitInfos.difficulty
+								? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
+								: theme.colors.primary
+						}
 					/>
 				</View>
 			</Pressable>
@@ -152,7 +164,7 @@ export default function CardCheckHabit({
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
-					color={habitInfos.category?.color || theme.colors.primary}
+					color={theme.colors.primary}
 					disabled={disabled}
 				/>
 			</View>
