@@ -16,8 +16,49 @@ export default function HabitDetail() {
 	const translateY = useRef(new Animated.Value(1000)).current;
 	const [lastDays, setLastDays] = useState([]);
 
+	// Timer
+	const [timerSeconds, setTimerSeconds] = useState(0);
+	const [isTimerActive, setIsTimerActive] = useState(false);
+	const timerRef: any = useRef(null);
+
+	const startTimer = () => {
+		if (!isTimerActive) {
+			const durationSeconds = habitInfos.duration * 60;
+			setTimerSeconds(durationSeconds);
+			setIsTimerActive(true);
+			timerRef.current = setInterval(() => {
+				setTimerSeconds((prevSeconds) => {
+					if (prevSeconds <= 1) {
+						clearInterval(timerRef.current);
+						setIsTimerActive(false);
+						return 0;
+					}
+					return prevSeconds - 1;
+				});
+			}, 1000);
+		}
+	};
+
+	const stopTimer = () => {
+		clearInterval(timerRef.current);
+		setIsTimerActive(false);
+	};
+
+	useEffect(() => {
+		return () => {
+			if (timerRef.current) {
+				clearInterval(timerRef.current);
+			}
+		};
+	}, []);
+
+	const formatTime = (seconds: any) => {
+		const minutes = Math.floor(seconds / 60);
+		const remainingSeconds = seconds % 60;
+		return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+	};
+
 	const params = useLocalSearchParams();
-	const isPresented = router.canGoBack();
 	let { habit = "", habitInfos = "" }: any = params;
 
 	if (typeof habitInfos === "string") {
@@ -70,17 +111,6 @@ export default function HabitDetail() {
 		setLastDays(last7Days);
 	}, [habit]);
 
-	const handleBack = () => {
-		Animated.timing(translateY, {
-			toValue: 1000,
-			duration: 300,
-			easing: Easing.linear,
-			useNativeDriver: true,
-		}).start(() => {
-			router.back();
-		});
-	};
-
 	function hexToRgb(hex: string) {
 		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result
@@ -130,10 +160,30 @@ export default function HabitDetail() {
 					</Text>
 				</View>
 				<View>
-					<Text>{habitInfos.duration} minutes</Text>
-					<Pressable>
-						<Text>Commencer l'habitude</Text>
-					</Pressable>
+					{!isTimerActive ? (
+						<Pressable
+							onPress={startTimer}
+							className="py-2 px-6 rounded-xl w-11/12 mx-auto "
+							style={{
+								backgroundColor: theme.colors.primary,
+								borderColor: theme.colors.primary,
+								borderWidth: 2,
+								marginTop: 10,
+							}}
+						>
+							<Text
+								className="text-lg text-center font-semibold"
+								style={{ color: theme.colors.textSecondary }}
+							>
+								Commencer l'habitude
+							</Text>
+						</Pressable>
+					) : (
+						<Pressable onPress={stopTimer}>
+							<Text>Arrêter l'habitude</Text>
+						</Pressable>
+					)}
+					{isTimerActive && <Text>{formatTime(timerSeconds)}</Text>}
 				</View>
 
 				<View
