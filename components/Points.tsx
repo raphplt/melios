@@ -27,7 +27,7 @@ export default function Points() {
 				<Text
 					style={{
 						color: theme.colors.primary,
-						fontSize: 18,
+						fontSize: 16,
 					}}
 					className="font-bold mr-1"
 				>
@@ -44,7 +44,7 @@ export default function Points() {
 				<Text
 					style={{
 						color: "#DBBB16",
-						fontSize: 18,
+						fontSize: 16,
 					}}
 					className="font-bold mr-1"
 				>

@@ -13,6 +13,7 @@ import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withSpring,
+	withTiming,
 } from "react-native-reanimated";
 import { useData } from "../../constants/DataContext";
 
@@ -34,11 +35,14 @@ export default function CardCheckHabit({
 		{ 4: "#FF6347" },
 		{ 5: "#C71585" },
 	];
+
 	const navigation: any = useNavigation();
 	const translateX = useSharedValue(0);
+	const opacity = useSharedValue(0);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
+			opacity: opacity.value,
 			transform: [{ translateX: translateX.value }],
 		};
 	});
@@ -57,6 +61,13 @@ export default function CardCheckHabit({
 		}, 1000);
 
 		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
+		opacity.value = withTiming(1, { duration: 500 });
+		return () => {
+			opacity.value = withTiming(0, { duration: 500 });
+		};
 	}, []);
 
 	// Function to set habit as done
@@ -102,7 +113,7 @@ export default function CardCheckHabit({
 	return (
 		<Animated.View
 			style={[animatedStyles]}
-			className="w-[90%] mx-auto my-2 flex flex-row items-center justify-evenly "
+			className="w-[90%] mx-auto my-2 flex flex-row items-center justify-evenly"
 		>
 			<Pressable
 				className="px-2"
@@ -163,14 +174,17 @@ export default function CardCheckHabit({
 					/>
 				</View>
 			</Pressable>
-			<View className="flex items-center justify-center px-2">
+			<Pressable
+				onPress={setHabitDone}
+				className="flex items-center justify-center px-2 py-2"
+			>
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
 					color={theme.colors.primary}
 					disabled={disabled}
 				/>
-			</View>
+			</Pressable>
 		</Animated.View>
 	);
 }

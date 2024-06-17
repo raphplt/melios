@@ -1,5 +1,4 @@
-import { ActivityIndicator, RefreshControl } from "react-native";
-import { Text, View } from "../../components/Themed";
+import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemeContext";
 import { getRewards } from "../../db/rewards";

@@ -5,6 +5,7 @@ import { ThemeContext } from "../ThemeContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabit } from "../../db/member";
 import { getMemberHabit } from "../../db/member";
+import { lightenColor } from "../../utils/Utils";
 
 export default function CardHabit({ habit, navigation }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -23,19 +24,7 @@ export default function CardHabit({ habit, navigation }: any) {
 		})();
 	}, []);
 
-	function hexToRgb(hex: string) {
-		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-		return result
-			? {
-					r: parseInt(result[1], 16),
-					g: parseInt(result[2], 16),
-					b: parseInt(result[3], 16),
-			  }
-			: null;
-	}
-
-	const rgb = hexToRgb(habit.category.color);
-	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.05)` : "#FFFFFF";
+	const lightenedColor = lightenColor(habit.category.color, 0.1);
 
 	return (
 		<TouchableOpacity onPress={setHabit}>
@@ -43,7 +32,7 @@ export default function CardHabit({ habit, navigation }: any) {
 				<View
 					className="flex items-center flex-row bg-gray-200 py-2 rounded-lg basis-4/5"
 					style={{
-						backgroundColor: rgba,
+						backgroundColor: lightenedColor,
 						borderColor: habit.category.color || theme.colors.text,
 						borderWidth: 1,
 					}}

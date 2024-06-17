@@ -1,7 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
-import { View } from "../Themed";
-import { Text } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { Text, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
 
@@ -21,11 +18,11 @@ export default function TopRow({
 				style={{
 					backgroundColor: color,
 					borderColor: borderColor || theme.colors.primary,
-					borderWidth: 2,
+					borderWidth: 1,
 				}}
 			>
 				<Text
-					className="font-bold text-[16px]"
+					className="font-bold text-[14px]"
 					style={{ color: textColor || theme.colors.text }}
 				>{`${number}`}</Text>
 			</View>

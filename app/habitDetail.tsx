@@ -9,12 +9,14 @@ import moment from "moment";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
+import { lightenColor } from "../utils/Utils";
 
 export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
 	const [difficulty, setDifficulty] = useState("");
 	const translateY = useRef(new Animated.Value(1000)).current;
 	const [lastDays, setLastDays] = useState([]);
+	const [doneToday, setDoneToday] = useState(false);
 
 	const params = useLocalSearchParams();
 	let { habit = "", habitInfos = "" }: any = params;
@@ -67,6 +69,11 @@ export default function HabitDetail() {
 			});
 		}
 		setLastDays(last7Days);
+
+		const doneToday = habit?.logs?.find(
+			(log: any) => log.date === moment().format("YYYY-MM-DD")
+		);
+		setDoneToday(doneToday);
 	}, [habit]);
 
 	// Timer
@@ -163,19 +170,7 @@ export default function HabitDetail() {
 		return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
 	};
 
-	function hexToRgb(hex: any) {
-		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-		return result
-			? {
-					r: parseInt(result[1], 16),
-					g: parseInt(result[2], 16),
-					b: parseInt(result[3], 16),
-			  }
-			: null;
-	}
-
-	const rgb = hexToRgb(habitInfos.category?.color);
-	const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` : "#FFFFFF";
+	const lightenedColor = lightenColor(habitInfos.category?.color, 0.1);
 
 	return (
 		<Animated.View
@@ -191,7 +186,7 @@ export default function HabitDetail() {
 				<View
 					className="py-2 px-6 rounded-xl w-11/12 mx-auto flex items-center flex-row justify-center"
 					style={{
-						backgroundColor: rgba,
+						backgroundColor: lightenedColor,
 						borderColor: habitInfos.category?.color,
 						borderWidth: 2,
 					}}
@@ -211,52 +206,80 @@ export default function HabitDetail() {
 						{habitInfos.name}
 					</Text>
 				</View>
-				<View className="py-12">
-					{!isTimerActive ? (
-						<Pressable
-							onPress={startTimer}
-							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
+				{!doneToday ? (
+					<View className="py-12">
+						{!isTimerActive ? (
+							<Pressable
+								onPress={startTimer}
+								className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
+								style={{
+									backgroundColor: theme.colors.primary,
+									borderColor: theme.colors.primary,
+									borderWidth: 2,
+									marginTop: 10,
+								}}
+							>
+								<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
+								<Text
+									className="text-lg text-center font-semibold ml-2"
+									style={{ color: theme.colors.textSecondary }}
+								>
+									Commencer l'habitude
+								</Text>
+							</Pressable>
+						) : (
+							<Pressable
+								onPress={stopTimer}
+								className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
+								style={{
+									backgroundColor: theme.colors.primary,
+									borderColor: theme.colors.primary,
+									borderWidth: 2,
+									marginTop: 10,
+								}}
+							>
+								<Ionicons name="pause" size={24} color={theme.colors.textSecondary} />
+								<Text
+									className="text-lg text-center font-semibold ml-2"
+									style={{ color: theme.colors.textSecondary }}
+								>
+									Arrêter l'habitude
+								</Text>
+							</Pressable>
+						)}
+						{isTimerActive && (
+							<Text className="text-[50px] text-center font-semibold mt-4">
+								{formatTime(timerSeconds)}
+							</Text>
+						)}
+					</View>
+				) : (
+					<View
+						className="py-3 rounded-xl my-6 w-11/12"
+						style={{
+							backgroundColor: theme.colors.cardBackground,
+							borderColor: theme.colors.primary,
+							borderWidth: 2,
+						}}
+					>
+						<Ionicons
+							name="checkmark-circle"
+							size={50}
+							color={theme.colors.primary}
+							style={{ alignSelf: "center" }}
+						/>
+						<Text
+							className="text-lg text-center font-semibold"
 							style={{
-								backgroundColor: theme.colors.primary,
-								borderColor: theme.colors.primary,
-								borderWidth: 2,
-								marginTop: 10,
+								color: theme.colors.primary,
+								maxWidth: "90%",
+								alignSelf: "center",
 							}}
 						>
-							<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
-							<Text
-								className="text-lg text-center font-semibold ml-2"
-								style={{ color: theme.colors.textSecondary }}
-							>
-								Commencer l'habitude
-							</Text>
-						</Pressable>
-					) : (
-						<Pressable
-							onPress={stopTimer}
-							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
-							style={{
-								backgroundColor: theme.colors.primary,
-								borderColor: theme.colors.primary,
-								borderWidth: 2,
-								marginTop: 10,
-							}}
-						>
-							<Ionicons name="pause" size={24} color={theme.colors.textSecondary} />
-							<Text
-								className="text-lg text-center font-semibold ml-2"
-								style={{ color: theme.colors.textSecondary }}
-							>
-								Arrêter l'habitude
-							</Text>
-						</Pressable>
-					)}
-					{isTimerActive && (
-						<Text className="text-[50px] text-center font-semibold mt-4">
-							{formatTime(timerSeconds)}
+							Vous avez déjà fait cette habitude aujourd'hui
 						</Text>
-					)}
-				</View>
+					</View>
+				)}
 
 				<View
 					className="flex flex-col items-center justify-between w-11/12 mx-auto py-2 rounded-lg mt-6"

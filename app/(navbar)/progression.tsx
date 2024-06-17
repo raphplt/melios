@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemeContext";
-import { Text, View } from "../../components/Themed";
 import { getMemberHabits } from "../../db/member";
-import { Pressable } from "react-native";
+import {  Text, View } from "react-native";
 import moment from "moment";
 import { RefreshControl, ScrollView } from "react-native";
 import HabitsCompleted from "../../components/progression/HabitsCompleted";
 import { HabitCard } from "../../components/progression/HabitCard";
 import SetTime from "../../components/progression/SetTime";
-import { LineChart } from "react-native-chart-kit";
-import { Dimensions } from "react-native";
 import Graph from "../../components/progression/Graph";
 
 export default function Progression() {

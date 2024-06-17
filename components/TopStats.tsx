@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
-import { View, Text } from "./Themed";
 import moment from "moment";
-import { Image, ImageBackground } from "react-native";
+import { Image, ImageBackground, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getRewards } from "../db/rewards";
 import Points from "./Points";
 import { LinearGradient } from "expo-linear-gradient";
+import { View } from "react-native";
 
 export default function TopStats({ habits }: any) {
 	const { theme } = useContext(ThemeContext);

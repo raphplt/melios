@@ -1,4 +1,4 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { FontAwesome } from "@expo/vector-icons";
 import { Tabs, useNavigation } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { useContext, useEffect } from "react";
@@ -8,15 +8,50 @@ import { AntDesign } from "@expo/vector-icons";
 import { useSession } from "../../constants/UserContext";
 import Points from "../../components/Points";
 
-function TabBarIcon(props: {
+interface TabBarIconProps {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
 	color: string;
-}) {
-	return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export default function TabLayout() {
-	const { user, isLoading }: any = useSession();
+const TabBarIcon: React.FC<TabBarIconProps> = ({ name, color }) => (
+	<FontAwesome name={name} size={28} color={color} />
+);
+
+const createHeaderStyle = (theme: any) => ({
+	backgroundColor: theme.colors.background,
+	borderBottomLeftRadius: 10,
+	borderBottomRightRadius: 10,
+	shadowColor: "transparent",
+});
+
+const createTabOptions = (
+	theme: any,
+	title: string,
+	iconName: string,
+	headerLeft?: () => JSX.Element,
+	headerRight?: () => JSX.Element,
+	headerTitleStyleOverride?: object // Ajout d'un paramètre pour le style de titre d'en-tête personnalisé
+) => ({
+	title,
+	headerTitleStyle: headerTitleStyleOverride || {}, // Utilisation du style personnalisé s'il est fourni
+	tabBarShowLabel: false,
+	headerStyle: createHeaderStyle(theme),
+	tabBarStyle: {
+		backgroundColor: theme.colors.background,
+		shadowOpacity: 0, // Supprimer l'ombre pour iOS
+		elevation: 0, // Supprimer l'ombre pour Android
+		borderTopWidth: 0, // Optionnel: supprimer la bordure en haut pour un look plus net
+	},
+
+	headerLeft,
+	headerRight,
+	tabBarIcon: ({ color }: { color: string }) => (
+		<TabBarIcon name={iconName as any} color={color} />
+	),
+});
+
+const TabLayout: React.FC = () => {
+	const { user, isLoading } = useSession();
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
 
@@ -24,12 +59,19 @@ export default function TabLayout() {
 		if (!isLoading && !user) {
 			navigation.navigate("login");
 		}
-	}, [isLoading, user]);
+	}, [isLoading, user, navigation]);
 
 	if (isLoading) {
 		return (
-			<View className="flex-1 items-center justify-center h-screen">
-				<Text className="text-2xl font-bold text-center text-gray-700">
+			<View
+				style={{
+					flex: 1,
+					alignItems: "center",
+					justifyContent: "center",
+					height: "100%",
+				}}
+			>
+				<Text style={{ fontSize: 20, fontWeight: "bold", color: "gray" }}>
 					Loading...
 				</Text>
 			</View>
@@ -40,90 +82,50 @@ export default function TabLayout() {
 		<Tabs>
 			<Tabs.Screen
 				name="index"
-				options={{
-					title: "Accueil",
-					headerTitleStyle: {
-						display: "none",
-					},
-					headerStyle: {
-						backgroundColor: theme.colors.background,
-						borderBottomLeftRadius: 10,
-						borderBottomRightRadius: 10,
-					},
-					headerLeft: () => (
-						<View
-							style={{
-								marginLeft: 15,
-							}}
-						>
-							<Melios fill={theme.colors.text} />
-						</View>
-					),
-					headerRight: () => (
-						<View className="flex flex-row items-center">
-							<Points />
-							<Pressable
-								onPress={() => {
-									navigation.navigate("account");
-								}}
-								className="ml-3"
-							>
-								<AntDesign
-									name="user"
-									size={24}
-									color="black"
-									style={{ marginRight: 15 }}
-								/>
-							</Pressable>
-						</View>
-					),
-
-					tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-				}}
+				options={
+					createTabOptions(
+						theme,
+						"Accueil",
+						"home",
+						() => (
+							<View style={{ marginLeft: 15 }}>
+								<Melios fill={theme.colors.text} />
+							</View>
+						),
+						() => (
+							<View style={{ flexDirection: "row", alignItems: "center" }}>
+								<Points />
+								<Pressable
+									onPress={() => navigation.navigate("account")}
+									className="ml-2"
+								>
+									<AntDesign
+										name="user"
+										size={24}
+										color="black"
+										style={{ marginRight: 15 }}
+									/>
+								</Pressable>
+							</View>
+						),
+						{ display: "none" }
+					) as any
+				}
 			/>
 			<Tabs.Screen
 				name="progression"
-				options={{
-					title: "Progression",
-					headerStyle: {
-						backgroundColor: theme.colors.background,
-						borderBottomLeftRadius: 10,
-						borderBottomRightRadius: 10,
-					},
-
-					tabBarIcon: ({ color }) => <TabBarIcon name="bar-chart" color={color} />,
-				}}
+				options={createTabOptions(theme, "Progression", "bar-chart") as any}
 			/>
 			<Tabs.Screen
 				name="recompenses"
-				options={{
-					title: "Récompenses",
-					headerStyle: {
-						backgroundColor: theme.colors.background,
-						borderBottomLeftRadius: 10,
-						borderBottomRightRadius: 10,
-					},
-					tabBarIcon: ({ color }) => <TabBarIcon name="trophy" color={color} />,
-				}}
+				options={createTabOptions(theme, "Récompenses", "trophy") as any}
 			/>
 			<Tabs.Screen
 				name="account"
-				options={{
-					title: "Compte",
-					headerBackground(props) {
-						return (
-							<View
-								style={{
-									flex: 1,
-									backgroundColor: theme.colors.background,
-								}}
-								className="rounded-b-xl"
-							/>
-						);
-					},
-					tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-				}}
+				options={createTabOptions(theme, "Compte", "user") as any}
 			/>
 		</Tabs>
 	);
-}
+};
+
+export default TabLayout;
