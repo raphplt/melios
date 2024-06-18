@@ -7,15 +7,10 @@ import Melios from "../../components/Svg/Melios";
 import { AntDesign } from "@expo/vector-icons";
 import { useSession } from "../../constants/UserContext";
 import Points from "../../components/Points";
-
-interface TabBarIconProps {
-	name: React.ComponentProps<typeof FontAwesome>["name"];
-	color: string;
-}
-
-const TabBarIcon: React.FC<TabBarIconProps> = ({ name, color }) => (
-	<FontAwesome name={name} size={28} color={color} />
-);
+import Home from "../../components/Svg/Home";
+import Progress from "../../components/Svg/Progress";
+import Gift from "../../components/Svg/Gift";
+import User from "../../components/Svg/User";
 
 const createHeaderStyle = (theme: any) => ({
 	backgroundColor: theme.colors.background,
@@ -27,27 +22,24 @@ const createHeaderStyle = (theme: any) => ({
 const createTabOptions = (
 	theme: any,
 	title: string,
-	iconName: string,
+	tabBarIcon?: () => JSX.Element,
 	headerLeft?: () => JSX.Element,
 	headerRight?: () => JSX.Element,
-	headerTitleStyleOverride?: object // Ajout d'un paramètre pour le style de titre d'en-tête personnalisé
+	headerTitleStyleOverride?: object
 ) => ({
 	title,
-	headerTitleStyle: headerTitleStyleOverride || {}, // Utilisation du style personnalisé s'il est fourni
+	headerTitleStyle: headerTitleStyleOverride || {},
 	tabBarShowLabel: false,
 	headerStyle: createHeaderStyle(theme),
 	tabBarStyle: {
 		backgroundColor: theme.colors.background,
-		shadowOpacity: 0, // Supprimer l'ombre pour iOS
-		elevation: 0, // Supprimer l'ombre pour Android
-		borderTopWidth: 0, // Optionnel: supprimer la bordure en haut pour un look plus net
+		shadowOpacity: 0,
+		elevation: 0,
+		borderTopWidth: 0,
 	},
-
 	headerLeft,
 	headerRight,
-	tabBarIcon: ({ color }: { color: string }) => (
-		<TabBarIcon name={iconName as any} color={color} />
-	),
+	tabBarIcon,
 });
 
 const TabLayout: React.FC = () => {
@@ -86,7 +78,7 @@ const TabLayout: React.FC = () => {
 					createTabOptions(
 						theme,
 						"Accueil",
-						"home",
+						() => <Home />,
 						() => (
 							<View style={{ marginLeft: 15 }}>
 								<Melios fill={theme.colors.text} />
@@ -97,13 +89,13 @@ const TabLayout: React.FC = () => {
 								<Points />
 								<Pressable
 									onPress={() => navigation.navigate("account")}
-									className="ml-2"
+									className="ml-3"
 								>
 									<AntDesign
 										name="user"
 										size={24}
-										color="black"
-										style={{ marginRight: 15 }}
+										color={theme.colors.text}
+										style={{ marginRight: 20 }}
 									/>
 								</Pressable>
 							</View>
@@ -114,15 +106,15 @@ const TabLayout: React.FC = () => {
 			/>
 			<Tabs.Screen
 				name="progression"
-				options={createTabOptions(theme, "Progression", "bar-chart") as any}
+				options={createTabOptions(theme, "Progression", () => <Progress />) as any}
 			/>
 			<Tabs.Screen
 				name="recompenses"
-				options={createTabOptions(theme, "Récompenses", "trophy") as any}
+				options={createTabOptions(theme, "Récompenses", () => <Gift />) as any}
 			/>
 			<Tabs.Screen
 				name="account"
-				options={createTabOptions(theme, "Compte", "user") as any}
+				options={createTabOptions(theme, "Compte", () => <User />) as any}
 			/>
 		</Tabs>
 	);

@@ -37,11 +37,10 @@ export default function Index() {
 	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const [welcomeMessage, setWelcomeMessage] = useState("");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
-	const [showMoreValidate, setShowMoreValidate] = useState(3);
+	const [showMoreValidate, setShowMoreValidate] = useState(5);
 	const [showMoreNext, setShowMoreNext] = useState(3);
 	const rotation = useRef(new Animated.Value(0)).current;
 	const { user } = useContext(UserContext);
-	
 
 	useEffect(() => {
 		(async () => {
@@ -242,13 +241,7 @@ export default function Index() {
 					theme === DarkTheme ? theme.colors.background : theme.colors.background
 				}
 			/>
-			{/* <ScrollView
-				className=" overflow-y-hidden"
-				showsVerticalScrollIndicator={false}
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}
-			> */}
+
 			<ParallaxScrollView
 				habits={userHabits}
 				refreshControl={
@@ -263,9 +256,6 @@ export default function Index() {
 				}
 			>
 				<Background />
-				{/* <View style={{ backgroundColor: "transparent" }}>
-					<TopStats habits={userHabits} />
-				</View> */}
 
 				<View
 					style={{ backgroundColor: "transparent" }}
@@ -305,9 +295,9 @@ export default function Index() {
 								.length > 0 ? (
 								<TopRow
 									icon="close-circle"
-									color={theme.colors.blueSecondary}
-									borderColor={theme.colors.bluePrimary}
-									textColor={theme.colors.bluePrimary}
+									color={theme.colors.background}
+									borderColor={theme.colors.primary}
+									textColor={theme.colors.primary}
 									text="Prochaines habitudes"
 									number={
 										uncompletedHabits.filter((habit: any) => habit.moment >= hours).length
@@ -316,25 +306,25 @@ export default function Index() {
 							) : (
 								<View
 									style={{
-										backgroundColor: theme.colors.greenSecondary,
-										borderColor: theme.colors.greenPrimary,
+										// backgroundColor: theme.colors.greenSecondary,
+										borderColor: theme.colors.primary,
 										borderWidth: 2,
 									}}
 									className="rounded-lg flex-col flex items-center justify-center mx-auto w-[95%] py-2 px-4"
 								>
 									<View className="flex flex-row items-center justify-center w-10/12 mx-auto">
 										<View className="mx-2">
-											<Entypo name="trophy" size={24} color="black" />
+											<Entypo name="trophy" size={24} color={theme.colors.primary} />
 										</View>
 										<Text
-											className="mx-2 font-semibold text-lg"
-											style={{ color: "black" }}
+											className="mx-2 font-bold text-lg"
+											style={{ color: theme.colors.primary }}
 										>
 											Félicitations !
 										</Text>
 									</View>
 									<Text
-										style={{ color: "black" }}
+										style={{ color: theme.colors.primary }}
 										className="text-center w-3/4 mx-auto mt-2"
 									>
 										{completedHabits.length === userHabits.length
@@ -370,7 +360,7 @@ export default function Index() {
 						>
 							<TopRow
 								icon="checkmark-circle"
-								color={theme.colors.greenSecondary}
+								color={theme.colors.background}
 								borderColor={theme.colors.greenPrimary}
 								textColor={theme.colors.greenPrimary}
 								text="Validées"
@@ -414,7 +404,7 @@ export default function Index() {
 								>
 									<TopRow
 										icon="close-circle"
-										color={theme.colors.redSecondary}
+										color={theme.colors.background}
 										borderColor={theme.colors.redPrimary}
 										textColor={theme.colors.redPrimary}
 										text="Manquées"
@@ -462,8 +452,6 @@ export default function Index() {
 				)}
 				{userHabits.length > 0 && <ActivitiesContainer userHabits={userHabits} />}
 			</ParallaxScrollView>
-
-			{/* </ScrollView> */}
 		</>
 	);
 }

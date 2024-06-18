@@ -29,11 +29,11 @@ export default function CardCheckHabit({
 	const [habitInfos, setHabitInfos] = useState<any>({});
 	const { points, setPoints } = useData();
 	const difficulties: any = [
-		{ 1: "#6D9886" },
-		{ 2: "#79A3B1" },
-		{ 3: "#FFA07A" },
-		{ 4: "#FF6347" },
-		{ 5: "#C71585" },
+		{ 1: "#E9C46A" },
+		{ 2: "#F4A261" },
+		{ 3: "#F4A261" },
+		{ 4: "#E76F51" },
+		{ 5: "#E63946" },
 	];
 
 	const navigation: any = useNavigation();
@@ -75,11 +75,11 @@ export default function CardCheckHabit({
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 
 		await setMemberHabitLog(habit.id, date, true);
-		await setRewards("odyssee", habitInfos.reward * habitInfos.difficulty);
+		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 
 		setPoints({
 			...points,
-			odyssee: points.odyssee + habitInfos.reward * habitInfos.difficulty,
+			odyssee: points.odyssee + habitInfos.reward + habitInfos.difficulty,
 		});
 
 		onHabitStatusChange(habit, true);
@@ -116,7 +116,18 @@ export default function CardCheckHabit({
 			className="w-[90%] mx-auto my-2 flex flex-row items-center justify-evenly"
 		>
 			<Pressable
-				className="px-2"
+				onPress={setHabitDone}
+				className="flex items-center justify-center px-3 py-2"
+			>
+				<Checkbox
+					value={toggleCheckBox}
+					onValueChange={setHabitDone}
+					color={theme.colors.primary}
+					disabled={disabled}
+				/>
+			</Pressable>
+			<Pressable
+				className="px-3"
 				onPress={() => {
 					navigation.navigate("habitDetail", {
 						habit: JSON.stringify(habit),
@@ -129,7 +140,7 @@ export default function CardCheckHabit({
 					style={{
 						borderColor: theme.colors.border,
 						borderWidth: 1,
-						backgroundColor: theme.colors.cardBackground,
+						backgroundColor: theme.colors.background,
 					}}
 				>
 					<View
@@ -173,17 +184,6 @@ export default function CardCheckHabit({
 						}
 					/>
 				</View>
-			</Pressable>
-			<Pressable
-				onPress={setHabitDone}
-				className="flex items-center justify-center px-2 py-2"
-			>
-				<Checkbox
-					value={toggleCheckBox}
-					onValueChange={setHabitDone}
-					color={theme.colors.primary}
-					disabled={disabled}
-				/>
 			</Pressable>
 		</Animated.View>
 	);

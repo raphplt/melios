@@ -121,12 +121,27 @@ export default function Account() {
 
 							<Pressable
 								onPress={handleLogout}
-								className="mx-auto bg-red-500 py-1 border-red-500 border-[1px] px-3 rounded-lg w-3/5 flex items-center justify-center flex-row"
+								style={{
+									backgroundColor: theme.colors.redSecondary,
+									borderColor: theme.colors.redPrimary,
+									borderWidth: 2,
+								}}
+								className="mx-auto px-3 rounded-lg w-3/5 py-1 flex items-center justify-center flex-row"
 							>
 								<View className="mx-2 bg-transparent">
-									<AntDesign name="logout" size={20} color="white" className="mx-2" />
+									<AntDesign
+										name="logout"
+										size={20}
+										color={theme.colors.redPrimary}
+										className="mx-2"
+									/>
 								</View>
-								<Text className="text-lg text-center text- mx-2">Déconnexion</Text>
+								<Text
+									className="text-lg text-center text- mx-2 text-white"
+									style={{ color: theme.colors.redPrimary }}
+								>
+									Déconnexion
+								</Text>
 							</Pressable>
 						</View>
 					) : (

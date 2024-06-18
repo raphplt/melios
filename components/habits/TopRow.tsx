@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
+import { useFonts } from "expo-font";
 
 export default function TopRow({
 	icon,
@@ -11,24 +12,29 @@ export default function TopRow({
 	textColor,
 }: any) {
 	const { theme } = useContext(ThemeContext);
+
 	return (
-		<View className="flex items-center justify-start flex-row w-10/12 bg-transparent mx-auto my-2">
+		<View className="flex items-center justify-start flex-row w-[90%] bg-transparent mx-auto my-2">
 			<View
-				className="flex items-center justify-center rounded-full w-7 h-7 mr-2"
+				className="flex items-center justify-center rounded-full w-7 h-7 mr-2 "
 				style={{
 					backgroundColor: color,
 					borderColor: borderColor || theme.colors.primary,
-					borderWidth: 1,
+					borderWidth: 3,
 				}}
 			>
 				<Text
-					className="font-bold text-[14px]"
-					style={{ color: textColor || theme.colors.text }}
+					className="font-bold text-[16px]"
+					style={{
+						color: textColor || theme.colors.text,
+					}}
 				>{`${number}`}</Text>
 			</View>
 			<Text
-				className="font-semibold text-[16px]"
-				style={{ color: theme.colors.text }}
+				className="font-semibold text-lg"
+				style={{
+					color: theme.colors.text,
+				}}
 			>
 				{text}
 			</Text>

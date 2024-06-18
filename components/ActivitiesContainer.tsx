@@ -2,24 +2,28 @@ import { useContext } from "react";
 import Activity from "./Activity";
 import { ThemeContext } from "./ThemeContext";
 import { ScrollView, View, Text } from "react-native";
+import { lightenColor } from "../utils/Utils";
+import { useFonts } from "expo-font";
 
 export default function ActivitiesContainer({ userHabits }: any) {
 	const { theme } = useContext(ThemeContext);
 
+	const blueSoft = lightenColor("#08209F", 0.05);
+
 	return (
 		<View
-			className="mt-8 py-4 mb-5 pb-10 rounded-t-2xl"
+			className="mt-8 py-4 mb-5 pb-10 rounded-xl ml-3 z-[1000]"
 			style={{
-				backgroundColor: theme.colors.primary,
+				backgroundColor: "#F2F4FA",
 			}}
 		>
 			<Text
-				className="text-lg font-bold mb-3 w-10/12 mx-auto"
+				className="text-lg mb-3 w-10/12 mx-auto font-semibold"
 				style={{
-					color: "white",
+					color: theme.colors.text,
 				}}
 			>
-				Activités à faire
+				Mes activités
 			</Text>
 			<ScrollView
 				horizontal={true}
