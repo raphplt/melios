@@ -4,7 +4,6 @@ import { ThemeContext } from "../components/ThemeContext";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { Easing } from "react-native-reanimated";
 import moment from "moment";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -105,6 +104,8 @@ export default function HabitDetail() {
 			rewards: points.rewards + habitInfos.reward,
 			odyssee: points.odyssee + habitInfos.reward + habitInfos.difficulty,
 		});
+
+		setDoneToday(true);
 
 		setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
 		setUncompletedHabitsData((prevHabits: any) =>

@@ -77,7 +77,7 @@ export default function Recompenses() {
 				}
 			>
 				<View
-					className="flex flex-row justify-between my-4 mx-auto rounded-xl text-white py-3 px-3 w-11/12"
+					className="flex flex-row justify-between items-center my-4 mx-auto rounded-xl text-white py-2 px-3 w-11/12"
 					style={{
 						backgroundColor: theme.colors.primary,
 					}}
@@ -90,14 +90,8 @@ export default function Recompenses() {
 					>
 						Mes points
 					</Text>
-					<Text
-						className="text-center text-xl "
-						style={{
-							color: theme.colors.text,
-						}}
-					>
-						<Points />
-					</Text>
+
+					<Points />
 				</View>
 
 				<View

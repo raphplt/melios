@@ -22,7 +22,7 @@ const createHeaderStyle = (theme: any) => ({
 const createTabOptions = (
 	theme: any,
 	title: string,
-	tabBarIcon?: () => JSX.Element,
+	tabBarIcon?: (color: any) => JSX.Element,
 	headerLeft?: () => JSX.Element,
 	headerRight?: () => JSX.Element,
 	headerTitleStyleOverride?: object
@@ -78,7 +78,7 @@ const TabLayout: React.FC = () => {
 					createTabOptions(
 						theme,
 						"Accueil",
-						() => <Home />,
+						({ color }) => <Home color={color} />,
 						() => (
 							<View style={{ marginLeft: 15 }}>
 								<Melios fill={theme.colors.text} />
@@ -106,15 +106,27 @@ const TabLayout: React.FC = () => {
 			/>
 			<Tabs.Screen
 				name="progression"
-				options={createTabOptions(theme, "Progression", () => <Progress />) as any}
+				options={
+					createTabOptions(theme, "Progression", ({ color }) => (
+						<Progress color={color} />
+					)) as any
+				}
 			/>
 			<Tabs.Screen
 				name="recompenses"
-				options={createTabOptions(theme, "Récompenses", () => <Gift />) as any}
+				options={
+					createTabOptions(theme, "Récompenses", ({ color }) => (
+						<Gift color={color} />
+					)) as any
+				}
 			/>
 			<Tabs.Screen
 				name="account"
-				options={createTabOptions(theme, "Compte", () => <User />) as any}
+				options={
+					createTabOptions(theme, "Compte", ({ color }) => (
+						<User color={color} />
+					)) as any
+				}
 			/>
 		</Tabs>
 	);
