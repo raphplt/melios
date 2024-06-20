@@ -220,7 +220,7 @@ export default function Account() {
 						className=" text-center  text-sm"
 						style={{ color: theme.colors.text }}
 					>
-						Melios v1.0.4 - © 2024 Melios. Tous droits réservés.
+						Melios v1.0.5 - © 2024 Melios. Tous droits réservés.
 					</Text>
 				</View>
 			</ThemeProvider>
