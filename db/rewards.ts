@@ -31,7 +31,8 @@ export const getRewards = async () => {
 			if (uid)
 				await addDoc(collection(db, "rewards"), {
 					uid: uid,
-					points: 0,
+					rewards: 0,
+					odyssee: 0,
 				});
 		}
 	} catch (error) {

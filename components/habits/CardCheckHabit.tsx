@@ -21,7 +21,7 @@ export default function CardCheckHabit({
 	habit = [],
 	onHabitStatusChange,
 	completed,
-	disabled = false,
+	disabled,
 }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -72,8 +72,9 @@ export default function CardCheckHabit({
 
 	// Function to set habit as done
 	const setHabitDone = async () => {
+		setToggleCheckBox(true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		console.log(habit.id, date, true, typeof habit);
+		disabled = true;
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 
@@ -83,7 +84,6 @@ export default function CardCheckHabit({
 		});
 
 		onHabitStatusChange(habit, true);
-		setToggleCheckBox(true);
 
 		if (habit.logs) {
 			const lastLog = habit.logs[habit.logs.length - 1];

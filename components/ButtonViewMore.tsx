@@ -6,10 +6,11 @@ export default function ButtonViewMore({ onPress, text }: any) {
 	const { theme } = useContext(ThemeContext);
 	return (
 		<Pressable
-			className="rounded-2xl p-1 mt-2 px-6 mx-auto w-10/12 bg-blue-50"
+			className="rounded-2xl p-1 mt-2 px-6 mx-auto w-10/12"
 			style={{
 				borderColor: theme.colors.primary,
 				borderWidth: 1,
+				backgroundColor: theme.colors.cardBackground,
 			}}
 			onPress={onPress}
 		>

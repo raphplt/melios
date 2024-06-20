@@ -14,7 +14,7 @@ export default function ActivitiesContainer({ userHabits }: any) {
 		<View
 			className="mt-8 py-4 mb-5 pb-10 rounded-xl ml-3 z-[1000]"
 			style={{
-				backgroundColor: "#F2F4FA",
+				backgroundColor: theme.colors.cardBackground,
 			}}
 		>
 			<Text

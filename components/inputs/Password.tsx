@@ -61,7 +61,7 @@ export default function InputPassword(props: any) {
 					onPress={() => setShowPassword(!showPassword)}
 					style={{
 						position: "absolute",
-						right: 10,
+						right: 30,
 						padding: 5,
 					}}
 				>
@@ -96,7 +96,7 @@ export default function InputPassword(props: any) {
 					onPress={() => setShowPassword(!showPassword)}
 					style={{
 						position: "absolute",
-						right: 10,
+						right: 30,
 						padding: 5,
 					}}
 				>

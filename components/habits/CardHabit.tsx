@@ -6,13 +6,24 @@ import Checkbox from "expo-checkbox";
 import { setMemberHabit } from "../../db/member";
 import { getMemberHabit } from "../../db/member";
 import { lightenColor } from "../../utils/Utils";
+import { useData } from "../../constants/DataContext";
 
 export default function CardHabit({ habit, navigation }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
+	const { setUncompletedHabitsData, setCompletedHabitsData } = useData();
+
 	const setHabit = async () => {
 		await setMemberHabit(habit);
+
+		if (toggleCheckBox) {
+			setUncompletedHabitsData((prev: any) =>
+				prev.filter((h: any) => h.id !== habit.id)
+			);
+		} else {
+			setUncompletedHabitsData((prev: any) => [...prev, habit]);
+		}
 
 		setToggleCheckBox(!toggleCheckBox);
 	};
