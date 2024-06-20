@@ -10,6 +10,9 @@ import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { lightenColor } from "../utils/Utils";
+import { setMemberHabitLog } from "../db/member";
+import { setRewards } from "../db/rewards";
+import { useData } from "../constants/DataContext";
 
 export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
@@ -17,6 +20,11 @@ export default function HabitDetail() {
 	const translateY = useRef(new Animated.Value(1000)).current;
 	const [lastDays, setLastDays] = useState([]);
 	const [doneToday, setDoneToday] = useState(false);
+	const [validationMessage, setValidationMessage] = useState("");
+	const [showValidationMessage, setShowValidationMessage] = useState(false);
+	const date = moment().format("YYYY-MM-DD");
+	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
+		useData();
 
 	const params = useLocalSearchParams();
 	let { habit = "", habitInfos = "" }: any = params;
@@ -30,10 +38,8 @@ export default function HabitDetail() {
 	}
 
 	useEffect(() => {
-		Animated.timing(translateY, {
+		Animated.spring(translateY, {
 			toValue: 0,
-			duration: 300,
-			easing: Easing.linear,
 			useNativeDriver: true,
 		}).start();
 
@@ -81,6 +87,34 @@ export default function HabitDetail() {
 	const [isTimerActive, setIsTimerActive] = useState(false);
 	const timerRef: any = useRef(null);
 
+	const handleTimerEnd = async () => {
+		if (typeof habit === "string") {
+			try {
+				habit = JSON.parse(habit);
+			} catch (error) {
+				console.error("Failed to parse habit:", error);
+			}
+		}
+		setValidationMessage("Félicitations ! Vous avez complété votre habitude.");
+
+		await setMemberHabitLog(habit.id, date, true);
+		await setRewards("rewards", habitInfos.reward);
+		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
+		setPoints({
+			...points,
+			rewards: points.rewards + habitInfos.reward,
+			odyssee: points.odyssee + habitInfos.reward + habitInfos.difficulty,
+		});
+
+		setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
+		setUncompletedHabitsData((prevHabits: any) =>
+			prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
+		);
+
+		setShowValidationMessage(true);
+		setTimeout(() => setShowValidationMessage(false), 5000);
+	};
+
 	const startTimer = () => {
 		if (!isTimerActive) {
 			const durationSeconds = habitInfos.duration * 60;
@@ -91,6 +125,7 @@ export default function HabitDetail() {
 					if (prevSeconds <= 1) {
 						clearInterval(timerRef.current);
 						setIsTimerActive(false);
+						handleTimerEnd();
 						return 0;
 					}
 					return prevSeconds - 1;
@@ -129,7 +164,6 @@ export default function HabitDetail() {
 	useEffect(() => {
 		const listener = AppState.addEventListener("change", handleAppStateChange);
 
-		// Initial call to restore the state when the app is started
 		restoreTimerState();
 
 		return () => {
@@ -146,6 +180,7 @@ export default function HabitDetail() {
 					if (prevSeconds <= 1) {
 						clearInterval(timerRef.current);
 						setIsTimerActive(false);
+						handleTimerEnd();
 						return 0;
 					}
 					return prevSeconds - 1;
@@ -178,7 +213,7 @@ export default function HabitDetail() {
 				backgroundColor: theme.colors.background,
 				paddingTop: 20,
 				flex: 1,
-				// transform: [{ translateY }],
+				transform: [{ translateY }],
 			}}
 			className="h-screen w-full mx-auto border-gray-500 overflow-y-auto top-0 absolute"
 		>
@@ -247,8 +282,12 @@ export default function HabitDetail() {
 								</Text>
 							</Pressable>
 						)}
+
 						{isTimerActive && (
-							<Text className="text-[50px] text-center font-semibold mt-4">
+							<Text
+								className="text-4xl font-bold text-center mt-8"
+								style={{ color: theme.colors.text }}
+							>
 								{formatTime(timerSeconds)}
 							</Text>
 						)}
@@ -277,6 +316,34 @@ export default function HabitDetail() {
 							}}
 						>
 							Vous avez déjà fait cette habitude aujourd'hui
+						</Text>
+					</View>
+				)}
+
+				{showValidationMessage && (
+					<View
+						className="py-3 px-6 rounded-xl w-11/12 mx-auto my-6"
+						style={{
+							backgroundColor: theme.colors.cardBackground,
+							borderColor: theme.colors.primary,
+							borderWidth: 2,
+						}}
+					>
+						<Ionicons
+							name="checkmark-circle"
+							size={50}
+							color={theme.colors.primary}
+							style={{ alignSelf: "center" }}
+						/>
+						<Text
+							className="text-lg text-center font-semibold"
+							style={{
+								color: theme.colors.primary,
+								maxWidth: "90%",
+								alignSelf: "center",
+							}}
+						>
+							{validationMessage}
 						</Text>
 					</View>
 				)}

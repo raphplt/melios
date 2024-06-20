@@ -75,7 +75,7 @@ export default function Select() {
 		const category = habit.category?.category || "Autres";
 		if (!acc[category]) {
 			acc[category] = {
-				color: habit.category?.color || "#000000",
+				color: habit.category?.color || theme.colors.text,
 				icon: habit.category?.icon || "question",
 				habits: [],
 			};

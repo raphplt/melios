@@ -9,12 +9,15 @@ import {
 	Image,
 	Animated,
 } from "react-native";
-import { DarkTheme, useNavigation } from "@react-navigation/native";
+import {
+	DarkTheme,
+	useIsFocused,
+	useNavigation,
+} from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "react-native";
 import { getMemberHabits, getMemberInfos } from "../../db/member";
 import CardCheckHabit from "../../components/habits/CardCheckHabit";
-import moment from "moment";
 import ActivitiesContainer from "../../components/ActivitiesContainer";
 import { Entypo } from "@expo/vector-icons";
 import Background from "../../components/Svg/Background";
@@ -22,25 +25,34 @@ import TopRow from "../../components/habits/TopRow";
 import { UserContext } from "../../constants/UserContext";
 import ButtonViewMore from "../../components/ButtonViewMore";
 import ParallaxScrollView from "../../components/ParallaxScrollView";
+import { useData } from "../../constants/DataContext";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
 	const isMounted = useRef(true);
+	const isFocused = useIsFocused();
+	const rotation = useRef(new Animated.Value(0)).current;
+	const { user } = useContext(UserContext);
+	const {
+		habits,
+		isLoading,
+		uncompletedHabitsData,
+		completedHabitsData,
+		setUncompletedHabitsData,
+		setCompletedHabitsData,
+	} = useData();
+
 	const [userHabits, setUserHabits] = useState<any>([]);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
-	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [hours, setHours] = useState(new Date().getHours());
-	const [completedHabits, setCompletedHabits] = useState([]);
-	const [uncompletedHabits, setUncompletedHabits] = useState([]);
+
 	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const [welcomeMessage, setWelcomeMessage] = useState("");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const [showMoreValidate, setShowMoreValidate] = useState(5);
-	const [showMoreNext, setShowMoreNext] = useState(3);
-	const rotation = useRef(new Animated.Value(0)).current;
-	const { user } = useContext(UserContext);
+	const [showMoreNext, setShowMoreNext] = useState(5);
 
 	useEffect(() => {
 		(async () => {
@@ -59,6 +71,12 @@ export default function Index() {
 			isMounted.current = false;
 		};
 	}, []);
+
+	useEffect(() => {
+		if (isFocused) {
+			onRefresh();
+		}
+	}, [isFocused]);
 
 	useEffect(() => {
 		(async () => {
@@ -84,8 +102,8 @@ export default function Index() {
 			const memberInfos = await getMemberInfos();
 			setMemberInfos(memberInfos);
 			setUserHabits(data);
-			setShowMoreValidate(3);
-			setShowMoreNext(3);
+			setShowMoreValidate(5);
+			setShowMoreNext(5);
 		} catch (error) {
 			handleError(error);
 		} finally {
@@ -95,65 +113,20 @@ export default function Index() {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setDate(moment().format("YYYY-MM-DD"));
 			setHours(new Date().getHours());
-		}, 1000);
+		}, 10000);
 
 		return () => clearInterval(interval);
 	}, []);
 
 	useEffect(() => {
-		(async () => {
-			try {
-				const data = await getMemberHabits();
-				// if (isMounted.current) {
-				setUserHabits(data);
-				setLoading(false);
-				// }
-			} catch (error) {
-				handleError(error);
-				setUserHabits([]);
-				setLoading(false);
-			}
-		})();
+		setLoading(isLoading);
+		setUserHabits(habits);
 
 		return () => {
 			isMounted.current = false;
 		};
-	}, [memberInfos]);
-
-	useEffect(() => {
-		const completedHabits = userHabits
-			.filter((habit: any) => {
-				if (habit.logs) {
-					const lastLog = habit.logs[habit.logs.length - 1];
-
-					if (lastLog && lastLog.date === date && lastLog.done === true) {
-						return true;
-					}
-				}
-			})
-			.sort((a: any, b: any) => a.moment - b.moment);
-
-		const uncompletedHabits = userHabits
-			.filter((habit: any) => {
-				if (habit.logs) {
-					const lastLog = habit.logs[habit.logs.length - 1];
-
-					if (lastLog && lastLog.date !== date) {
-						return true;
-					}
-					if (lastLog && lastLog.date === date && lastLog.done === false) {
-						return true;
-					} else if (habit.logs.length === 0) {
-						return true;
-					}
-				}
-			})
-			.sort((a: any, b: any) => a.moment - b.moment);
-		setCompletedHabits(completedHabits);
-		setUncompletedHabits(uncompletedHabits);
-	}, [userHabits, date]);
+	}, [habits, isLoading, completedHabitsData, uncompletedHabitsData]);
 
 	const handleError = (error: any) => {
 		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
@@ -161,13 +134,14 @@ export default function Index() {
 
 	const handleHabitStatusChange = (habit: any, done: boolean) => {
 		if (done) {
-			setCompletedHabits((prevHabits) => [...prevHabits, habit] as any);
-			setUncompletedHabits((prevHabits) =>
+			console.log("Habit done : ", habit);
+			setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
+			setUncompletedHabitsData((prevHabits: any) =>
 				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
 			);
 		} else {
-			setUncompletedHabits((prevHabits) => [...prevHabits, habit] as any);
-			setCompletedHabits((prevHabits) =>
+			setUncompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
+			setCompletedHabitsData((prevHabits: any) =>
 				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
 			);
 		}
@@ -194,7 +168,7 @@ export default function Index() {
 		outputRange: ["0deg", "360deg"],
 	});
 
-	if (loading) {
+	if (loading || !userHabits || isLoading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 				<ActivityIndicator size="large" color={theme.colors.primary} />
@@ -205,12 +179,12 @@ export default function Index() {
 		);
 	}
 
-	const missedHabitsCount = uncompletedHabits.filter(
+	const missedHabitsCount = uncompletedHabitsData.filter(
 		(habit: any) => habit.moment < hours
 	).length;
 
 	const updateShowValidate = () => {
-		if (showMoreValidate < completedHabits.length) {
+		if (showMoreValidate < completedHabitsData.length) {
 			setShowMoreValidate((prev) => prev + 5);
 		} else {
 			setShowMoreValidate(3);
@@ -218,7 +192,7 @@ export default function Index() {
 	};
 
 	const updateShowNext = () => {
-		if (showMoreNext < uncompletedHabits.length) {
+		if (showMoreNext < uncompletedHabitsData.length) {
 			setShowMoreNext((prev) => prev + 5);
 		} else {
 			setShowMoreNext(3);
@@ -290,8 +264,8 @@ export default function Index() {
 							className="flex flex-row flex-wrap justify-start py-2 mb-2"
 							style={{ backgroundColor: "transparent" }}
 						>
-							{uncompletedHabits.length > 0 &&
-							uncompletedHabits.filter((habit: any) => habit.moment + 1 > hours)
+							{uncompletedHabitsData.length > 0 &&
+							uncompletedHabitsData.filter((habit: any) => habit.moment + 1 > hours)
 								.length > 0 ? (
 								<TopRow
 									icon="close-circle"
@@ -300,7 +274,8 @@ export default function Index() {
 									textColor={theme.colors.primary}
 									text="Prochaines habitudes"
 									number={
-										uncompletedHabits.filter((habit: any) => habit.moment >= hours).length
+										uncompletedHabitsData.filter((habit: any) => habit.moment >= hours)
+											.length
 									}
 								/>
 							) : (
@@ -327,14 +302,14 @@ export default function Index() {
 										style={{ color: theme.colors.primary }}
 										className="text-center w-3/4 mx-auto mt-2"
 									>
-										{completedHabits.length === userHabits.length
+										{completedHabitsData.length === userHabits.length
 											? `Vous avez validé toutes vos habitudes pour aujourd'hui !`
 											: `Vous n'avez pas d'habitudes à valider pour le moment.`}
 									</Text>
 								</View>
 							)}
 
-							{uncompletedHabits
+							{uncompletedHabitsData
 								.filter((habit: any) => habit.moment >= hours)
 								.slice(0, showMoreNext)
 								.map((filteredHabit: any) => (
@@ -344,12 +319,14 @@ export default function Index() {
 										onHabitStatusChange={handleHabitStatusChange}
 									/>
 								))}
-							{uncompletedHabits.filter((habit: any) => habit.moment >= hours).length >
-							3 ? (
+							{uncompletedHabitsData.filter((habit: any) => habit.moment >= hours)
+								.length > 3 ? (
 								<ButtonViewMore
 									onPress={updateShowNext}
 									text={
-										showMoreNext < uncompletedHabits.length ? "Voir plus" : "Voir moins"
+										showMoreNext < uncompletedHabitsData.length
+											? "Voir plus"
+											: "Voir moins"
 									}
 								/>
 							) : null}
@@ -364,12 +341,12 @@ export default function Index() {
 								borderColor={theme.colors.greenPrimary}
 								textColor={theme.colors.greenPrimary}
 								text="Validées"
-								number={completedHabits.length}
+								number={completedHabitsData.length}
 							/>
 							<View className="w-full mx-auto">
 								{[
 									...new Map(
-										completedHabits.map((item: any) => [item.id, item])
+										completedHabitsData.map((item: any) => [item.id, item])
 									).values(),
 								]
 									.slice(0, showMoreValidate)
@@ -383,11 +360,11 @@ export default function Index() {
 										/>
 									))}
 
-								{completedHabits.length > 3 ? (
+								{completedHabitsData.length > 3 ? (
 									<ButtonViewMore
 										onPress={updateShowValidate}
 										text={
-											showMoreValidate < completedHabits.length
+											showMoreValidate < completedHabitsData.length
 												? "Voir plus"
 												: "Voir moins"
 										}
@@ -395,9 +372,9 @@ export default function Index() {
 								) : null}
 							</View>
 						</View>
-						{uncompletedHabits.length > 0 &&
-							uncompletedHabits.filter((habit: any) => habit.moment < hours).length >
-								0 && (
+						{uncompletedHabitsData.length > 0 &&
+							uncompletedHabitsData.filter((habit: any) => habit.moment < hours)
+								.length > 0 && (
 								<View
 									className="flex flex-row flex-wrap justify-start py-2 mb-2"
 									style={{ backgroundColor: "transparent" }}
@@ -416,7 +393,7 @@ export default function Index() {
 											style={{ backgroundColor: "transparent" }}
 											className=" flex flex-col w-full"
 										>
-											{uncompletedHabits
+											{uncompletedHabitsData
 												.filter((habit: any) => habit.moment < hours)
 												.map((filteredHabit: any) => (
 													<CardCheckHabit
