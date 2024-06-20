@@ -34,6 +34,9 @@ export default function Index() {
 	const isFocused = useIsFocused();
 	const rotation = useRef(new Animated.Value(0)).current;
 	const { user } = useContext(UserContext);
+
+	!user && navigation.navigate("login");
+	
 	const {
 		habits,
 		isLoading,
@@ -205,7 +208,7 @@ export default function Index() {
 			? require("../../assets/images/illustrations/temple_day.jpg")
 			: require("../../assets/images/illustrations/temple_night.jpg");
 
-	!user && navigation.navigate("login");
+
 
 	return (
 		<>
