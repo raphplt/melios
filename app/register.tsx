@@ -51,7 +51,7 @@ export default function Register() {
 				const user = await createUser(updatedForm);
 				if (user) {
 					console.log("Redirection");
-					navigation.navigate("(navbar)");
+					navigation.navigate("select");
 				}
 			} catch (error) {
 				console.error("Erreur lors de la création de l'utilisateur : ", error);

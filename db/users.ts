@@ -9,6 +9,7 @@ import { auth } from ".";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useData } from "../constants/DataContext";
 
 export const createUser = async (form: any) => {
 	try {
@@ -56,13 +57,13 @@ export const createUser = async (form: any) => {
 	}
 };
 
-
 export const disconnectUser = async () => {
 	try {
-		await getAuth().signOut();
 		await AsyncStorage.removeItem("user");
 		await AsyncStorage.removeItem("isAuthenticated");
 		await AsyncStorage.removeItem("habitsData");
+		await AsyncStorage.removeItem("habits");
+		await getAuth().signOut();
 	} catch (error) {
 		console.error("Erreur lors de la déconnexion : ", error);
 	}

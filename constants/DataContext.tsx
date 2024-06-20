@@ -7,7 +7,7 @@ import moment from "moment";
 export const DataContext = createContext<any>({});
 
 export const DataProvider = ({ children }: any) => {
-	const { isLoading: isSessionLoading } = useSession();
+	const { isLoading: isSessionLoading, user } = useSession();
 	const [habits, setHabits]: any = useState();
 	const [uncompletedHabitsData, setUncompletedHabitsData]: any = useState([]);
 	const [completedHabitsData, setCompletedHabitsData]: any = useState([]);
@@ -78,7 +78,7 @@ export const DataProvider = ({ children }: any) => {
 				}
 			})();
 		}
-	}, [isSessionLoading]);
+	}, [isSessionLoading, user]);
 
 	return (
 		<DataContext.Provider

@@ -24,8 +24,8 @@ export default function CardHabit({ habit, navigation }: any) {
 		} else {
 			setUncompletedHabitsData((prev: any) => [...prev, habit]);
 		}
-
 		setToggleCheckBox(!toggleCheckBox);
+
 	};
 
 	useEffect(() => {

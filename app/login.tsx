@@ -14,6 +14,8 @@ import { ThemeContext } from "../components/ThemeContext";
 import { useNavigation } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSession } from "../constants/UserContext";
+import { getAllHabits } from "../db/fetch";
+import { getMemberHabits } from "../db/member";
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
 	const [email, setEmail] = useState("");
@@ -38,6 +40,7 @@ export default function Login() {
 			navigation.navigate("(navbar)");
 		}
 	}, [isLoading, user, navigation]);
+
 	const login = async () => {
 		try {
 			const snapshot: any = await loginUser(email, password);
@@ -46,6 +49,7 @@ export default function Login() {
 				setError(snapshot.error);
 				return;
 			} else {
+				navigation.navigate("index");
 				console.log("Utilisateur connecté avec succès.");
 			}
 		} catch (error) {

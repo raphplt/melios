@@ -14,6 +14,7 @@ import { getMemberInfos } from "../../db/member";
 import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
+import { useData } from "../../constants/DataContext";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -23,6 +24,12 @@ export default function Account() {
 	const isMounted = useRef(true);
 	const [loading, setLoading] = useState(true);
 	const [notifications, setNotifications] = useState(false);
+	const {
+		setHabits,
+		setUncompletedHabitsData,
+		setCompletedHabitsData,
+		setPoints,
+	} = useData();
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -63,6 +70,11 @@ export default function Account() {
 	};
 
 	const handleLogout = async () => {
+		setHabits([]);
+		setUncompletedHabitsData([]);
+		setCompletedHabitsData([]);
+		setPoints({ odyssee: 0, rewards: 0 });
+
 		await disconnectUser();
 	};
 

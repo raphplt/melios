@@ -70,11 +70,15 @@ export default function CardCheckHabit({
 		};
 	}, []);
 
-	// Function to set habit as done
+	useEffect(() => {
+		if (completed) {
+			setToggleCheckBox(true);
+		}
+	}, [completed]);
+
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		disabled = true;
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 
@@ -84,31 +88,7 @@ export default function CardCheckHabit({
 		});
 
 		onHabitStatusChange(habit, true);
-
-		if (habit.logs) {
-			const lastLog = habit.logs[habit.logs.length - 1];
-			if (lastLog && lastLog.date === date && lastLog.done === true) {
-				setToggleCheckBox(true);
-			} else {
-				setToggleCheckBox(false);
-			}
-		} else {
-			setToggleCheckBox(false);
-		}
 	};
-
-	useEffect(() => {
-		if (habit.logs) {
-			const lastLog = habit.logs[habit.logs.length - 1];
-			if (lastLog && lastLog.date === date && lastLog.done === true) {
-				setToggleCheckBox(true);
-			} else {
-				setToggleCheckBox(false);
-			}
-		} else {
-			setToggleCheckBox(false);
-		}
-	}, []);
 
 	return (
 		<Animated.View
@@ -118,12 +98,13 @@ export default function CardCheckHabit({
 			<Pressable
 				onPress={setHabitDone}
 				className="flex items-center justify-center px-3 py-2"
+				disabled={toggleCheckBox}
 			>
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
 					color={theme.colors.primary}
-					disabled={disabled}
+					disabled={disabled || toggleCheckBox}
 				/>
 			</Pressable>
 			<Pressable
