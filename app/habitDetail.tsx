@@ -377,7 +377,7 @@ export default function HabitDetail() {
 					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
 						<MaterialIcons name="category" size={24} color={theme.colors.text} />
 						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
-							{habitInfos.category.category}
+							{habitInfos.category?.category}
 						</Text>
 					</View>
 
