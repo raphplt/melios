@@ -223,6 +223,17 @@ export default function Account() {
 							value={notifications}
 						/>
 					</View>
+					<Pressable
+						onPress={() => navigation.navigate("notifications")}
+						className="mx-auto bg-blue-500 py-2 px-4 rounded-2xl w-2/3"
+					>
+						<Text
+							style={{ color: theme.colors.textSecondary }}
+							className="text-lg text-center"
+						>
+							Gérer les notifications
+						</Text>
+					</Pressable>
 				</ScrollView>
 				<View
 					className="w-full mx-auto mt-12 absolute bottom-0 pt-1"

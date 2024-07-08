@@ -24,7 +24,7 @@ export default function TopRow({
 				}}
 			>
 				<Text
-					className="font-bold text-[16px]"
+					className="font-bold text-[15px]"
 					style={{
 						color: textColor || theme.colors.text,
 					}}

@@ -22,7 +22,7 @@ export default function Graph({ habits }: any) {
 						],
 					}}
 					width={Dimensions.get("window").width * 0.95}
-					height={220}
+					height={250}
 					yAxisLabel=""
 					yAxisSuffix="%"
 					yAxisInterval={1}
@@ -34,12 +34,15 @@ export default function Graph({ habits }: any) {
 						color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
 						labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
 						style: {
-							borderRadius: 16,
+							borderRadius: 12,
 						},
 						propsForDots: {
 							r: "6",
 							strokeWidth: "2",
 							stroke: "#ffa726",
+						},
+						propsForLabels: {
+							rotation: 45,
 						},
 					}}
 					bezier

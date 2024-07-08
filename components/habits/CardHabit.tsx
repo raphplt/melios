@@ -40,6 +40,14 @@ export default function CardHabit({ habit, navigation }: any) {
 	return (
 		<TouchableOpacity onPress={setHabit}>
 			<View className="w-full mx-auto my-2 flex flex-row items-center justify-evenly">
+				<View>
+					<Checkbox
+						value={toggleCheckBox}
+						// disabled
+						onValueChange={setHabit}
+						color={habit.category.color || theme.colors.primary}
+					/>
+				</View>
 				<View
 					className="flex items-center flex-row bg-gray-200 py-2 rounded-lg basis-4/5"
 					style={{
@@ -57,14 +65,6 @@ export default function CardHabit({ habit, navigation }: any) {
 					>
 						{habit.name}
 					</Text>
-				</View>
-				<View>
-					<Checkbox
-						value={toggleCheckBox}
-						// disabled
-						onValueChange={setHabit}
-						color={habit.category.color || theme.colors.primary}
-					/>
 				</View>
 			</View>
 		</TouchableOpacity>
