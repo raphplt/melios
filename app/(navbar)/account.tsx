@@ -2,7 +2,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemeContext";
 import ToggleButton from "../../components/Switch";
 import { onAuthStateChanged } from "firebase/auth";
-import { Pressable, Image, StatusBar, Text, View } from "react-native";
+import {
+	Pressable,
+	Image,
+	StatusBar,
+	Text,
+	View,
+	ScrollView,
+} from "react-native";
 import {
 	DarkTheme,
 	ThemeProvider,
@@ -11,10 +18,10 @@ import {
 import { disconnectUser } from "../../db/users";
 import { auth } from "../../db";
 import { getMemberInfos } from "../../db/member";
-import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import { useData } from "../../constants/DataContext";
+import permissions from "../../hooks/perrmissions";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -29,7 +36,9 @@ export default function Account() {
 		setUncompletedHabitsData,
 		setCompletedHabitsData,
 		setPoints,
+		setExpoPushToken,
 	} = useData();
+	const { AskNotification } = permissions();
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -65,8 +74,21 @@ export default function Account() {
 	};
 
 	const handleToggleNotifications = async () => {
-		setNotifications(!notifications);
-		await AsyncStorage.setItem("notifications", notifications ? "true" : "false");
+		if (!notifications) {
+			const token = await AskNotification();
+			if (token) {
+				setExpoPushToken(token);
+				setNotifications(true);
+				await AsyncStorage.setItem("notifications", "true");
+			} else {
+				setNotifications(false);
+				await AsyncStorage.setItem("notifications", "false");
+			}
+		} else {
+			setExpoPushToken("");
+			setNotifications(false);
+			await AsyncStorage.setItem("notifications", "false");
+		}
 	};
 
 	const handleLogout = async () => {

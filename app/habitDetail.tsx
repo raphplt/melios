@@ -12,6 +12,7 @@ import { lightenColor } from "../utils/Utils";
 import { setMemberHabitLog } from "../db/member";
 import { setRewards } from "../db/rewards";
 import { useData } from "../constants/DataContext";
+import notifications from "../hooks/notifications";
 
 export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
@@ -22,8 +23,15 @@ export default function HabitDetail() {
 	const [validationMessage, setValidationMessage] = useState("");
 	const [showValidationMessage, setShowValidationMessage] = useState(false);
 	const date = moment().format("YYYY-MM-DD");
-	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
-		useData();
+	const {
+		setUncompletedHabitsData,
+		setCompletedHabitsData,
+		points,
+		setPoints,
+		expoPushToken,
+	} = useData();
+
+	const { sendPushNotification } = notifications();
 
 	const params = useLocalSearchParams();
 	let { habit = "", habitInfos = "" }: any = params;
@@ -132,6 +140,13 @@ export default function HabitDetail() {
 					return prevSeconds - 1;
 				});
 			}, 1000);
+
+			if (expoPushToken) {
+				sendPushNotification(expoPushToken, {
+					title: habitInfos.name,
+					body: `Il est l'heure de faire votre habitude ${habitInfos.name} !`,
+				});
+			}
 		}
 	};
 

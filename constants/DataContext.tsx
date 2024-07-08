@@ -3,6 +3,7 @@ import { getRewards } from "../db/rewards";
 import { useSession } from "./UserContext";
 import { getMemberHabits } from "../db/member";
 import moment from "moment";
+import permissions from "../hooks/perrmissions";
 
 export const DataContext = createContext<any>({});
 
@@ -17,6 +18,9 @@ export const DataProvider = ({ children }: any) => {
 	});
 	const [isLoading, setIsLoading]: any = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
+	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
+
+	const { AskNotification } = permissions();
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -30,6 +34,12 @@ export const DataProvider = ({ children }: any) => {
 		if (!isSessionLoading) {
 			(async () => {
 				try {
+					// Set user permissions
+					if (!expoPushToken) {
+						const token: string | undefined = await AskNotification();
+						setExpoPushToken(token);
+					}
+
 					const snapshotRewards: any = await getRewards();
 					setPoints({
 						rewards: snapshotRewards[0]?.rewards ?? 0,
@@ -92,6 +102,8 @@ export const DataProvider = ({ children }: any) => {
 				setUncompletedHabitsData,
 				completedHabitsData,
 				setCompletedHabitsData,
+				expoPushToken,
+				setExpoPushToken,
 			}}
 		>
 			{children}
