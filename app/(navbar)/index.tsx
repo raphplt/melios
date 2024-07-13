@@ -175,7 +175,7 @@ export default function Index() {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 				<ActivityIndicator size="large" color={theme.colors.primary} />
-				<Text style={{ color: theme.colors.text }} className="text-lg mt-8">
+				<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
 					Chargement des habitudes...
 				</Text>
 			</View>

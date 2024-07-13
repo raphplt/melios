@@ -1,9 +1,13 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import moment from "moment";
 import { getRewards } from "../db/rewards";
 import { useSession } from "./UserContext";
 import { getMemberHabits } from "../db/member";
-import moment from "moment";
-import permissions from "../hooks/perrmissions";
+import permissions from "../hooks/permissions";
+import { processHabits } from "../utils/habitsUtils";
+import { extractPoints } from "../utils/pointsUtils";
+import { getNotificationToken } from "../utils/notificationsUtils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const DataContext = createContext<any>({});
 
@@ -19,6 +23,7 @@ export const DataProvider = ({ children }: any) => {
 	const [isLoading, setIsLoading]: any = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
+	const [sendNotification, setSendNotification] = useState<boolean>(false);
 
 	const { AskNotification } = permissions();
 
@@ -34,51 +39,27 @@ export const DataProvider = ({ children }: any) => {
 		if (!isSessionLoading) {
 			(async () => {
 				try {
-					// Set user permissions
-					if (!expoPushToken) {
-						const token: string | undefined = await AskNotification();
-						setExpoPushToken(token);
+					await getNotificationToken(
+						AskNotification,
+						setExpoPushToken,
+						expoPushToken
+					);
+
+					const notificationEnabled = await AsyncStorage.getItem(
+						"notificationEnabled"
+					);
+					if (notificationEnabled === "true") {
+						setSendNotification(true);
 					}
 
 					const snapshotRewards: any = await getRewards();
-					setPoints({
-						rewards: snapshotRewards[0]?.rewards ?? 0,
-						odyssee: snapshotRewards[0]?.odyssee ?? 0,
-					});
+					setPoints(extractPoints(snapshotRewards));
 
 					const snapshotHabits = await getMemberHabits();
 					setHabits(snapshotHabits);
 
-					const uncompleted = snapshotHabits
-						.filter((habit: any) => {
-							if (habit.logs) {
-								const lastLog = habit.logs[habit.logs.length - 1];
-
-								if (lastLog && lastLog.date !== date) {
-									return true;
-								}
-								if (lastLog && lastLog.date === date && lastLog.done === false) {
-									return true;
-								} else if (habit.logs.length === 0) {
-									return true;
-								}
-							}
-						})
-						.sort((a: any, b: any) => a.moment - b.moment);
+					const { uncompleted, completed } = processHabits(snapshotHabits, date);
 					setUncompletedHabitsData(uncompleted);
-
-					const completed = snapshotHabits
-						.filter((habit: any) => {
-							if (habit.logs) {
-								const lastLog = habit.logs[habit.logs.length - 1];
-
-								if (lastLog && lastLog.date === date && lastLog.done === true) {
-									return true;
-								}
-							}
-						})
-						.sort((a: any, b: any) => a.moment - b.moment);
-
 					setCompletedHabitsData(completed);
 
 					setIsLoading(false);
@@ -104,6 +85,8 @@ export const DataProvider = ({ children }: any) => {
 				setCompletedHabitsData,
 				expoPushToken,
 				setExpoPushToken,
+				sendNotification,
+				setSendNotification,
 			}}
 		>
 			{children}

@@ -57,7 +57,7 @@ export default function Recompenses() {
 					alignItems: "center",
 				}}
 			>
-				<Text style={{ color: theme.colors.text }} className="text-lg mt-8">
+				<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
 					Chargement des récompenses...
 				</Text>
 				<ActivityIndicator size="large" color={theme.colors.primary} />

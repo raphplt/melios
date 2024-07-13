@@ -21,7 +21,7 @@ import { getMemberInfos } from "../../db/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import { useData } from "../../constants/DataContext";
-import permissions from "../../hooks/perrmissions";
+import notifications from "../../hooks/notifications";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -30,15 +30,16 @@ export default function Account() {
 	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const isMounted = useRef(true);
 	const [loading, setLoading] = useState(true);
-	const [notifications, setNotifications] = useState(false);
 	const {
 		setHabits,
 		setUncompletedHabitsData,
 		setCompletedHabitsData,
 		setPoints,
 		setExpoPushToken,
+		sendNotification,
+		setSendNotification,
 	} = useData();
-	const { AskNotification } = permissions();
+	const { scheduleDailyNotification, cancelAllNotifications } = notifications();
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -73,24 +74,6 @@ export default function Account() {
 		await AsyncStorage.setItem("theme", newTheme ? "dark" : "light");
 	};
 
-	const handleToggleNotifications = async () => {
-		if (!notifications) {
-			const token = await AskNotification();
-			if (token) {
-				setExpoPushToken(token);
-				setNotifications(true);
-				await AsyncStorage.setItem("notifications", "true");
-			} else {
-				setNotifications(false);
-				await AsyncStorage.setItem("notifications", "false");
-			}
-		} else {
-			setExpoPushToken("");
-			setNotifications(false);
-			await AsyncStorage.setItem("notifications", "false");
-		}
-	};
-
 	const handleLogout = async () => {
 		setHabits([]);
 		setUncompletedHabitsData([]);
@@ -101,6 +84,17 @@ export default function Account() {
 	};
 
 	const navigation: any = useNavigation();
+
+	const handleToggleNotifications = async () => {
+		const notificationEnabled = await AsyncStorage.getItem("notificationEnabled");
+		if (notificationEnabled === "true") {
+			await AsyncStorage.setItem("notificationEnabled", "false");
+			await cancelAllNotifications();
+		} else {
+			await AsyncStorage.setItem("notificationEnabled", "true");
+			await scheduleDailyNotification();
+		}
+	};
 
 	const handleError = (error: any) => {
 		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
@@ -242,20 +236,9 @@ export default function Account() {
 						<ToggleButton
 							title="Notifications"
 							onToggle={handleToggleNotifications}
-							value={notifications}
+							value={sendNotification}
 						/>
 					</View>
-					<Pressable
-						onPress={() => navigation.navigate("notifications")}
-						className="mx-auto bg-blue-500 py-2 px-4 rounded-2xl w-2/3"
-					>
-						<Text
-							style={{ color: theme.colors.textSecondary }}
-							className="text-lg text-center"
-						>
-							Gérer les notifications
-						</Text>
-					</Pressable>
 				</ScrollView>
 				<View
 					className="w-full mx-auto mt-12 absolute bottom-0 pt-1"
