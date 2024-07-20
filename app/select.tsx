@@ -12,7 +12,7 @@ import {
 import { useNavigation } from "expo-router";
 import { ThemeContext } from "../components/ThemeContext";
 import { getHabitsWithCategories } from "../db/fetch";
-import CardHabit from "../components/habits/CardHabit";
+import CardHabit from "../components/Habits/CardHabit";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ButtonViewMore from "../components/ButtonViewMore";

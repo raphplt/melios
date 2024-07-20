@@ -4,10 +4,10 @@ import { getMemberHabits } from "../../db/member";
 import {  Text, View } from "react-native";
 import moment from "moment";
 import { RefreshControl, ScrollView } from "react-native";
-import HabitsCompleted from "../../components/progression/HabitsCompleted";
-import { HabitCard } from "../../components/progression/HabitCard";
-import SetTime from "../../components/progression/SetTime";
-import Graph from "../../components/progression/Graph";
+import HabitsCompleted from "../../components/Progression/HabitsCompleted";
+import { HabitCard } from "../../components/Progression/HabitCard";
+import SetTime from "../../components/Progression/SetTime";
+import Graph from "../../components/Progression/Graph";
 
 export default function Progression() {
 	const { theme } = useContext(ThemeContext);

@@ -77,6 +77,7 @@ export default function CardCheckHabit({
 	}, [completed]);
 
 	const setHabitDone = async () => {
+		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);
@@ -86,8 +87,6 @@ export default function CardCheckHabit({
 			...points,
 			odyssee: points.odyssee + habitInfos.reward + habitInfos.difficulty,
 		});
-
-		onHabitStatusChange(habit, true);
 	};
 
 	return (

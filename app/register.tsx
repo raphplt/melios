@@ -4,11 +4,11 @@ import { createUser } from "../db/users";
 import { ThemeContext } from "../components/ThemeContext";
 import { useNavigation } from "expo-router";
 import { Questions } from "../constants/slides";
-import MultipleChoice from "../components/inputs/MultipleChoice";
-import InputText from "../components/inputs/Text";
-import SingleChoice from "../components/inputs/SingleChoice";
+import MultipleChoice from "../components/Inputs/MultipleChoice";
+import InputText from "../components/Inputs/Text";
+import SingleChoice from "../components/Inputs/SingleChoice";
 import { AntDesign } from "@expo/vector-icons";
-import InputPassword from "../components/inputs/Password";
+import InputPassword from "../components/Inputs/Password";
 import { checkEmailExists } from "../db/users";
 
 export default function Register() {
