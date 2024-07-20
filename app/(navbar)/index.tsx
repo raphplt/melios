@@ -26,6 +26,7 @@ import { UserContext } from "../../constants/UserContext";
 import ButtonViewMore from "../../components/ButtonViewMore";
 import ParallaxScrollView from "../../components/ParallaxScrollView";
 import { useData } from "../../constants/DataContext";
+import CardPlaceHolder from "../../components/CardLoader";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -36,7 +37,7 @@ export default function Index() {
 	const { user } = useContext(UserContext);
 
 	!user && navigation.navigate("login");
-	
+
 	const {
 		habits,
 		isLoading,
@@ -77,7 +78,7 @@ export default function Index() {
 
 	useEffect(() => {
 		if (isFocused) {
-			onRefresh();
+			backgroundRefresh();
 		}
 	}, [isFocused]);
 
@@ -111,6 +112,17 @@ export default function Index() {
 			handleError(error);
 		} finally {
 			setRefreshing(false);
+		}
+	};
+
+	const backgroundRefresh = async () => {
+		try {
+			const data = await getMemberHabits();
+			const memberInfos = await getMemberInfos();
+			setMemberInfos(memberInfos);
+			setUserHabits(data);
+		} catch (error) {
+			handleError(error);
 		}
 	};
 
@@ -178,6 +190,7 @@ export default function Index() {
 				<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
 					Chargement des habitudes...
 				</Text>
+				{/* <CardPlaceHolder /> */}
 			</View>
 		);
 	}
@@ -207,8 +220,6 @@ export default function Index() {
 		currentHour >= 7 && currentHour < 20
 			? require("../../assets/images/illustrations/temple_day.jpg")
 			: require("../../assets/images/illustrations/temple_night.jpg");
-
-
 
 	return (
 		<>
@@ -241,6 +252,7 @@ export default function Index() {
 					<Text style={{ color: theme.colors.text }} className="text-xl font-bold">
 						{welcomeMessage}
 					</Text>
+					<CardPlaceHolder />
 					<Animated.View style={{ transform: [{ rotate }] }}>
 						<Pressable
 							onPressIn={handlePressIn}

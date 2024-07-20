@@ -79,6 +79,7 @@ export default function CardCheckHabit({
 	const setHabitDone = async () => {
 		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);
+		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
