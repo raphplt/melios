@@ -93,6 +93,23 @@ export default function Recompenses() {
 
 					<Points />
 				</View>
+				<View
+					className="w-11/12 mx-auto rounded-lg py-1 "
+					style={{
+						borderColor: theme.colors.border,
+						borderWidth: 1,
+						backgroundColor: theme.colors.cardBackground,
+					}}
+				>
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className=" font-semibold mx-4 text-center"
+					>
+						Les récompenses ne sont pas encore disponibles. Revenez bientôt !
+					</Text>
+				</View>
 
 				<View
 					className="flex flex-col items-center justify-center"
@@ -116,7 +133,6 @@ export default function Recompenses() {
 						style={{ alignSelf: "center" }}
 					/>
 				</View>
-				{/* <EditScreenInfo path="app/(tabs)/two.tsx" /> */}
 			</ScrollView>
 		</>
 	);

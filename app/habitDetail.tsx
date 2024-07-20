@@ -13,6 +13,7 @@ import { setMemberHabitLog } from "../db/member";
 import { setRewards } from "../db/rewards";
 import { useData } from "../constants/DataContext";
 import notifications from "../hooks/notifications";
+import * as Notifications from "expo-notifications";
 
 export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
@@ -146,6 +147,12 @@ export default function HabitDetail() {
 					title: habitInfos.name,
 					body: `Il est l'heure de faire votre habitude ${habitInfos.name} !`,
 				});
+				scheduleNotificationWithActions(
+					habitInfos.name,
+					`Il est l'heure de faire votre habitude ${habitInfos.name} !`
+				);
+			} else {
+				console.log("no token");
 			}
 		}
 	};
@@ -222,6 +229,46 @@ export default function HabitDetail() {
 	};
 
 	const lightenedColor = lightenColor(habitInfos.category?.color, 0.1);
+
+	useEffect(() => {
+		Notifications.setNotificationCategoryAsync("habit-timer", [
+			{
+				identifier: "PAUSE_TIMER",
+				buttonTitle: "Pause",
+			},
+			{
+				identifier: "RESUME_TIMER",
+				buttonTitle: "Continuer",
+			},
+		]);
+
+		// Gérer les actions de notification
+		Notifications.addNotificationResponseReceivedListener((response) => {
+			const actionIdentifier = response.actionIdentifier;
+
+			if (actionIdentifier === "PAUSE_TIMER") {
+				// Logique pour mettre en pause le timer
+				stopTimer();
+			} else if (actionIdentifier === "RESUME_TIMER") {
+				// Logique pour continuer le timer
+				startTimer();
+			}
+		});
+	}, []);
+
+	const scheduleNotificationWithActions = async (title : string, body: string) => {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title,
+				body,
+				sound: true,
+				categoryIdentifier: "habit-timer", // Ajoutez la catégorie ici
+			},
+			trigger: {
+				seconds: 1, // Vous pouvez ajuster le déclencheur comme nécessaire
+			},
+		});
+	};
 
 	return (
 		<Animated.View
