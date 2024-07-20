@@ -19,9 +19,10 @@ import { disconnectUser } from "../../db/users";
 import { auth } from "../../db";
 import { getMemberInfos } from "../../db/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AntDesign } from "@expo/vector-icons";
 import { useData } from "../../constants/DataContext";
 import notifications from "../../hooks/notifications";
+import LogoutButton from "../../components/Account/LogoutButton";
+import UserInfos from "../../components/Account/UserInfos";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -35,9 +36,7 @@ export default function Account() {
 		setUncompletedHabitsData,
 		setCompletedHabitsData,
 		setPoints,
-		setExpoPushToken,
 		sendNotification,
-		setSendNotification,
 	} = useData();
 	const { scheduleDailyNotification, cancelAllNotifications } = notifications();
 
@@ -147,30 +146,7 @@ export default function Account() {
 								</View>
 							</View>
 
-							<Pressable
-								onPress={handleLogout}
-								style={{
-									backgroundColor: theme.colors.redSecondary,
-									borderColor: theme.colors.redPrimary,
-									borderWidth: 2,
-								}}
-								className="mx-auto px-3 rounded-lg w-3/5 py-1 flex items-center justify-center flex-row"
-							>
-								<View className="mx-2 bg-transparent">
-									<AntDesign
-										name="logout"
-										size={20}
-										color={theme.colors.redPrimary}
-										className="mx-2"
-									/>
-								</View>
-								<Text
-									className="text-lg text-center text- mx-2 text-white"
-									style={{ color: theme.colors.redPrimary }}
-								>
-									Déconnexion
-								</Text>
-							</Pressable>
+							<LogoutButton handleLogout={handleLogout} theme={theme} />
 						</View>
 					) : (
 						<View style={{ backgroundColor: theme.colors.background }}>
@@ -221,7 +197,7 @@ export default function Account() {
 						className="w-10/12 mx-auto mb-4 text-lg font-semibold"
 						style={{ color: theme.colors.text }}
 					>
-						Paramètres supplémentaires
+						Paramètres de l'application
 					</Text>
 					<View />
 					<View
@@ -239,6 +215,9 @@ export default function Account() {
 							value={sendNotification}
 						/>
 					</View>
+					{memberInfos && Object.keys(memberInfos).length > 0 && (
+						<UserInfos data={memberInfos} />
+					)}
 				</ScrollView>
 				<View
 					className="w-full mx-auto mt-12 absolute bottom-0 pt-1"
@@ -248,7 +227,7 @@ export default function Account() {
 						className=" text-center  text-sm"
 						style={{ color: theme.colors.text }}
 					>
-						Melios v1.0.5 - © 2024 Melios. Tous droits réservés.
+						Melios v1.1.2 - © 2024 Melios. Tous droits réservés.
 					</Text>
 				</View>
 			</ThemeProvider>

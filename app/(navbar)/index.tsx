@@ -26,7 +26,6 @@ import { UserContext } from "../../constants/UserContext";
 import ButtonViewMore from "../../components/ButtonViewMore";
 import ParallaxScrollView from "../../components/ParallaxScrollView";
 import { useData } from "../../constants/DataContext";
-import CardPlaceHolder from "../../components/CardLoader";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -149,7 +148,6 @@ export default function Index() {
 
 	const handleHabitStatusChange = (habit: any, done: boolean) => {
 		if (done) {
-			console.log("Habit done : ", habit);
 			setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
 			setUncompletedHabitsData((prevHabits: any) =>
 				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
@@ -190,7 +188,6 @@ export default function Index() {
 				<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
 					Chargement des habitudes...
 				</Text>
-				{/* <CardPlaceHolder /> */}
 			</View>
 		);
 	}
@@ -252,7 +249,6 @@ export default function Index() {
 					<Text style={{ color: theme.colors.text }} className="text-xl font-bold">
 						{welcomeMessage}
 					</Text>
-					<CardPlaceHolder />
 					<Animated.View style={{ transform: [{ rotate }] }}>
 						<Pressable
 							onPressIn={handlePressIn}

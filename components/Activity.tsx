@@ -3,7 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { ThemeContext } from "./ThemeContext";
 import { getHabitById } from "../db/habits";
 import tinycolor from "tinycolor2";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 
 export default function Activity({ habit }: any) {

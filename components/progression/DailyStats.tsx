@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import HabitCard from "../../components/progression/HabitCard";
+import { HabitCard } from "./HabitCard";
 
 const DailyStats = ({ scoreHabits, comparedToYesterday, theme }) => {
 	return (
