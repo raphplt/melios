@@ -2,14 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { ThemeContext } from "../../components/ThemeContext";
 import ToggleButton from "../../components/Switch";
 import { onAuthStateChanged } from "firebase/auth";
-import {
-	Pressable,
-	Image,
-	StatusBar,
-	Text,
-	View,
-	ScrollView,
-} from "react-native";
+import { Image, StatusBar, Text, View, ScrollView } from "react-native";
 import {
 	DarkTheme,
 	ThemeProvider,
@@ -24,11 +17,11 @@ import notifications from "../../hooks/notifications";
 import LogoutButton from "../../components/Account/LogoutButton";
 import UserInfos from "../../components/Account/UserInfos";
 import LoginView from "../../components/Account/LoginView";
-import { Iconify } from "react-native-iconify";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
+
 	const [isSignedIn, setIsSignedIn] = useState(false);
 	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const isMounted = useRef(true);
@@ -38,7 +31,8 @@ export default function Account() {
 		setUncompletedHabitsData,
 		setCompletedHabitsData,
 		setPoints,
-		sendNotification,
+		notificationToggle,
+		setNotificationToggle,
 	} = useData();
 	const { scheduleDailyNotification, cancelAllNotifications } = notifications();
 
@@ -91,9 +85,11 @@ export default function Account() {
 		if (notificationEnabled === "true") {
 			await AsyncStorage.setItem("notificationEnabled", "false");
 			await cancelAllNotifications();
+			setNotificationToggle(false);
 		} else {
 			await AsyncStorage.setItem("notificationEnabled", "true");
 			await scheduleDailyNotification();
+			setNotificationToggle(true);
 		}
 	};
 
@@ -102,6 +98,8 @@ export default function Account() {
 	};
 
 	loading && <Text>Loading...</Text>;
+
+	console.log("toggle", notificationToggle);
 
 	return (
 		<>
@@ -179,7 +177,7 @@ export default function Account() {
 							<ToggleButton
 								title="Notifications"
 								onToggle={handleToggleNotifications}
-								value={sendNotification}
+								value={notificationToggle}
 							/>
 						</View>
 					</View>

@@ -23,7 +23,7 @@ export const DataProvider = ({ children }: any) => {
 	const [isLoading, setIsLoading]: any = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
-	const [sendNotification, setSendNotification] = useState<boolean>(false);
+	const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
 
 	const { AskNotification } = permissions();
 
@@ -49,7 +49,9 @@ export const DataProvider = ({ children }: any) => {
 						"notificationEnabled"
 					);
 					if (notificationEnabled === "true") {
-						setSendNotification(true);
+						setNotificationToggle(true);
+					} else {
+						setNotificationToggle(false);
 					}
 
 					const snapshotRewards: any = await getRewards();
@@ -85,8 +87,8 @@ export const DataProvider = ({ children }: any) => {
 				setCompletedHabitsData,
 				expoPushToken,
 				setExpoPushToken,
-				sendNotification,
-				setSendNotification,
+				notificationToggle,
+				setNotificationToggle,
 			}}
 		>
 			{children}
