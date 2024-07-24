@@ -9,7 +9,7 @@ export default function LogoutButton({ handleLogout, theme }) {
 			style={{
 				borderColor: theme.colors.redPrimary,
 			}}
-			className="border mx-auto px-5 rounded-lg py-2 bg-red-50 flex items-center justify-center flex-row"
+			className="mb-4 border mx-auto w-11/12 rounded-2xl py-2 bg-red-50  flex items-center justify-center flex-row"
 		>
 			<View className="mx-2 bg-transparent">
 				<Iconify icon="mdi:logout" size={20} color={theme.colors.redPrimary} />

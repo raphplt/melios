@@ -23,6 +23,8 @@ import { useData } from "../../constants/DataContext";
 import notifications from "../../hooks/notifications";
 import LogoutButton from "../../components/Account/LogoutButton";
 import UserInfos from "../../components/Account/UserInfos";
+import LoginView from "../../components/Account/LoginView";
+import { Iconify } from "react-native-iconify";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -113,11 +115,15 @@ export default function Account() {
 			/>
 			<ThemeProvider value={theme}>
 				<ScrollView
+					showsVerticalScrollIndicator={false}
 					className="h-[100vh]"
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					{isSignedIn ? (
-						<View style={{ backgroundColor: theme.colors.background }}>
+						<View
+							style={{ backgroundColor: theme.colors.background }}
+							className="mb-4"
+						>
 							<View
 								className="mx-auto flex flex-row pt-6 justify-center w-11/12 items-center mb-12"
 								style={{ backgroundColor: theme.colors.background }}
@@ -145,86 +151,49 @@ export default function Account() {
 									</Text>
 								</View>
 							</View>
-
-							<LogoutButton handleLogout={handleLogout} theme={theme} />
 						</View>
 					) : (
-						<View style={{ backgroundColor: theme.colors.background }}>
-							<Text
-								className=" ml-6 mb-4 text-xl mt-6  text-center"
-								style={{ color: theme.colors.text }}
-							>
-								Non connecté
-							</Text>
-							<Pressable
-								onPress={() => navigation.navigate("register")}
-								className=" bg-blue-500 py-2 px-4 rounded-2xl w-2/3 mx-auto mt-4"
-							>
-								<Text
-									style={{ color: theme.colors.textSecondary }}
-									className="text-lg text-center"
-								>
-									Inscription
-								</Text>
-							</Pressable>
-							<Text
-								className="text-xl text-center my-3"
-								style={{ color: theme.colors.text }}
-							>
-								ou
-							</Text>
-							<Pressable
-								onPress={() => navigation.navigate("login")}
-								className="mx-auto bg-green-500 py-2 px-4 rounded-2xl w-2/3"
-							>
-								<Text
-									style={{ color: theme.colors.textSecondary }}
-									className="text-lg text-center"
-								>
-									Connexion
-								</Text>
-							</Pressable>
-						</View>
+						<LoginView theme={theme} navigation={navigation} />
 					)}
 					<View
-						style={{
-							height: 1,
-							width: "80%",
-						}}
-						className="mx-auto my-6 mt-12"
-					/>
-					<Text
-						className="w-10/12 mx-auto mb-4 text-lg font-semibold"
-						style={{ color: theme.colors.text }}
+						className="p-4 mb-6 w-[95%] mx-auto rounded-xl"
+						style={{ backgroundColor: theme.colors.textSecondary }}
 					>
-						Paramètres de l'application
-					</Text>
-					<View />
-					<View
-						className="w-11/12 mx-auto"
-						style={{ backgroundColor: theme.colors.background }}
-					>
-						<ToggleButton
-							title="Mode sombre"
-							onToggle={handleToggleTheme}
-							value={isDarkTheme}
-						/>
-						<ToggleButton
-							title="Notifications"
-							onToggle={handleToggleNotifications}
-							value={sendNotification}
-						/>
+						<View className="flex w-full font-semibold mx-auto mb-4 flex-row items-center ">
+							<Text
+								className=" text-lg font-semibold ml-3"
+								style={{ color: theme.colors.text }}
+							>
+								Paramètres généraux
+							</Text>
+						</View>
+						<View
+							className="p-4 rounded-lg shadow-md mb-4"
+							style={{ backgroundColor: theme.colors.background }}
+						>
+							<ToggleButton
+								title="Mode sombre"
+								onToggle={handleToggleTheme}
+								value={isDarkTheme}
+							/>
+							<ToggleButton
+								title="Notifications"
+								onToggle={handleToggleNotifications}
+								value={sendNotification}
+							/>
+						</View>
 					</View>
 					{memberInfos && Object.keys(memberInfos).length > 0 && (
 						<UserInfos data={memberInfos} />
 					)}
+					<LogoutButton handleLogout={handleLogout} theme={theme} />
 				</ScrollView>
 				<View
-					className="w-full mx-auto mt-12 absolute bottom-0 pt-1"
+					className="w-full mx-auto"
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					<Text
-						className=" text-center  text-sm"
+						className=" text-center text-sm"
 						style={{ color: theme.colors.text }}
 					>
 						Melios v1.1.2 - © 2024 Melios. Tous droits réservés.

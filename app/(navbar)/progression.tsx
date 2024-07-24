@@ -115,6 +115,7 @@ export default function Progression() {
 	return (
 		<ScrollView
 			style={{ backgroundColor: theme.colors.background }}
+			showsVerticalScrollIndicator={false}
 			refreshControl={
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
