@@ -77,7 +77,6 @@ export default function CardCheckHabit({
 	}, [completed]);
 
 	const setHabitDone = async () => {
-		onHabitStatusChange(habit, true);
 		setToggleCheckBox(true);
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
