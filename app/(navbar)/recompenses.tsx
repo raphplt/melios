@@ -4,7 +4,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { getRewards } from "../../db/rewards";
 import { ScrollView } from "react-native";
 import { Image } from "react-native";
-import Points from "../../components/Points";
+import Points from "../../components/Recompenses/Points";
 
 export default function Recompenses() {
 	const { theme } = useContext(ThemeContext);
