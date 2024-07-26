@@ -2,8 +2,6 @@ import { useContext, useEffect, useState, useRef } from "react";
 import { View, Text, Animated, Pressable, AppState } from "react-native";
 import { ThemeContext } from "../context/ThemeContext";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,113 +11,110 @@ import { setMemberHabitLog } from "../db/member";
 import { setRewards } from "../db/rewards";
 import { useData } from "../context/DataContext";
 import { formatTime } from "../utils/timeUtils";
+import InfosPanel from "../components/HabitDetail/InfosPanel";
+import { Habit } from "../types/habit";
+import LastDays from "../components/HabitDetail/LastDays";
+
+export interface DayStatus {
+	date: string;
+	done: boolean;
+}
 
 export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
-	const [difficulty, setDifficulty] = useState("");
+	const date = moment().format("YYYY-MM-DD");
+
 	const translateY = useRef(new Animated.Value(1000)).current;
-	const [lastDays, setLastDays] = useState([]);
+	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 	const [doneToday, setDoneToday] = useState(false);
 	const [validationMessage, setValidationMessage] = useState("");
 	const [showValidationMessage, setShowValidationMessage] = useState(false);
-	const date = moment().format("YYYY-MM-DD");
 	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
 		useData();
+	const [habitParsed, setHabitParsed] = useState<Habit | null>(null);
 
 	const params = useLocalSearchParams();
-	let { habit = "", habitInfos = "" }: any = params;
+	let { habit = "", habitInfos = "" } = params;
 
-	if (typeof habitInfos === "string") {
-		try {
-			habitInfos = JSON.parse(habitInfos);
-		} catch (error) {
-			console.error("Failed to parse habitInfos:", error);
+	useEffect(() => {
+		if (typeof habitInfos === "string" && habitInfos) {
+			try {
+				const snapshot = JSON.parse(habitInfos) as Habit;
+				setHabitParsed(snapshot);
+			} catch (error) {
+				console.error("Failed to parse habitInfos:", error);
+			}
 		}
-	}
+	}, [habitInfos]);
 
 	useEffect(() => {
 		Animated.spring(translateY, {
 			toValue: 0,
 			useNativeDriver: true,
 		}).start();
-
-		if (habitInfos) {
-			if (habitInfos.difficulty === 1) {
-				setDifficulty("Facile");
-			}
-			if (habitInfos.difficulty === 2) {
-				setDifficulty("Moyen");
-			}
-			if (habitInfos.difficulty >= 3) {
-				setDifficulty("Difficile");
-			}
-		}
-	}, [habitInfos]);
+	}, []);
 
 	useEffect(() => {
-		if (typeof habit === "string") {
+		if (typeof habit === "string" && habit) {
 			try {
-				habit = JSON.parse(habit);
+				const parsedHabit = JSON.parse(habit);
+				const last7Days: DayStatus[] = [];
+				for (let i = 7; i >= 1; i--) {
+					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+					const log = parsedHabit?.logs?.find((log: any) => log.date === day);
+					last7Days.push({
+						date: day,
+						done: log ? log.done : false,
+					});
+				}
+				setLastDays(last7Days);
+				const doneToday = parsedHabit?.logs?.find(
+					(log: any) => log.date === moment().format("YYYY-MM-DD")
+				);
+				setDoneToday(doneToday);
 			} catch (error) {
 				console.error("Failed to parse habit:", error);
 			}
 		}
-
-		const last7Days: any = [];
-		for (let i = 7; i >= 1; i--) {
-			const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-			const log = habit?.logs?.find((log: any) => log.date === day);
-			last7Days.push({
-				date: day,
-				done: log ? log.done : false,
-			});
-		}
-		setLastDays(last7Days);
-
-		const doneToday = habit?.logs?.find(
-			(log: any) => log.date === moment().format("YYYY-MM-DD")
-		);
-		setDoneToday(doneToday);
 	}, [habit]);
 
 	// Timer
 	const [timerSeconds, setTimerSeconds] = useState(0);
 	const [isTimerActive, setIsTimerActive] = useState(false);
-	const timerRef: any = useRef(null);
+	const timerRef = useRef<any>(null);
 
 	const handleTimerEnd = async () => {
-		if (typeof habit === "string") {
-			try {
-				habit = JSON.parse(habit);
-			} catch (error) {
-				console.error("Failed to parse habit:", error);
+		try {
+			if (!habitParsed) {
+				return;
 			}
+
+			setValidationMessage("Félicitations ! Vous avez complété votre habitude.");
+			await setMemberHabitLog(habitParsed.id, date, true);
+			await setRewards("rewards", habitParsed.reward);
+			await setRewards("odyssee", habitParsed.reward + habitParsed.difficulty);
+			setPoints({
+				...points,
+				rewards: points.rewards + habitParsed.reward,
+				odyssee: points.odyssee + habitParsed.reward + habitParsed.difficulty,
+			});
+			setDoneToday(true);
+			setCompletedHabitsData(
+				(prevHabits: any) => [...prevHabits, habitParsed] as any
+			);
+			setUncompletedHabitsData((prevHabits: any) =>
+				prevHabits.filter((oldHabit: any) => oldHabit.id !== habitParsed.id)
+			);
+			setShowValidationMessage(true);
+			setTimeout(() => setShowValidationMessage(false), 5000);
+		} catch (error) {
+			console.error("Failed to parse habit:", error);
 		}
-		setValidationMessage("Félicitations ! Vous avez complété votre habitude.");
-
-		await setMemberHabitLog(habit.id, date, true);
-		await setRewards("rewards", habitInfos.reward);
-		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
-		setPoints({
-			...points,
-			rewards: points.rewards + habitInfos.reward,
-			odyssee: points.odyssee + habitInfos.reward + habitInfos.difficulty,
-		});
-
-		setDoneToday(true);
-
-		setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
-		setUncompletedHabitsData((prevHabits: any) =>
-			prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
-		);
-
-		setShowValidationMessage(true);
-		setTimeout(() => setShowValidationMessage(false), 5000);
 	};
 
 	const startTimer = () => {
-		if (!isTimerActive) {
-			const durationSeconds = habitInfos.duration * 60;
+		if (!isTimerActive && habitParsed) {
+			const durationSeconds = habitParsed.duration * 60;
 			setTimerSeconds(durationSeconds);
 			setIsTimerActive(true);
 			timerRef.current = setInterval(() => {
@@ -136,7 +131,7 @@ export default function HabitDetail() {
 		}
 	};
 
-	const saveTimerState = async (seconds: any) => {
+	const saveTimerState = async (seconds: number) => {
 		try {
 			await AsyncStorage.setItem("timerSeconds", seconds.toString());
 		} catch (error) {
@@ -165,9 +160,7 @@ export default function HabitDetail() {
 
 	useEffect(() => {
 		const listener = AppState.addEventListener("change", handleAppStateChange);
-
 		restoreTimerState();
-
 		return () => {
 			listener.remove();
 		};
@@ -175,7 +168,11 @@ export default function HabitDetail() {
 
 	useEffect(() => {
 		if (isTimerActive) {
-			const durationSeconds = habitInfos.duration * 60;
+			if (!habitParsed) {
+				return;
+			}
+
+			const durationSeconds = habitParsed.duration * 60;
 			setTimerSeconds(durationSeconds);
 			timerRef.current = setInterval(() => {
 				setTimerSeconds((prevSeconds) => {
@@ -201,7 +198,25 @@ export default function HabitDetail() {
 		setIsTimerActive(false);
 	};
 
-	const lightenedColor = lightenColor(habitInfos.category?.color, 0.1);
+	const lightenedColor = lightenColor(
+		habitParsed?.category?.color || theme.colors.primary,
+		0.1
+	);
+
+	if (!habitParsed) {
+		return (
+			<View
+				style={{
+					backgroundColor: theme.colors.background,
+					paddingTop: 20,
+					flex: 1,
+				}}
+				className="h-screen w-full mx-auto border-gray-500 overflow-y-auto top-0 absolute"
+			>
+				<Text>Loading...</Text>
+			</View>
+		);
+	}
 
 	return (
 		<Animated.View
@@ -218,23 +233,23 @@ export default function HabitDetail() {
 					className="py-2 px-6 rounded-xl w-11/12 mx-auto flex items-center flex-row justify-center"
 					style={{
 						backgroundColor: lightenedColor,
-						borderColor: habitInfos.category?.color,
+						borderColor: habitParsed.category?.color,
 						borderWidth: 2,
 					}}
 				>
 					<FontAwesome6
-						name={habitInfos.category?.icon || "question"}
+						name={habitParsed.category?.icon || "question"}
 						size={24}
-						color={habitInfos.category?.color || theme.colors.text}
+						color={habitParsed.category?.color || theme.colors.text}
 						style={{ marginRight: 10 }}
 					/>
 					<Text
 						style={{
-							color: habitInfos.category?.color,
+							color: habitParsed.category?.color,
 						}}
 						className="text-lg text-center font-semibold"
 					>
-						{habitInfos.name}
+						{habitParsed.name}
 					</Text>
 				</View>
 				{!doneToday ? (
@@ -344,52 +359,7 @@ export default function HabitDetail() {
 					</View>
 				)}
 
-				<View
-					className="flex flex-col items-center justify-between w-11/12 mx-auto py-2 rounded-lg mt-6"
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-						borderColor: habitInfos.category?.color,
-						borderWidth: 2,
-					}}
-				>
-					<Text
-						style={{
-							color: theme.colors.text,
-							borderBottomWidth: 2,
-							borderBottomColor: habitInfos.category?.color || theme.colors.border,
-						}}
-						className="text-[16px] text-center font-semibold pb-2 w-11/12 mx-auto"
-					>
-						“{habitInfos.description}”
-					</Text>
-					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
-						<Ionicons name="time" size={24} color={theme.colors.text} />
-						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
-							{habitInfos.duration} minutes
-						</Text>
-					</View>
-
-					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
-						<MaterialIcons name="category" size={24} color={theme.colors.text} />
-						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
-							{habitInfos.category?.category}
-						</Text>
-					</View>
-
-					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
-						<AntDesign name="clockcircleo" size={24} color={theme.colors.text} />
-						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
-							à {habitInfos.moment} heure
-						</Text>
-					</View>
-
-					<View className="flex flex-row justify-between items-center w-full mx-auto mt-4 px-5">
-						<AntDesign name="linechart" size={24} color={theme.colors.text} />
-						<Text style={{ color: theme.colors.text, fontSize: 16, marginLeft: 5 }}>
-							{difficulty}
-						</Text>
-					</View>
-				</View>
+				<InfosPanel habitInfos={habitParsed} theme={theme} />
 
 				<Text
 					style={{ color: theme.colors.text }}
@@ -397,25 +367,7 @@ export default function HabitDetail() {
 				>
 					Derniers jours
 				</Text>
-				<View className="w-11/12 mx-auto mt-5 flex flex-row justify-center items-center">
-					{lastDays &&
-						lastDays.map((day: any, index) => (
-							<View
-								key={index}
-								className="flex flex-col items-center justify-center mx-2"
-							>
-								<Checkbox
-									value={day.done}
-									disabled={true}
-									className="w-8 h-8 mb-1"
-									color={day.done ? habitInfos.color : theme.colors.text}
-								/>
-								<Text style={{ color: theme.colors.text }}>
-									{moment(day.date, "YYYY-MM-DD").format("DD")}
-								</Text>
-							</View>
-						))}
-				</View>
+			<LastDays lastDays={lastDays} theme={theme} habitParsed={habitParsed} />
 			</View>
 		</Animated.View>
 	);

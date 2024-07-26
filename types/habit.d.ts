@@ -1,10 +1,12 @@
+import { Category } from "./category";
+
 export type Habit = {
+	category: Category;
 	id: string;
-	name: string;
 	description: string;
 	difficulty: number;
-	category: string;
-	icon: string;
-	color: string;
 	duration: number;
+	moment: number;
+	name: string;
+	reward: number;
 };
