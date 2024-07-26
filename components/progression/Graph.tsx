@@ -11,7 +11,7 @@ import {
 	Pressable,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function Graph({ habits, period }: any) {

@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import Activity from "./Activity";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { ScrollView, View, Text } from "react-native";
-import { lightenColor } from "../utils/Utils";
-import { useFonts } from "expo-font";
+import { lightenColor } from "../../utils/Utils";
 
 export default function ActivitiesContainer({ userHabits }: any) {
 	const { theme } = useContext(ThemeContext);

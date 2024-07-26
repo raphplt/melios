@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Pressable, Text } from "react-native";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SetTime({ text, handlePress, activeButton }: any) {
 	const { theme } = useContext(ThemeContext);

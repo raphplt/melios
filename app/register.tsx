@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable, BackHandler, Alert } from "react-native";
 import { createUser } from "../db/users";
-import { ThemeContext } from "../components/ThemeContext";
+import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation } from "expo-router";
-import { Questions } from "../constants/slides";
 import MultipleChoice from "../components/Inputs/MultipleChoice";
 import InputText from "../components/Inputs/Text";
 import SingleChoice from "../components/Inputs/SingleChoice";
 import { AntDesign } from "@expo/vector-icons";
 import InputPassword from "../components/Inputs/Password";
 import { checkEmailExists } from "../db/users";
+import { Questions } from "../constants/Slides";
 
 export default function Register() {
 	const { theme } = useContext(ThemeContext);

@@ -1,26 +1,9 @@
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import habits from "./data/habits";
 import { getCategoryById } from "./category";
 
 const LOCAL_STORAGE_KEY = "habitsData";
-
-// Fonction pour importer les habitudes
-export const importHabits = async () => {
-	try {
-		const habitsCollection = collection(db, "habits");
-		await Promise.all(
-			habits.habits.map(async (habit) => {
-				await addDoc(habitsCollection, habit);
-			})
-		);
-		console.log("Habitudes importées avec succès");
-	} catch (error) {
-		console.error("Erreur lors de l'importation des habitudes: ", error);
-		throw error;
-	}
-};
 
 // Fonction pour récupérer tous les documents de la collection "habits"
 export const getAllHabits = async (forceRefresh = false) => {
@@ -90,6 +73,22 @@ export const getHabitById = async (id: any) => {
 		throw error;
 	}
 };
+
+// Fonction pour importer les habitudes
+// export const importHabits = async () => {
+// 	try {
+// 		const habitsCollection = collection(db, "habits");
+// 		await Promise.all(
+// 			habits.habits.map(async (habit) => {
+// 				await addDoc(habitsCollection, habit);
+// 			})
+// 		);
+// 		console.log("Habitudes importées avec succès");
+// 	} catch (error) {
+// 		console.error("Erreur lors de l'importation des habitudes: ", error);
+// 		throw error;
+// 	}
+// };
 
 // export const updateHabitsByName = async () => {
 // 	const habitsCollection = collection(db, "habits");

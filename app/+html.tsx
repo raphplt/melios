@@ -1,5 +1,5 @@
 import { ScrollViewStyleReset } from "expo-router/html";
-import { SessionProvider } from "../constants/UserContext";
+import { SessionProvider } from "../context/UserContext";
 
 export default function Root({ children }: { children: React.ReactNode }) {
 	return (

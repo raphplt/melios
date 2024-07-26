@@ -1,6 +1,6 @@
 import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../components/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { getRewards } from "../../db/rewards";
 import { ScrollView } from "react-native";
 import { Image } from "react-native";

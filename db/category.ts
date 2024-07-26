@@ -1,22 +1,5 @@
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from ".";
-import categoriesData from "./data/categories";
-
-// Fonction pour importer les catégories
-export const importCategories = async () => {
-	try {
-		const categoriesCollection = collection(db, "categories");
-		await Promise.all(
-			categoriesData.categories.map(async (category) => {
-				await addDoc(categoriesCollection, category);
-			})
-		);
-		console.log("Catégories importées avec succès");
-	} catch (error) {
-		console.error("Erreur lors de l'importation des catégories: ", error);
-		throw error;
-	}
-};
 
 // Fonction pour récupérer tous les documents de la collection "categories"
 export const getAllCategories = async (forceRefresh = false) => {
@@ -52,3 +35,19 @@ export const getCategoryById = async (categoryId: any) => {
 		throw error;
 	}
 };
+
+// Fonction pour importer les catégories
+// export const importCategories = async () => {
+// 	try {
+// 		const categoriesCollection = collection(db, "categories");
+// 		await Promise.all(
+// 			categoriesData.categories.map(async (category) => {
+// 				await addDoc(categoriesCollection, category);
+// 			})
+// 		);
+// 		console.log("Catégories importées avec succès");
+// 	} catch (error) {
+// 		console.error("Erreur lors de l'importation des catégories: ", error);
+// 		throw error;
+// 	}
+// };

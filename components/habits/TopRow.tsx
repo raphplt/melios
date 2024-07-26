@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 import { useContext } from "react";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useFonts } from "expo-font";
 
 export default function TopRow({

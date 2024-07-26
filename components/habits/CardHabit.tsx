@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabit } from "../../db/member";
 import { getMemberHabit } from "../../db/member";
 import { lightenColor } from "../../utils/Utils";
-import { useData } from "../../constants/DataContext";
+import { useData } from "../../context/DataContext";
 
 export default function CardHabit({ habit, navigation }: any) {
 	const { theme } = useContext(ThemeContext);
@@ -25,7 +25,6 @@ export default function CardHabit({ habit, navigation }: any) {
 			setUncompletedHabitsData((prev: any) => [...prev, habit]);
 		}
 		setToggleCheckBox(!toggleCheckBox);
-
 	};
 
 	useEffect(() => {

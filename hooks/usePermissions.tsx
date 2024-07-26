@@ -7,7 +7,7 @@ const handleRegistrationError = (errorMessage: string) => {
 	console.log(errorMessage);
 };
 
-const permissions = () => {
+const usePermissions = () => {
 	const AskNotification = async () => {
 		if (Platform.OS === "android") {
 			await Notifications.setNotificationChannelAsync("default", {
@@ -56,4 +56,4 @@ const permissions = () => {
 	return { AskNotification };
 };
 
-export default permissions;
+export default usePermissions;

@@ -10,11 +10,11 @@ import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { ThemeContext } from "../components/ThemeContext";
+import { ThemeContext } from "../context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SessionProvider, useSession } from "../constants/UserContext"; // Utiliser useSession
-import { DataProvider } from "../constants/DataContext";
+import { SessionProvider, useSession } from "../context/UserContext"; // Utiliser useSession
+import { DataProvider } from "../context/DataContext";
 
 export { ErrorBoundary } from "expo-router";
 

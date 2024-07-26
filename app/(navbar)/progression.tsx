@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { ThemeContext } from "../../components/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { View, ScrollView, RefreshControl, Text } from "react-native";
 import moment from "moment";
 import { useHabits } from "../../hooks/userHabits";

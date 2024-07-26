@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabitLog } from "../../db/member";
 import moment from "moment";
@@ -15,7 +15,7 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
-import { useData } from "../../constants/DataContext";
+import { useData } from "../../context/DataContext";
 
 export default function CardCheckHabit({
 	habit = [],

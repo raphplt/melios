@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import Svg, { Rect, Path } from "react-native-svg";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Progress({ ...props }) {
 	return (

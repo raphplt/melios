@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import { View, Text, Animated, Pressable, AppState } from "react-native";
-import { ThemeContext } from "../components/ThemeContext";
+import { ThemeContext } from "../context/ThemeContext";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -11,9 +11,8 @@ import { useLocalSearchParams } from "expo-router";
 import { lightenColor } from "../utils/Utils";
 import { setMemberHabitLog } from "../db/member";
 import { setRewards } from "../db/rewards";
-import { useData } from "../constants/DataContext";
-import notifications from "../hooks/notifications";
-import * as Notifications from "expo-notifications";
+import { useData } from "../context/DataContext";
+import { formatTime } from "../utils/timeUtils";
 
 export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
@@ -24,15 +23,8 @@ export default function HabitDetail() {
 	const [validationMessage, setValidationMessage] = useState("");
 	const [showValidationMessage, setShowValidationMessage] = useState(false);
 	const date = moment().format("YYYY-MM-DD");
-	const {
-		setUncompletedHabitsData,
-		setCompletedHabitsData,
-		points,
-		setPoints,
-		expoPushToken,
-	} = useData();
-
-	const { sendPushNotification } = notifications();
+	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
+		useData();
 
 	const params = useLocalSearchParams();
 	let { habit = "", habitInfos = "" }: any = params;
@@ -141,19 +133,6 @@ export default function HabitDetail() {
 					return prevSeconds - 1;
 				});
 			}, 1000);
-
-			if (expoPushToken) {
-				sendPushNotification(expoPushToken, {
-					title: habitInfos.name,
-					body: `Il est l'heure de faire votre habitude ${habitInfos.name} !`,
-				});
-				scheduleNotificationWithActions(
-					habitInfos.name,
-					`Il est l'heure de faire votre habitude ${habitInfos.name} !`
-				);
-			} else {
-				console.log("no token");
-			}
 		}
 	};
 
@@ -222,53 +201,7 @@ export default function HabitDetail() {
 		setIsTimerActive(false);
 	};
 
-	const formatTime = (seconds: any) => {
-		const minutes = Math.floor(seconds / 60);
-		const remainingSeconds = seconds % 60;
-		return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-	};
-
 	const lightenedColor = lightenColor(habitInfos.category?.color, 0.1);
-
-	useEffect(() => {
-		Notifications.setNotificationCategoryAsync("habit-timer", [
-			{
-				identifier: "PAUSE_TIMER",
-				buttonTitle: "Pause",
-			},
-			{
-				identifier: "RESUME_TIMER",
-				buttonTitle: "Continuer",
-			},
-		]);
-
-		// Gérer les actions de notification
-		Notifications.addNotificationResponseReceivedListener((response) => {
-			const actionIdentifier = response.actionIdentifier;
-
-			if (actionIdentifier === "PAUSE_TIMER") {
-				// Logique pour mettre en pause le timer
-				stopTimer();
-			} else if (actionIdentifier === "RESUME_TIMER") {
-				// Logique pour continuer le timer
-				startTimer();
-			}
-		});
-	}, []);
-
-	const scheduleNotificationWithActions = async (title : string, body: string) => {
-		await Notifications.scheduleNotificationAsync({
-			content: {
-				title,
-				body,
-				sound: true,
-				categoryIdentifier: "habit-timer", // Ajoutez la catégorie ici
-			},
-			trigger: {
-				seconds: 1, // Vous pouvez ajuster le déclencheur comme nécessaire
-			},
-		});
-	};
 
 	return (
 		<Animated.View

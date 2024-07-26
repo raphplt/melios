@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import { ThemeContext } from "./ThemeContext";
-import { getHabitById } from "../db/habits";
+import { ThemeContext } from "../../context/ThemeContext";
+import { getHabitById } from "../../db/habits";
 import tinycolor from "tinycolor2";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";

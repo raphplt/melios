@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { View, Text, Pressable } from "react-native";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function SingleChoice(props: any) {
 	const { theme } = useContext(ThemeContext);

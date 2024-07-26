@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { UserDatas } from "../../types/user";
 import { Iconify } from "react-native-iconify";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function UserInfos({ data }: { data: UserDatas }) {
 	const [showHabits, setShowHabits] = useState(false);

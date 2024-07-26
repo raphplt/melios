@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { View, Text, Pressable } from "react-native";
-import { ThemeContext } from "../ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function MultipleChoice(props: any) {
 	const { theme } = useContext(ThemeContext);
@@ -16,7 +16,7 @@ export default function MultipleChoice(props: any) {
 			setSelectedAnswers((prevSelected: any) => [...prevSelected, answer]);
 		}
 	};
-	
+
 	return (
 		<View className="w-screen">
 			<Text

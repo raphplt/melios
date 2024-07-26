@@ -1,8 +1,14 @@
+import { View } from "react-native";
 import { Pressable, Text } from "react-native";
-import { View } from "../Themed";
 import { Iconify } from "react-native-iconify";
 
-export default function LogoutButton({ handleLogout, theme }) {
+export default function LogoutButton({
+	handleLogout,
+	theme,
+}: {
+	handleLogout: () => void;
+	theme: any;
+}) {
 	return (
 		<Pressable
 			onPress={handleLogout}

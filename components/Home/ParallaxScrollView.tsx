@@ -5,14 +5,14 @@ import {
 	type PropsWithChildren,
 	type ReactElement,
 } from "react";
-import { Image, StyleSheet, Text, View, useColorScheme } from "react-native";
+import { Image, Text, View, useColorScheme } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedRef,
 	useAnimatedStyle,
 	useScrollViewOffset,
 } from "react-native-reanimated";
-import { ThemeContext } from "./ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
 
 const HEADER_HEIGHT = 250;
@@ -128,7 +128,7 @@ export default function ParallaxScrollView({
 				>
 					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 left-5  z-30">
 						<Image
-							source={require("../assets/images/icons/flamme.png")}
+							source={require("../../assets/images/icons/flamme.png")}
 							style={{ width: 50, height: 50, resizeMode: "contain" }}
 						/>
 						<Text

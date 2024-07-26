@@ -9,7 +9,7 @@ import { auth } from ".";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useData } from "../constants/DataContext";
+import { useData } from "../context/DataContext";
 
 export const createUser = async (form: any) => {
 	try {

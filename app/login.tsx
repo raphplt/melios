@@ -10,10 +10,10 @@ import {
 	Platform,
 } from "react-native";
 import { loginUser } from "../db/users";
-import { ThemeContext } from "../components/ThemeContext";
+import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useSession } from "../constants/UserContext";
+import { useSession } from "../context/UserContext";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);

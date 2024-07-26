@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { ThemeContext } from "./ThemeContext";
-import { useData } from "../constants/DataContext";
+import { ThemeContext } from "../context/ThemeContext";
+import { useData } from "../context/DataContext";
 import MoneyMelios from "./Svg/MoneyMelios";
 import MoneyOdyssee from "./Svg/MoneyOdyssee";
 

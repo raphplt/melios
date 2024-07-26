@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../components/ThemeContext";
-import ToggleButton from "../../components/Switch";
+import { ThemeContext } from "../../context/ThemeContext";
+import ToggleButton from "../../components/Account/Switch";
 import { onAuthStateChanged } from "firebase/auth";
 import { Image, StatusBar, Text, View, ScrollView } from "react-native";
 import {
@@ -12,8 +12,8 @@ import { disconnectUser } from "../../db/users";
 import { auth } from "../../db";
 import { getMemberInfos } from "../../db/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useData } from "../../constants/DataContext";
-import notifications from "../../hooks/notifications";
+import { useData } from "../../context/DataContext";
+import notifications from "../../hooks/useNotifications";
 import LogoutButton from "../../components/Account/LogoutButton";
 import UserInfos from "../../components/Account/UserInfos";
 import LoginView from "../../components/Account/LoginView";
@@ -98,8 +98,6 @@ export default function Account() {
 	};
 
 	loading && <Text>Loading...</Text>;
-
-	console.log("toggle", notificationToggle);
 
 	return (
 		<>

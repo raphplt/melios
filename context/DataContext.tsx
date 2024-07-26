@@ -3,7 +3,7 @@ import moment from "moment";
 import { getRewards } from "../db/rewards";
 import { useSession } from "./UserContext";
 import { getMemberHabits } from "../db/member";
-import permissions from "../hooks/permissions";
+import permissions from "../hooks/usePermissions";
 import { processHabits } from "../utils/habitsUtils";
 import { extractPoints } from "../utils/pointsUtils";
 import { getNotificationToken } from "../utils/notificationsUtils";
@@ -16,14 +16,14 @@ export const DataProvider = ({ children }: any) => {
 	const [habits, setHabits]: any = useState();
 	const [uncompletedHabitsData, setUncompletedHabitsData]: any = useState([]);
 	const [completedHabitsData, setCompletedHabitsData]: any = useState([]);
-	const [points, setPoints]: any = useState({
-		rewards: 0,
-		odyssee: 0,
-	});
 	const [isLoading, setIsLoading]: any = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
 	const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
+	const [points, setPoints]: any = useState({
+		rewards: 0,
+		odyssee: 0,
+	});
 
 	const { AskNotification } = permissions();
 

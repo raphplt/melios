@@ -1,9 +1,8 @@
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
-import { Platform } from "react-native";
-import { useData } from "../constants/DataContext";
+import { useData } from "../context/DataContext";
 
-const notifications = () => {
+const useNotifications = () => {
 	const { habits } = useData();
 	const sendPushNotification = async (
 		expoPushToken: string,
@@ -32,7 +31,6 @@ const notifications = () => {
 			return;
 		}
 
-		// Check for permissions
 		const { status } = await Notifications.getPermissionsAsync();
 		if (status !== "granted") {
 			const { status: newStatus } = await Notifications.requestPermissionsAsync();
@@ -65,7 +63,6 @@ const notifications = () => {
 	};
 
 	const cancelAllNotifications = async () => {
-		console.log("Cancelling all notifications");
 		await Notifications.cancelAllScheduledNotificationsAsync();
 	};
 
@@ -76,4 +73,4 @@ const notifications = () => {
 	};
 };
 
-export default notifications;
+export default useNotifications;

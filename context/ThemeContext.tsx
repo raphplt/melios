@@ -1,7 +1,7 @@
-import React from "react";
+import { createContext } from "react";
 import { DefaultTheme } from "../constants/Theme";
 
-export const ThemeContext = React.createContext({
+export const ThemeContext = createContext({
 	theme: DefaultTheme,
 	toggleTheme: () => {},
 });

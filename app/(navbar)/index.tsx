@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../components/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import {
 	View,
 	RefreshControl,
@@ -18,14 +18,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text } from "react-native";
 import { getMemberHabits, getMemberInfos } from "../../db/member";
 import CardCheckHabit from "../../components/Habits/CardCheckHabit";
-import ActivitiesContainer from "../../components/ActivitiesContainer";
+import ActivitiesContainer from "../../components/Home/ActivitiesContainer";
 import { Entypo } from "@expo/vector-icons";
 import Background from "../../components/Svg/Background";
 import TopRow from "../../components/Habits/TopRow";
-import { UserContext } from "../../constants/UserContext";
-import ButtonViewMore from "../../components/ButtonViewMore";
-import ParallaxScrollView from "../../components/ParallaxScrollView";
-import { useData } from "../../constants/DataContext";
+import { UserContext } from "../../context/UserContext";
+import ButtonViewMore from "../../components/Home/ButtonViewMore";
+import ParallaxScrollView from "../../components/Home/ParallaxScrollView";
+import { useData } from "../../context/DataContext";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
