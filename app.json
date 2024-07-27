@@ -25,7 +25,7 @@
 			},
 			"package": "com.raphplt.melios",
 			"permissions": ["NOTIFICATIONS"],
-			"googleServicesFile": "./google-service-account-file/melios-4a03d-44ca4cc6331d.json"
+			"googleServicesFile": "./google-services/google-services.json"
 		},
 		"web": {
 			"bundler": "metro",
