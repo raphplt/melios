@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import Svg, { Ellipse, Path } from "react-native-svg";
-import { ThemeContext } from "../../context/ThemeContext";
 
 export default function User({ ...props }) {
 	return (

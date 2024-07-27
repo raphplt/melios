@@ -1,6 +1,8 @@
 import {
 	addDoc,
 	collection,
+	doc,
+	getDoc,
 	getDocs,
 	query,
 	updateDoc,
@@ -80,6 +82,52 @@ export const setRewards = async (
 		}
 	} catch (error) {
 		console.log("Erreur lors de la récupération des récompenses : ", error);
+		throw error;
+	}
+};
+
+export const getAllRewards = async () => {
+	try {
+		const rewardsCollectionRef = collection(db, "rewards");
+		const rewardsSnapshot = await getDocs(query(rewardsCollectionRef));
+
+		if (!rewardsSnapshot.empty) {
+			const allRewards = await Promise.all(
+				rewardsSnapshot.docs.map(async (rewardDoc) => {
+					const rewardData = rewardDoc.data();
+					const uid = rewardData.uid;
+
+					const membersCollectionRef = collection(db, "members");
+					const userSnapshot = await getDocs(
+						query(membersCollectionRef, where("uid", "==", uid))
+					);
+
+					let userName = "Unknown User";
+					if (!userSnapshot.empty) {
+						const userDoc = userSnapshot.docs[0];
+
+						const userData = userDoc.data();
+						userName = userData.nom || "Unknown User";
+					}
+
+					return {
+						id: rewardDoc.id,
+						...rewardData,
+						name: userName,
+					};
+				})
+			);
+
+			return allRewards;
+		} else {
+			console.log("Aucune récompense trouvée.");
+			return [];
+		}
+	} catch (error) {
+		console.log(
+			"Erreur lors de la récupération de toutes les récompenses : ",
+			error
+		);
 		throw error;
 	}
 };

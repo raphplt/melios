@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 export default function InfosPanel({
 	habitInfos,
 	theme,
+	lightenedColor,
 }: {
 	habitInfos: Habit;
 	theme: any;
+	lightenedColor: string;
 }) {
 	const [difficulty, setDifficulty] = useState<string>("");
 
@@ -35,7 +37,7 @@ export default function InfosPanel({
 		<View
 			className="flex flex-col items-center justify-between w-11/12 mx-auto py-2 rounded-lg mt-6"
 			style={{
-				backgroundColor: theme.colors.cardBackground,
+				backgroundColor: lightenedColor || theme.colors.cardBackground,
 				borderColor: habitInfos.category?.color,
 				borderWidth: 2,
 			}}
@@ -45,7 +47,7 @@ export default function InfosPanel({
 					color: theme.colors.text,
 					borderBottomColor: habitInfos.category?.color || theme.colors.border,
 				}}
-				className="text-[16px] text-center font-semibold pb-2 w-11/12 mx-auto border-b-2"
+				className="text-[15px] text-center font-semibold pb-2 w-11/12 mx-auto border-b-2"
 			>
 				{habitInfos.description}
 			</Text>

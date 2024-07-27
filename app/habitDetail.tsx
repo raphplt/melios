@@ -27,8 +27,6 @@ export default function HabitDetail() {
 	const translateY = useRef(new Animated.Value(1000)).current;
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 	const [doneToday, setDoneToday] = useState(false);
-	const [validationMessage, setValidationMessage] = useState("");
-	const [showValidationMessage, setShowValidationMessage] = useState(false);
 	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
 		useData();
 	const [habitParsed, setHabitParsed] = useState<Habit | null>(null);
@@ -89,7 +87,6 @@ export default function HabitDetail() {
 				return;
 			}
 
-			setValidationMessage("Félicitations ! Vous avez complété votre habitude.");
 			await setMemberHabitLog(habitParsed.id, date, true);
 			await setRewards("rewards", habitParsed.reward);
 			await setRewards("odyssee", habitParsed.reward + habitParsed.difficulty);
@@ -105,8 +102,6 @@ export default function HabitDetail() {
 			setUncompletedHabitsData((prevHabits: any) =>
 				prevHabits.filter((oldHabit: any) => oldHabit.id !== habitParsed.id)
 			);
-			setShowValidationMessage(true);
-			setTimeout(() => setShowValidationMessage(false), 5000);
 		} catch (error) {
 			console.error("Failed to parse habit:", error);
 		}
@@ -200,7 +195,7 @@ export default function HabitDetail() {
 
 	const lightenedColor = lightenColor(
 		habitParsed?.category?.color || theme.colors.primary,
-		0.1
+		0.05
 	);
 
 	if (!habitParsed) {
@@ -230,7 +225,7 @@ export default function HabitDetail() {
 		>
 			<View className="flex flex-col items-center justify-center mt-4">
 				<View
-					className="py-2 px-6 rounded-xl w-11/12 mx-auto flex items-center flex-row justify-center"
+					className="py-2 px-6 rounded-lg w-11/12 mx-auto flex items-center flex-row justify-center"
 					style={{
 						backgroundColor: lightenedColor,
 						borderColor: habitParsed.category?.color,
@@ -331,35 +326,11 @@ export default function HabitDetail() {
 					</View>
 				)}
 
-				{showValidationMessage && (
-					<View
-						className="py-3 px-6 rounded-xl w-11/12 mx-auto my-6"
-						style={{
-							backgroundColor: theme.colors.cardBackground,
-							borderColor: theme.colors.primary,
-							borderWidth: 2,
-						}}
-					>
-						<Ionicons
-							name="checkmark-circle"
-							size={50}
-							color={theme.colors.primary}
-							style={{ alignSelf: "center" }}
-						/>
-						<Text
-							className="text-lg text-center font-semibold"
-							style={{
-								color: theme.colors.primary,
-								maxWidth: "90%",
-								alignSelf: "center",
-							}}
-						>
-							{validationMessage}
-						</Text>
-					</View>
-				)}
-
-				<InfosPanel habitInfos={habitParsed} theme={theme} />
+				<InfosPanel
+					habitInfos={habitParsed}
+					theme={theme}
+					lightenedColor={lightenedColor}
+				/>
 
 				<Text
 					style={{ color: theme.colors.text }}
@@ -367,7 +338,7 @@ export default function HabitDetail() {
 				>
 					Derniers jours
 				</Text>
-			<LastDays lastDays={lastDays} theme={theme} habitParsed={habitParsed} />
+				<LastDays lastDays={lastDays} theme={theme} />
 			</View>
 		</Animated.View>
 	);

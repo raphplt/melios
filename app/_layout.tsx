@@ -93,9 +93,15 @@ function MainNavigator() {
 						options={{
 							title: "Détail de l'habitude",
 							presentation: "transparentModal",
-							// headerShown: false,
 						}}
 					/>
+					<Stack.Screen
+						name="account"
+						options={{
+							title: "Mon compte",
+						}}
+					/>
+
 					<Stack.Screen
 						name="login"
 						options={{

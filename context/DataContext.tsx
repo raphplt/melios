@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import moment from "moment";
 import { getRewards } from "../db/rewards";
 import { useSession } from "./UserContext";
-import { getMemberHabits } from "../db/member";
+import { getMemberHabits, getMemberInfos } from "../db/member";
 import permissions from "../hooks/usePermissions";
 import { processHabits } from "../utils/habitsUtils";
 import { extractPoints } from "../utils/pointsUtils";
@@ -24,6 +24,7 @@ export const DataProvider = ({ children }: any) => {
 		rewards: 0,
 		odyssee: 0,
 	});
+	const [member, setMember]: any = useState();
 
 	const { AskNotification } = permissions();
 
@@ -53,6 +54,9 @@ export const DataProvider = ({ children }: any) => {
 					} else {
 						setNotificationToggle(false);
 					}
+
+					const snapshotMember = await getMemberInfos();
+					setMember(snapshotMember);
 
 					const snapshotRewards: any = await getRewards();
 					setPoints(extractPoints(snapshotRewards));
@@ -89,6 +93,8 @@ export const DataProvider = ({ children }: any) => {
 				setExpoPushToken,
 				notificationToggle,
 				setNotificationToggle,
+				member,
+				setMember,
 			}}
 		>
 			{children}

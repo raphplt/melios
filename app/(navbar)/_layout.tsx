@@ -11,6 +11,7 @@ import Home from "../../components/Svg/Home";
 import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
 import User from "../../components/Svg/User";
+import Agora from "../../components/Svg/Aroga";
 
 const createHeaderStyle = (theme: any) => ({
 	backgroundColor: theme.colors.background,
@@ -121,10 +122,10 @@ const TabLayout: React.FC = () => {
 				}
 			/>
 			<Tabs.Screen
-				name="account"
+				name="agora"
 				options={
-					createTabOptions(theme, "Compte", ({ color }) => (
-						<User color={color} />
+					createTabOptions(theme, "Agora", ({ color }) => (
+						<Agora color={color} />
 					)) as any
 				}
 			/>

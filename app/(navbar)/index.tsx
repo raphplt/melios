@@ -38,6 +38,8 @@ export default function Index() {
 	!user && navigation.navigate("login");
 
 	const {
+		member,
+		setMember,
 		habits,
 		isLoading,
 		uncompletedHabitsData,
@@ -51,29 +53,10 @@ export default function Index() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
 
-	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const [welcomeMessage, setWelcomeMessage] = useState("");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const [showMoreValidate, setShowMoreValidate] = useState(5);
 	const [showMoreNext, setShowMoreNext] = useState(5);
-
-	useEffect(() => {
-		(async () => {
-			try {
-				const data = await getMemberInfos();
-				setMemberInfos(data);
-				setLoading(false);
-			} catch (error) {
-				handleError(error);
-				setMemberInfos(null);
-				setLoading(false);
-			}
-		})();
-
-		return () => {
-			isMounted.current = false;
-		};
-	}, []);
 
 	useEffect(() => {
 		if (isFocused) {
@@ -83,7 +66,7 @@ export default function Index() {
 
 	useEffect(() => {
 		(async () => {
-			const username = memberInfos && memberInfos.nom;
+			const username = member && member.nom;
 			const time = new Date().getHours();
 			if (time < 12) {
 				setWelcomeMessage(`Bonjour${username ? ", " + username : ""} !`);
@@ -95,7 +78,7 @@ export default function Index() {
 				setWelcomeMessage(`Bonsoir${username ? ", " + username : ""} !`);
 			}
 		})();
-	}, [memberInfos]);
+	}, [member]);
 
 	const onRefresh = async () => {
 		setRefreshing(true);
@@ -103,7 +86,7 @@ export default function Index() {
 			setShowMissingHabits(false);
 			const data = await getMemberHabits();
 			const memberInfos = await getMemberInfos();
-			setMemberInfos(memberInfos);
+			setMember(memberInfos);
 			setUserHabits(data);
 			setShowMoreValidate(5);
 			setShowMoreNext(5);
@@ -118,7 +101,7 @@ export default function Index() {
 		try {
 			const data = await getMemberHabits();
 			const memberInfos = await getMemberInfos();
-			setMemberInfos(memberInfos);
+			setMember(memberInfos);
 			setUserHabits(data);
 		} catch (error) {
 			handleError(error);

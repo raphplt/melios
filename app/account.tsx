@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
-import ToggleButton from "../../components/Account/Switch";
+import { ThemeContext } from "../context/ThemeContext";
+import ToggleButton from "../components/Account/Switch";
 import { onAuthStateChanged } from "firebase/auth";
 import { Image, StatusBar, Text, View, ScrollView } from "react-native";
 import {
@@ -8,22 +8,20 @@ import {
 	ThemeProvider,
 	useNavigation,
 } from "@react-navigation/native";
-import { disconnectUser } from "../../db/users";
-import { auth } from "../../db";
-import { getMemberInfos } from "../../db/member";
+import { disconnectUser } from "../db/users";
+import { auth } from "../db";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useData } from "../../context/DataContext";
-import notifications from "../../hooks/useNotifications";
-import LogoutButton from "../../components/Account/LogoutButton";
-import UserInfos from "../../components/Account/UserInfos";
-import LoginView from "../../components/Account/LoginView";
+import { useData } from "../context/DataContext";
+import notifications from "../hooks/useNotifications";
+import LogoutButton from "../components/Account/LogoutButton";
+import UserInfos from "../components/Account/UserInfos";
+import LoginView from "../components/Account/LoginView";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 
 	const [isSignedIn, setIsSignedIn] = useState(false);
-	const [memberInfos, setMemberInfos] = useState<any>([]);
 	const isMounted = useRef(true);
 	const [loading, setLoading] = useState(true);
 	const {
@@ -33,6 +31,7 @@ export default function Account() {
 		setPoints,
 		notificationToggle,
 		setNotificationToggle,
+		member,
 	} = useData();
 	const { scheduleDailyNotification, cancelAllNotifications } = notifications();
 
@@ -42,24 +41,6 @@ export default function Account() {
 		});
 
 		return () => unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		(async () => {
-			try {
-				const data = await getMemberInfos();
-				setMemberInfos(data);
-				setLoading(false);
-			} catch (error) {
-				handleError(error);
-				setMemberInfos([]);
-				setLoading(false);
-			}
-		})();
-
-		return () => {
-			isMounted.current = false;
-		};
 	}, []);
 
 	const handleToggleTheme = async () => {
@@ -125,7 +106,7 @@ export default function Account() {
 								style={{ backgroundColor: theme.colors.background }}
 							>
 								<Image
-									source={require("../../assets/images/pfp.jpg")}
+									source={require("../assets/images/pfp.jpg")}
 									className="rounded-full mx-auto mt-4"
 									style={{ width: 120, height: 120 }}
 								/>
@@ -137,7 +118,7 @@ export default function Account() {
 										className=" ml-6 mb-4 text-xl mt-3"
 										style={{ color: theme.colors.text }}
 									>
-										{memberInfos?.nom}
+										{member?.nom}
 									</Text>
 									<Text
 										className=" ml-6 mb-4 text-lg mt-3"
@@ -179,9 +160,7 @@ export default function Account() {
 							/>
 						</View>
 					</View>
-					{memberInfos && Object.keys(memberInfos).length > 0 && (
-						<UserInfos data={memberInfos} />
-					)}
+					{member && Object.keys(member).length > 0 && <UserInfos data={member} />}
 					<LogoutButton handleLogout={handleLogout} theme={theme} />
 				</ScrollView>
 				<View

@@ -1,6 +1,4 @@
-import { useContext } from "react";
-import Svg, { Ellipse, Path } from "react-native-svg";
-import { ThemeContext } from "../../context/ThemeContext";
+import Svg, { Path } from "react-native-svg";
 
 export default function Gift({ ...props }) {
 	return (

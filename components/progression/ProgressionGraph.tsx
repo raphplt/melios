@@ -1,8 +1,18 @@
 import React from "react";
 import { View, Text } from "react-native";
 import Graph from "./Graph";
+import { Iconify } from "react-native-iconify";
+import HeaderContainer from "./HeaderContainer";
 
-const ProgressionGraph = ({ habitLastDaysCompleted, activeButton, theme }) => {
+const ProgressionGraph = ({
+	habitLastDaysCompleted,
+	activeButton,
+	theme,
+}: {
+	habitLastDaysCompleted: Record<string, number>;
+	activeButton: string;
+	theme: any;
+}) => {
 	const getTitle = () => {
 		switch (activeButton) {
 			case "Jour":
@@ -22,12 +32,16 @@ const ProgressionGraph = ({ habitLastDaysCompleted, activeButton, theme }) => {
 		<View
 			style={{ backgroundColor: theme.colors.background, alignItems: "center" }}
 		>
-			<Text
-				className="w-10/12 mt-4 mb-2 text-[16px] font-semibold"
-				style={{ color: theme.colors.text }}
-			>
-				{getTitle()}
-			</Text>
+			<HeaderContainer>
+				<Iconify icon="mdi:graph-line" size={20} color={theme.colors.text} />
+				<Text
+					className="text-[16px] font-semibold"
+					style={{ color: theme.colors.text }}
+				>
+					{getTitle()}
+				</Text>
+			</HeaderContainer>
+
 			<Graph habits={habitLastDaysCompleted} period={activeButton} />
 		</View>
 	);
