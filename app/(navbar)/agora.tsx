@@ -29,7 +29,6 @@ export default function Agora() {
 	const { theme } = useContext(ThemeContext);
 	const { member } = useData();
 
-	console.log(member.uid);
 
 	const fetchRewards = async () => {
 		try {

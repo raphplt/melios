@@ -24,8 +24,8 @@
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.raphplt.melios",
-			"permissions": ["NOTIFICATIONS"],
-			"googleServicesFile": "./google-services/google-services.json"
+			"permissions": ["NOTIFICATIONS"]
+			// "googleServicesFile": "./google-services/google-services.json"
 		},
 		"web": {
 			"bundler": "metro",
