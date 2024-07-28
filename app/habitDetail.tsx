@@ -6,7 +6,7 @@ import moment from "moment";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
-import { lightenColor } from "../utils/Utils";
+import { lightenColor } from "../utils/colors";
 import { setMemberHabitLog } from "../db/member";
 import { setRewards } from "../db/rewards";
 import { useData } from "../context/DataContext";

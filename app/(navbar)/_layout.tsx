@@ -1,4 +1,3 @@
-import { FontAwesome } from "@expo/vector-icons";
 import { Tabs, useNavigation } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { useContext, useEffect } from "react";
@@ -6,7 +5,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import Melios from "../../components/Svg/Melios";
 import { AntDesign } from "@expo/vector-icons";
 import { useSession } from "../../context/UserContext";
-import Points from "../../components/Recompenses/Points";
+import Points from "../../components/Shared/Points";
 import Home from "../../components/Svg/Home";
 import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";

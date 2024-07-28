@@ -16,6 +16,9 @@ import CardHabit from "../components/Habits/CardHabit";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ButtonViewMore from "../components/Home/ButtonViewMore";
+import { useData } from "../context/DataContext";
+import SearchBar from "../components/Select/SearchBar";
+import Tips from "../components/Select/Tips";
 
 export default function Select() {
 	const [habitsData, setHabitsData] = useState([]);
@@ -24,7 +27,7 @@ export default function Select() {
 	const [deleteAdvice, setDeleteAdvice] = useState(false);
 	const [displayedHabitsCount, setDisplayedHabitsCount]: any = useState({});
 	const [selectedCategory, setSelectedCategory] = useState(null);
-	
+	const { habits, setHabits } = useData();
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
@@ -149,6 +152,7 @@ export default function Select() {
 				keyExtractor={(habit) => habit.id}
 				nestedScrollEnabled
 				ListFooterComponent={
+					displayedHabitsCount[item.category] > 0 &&
 					item.habits.length > displayedHabitsCount[item.category] ? (
 						<ButtonViewMore
 							text="Voir plus"
@@ -193,72 +197,21 @@ export default function Select() {
 					ListHeaderComponent={
 						<>
 							{!deleteAdvice && (
-								<View
-									className="flex flex-row items-center w-11/12 mx-auto rounded-xl py-2 px-3 mt-4"
-									style={{
-										backgroundColor: "#FFC67C",
-										borderColor: theme.colors.border,
-										borderWidth: 1,
-									}}
-								>
-									<Ionicons name="bulb" size={24} style={{ color: theme.colors.text }} />
-									<Text
-										className="text-[15px] w-10/12 mx-auto text-left font-semibold"
-										style={{ color: theme.colors.text }}
-									>
-										Vous pouvez sélectionner jusqu'à 20 habitudes.
-									</Text>
-									<Pressable
-										onPress={() => setDeleteAdvice(true)}
-										style={{ position: "absolute", right: 10 }}
-									>
-										<Ionicons
-											name="close"
-											size={24}
-											style={{ color: theme.colors.text }}
-										/>
-									</Pressable>
-								</View>
+								<Tips theme={theme} setDeleteAdvice={setDeleteAdvice} />
 							)}
-							<View
-								className="flex flex-row items-center w-11/12 mx-auto rounded-xl py-1 px-3 mt-4"
-								style={{
-									backgroundColor: theme.colors.cardBackground,
-									borderColor: theme.colors.border,
-									borderWidth: 1,
-								}}
-							>
-								<Ionicons
-									name="search"
-									size={24}
-									style={{ color: theme.colors.text, marginRight: 10 }}
-								/>
-								<TextInput
-									style={{ flex: 1, height: 40, color: theme.colors.text }}
-									onChangeText={(text) => setSearch(text)}
-									value={search}
-									placeholder="Rechercher une habitude"
-								/>
-								{search.length > 0 && (
-									<Pressable onPress={() => setSearch("")}>
-										<Ionicons
-											name="close-circle"
-											size={24}
-											style={{ color: theme.colors.text }}
-										/>
-									</Pressable>
-								)}
-							</View>
+
+							<Text className="text-center ">{habits.length}/20 sélectionnées</Text>
+							<SearchBar search={search} setSearch={setSearch} theme={theme} />
 							<ScrollView
 								ref={scrollViewRef}
 								horizontal
 								showsHorizontalScrollIndicator={false}
-								className="mt-3 ml-4"
+								className="pt-4 ml-4"
 							>
 								{categories.map((category) => (
 									<Pressable
 										key={category.category}
-										className="flex py-2 px-4 rounded-xl mx-1"
+										className="flex py-2 px-4 rounded-3xl mx-1"
 										style={{
 											backgroundColor:
 												selectedCategory === category.category

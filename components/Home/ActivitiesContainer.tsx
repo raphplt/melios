@@ -2,12 +2,10 @@ import { useContext } from "react";
 import Activity from "./Activity";
 import { ThemeContext } from "../../context/ThemeContext";
 import { ScrollView, View, Text } from "react-native";
-import { lightenColor } from "../../utils/Utils";
+import { lightenColor } from "../../utils/colors";
 
 export default function ActivitiesContainer({ userHabits }: any) {
 	const { theme } = useContext(ThemeContext);
-
-	const blueSoft = lightenColor("#08209F", 0.05);
 
 	return (
 		<View

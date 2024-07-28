@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import MoneyOdyssee from "../Svg/MoneyOdyssee";
 import MoneyMelios from "../Svg/MoneyMelios";
-import { lightenColor } from "../../utils/Utils";
+import { lightenColor } from "../../utils/colors";
 
 export default function CardClassement({
 	reward,

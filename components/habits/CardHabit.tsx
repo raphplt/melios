@@ -5,7 +5,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import Checkbox from "expo-checkbox";
 import { setMemberHabit } from "../../db/member";
 import { getMemberHabit } from "../../db/member";
-import { lightenColor } from "../../utils/Utils";
+import { lightenColor } from "../../utils/colors";
 import { useData } from "../../context/DataContext";
 
 export default function CardHabit({ habit, navigation }: any) {
@@ -38,7 +38,7 @@ export default function CardHabit({ habit, navigation }: any) {
 
 	return (
 		<TouchableOpacity onPress={setHabit}>
-			<View className="w-full mx-auto my-2 flex flex-row items-center justify-evenly">
+			<View className="w-full mx-auto my-1 flex flex-row items-center justify-evenly">
 				<View>
 					<Checkbox
 						value={toggleCheckBox}
