@@ -67,8 +67,11 @@ function MainNavigator() {
 
 	if (isLoading || !loaded) {
 		return (
-			<View className="flex-1 items-center justify-center h-screen">
+			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 				<ActivityIndicator size="large" color={theme.colors.primary} />
+				<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
+					Chargement du compte...
+				</Text>
 			</View>
 		);
 	}

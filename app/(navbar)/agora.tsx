@@ -1,18 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import {
-	Text,
-	View,
-	ScrollView,
-	RefreshControl,
-	TouchableOpacity,
-} from "react-native";
+import { Text, View, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
 import { getAllRewards } from "../../db/rewards";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Iconify } from "react-native-iconify";
-import MoneyOdyssee from "../../components/Svg/MoneyOdyssee";
-import MoneyMelios from "../../components/Svg/MoneyMelios";
 import { useData } from "../../context/DataContext";
-import { lightenColor } from "../../utils/Utils";
+import Filters from "../../components/Agora/Filters";
+import CardClassement from "../../components/Agora/CardClassement";
 
 interface Reward {
 	id: string;
@@ -28,12 +21,13 @@ export default function Agora() {
 	const [filter, setFilter] = useState<"odyssee" | "rewards">("odyssee");
 	const { theme } = useContext(ThemeContext);
 	const { member } = useData();
-
+	const [loading, setLoading] = useState(true);
 
 	const fetchRewards = async () => {
 		try {
-			const rewards: Reward[] = await getAllRewards();
+			const rewards: any = await getAllRewards(); //TODO type
 			setUsersRewards(rewards);
+			setLoading(false);
 		} catch (error) {
 			console.error("Erreur lors de la récupération des récompenses : ", error);
 		} finally {
@@ -60,6 +54,14 @@ export default function Agora() {
 			}
 		});
 
+	if (loading) {
+		return (
+			<View className="flex items-center justify-center h-full">
+				<ActivityIndicator size="large" color={theme.colors.primary} />
+				<Text>Chargement...</Text>
+			</View>
+		);
+	}
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}
@@ -78,93 +80,16 @@ export default function Agora() {
 					</Text>
 				</View>
 
-				<View className="mb-4 flex flex-row justify-center">
-					<TouchableOpacity
-						style={{
-							backgroundColor:
-								filter === "odyssee" ? theme.colors.primary : theme.colors.background,
-							paddingVertical: 10,
-							paddingHorizontal: 20,
-							borderRadius: 20,
-							marginHorizontal: 5,
-						}}
-						onPress={() => setFilter("odyssee")}
-					>
-						<Text
-							style={{
-								color:
-									filter === "odyssee" ? theme.colors.textSecondary : theme.colors.text,
-							}}
-						>
-							Odyssee
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={{
-							backgroundColor:
-								filter === "rewards" ? theme.colors.primary : theme.colors.background,
-							paddingVertical: 10,
-							paddingHorizontal: 20,
-							borderRadius: 20,
-							marginHorizontal: 5,
-						}}
-						onPress={() => setFilter("rewards")}
-					>
-						<Text
-							style={{
-								color:
-									filter === "rewards" ? theme.colors.textSecondary : theme.colors.text,
-							}}
-						>
-							Rewards
-						</Text>
-					</TouchableOpacity>
-				</View>
+				<Filters filter={filter} setFilter={setFilter} theme={theme} />
 
 				<View className="flex items-center justify-center flex-col ">
 					{sortedRewards.map((reward) => (
-						<View
+						<CardClassement
 							key={reward.id}
-							style={{
-								backgroundColor:
-									member.uid === reward.uid
-										? lightenColor("#08209F", 0.1)
-										: theme.colors.background,
-								borderWidth: 1,
-								borderColor:
-									member.uid === reward.uid ? theme.colors.primary : theme.colors.border,
-							}}
-							className="flex flex-row justify-between items-center w-11/12 rounded-xl px-2 py-2 my-1"
-						>
-							<View className="flex items-center flex-row justify-center gap-2">
-								<Iconify
-									size={24}
-									color={theme.colors.text}
-									icon="solar:user-circle-outline"
-								/>
-								<Text style={{ color: theme.colors.text }}>{reward.name}</Text>
-							</View>
-							<View
-								className="flex flex-row items-center justify-center px-3 rounded-xl py-1 w-36"
-								style={{
-									backgroundColor: theme.colors.background,
-								}}
-							>
-								<View className="flex items-center flex-row">
-									<MoneyOdyssee />
-									<Text className="ml-2" style={{ color: theme.colors.text }}>
-										{reward.odyssee}
-									</Text>
-								</View>
-
-								<View className="flex items-center flex-row ml-2 rounded-xl">
-									<MoneyMelios />
-									<Text className="ml-2" style={{ color: theme.colors.text }}>
-										{reward.rewards}
-									</Text>
-								</View>
-							</View>
-						</View>
+							reward={reward}
+							member={member}
+							theme={theme}
+						/>
 					))}
 				</View>
 			</View>
