@@ -14,6 +14,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
+import { BlurView } from "expo-blur";
 
 const HEADER_HEIGHT = 250;
 
@@ -92,18 +93,18 @@ export default function ParallaxScrollView({
 		for (let i = 0; i < days; i++) {
 			const date = moment().subtract(i, "days").format("YYYY-MM-DD");
 
-			let score = 0;
+			let dayCompleted = false;
 			habits.forEach((habit: any) => {
 				if (habit.logs) {
 					const lastLog = habit.logs[habit.logs.length - 1];
 
 					if (lastLog && lastLog.date === date && lastLog.done === true) {
-						score += 1;
+						dayCompleted = true;
 					}
 				}
 			});
 
-			if (score === habits.length) {
+			if (dayCompleted) {
 				lastDaysCompleted += 1;
 			}
 		}
@@ -126,7 +127,7 @@ export default function ParallaxScrollView({
 						headerAnimatedStyle,
 					]}
 				>
-					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 left-5  z-30">
+					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 left-5 z-30">
 						<Image
 							source={require("../../assets/images/icons/flamme.png")}
 							style={{ width: 50, height: 50, resizeMode: "contain" }}
@@ -138,12 +139,24 @@ export default function ParallaxScrollView({
 							{scoreHabits} %
 						</Text>
 					</View>
-					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 right-5  z-30">
+					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 right-5 z-30 py-1 px-2">
+						<BlurView
+							intensity={50}
+							style={{
+								position: "absolute",
+								borderRadius: 10,
+								overflow: "hidden",
+								top: 0,
+								left: 0,
+								right: 0,
+								bottom: 0,
+							}}
+						/>
 						<Text
 							className="text-[16px]"
 							style={{ color: theme.colors.textSecondary }}
 						>
-							Streak: {lastDaysCompleted} jours
+							Série : {lastDaysCompleted} {lastDaysCompleted > 1 ? "jours" : "jour"}
 						</Text>
 					</View>
 

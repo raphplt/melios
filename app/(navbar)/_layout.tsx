@@ -9,7 +9,6 @@ import Points from "../../components/Shared/Points";
 import Home from "../../components/Svg/Home";
 import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
-import User from "../../components/Svg/User";
 import Agora from "../../components/Svg/Aroga";
 
 const createHeaderStyle = (theme: any) => ({
@@ -29,7 +28,7 @@ const createTabOptions = (
 ) => ({
 	title,
 	headerTitleStyle: headerTitleStyleOverride || {},
-	tabBarShowLabel: false,
+	// tabBarShowLabel: false,
 	headerStyle: createHeaderStyle(theme),
 	tabBarStyle: {
 		backgroundColor: theme.colors.background,
