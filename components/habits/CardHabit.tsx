@@ -12,7 +12,7 @@ export default function CardHabit({ habit, navigation }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-	const { setUncompletedHabitsData, setCompletedHabitsData } = useData();
+	const { setUncompletedHabitsData } = useData();
 
 	const setHabit = async () => {
 		await setMemberHabit(habit);

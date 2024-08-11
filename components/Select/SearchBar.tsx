@@ -12,7 +12,7 @@ export default function SearchBar({
 }) {
 	return (
 		<View
-			className="flex flex-row items-center w-11/12 mx-auto rounded-3xl  px-3 mt-2"
+			className="flex flex-row items-center rounded-3xl w-3/4 px-2 py-1 mx-1"
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 				borderColor: theme.colors.primary,
@@ -25,7 +25,7 @@ export default function SearchBar({
 				style={{ color: theme.colors.primary, marginRight: 10 }}
 			/>
 			<TextInput
-				style={{ flex: 1, height: 40, color: theme.colors.text }}
+				style={{ color: theme.colors.text }}
 				onChangeText={(text) => setSearch(text)}
 				value={search}
 				placeholder="Rechercher une habitude"

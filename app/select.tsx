@@ -4,7 +4,6 @@ import {
 	Text,
 	Pressable,
 	ActivityIndicator,
-	TextInput,
 	Animated,
 	FlatList,
 	ScrollView,
@@ -13,21 +12,20 @@ import { useNavigation } from "expo-router";
 import { ThemeContext } from "../context/ThemeContext";
 import { getHabitsWithCategories } from "../db/fetch";
 import CardHabit from "../components/Habits/CardHabit";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ButtonViewMore from "../components/Home/ButtonViewMore";
 import { useData } from "../context/DataContext";
 import SearchBar from "../components/Select/SearchBar";
-import Tips from "../components/Select/Tips";
+import NumberSelected from "../components/Select/NumberSelected";
 
 export default function Select() {
 	const [habitsData, setHabitsData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState("");
-	const [deleteAdvice, setDeleteAdvice] = useState(false);
 	const [displayedHabitsCount, setDisplayedHabitsCount]: any = useState({});
 	const [selectedCategory, setSelectedCategory] = useState(null);
-	const { habits, setHabits } = useData();
+	const { habits } = useData();
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: any = useNavigation();
@@ -108,7 +106,7 @@ export default function Select() {
 	const renderCategory = ({ item }: any) => (
 		<View key={item.category} className="mt-3">
 			<Pressable
-				className="w-11/12 mx-auto flex flex-row items-center justify-between py-1 px-2 rounded-lg mb-2 mt-4 drop-shadow-lg"
+				className="w-11/12 mx-auto flex flex-row items-center justify-between py-1 px-2 rounded-3xl mb-2 mt-4 drop-shadow-lg"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 					borderColor: item.color,
@@ -183,7 +181,7 @@ export default function Select() {
 		<Animated.View style={{ flex: 1, transform: [{ translateY }] }}>
 			{loading ? (
 				<View
-					className="flex items-center justify-center h-screen"
+					className="flex items-center justify-center min-h-screen"
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					<ActivityIndicator size="large" color={theme.colors.primary} />
@@ -196,12 +194,10 @@ export default function Select() {
 					keyExtractor={(item) => item.category}
 					ListHeaderComponent={
 						<>
-							{!deleteAdvice && (
-								<Tips theme={theme} setDeleteAdvice={setDeleteAdvice} />
-							)}
-
-							<Text className="text-center ">{habits.length}/20 sélectionnées</Text>
-							<SearchBar search={search} setSearch={setSearch} theme={theme} />
+							<View className="flex flex-row mx-auto">
+								<SearchBar search={search} setSearch={setSearch} theme={theme} />
+								<NumberSelected number={habits.length} />
+							</View>
 							<ScrollView
 								ref={scrollViewRef}
 								horizontal
