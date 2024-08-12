@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getHabitsWithCategories } from "../db/fetch";
+import { Habit } from "../types/habit";
 
 const useHabitsData = () => {
 	const [habitsData, setHabitsData] = useState([]);
@@ -14,6 +15,7 @@ const useHabitsData = () => {
 				const data = await getHabitsWithCategories();
 				setHabitsData(data);
 				setLoading(false);
+				//TODO type this
 				const initialDisplayedCounts = data.reduce((acc, habit) => {
 					acc[habit.id] = habit.initialCount || 0;
 					return acc;
@@ -29,9 +31,9 @@ const useHabitsData = () => {
 	}, []);
 
 	const filteredHabits = habitsData.filter(
-		(habit) =>
+		(habit: Habit) =>
 			habit.name.toLowerCase().includes(search.toLowerCase()) &&
-			(!selectedCategory || habit.categoryId === selectedCategory)
+			(!selectedCategory || habit.category.id === selectedCategory)
 	);
 
 	return {

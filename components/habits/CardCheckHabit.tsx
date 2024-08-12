@@ -1,21 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "../../context/ThemeContext";
 import Checkbox from "expo-checkbox";
-import { setMemberHabitLog } from "../../db/member";
 import moment from "moment";
-import { getHabitById } from "../../db/habits";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { setRewards } from "../../db/rewards";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useData } from "../../context/DataContext";
+import { getHabitById } from "@db/habits";
+import { setMemberHabitLog } from "@db/member";
+import { setRewards } from "@db/rewards";
+import usePoints from "@hooks/usePoints";
+
+interface Difficulty {
+	[key: number]: string;
+}
 
 export default function CardCheckHabit({
 	habit = [],
@@ -28,7 +33,8 @@ export default function CardCheckHabit({
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
 	const { points, setPoints } = useData();
-	const difficulties: any = [
+	const { addOdysseePoints } = usePoints();
+	const difficulties: Difficulty[] = [
 		{ 1: "#E9C46A" },
 		{ 2: "#F4A261" },
 		{ 3: "#F4A261" },
@@ -82,11 +88,7 @@ export default function CardCheckHabit({
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
-
-		setPoints({
-			...points,
-			odyssee: points.odyssee + habitInfos.reward + habitInfos.difficulty,
-		});
+		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 	};
 
 	return (
@@ -147,7 +149,7 @@ export default function CardCheckHabit({
 								textDecorationLine: completed ? "line-through" : "none",
 								marginLeft: 6,
 							}}
-							className="text-[14px] w-3/4 "
+							className="text-[14px] w-3/4"
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>

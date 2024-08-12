@@ -4,7 +4,13 @@
 		"strict": true,
 
 		"paths": {
-			"@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
+			"@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"],
+			"@db/*": ["./db/*"],
+			"@hooks/*": ["./hooks/*"],
+			"@utils/*": ["./utils/*"],
+			"@components/*": ["./components/*"],
+			"@context/*": ["./context/*"],
+			"@assets/*": ["./assets/*"]
 		},
 		"plugins": [{ "name": "nativewind/typescript-plugin" }]
 	},
@@ -14,12 +20,15 @@
 		".expo/types/**/*.ts",
 		"expo-env.d.ts",
 		"scripts/import_habits.js",
-		"db/index.ks"
+		"db/index.ts"
 	],
 	"exclude": [
 		"node_modules",
 		"babel.config.js",
 		"metro.config.js",
-		"jest.config.js"
+		"jest.config.js",
+		".expo",
+		"dist",
+		"build"
 	]
 }

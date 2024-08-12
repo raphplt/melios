@@ -11,9 +11,13 @@ import {
 } from "react-native";
 import { loginUser } from "../db/users";
 import { ThemeContext } from "../context/ThemeContext";
-import { useNavigation } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSession } from "../context/UserContext";
+import {
+	useNavigation,
+	ParamListBase,
+	NavigationProp,
+} from "@react-navigation/native";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -22,13 +26,12 @@ export default function Login() {
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 
-	const navigation: any = useNavigation();
 	const { user, isLoading } = useSession();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
 		return navigation.addListener("beforeRemove", (e: any) => {
 			if (!user) {
-				// Prevent default behavior of leaving the screen
 				e.preventDefault();
 			}
 		});

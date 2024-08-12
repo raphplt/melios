@@ -22,7 +22,8 @@ type Props = PropsWithChildren<{
 	headerImage: ReactElement;
 	headerBackgroundColor: { dark: string; light: string };
 	refreshControl?: ReactElement;
-	habits: any;
+	habits: any; //TODO type
+	isDayTime: boolean;
 }>;
 
 export default function ParallaxScrollView({
@@ -31,6 +32,7 @@ export default function ParallaxScrollView({
 	headerBackgroundColor,
 	refreshControl,
 	habits,
+	isDayTime,
 }: Props) {
 	const colorScheme = useColorScheme() ?? "light";
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -113,11 +115,10 @@ export default function ParallaxScrollView({
 	}, [habits, date]);
 
 	return (
-		<View className="">
+		<View>
 			<Animated.ScrollView
 				ref={scrollRef}
 				scrollEventThrottle={16}
-				className=""
 				showsVerticalScrollIndicator={false}
 				refreshControl={refreshControl}
 			>
@@ -127,16 +128,30 @@ export default function ParallaxScrollView({
 						headerAnimatedStyle,
 					]}
 				>
-					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 left-5 z-30">
+					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 left-5 z-30 px-3 py-2">
+						<BlurView
+							intensity={50}
+							style={{
+								position: "absolute",
+								borderRadius: 10,
+								overflow: "hidden",
+								top: 0,
+								left: 0,
+								right: 0,
+								bottom: 0,
+							}}
+						/>
 						<Image
 							source={require("../../assets/images/icons/flamme.png")}
-							style={{ width: 50, height: 50, resizeMode: "contain" }}
+							style={{ width: 40, height: 40, resizeMode: "contain" }}
 						/>
 						<Text
-							style={{ color: theme.colors.textSecondary }}
+							style={{
+								color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+							}}
 							className="text-xl mt-1 font-semibold"
 						>
-							{scoreHabits} %
+							{scoreHabits}%
 						</Text>
 					</View>
 					<View className="flex items-center justify-center flex-col bg-transparent absolute top-5 right-5 z-30 py-1 px-2">
@@ -153,8 +168,10 @@ export default function ParallaxScrollView({
 							}}
 						/>
 						<Text
-							className="text-[16px]"
-							style={{ color: theme.colors.textSecondary }}
+							className="font-semibold"
+							style={{
+								color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+							}}
 						>
 							Série : {lastDaysCompleted} {lastDaysCompleted > 1 ? "jours" : "jour"}
 						</Text>

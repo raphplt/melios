@@ -1,20 +1,22 @@
 import { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import { ThemeContext } from "../../context/ThemeContext";
-import { getHabitById } from "../../db/habits";
 import tinycolor from "tinycolor2";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
+import { UserHabit } from "../../types/userHabit";
+import { ThemeContext } from "@context/ThemeContext";
+import { getHabitById } from "@db/habits";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
-export default function Activity({ habit }: any) {
+export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [habitInfos, setHabitInfos] = useState<any>({});
 
-	const navigation: any = useNavigation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
 		async function getHabitInfos() {
-			const result = await getHabitById(habit.id);
+			const result = await getHabitById(userHabit.id);
 			setHabitInfos(result);
 		}
 		getHabitInfos();
@@ -26,17 +28,15 @@ export default function Activity({ habit }: any) {
 
 	return lighterColor ? (
 		<View
-			className="h-64 w-40 mx-2 rounded-xl"
+			className="h-64 w-40 mx-2 rounded-2xl"
 			style={{
 				backgroundColor: theme.colors.background,
-				borderColor: theme.colors.border,
-				borderWidth: 1,
 			}}
 		>
 			<Pressable
 				onPress={() => {
 					navigation.navigate("habitDetail", {
-						habit: JSON.stringify(habit),
+						habit: JSON.stringify(userHabit),
 						habitInfos: JSON.stringify(habitInfos),
 					});
 				}}
@@ -49,7 +49,7 @@ export default function Activity({ habit }: any) {
 				>
 					<View>
 						<Text
-							className=" text-lg italic font-semibold text-gray-900 right-2 top-2 absolute rounded-2xl px-2 border-[1px]"
+							className=" text-[16px] italic font-semibold text-gray-900 right-2 top-2 absolute rounded-2xl px-2 border-[1px]"
 							style={{
 								color: theme.colors.textSecondary,
 								backgroundColor: theme.colors.text,

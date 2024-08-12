@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { View, ScrollView, RefreshControl } from "react-native";
+import { ScrollView, RefreshControl } from "react-native";
 import ProgressionHeader from "../../components/Progression/ProgressionHeader";
 import ProgressionGraph from "../../components/Progression/ProgressionGraph";
 import DailyStats from "../../components/Progression/DailyStats";
