@@ -99,6 +99,7 @@ export default function Select() {
 		});
 	};
 
+	//TODO : add types
 	const renderHabit = ({ item }: any) => (
 		<CardHabit habit={item} navigation={navigation} />
 	);

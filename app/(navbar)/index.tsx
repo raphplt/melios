@@ -1,205 +1,52 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
-import {
-	View,
-	RefreshControl,
-	Pressable,
-	ActivityIndicator,
-	StatusBar,
-	Image,
-	Animated,
-} from "react-native";
-import {
-	DarkTheme,
-	useIsFocused,
-	useNavigation,
-} from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { View, RefreshControl, StatusBar, Image } from "react-native";
+import { DarkTheme } from "@react-navigation/native";
 import { Text } from "react-native";
-import { getMemberHabits, getMemberInfos } from "../../db/member";
-import CardCheckHabit from "../../components/Habits/CardCheckHabit";
-import ActivitiesContainer from "../../components/Home/ActivitiesContainer";
 import { Entypo } from "@expo/vector-icons";
-import Background from "../../components/Svg/Background";
-import TopRow from "../../components/Habits/TopRow";
-import { UserContext } from "../../context/UserContext";
-import ButtonViewMore from "../../components/Home/ButtonViewMore";
-import ParallaxScrollView from "../../components/Home/ParallaxScrollView";
-import { useData } from "../../context/DataContext";
-import useDate from "../../hooks/useDate";
+import useIndex from "@hooks/useIndex";
+import ParallaxScrollView from "@components/Home/ParallaxScrollView";
+import Background from "@components/Svg/Background";
+import TopRow from "@components/Habits/TopRow";
+import CardCheckHabit from "@components/Habits/CardCheckHabit";
+import ButtonViewMore from "@components/Home/ButtonViewMore";
+import ActivitiesContainer from "@components/Home/ActivitiesContainer";
+import LoaderScreen from "@components/Shared/LoaderScreen";
+import WelcomeRow from "@components/Home/WelcomeRow";
 
 export default function Index() {
-	const { theme } = useContext(ThemeContext);
-	const navigation: any = useNavigation();
-	const isMounted = useRef(true);
-	const isFocused = useIsFocused();
-	const rotation = useRef(new Animated.Value(0)).current;
-	const { user } = useContext(UserContext);
-	const { isDayTime } = useDate();
+	const {
+		theme,
+		navigation,
+		user,
+		userHabits,
+		loading,
+		refreshing,
+		welcomeMessage,
+		showMissingHabits,
+		showMoreValidate,
+		showMoreNext,
+		missedHabitsCount,
+		rotate,
+		imageSource,
+		uncompletedHabitsData,
+		completedHabitsData,
+		hours,
+		isLoading,
+		isDayTime,
+		setShowMissingHabits,
+		updateShowValidate,
+		updateShowNext,
+		onRefresh,
+		handleHabitStatusChange,
+		handlePressIn,
+		handlePressOut,
+	} = useIndex();
 
 	!user && navigation.navigate("login");
 
-	const {
-		member,
-		setMember,
-		habits,
-		isLoading,
-		uncompletedHabitsData,
-		completedHabitsData,
-		setUncompletedHabitsData,
-		setCompletedHabitsData,
-	} = useData();
-
-	const [userHabits, setUserHabits] = useState<any>([]);
-	const [loading, setLoading] = useState(true);
-	const [refreshing, setRefreshing] = useState(false);
-	const [hours, setHours] = useState(new Date().getHours());
-
-	const [welcomeMessage, setWelcomeMessage] = useState("");
-	const [showMissingHabits, setShowMissingHabits] = useState(false);
-	const [showMoreValidate, setShowMoreValidate] = useState(5);
-	const [showMoreNext, setShowMoreNext] = useState(5);
-
-	useEffect(() => {
-		if (isFocused) {
-			backgroundRefresh();
-		}
-	}, [isFocused]);
-
-	useEffect(() => {
-		(async () => {
-			const username = member && member.nom;
-			const time = new Date().getHours();
-			if (time < 12) {
-				setWelcomeMessage(`Bonjour${username ? ", " + username : ""} !`);
-			}
-			if (time >= 12 && time < 18) {
-				setWelcomeMessage(`Bon après-midi${username ? ", " + username : ""} !`);
-			}
-			if (time >= 18) {
-				setWelcomeMessage(`Bonsoir${username ? ", " + username : ""} !`);
-			}
-		})();
-	}, [member]);
-
-	const onRefresh = async () => {
-		setRefreshing(true);
-		try {
-			setShowMissingHabits(false);
-			const data = await getMemberHabits();
-			const memberInfos = await getMemberInfos();
-			setMember(memberInfos);
-			setUserHabits(data);
-			setShowMoreValidate(5);
-			setShowMoreNext(5);
-		} catch (error) {
-			handleError(error);
-		} finally {
-			setRefreshing(false);
-		}
-	};
-
-	const backgroundRefresh = async () => {
-		try {
-			const data = await getMemberHabits();
-			const memberInfos = await getMemberInfos();
-			setMember(memberInfos);
-			setUserHabits(data);
-		} catch (error) {
-			handleError(error);
-		}
-	};
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setHours(new Date().getHours());
-		}, 10000);
-
-		return () => clearInterval(interval);
-	}, []);
-
-	useEffect(() => {
-		setLoading(isLoading);
-		setUserHabits(habits);
-
-		return () => {
-			isMounted.current = false;
-		};
-	}, [habits, isLoading, completedHabitsData, uncompletedHabitsData]);
-
-	const handleError = (error: any) => {
-		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
-	};
-
-	const handleHabitStatusChange = (habit: any, done: boolean) => {
-		if (done) {
-			setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
-			setUncompletedHabitsData((prevHabits: any) =>
-				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
-			);
-		} else {
-			setUncompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
-			setCompletedHabitsData((prevHabits: any) =>
-				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
-			);
-		}
-	};
-
-	const handlePressIn = () => {
-		Animated.timing(rotation, {
-			toValue: 1,
-			duration: 300,
-			useNativeDriver: true,
-		}).start();
-	};
-
-	const handlePressOut = () => {
-		Animated.timing(rotation, {
-			toValue: 0,
-			duration: 300,
-			useNativeDriver: true,
-		}).start();
-	};
-
-	const rotate = rotation.interpolate({
-		inputRange: [0, 1],
-		outputRange: ["0deg", "360deg"],
-	});
-
 	if (loading || !userHabits || isLoading) {
-		return (
-			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<ActivityIndicator size="large" color={theme.colors.primary} />
-				<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
-					Chargement des habitudes...
-				</Text>
-			</View>
-		);
+		return <LoaderScreen text="Chargement de vos habitudes..." />;
 	}
-
-	const missedHabitsCount = uncompletedHabitsData.filter(
-		(habit: any) => habit.moment < hours
-	).length;
-
-	const updateShowValidate = () => {
-		if (showMoreValidate < completedHabitsData.length) {
-			setShowMoreValidate((prev) => prev + 5);
-		} else {
-			setShowMoreValidate(3);
-		}
-	};
-
-	const updateShowNext = () => {
-		if (showMoreNext < uncompletedHabitsData.length) {
-			setShowMoreNext((prev) => prev + 5);
-		} else {
-			setShowMoreNext(3);
-		}
-	};
-
-	const imageSource = isDayTime
-		? require("../../assets/images/illustrations/temple_day.jpg")
-		: require("../../assets/images/illustrations/temple_night.jpg");
 
 	return (
 		<>
@@ -226,29 +73,15 @@ export default function Index() {
 			>
 				<Background />
 
-				<View
-					style={{ backgroundColor: "transparent" }}
-					className="flex justify-between flex-row items-center mt-4 w-10/12 mx-auto"
-				>
-					<Text style={{ color: theme.colors.text }} className="text-xl font-bold">
-						{welcomeMessage}
-					</Text>
-					<Animated.View style={{ transform: [{ rotate }] }}>
-						<Pressable
-							onPressIn={handlePressIn}
-							onPressOut={handlePressOut}
-							onPress={() => {
-								navigation.navigate("select");
-							}}
-							className="rounded-full p-2"
-							style={{
-								backgroundColor: theme.colors.primary,
-							}}
-						>
-							<Ionicons name="add" size={24} color="white" />
-						</Pressable>
-					</Animated.View>
-				</View>
+				<WelcomeRow
+					theme={theme}
+					navigation={navigation}
+					welcomeMessage={welcomeMessage}
+					rotation={rotate}
+					rotate={rotate}
+					handlePressIn={handlePressIn}
+					handlePressOut={handlePressOut}
+				/>
 
 				{userHabits.length > 0 ? (
 					<View
@@ -276,7 +109,6 @@ export default function Index() {
 							) : (
 								<View
 									style={{
-										// backgroundColor: theme.colors.greenSecondary,
 										borderColor: theme.colors.primary,
 										borderWidth: 2,
 									}}

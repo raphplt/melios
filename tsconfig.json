@@ -9,7 +9,8 @@
 			"@hooks/*": ["./hooks/*"],
 			"@utils/*": ["./utils/*"],
 			"@components/*": ["./components/*"],
-			"@context/*": ["./context/*"]
+			"@context/*": ["./context/*"],
+			"@assets/*": ["./assets/*"]
 		},
 		"plugins": [{ "name": "nativewind/typescript-plugin" }]
 	},
