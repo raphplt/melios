@@ -1,3 +1,5 @@
+import { Difficulty } from "../types/difficultiesList";
+
 export const processHabits = (snapshotHabits: any, date: string) => {
 	const uncompleted = snapshotHabits
 		.filter((habit: any) => {
@@ -30,3 +32,11 @@ export const processHabits = (snapshotHabits: any, date: string) => {
 
 	return { uncompleted, completed };
 };
+
+export const difficulties: Difficulty[] = [
+	{ 1: "#E9C46A" },
+	{ 2: "#F4A261" },
+	{ 3: "#F4A261" },
+	{ 4: "#E76F51" },
+	{ 5: "#E63946" },
+];

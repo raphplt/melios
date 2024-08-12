@@ -26,11 +26,9 @@ export default function Activity({ habit }: any) {
 
 	return lighterColor ? (
 		<View
-			className="h-64 w-40 mx-2 rounded-xl"
+			className="h-64 w-40 mx-2 rounded-2xl"
 			style={{
 				backgroundColor: theme.colors.background,
-				borderColor: theme.colors.border,
-				borderWidth: 1,
 			}}
 		>
 			<Pressable
@@ -49,7 +47,7 @@ export default function Activity({ habit }: any) {
 				>
 					<View>
 						<Text
-							className=" text-lg italic font-semibold text-gray-900 right-2 top-2 absolute rounded-2xl px-2 border-[1px]"
+							className=" text-[16px] italic font-semibold text-gray-900 right-2 top-2 absolute rounded-2xl px-2 border-[1px]"
 							style={{
 								color: theme.colors.textSecondary,
 								backgroundColor: theme.colors.text,

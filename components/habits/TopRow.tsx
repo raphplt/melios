@@ -1,7 +1,6 @@
 import { Text, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
-import { useFonts } from "expo-font";
 
 export default function TopRow({
 	icon,
@@ -20,11 +19,11 @@ export default function TopRow({
 				style={{
 					backgroundColor: color,
 					borderColor: borderColor || theme.colors.primary,
-					borderWidth: 3,
+					borderWidth: 2,
 				}}
 			>
 				<Text
-					className="font-bold text-[15px]"
+					className="font-bold text-[14px]"
 					style={{
 						color: textColor || theme.colors.text,
 					}}

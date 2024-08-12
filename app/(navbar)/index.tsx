@@ -26,6 +26,7 @@ import { UserContext } from "../../context/UserContext";
 import ButtonViewMore from "../../components/Home/ButtonViewMore";
 import ParallaxScrollView from "../../components/Home/ParallaxScrollView";
 import { useData } from "../../context/DataContext";
+import useDate from "../../hooks/useDate";
 
 export default function Index() {
 	const { theme } = useContext(ThemeContext);
@@ -34,6 +35,7 @@ export default function Index() {
 	const isFocused = useIsFocused();
 	const rotation = useRef(new Animated.Value(0)).current;
 	const { user } = useContext(UserContext);
+	const { isDayTime } = useDate();
 
 	!user && navigation.navigate("login");
 
@@ -195,11 +197,9 @@ export default function Index() {
 		}
 	};
 
-	const currentHour = new Date().getHours();
-	const imageSource =
-		currentHour >= 7 && currentHour < 20
-			? require("../../assets/images/illustrations/temple_day.jpg")
-			: require("../../assets/images/illustrations/temple_night.jpg");
+	const imageSource = isDayTime
+		? require("../../assets/images/illustrations/temple_day.jpg")
+		: require("../../assets/images/illustrations/temple_night.jpg");
 
 	return (
 		<>
@@ -222,6 +222,7 @@ export default function Index() {
 						style={{ width: "100%", height: 250, resizeMode: "cover" }}
 					/>
 				}
+				isDayTime={isDayTime}
 			>
 				<Background />
 
