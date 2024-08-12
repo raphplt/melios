@@ -10,10 +10,10 @@ import {
 import { ThemeContext } from "@context/ThemeContext";
 import { Animated } from "react-native";
 import { UserContext } from "@context/UserContext";
-import useDate from "./useDate";
 import { useData } from "@context/DataContext";
 import { UserHabit } from "../types/userHabit";
 import { getMemberHabits, getMemberInfos } from "@db/member";
+import { isDayTime } from "@utils/timeUtils";
 
 const useIndex = () => {
 	// Contexts
@@ -21,7 +21,6 @@ const useIndex = () => {
 	const { theme } = useContext(ThemeContext);
 
 	// Hooks
-	const { isDayTime } = useDate();
 	const isFocused = useIsFocused();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const {

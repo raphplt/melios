@@ -1,24 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
+import useIndex from "@hooks/useIndex";
 import { Animated, Pressable, Text, View } from "react-native";
 
-export default function WelcomeRow({
-	theme,
-	navigation,
-	welcomeMessage,
-	rotation,
-	rotate,
-	handlePressIn,
-	handlePressOut,
-}: {
-	//TODO: types
-	theme: any;
-	navigation: any;
-	welcomeMessage: string;
-	rotation: any;
-	rotate: any;
-	handlePressIn: any;
-	handlePressOut: any;
-}) {
+export default function WelcomeRow() {
+	const {
+		theme,
+		welcomeMessage,
+		handlePressIn,
+		rotate,
+		navigation,
+		handlePressOut,
+	} = useIndex();
+
 	return (
 		<View
 			style={{ backgroundColor: "transparent" }}

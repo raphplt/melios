@@ -1,10 +1,17 @@
 import { useContext } from "react";
 import Activity from "./ActivityCard";
-import { ThemeContext } from "../../context/ThemeContext";
 import { ScrollView, View, Text } from "react-native";
+import { ThemeContext } from "@context/ThemeContext";
+import { UserHabit } from "../../types/userHabit";
+import useIndex from "@hooks/useIndex";
 
-export default function ActivitiesContainer({ userHabits }: any) {
+export default function ActivitiesContainer() {
+	const { userHabits } = useIndex();
 	const { theme } = useContext(ThemeContext);
+
+	if (!userHabits || userHabits.length === 0) {
+		return null;
+	}
 
 	return (
 		<View
@@ -26,8 +33,8 @@ export default function ActivitiesContainer({ userHabits }: any) {
 				className="ml-2"
 				showsHorizontalScrollIndicator={false}
 			>
-				{userHabits.map((habit: any, index: number) => {
-					return <Activity key={index} habit={habit} />;
+				{userHabits.map((userHabit: UserHabit, index: number) => {
+					return <Activity key={index} userHabit={userHabit} />;
 				})}
 			</ScrollView>
 		</View>

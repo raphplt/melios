@@ -1,20 +1,22 @@
 import { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import { ThemeContext } from "../../context/ThemeContext";
-import { getHabitById } from "../../db/habits";
 import tinycolor from "tinycolor2";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
+import { UserHabit } from "../../types/userHabit";
+import { ThemeContext } from "@context/ThemeContext";
+import { getHabitById } from "@db/habits";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
-export default function Activity({ habit }: any) {
+export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [habitInfos, setHabitInfos] = useState<any>({});
 
-	const navigation: any = useNavigation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
 		async function getHabitInfos() {
-			const result = await getHabitById(habit.id);
+			const result = await getHabitById(userHabit.id);
 			setHabitInfos(result);
 		}
 		getHabitInfos();
@@ -34,7 +36,7 @@ export default function Activity({ habit }: any) {
 			<Pressable
 				onPress={() => {
 					navigation.navigate("habitDetail", {
-						habit: JSON.stringify(habit),
+						habit: JSON.stringify(userHabit),
 						habitInfos: JSON.stringify(habitInfos),
 					});
 				}}
