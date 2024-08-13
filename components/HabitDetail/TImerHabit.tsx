@@ -55,7 +55,7 @@ export default function TimerHabit({
 					) : (
 						<Pressable
 							onPress={stopTimer}
-							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
+							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center justify-center"
 							style={{
 								backgroundColor: theme.colors.primary,
 								borderColor: theme.colors.primary,
@@ -65,7 +65,7 @@ export default function TimerHabit({
 						>
 							<Ionicons name="pause" size={24} color={theme.colors.textSecondary} />
 							<Text
-								className="text-lg text-center font-semibold ml-2"
+								className="text-lg text-center font-semibold ml-2 "
 								style={{ color: theme.colors.textSecondary }}
 							>
 								Arrêter l'habitude
@@ -84,7 +84,7 @@ export default function TimerHabit({
 				</View>
 			) : (
 				<View
-					className="py-3 rounded-xl my-6 w-11/12"
+					className="py-3 rounded-lg mb-6 mt-10 w-11/12 mx-auto"
 					style={{
 						backgroundColor: theme.colors.cardBackground,
 						borderColor: theme.colors.primary,

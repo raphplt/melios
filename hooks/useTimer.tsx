@@ -71,7 +71,6 @@ const useTimer = () => {
 			setUncompletedHabitsData((prevHabits: any) =>
 				prevHabits.filter((oldHabit: any) => oldHabit.id !== habitParsed.id)
 			);
-			// Clear stored timer state after completion
 			await AsyncStorage.removeItem("timerSeconds");
 		} catch (error) {
 			console.error("Failed to parse habit:", error);

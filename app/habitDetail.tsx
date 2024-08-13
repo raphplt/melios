@@ -15,6 +15,8 @@ import { formatTime } from "@utils/timeUtils";
 import { lightenColor } from "@utils/colors";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
+import useNotifications from "@hooks/useNotifications";
+import { DataContext } from "@context/DataContext";
 
 export interface DayStatus {
 	date: string;
@@ -22,16 +24,18 @@ export interface DayStatus {
 }
 
 export default function HabitDetail() {
-	const { theme } = useContext(ThemeContext);
-
-	const translateY = useRef(new Animated.Value(1000)).current;
-
-	const [habitParsed, setHabitParsed] = useState<Habit | null>(null);
 	const params = useLocalSearchParams();
 	let { habit = "", habitInfos = "" } = params;
-	const appState = useRef(AppState.currentState);
 
+	// Contexts
+	const { theme } = useContext(ThemeContext);
 	const { timerSeconds, isTimerActive, startTimer } = useTimer();
+	const { sendPushNotification } = useNotifications();
+
+	const translateY = useRef(new Animated.Value(1000)).current;
+	const appState = useRef(AppState.currentState);
+	const [habitParsed, setHabitParsed] = useState<Habit | null>(null);
+	const { expoPushToken } = useContext(DataContext);
 
 	useEffect(() => {
 		if (typeof habitInfos === "string" && habitInfos) {
@@ -69,6 +73,10 @@ export default function HabitDetail() {
 				startTimer(parseInt(remainingSeconds) / 60, habitParsed);
 			}
 		} else if (nextAppState === "background") {
+			sendPushNotification(expoPushToken, {
+				title: `${habitParsed?.name} en pause`,
+				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
+			}); //TODO supprimer quand on revient sur l'app
 			if (isTimerActive) {
 				await AsyncStorage.setItem("timerSeconds", timerSeconds.toString());
 
