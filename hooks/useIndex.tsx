@@ -130,7 +130,6 @@ const useIndex = () => {
 
 	//TODO type all
 	const handleHabitStatusChange = (habit: any, done: boolean) => {
-		console.log(habit);
 		if (done) {
 			setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
 			setUncompletedHabitsData((prevHabits: any) =>

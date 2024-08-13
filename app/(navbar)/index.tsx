@@ -25,6 +25,7 @@ export default function Index() {
 		onRefresh,
 	} = useIndex();
 
+	// Redirect if user is not connected
 	!user && navigation.navigate("login");
 
 	if (loading || !userHabits || isLoading) {
