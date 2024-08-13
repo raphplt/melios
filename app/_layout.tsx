@@ -94,6 +94,8 @@ function MainNavigator() {
 					<Stack.Screen
 						name="habitDetail"
 						options={{
+							headerShadowVisible: false,
+
 							title: "Détail de l'habitude",
 							presentation: "transparentModal",
 						}}
