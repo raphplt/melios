@@ -33,16 +33,15 @@ export default function TimerHabit({
 	return (
 		<>
 			{!doneToday ? (
-				<View className="py-12">
+				<View className="py-10">
 					{!isTimerActive ? (
 						<Pressable
 							onPress={() => startTimer(habitParsed.duration, habitParsed)}
-							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center"
+							className="py-2 px-6 rounded-lg w-11/12 mx-auto justify-center mt-4 flex flex-row items-center"
 							style={{
 								backgroundColor: theme.colors.primary,
 								borderColor: theme.colors.primary,
 								borderWidth: 2,
-								marginTop: 10,
 							}}
 						>
 							<Ionicons name="play" size={24} color={theme.colors.textSecondary} />

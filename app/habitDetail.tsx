@@ -1,18 +1,20 @@
 import { useContext, useEffect, useState, useRef } from "react";
-import { View, Text, Animated, AppState, AppStateStatus } from "react-native";
-import { ThemeContext } from "../context/ThemeContext";
+import { View, Animated, AppState, AppStateStatus } from "react-native";
 import * as Notifications from "expo-notifications";
 import { useLocalSearchParams } from "expo-router";
-import { lightenColor } from "../utils/colors";
-import { formatTime } from "../utils/timeUtils";
-import InfosPanel from "../components/HabitDetail/InfosPanel";
-import { Habit } from "../types/habit";
-import LastDays from "../components/HabitDetail/LastDays";
-import useTimer from "../hooks/useTimer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Customs imports
+import { Habit } from "../types/habit";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import TimerHabit from "@components/HabitDetail/TImerHabit";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
+import { ThemeContext } from "@context/ThemeContext";
+import useTimer from "@hooks/useTimer";
+import { formatTime } from "@utils/timeUtils";
+import { lightenColor } from "@utils/colors";
+import InfosPanel from "@components/HabitDetail/InfosPanel";
+import LastDays from "@components/HabitDetail/LastDays";
 
 export interface DayStatus {
 	date: string;
@@ -95,13 +97,11 @@ export default function HabitDetail() {
 		<Animated.View
 			style={{
 				backgroundColor: theme.colors.background,
-				paddingTop: 20,
-				flex: 1,
 				transform: [{ translateY }],
 			}}
-			className="h-screen w-full mx-auto border-gray-500 overflow-y-auto top-0 absolute"
+			className="h-screen w-full overflow-y-auto top-0 absolute pt-4"
 		>
-			<View className="flex flex-col items-center justify-center mt-4">
+			<View className="mt-4 w-full mx-auto flex justify-center flex-col">
 				<HabitDetailHeader
 					habitParsed={habitParsed}
 					theme={theme}

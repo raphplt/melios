@@ -10,6 +10,7 @@ import Home from "../../components/Svg/Home";
 import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
 import Agora from "../../components/Svg/Aroga";
+import LoaderScreen from "@components/Shared/LoaderScreen";
 
 const createHeaderStyle = (theme: any) => ({
 	backgroundColor: theme.colors.background,
@@ -52,22 +53,7 @@ const TabLayout: React.FC = () => {
 		}
 	}, [isLoading, user, navigation]);
 
-	if (isLoading) {
-		return (
-			<View
-				style={{
-					flex: 1,
-					alignItems: "center",
-					justifyContent: "center",
-					height: "100%",
-				}}
-			>
-				<Text style={{ fontSize: 20, fontWeight: "bold", color: "gray" }}>
-					Loading...
-				</Text>
-			</View>
-		);
-	}
+	if (isLoading) return <LoaderScreen text="Chargement..." />;
 
 	return (
 		<Tabs>

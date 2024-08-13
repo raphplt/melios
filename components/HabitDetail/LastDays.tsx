@@ -30,19 +30,21 @@ export default function LastDays({ theme, habit }: { theme: any; habit: any }) {
 
 	return (
 		<>
-			<HeaderContainer>
-				<Iconify
-					icon="ph:calendar-check-fill"
-					size={20}
-					color={theme.colors.text}
-				/>
-				<Text
-					style={{ color: theme.colors.text }}
-					className="text-[16px] font-semibold"
-				>
-					Complétion des derniers jours
-				</Text>
-			</HeaderContainer>
+			<View className="w-11/12 mx-auto mt-6">
+				<HeaderContainer>
+					<Iconify
+						icon="ph:calendar-check-fill"
+						size={20}
+						color={theme.colors.text}
+					/>
+					<Text
+						style={{ color: theme.colors.text }}
+						className="text-[16px] font-semibold "
+					>
+						Complétion des derniers jours
+					</Text>
+				</HeaderContainer>
+			</View>
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
