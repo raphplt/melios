@@ -19,7 +19,7 @@ import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
-import usePopup from "@hooks/usePopup";
+import { useData } from "@context/DataContext";
 
 export default function CardCheckHabit({
 	habit = [],
@@ -39,7 +39,7 @@ export default function CardCheckHabit({
 	const navigation: any = useNavigation();
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
-	const { newPopup } = usePopup();
+	const { popup } = useData();
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
@@ -52,7 +52,7 @@ export default function CardCheckHabit({
 		async function getHabitInfos() {
 			const result = await getHabitById(habit.id);
 			setHabitInfos(result);
-			setLoading(false); // Le chargement est terminé
+			setLoading(false);
 		}
 		getHabitInfos();
 	}, []);
@@ -80,7 +80,7 @@ export default function CardCheckHabit({
 
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
-		newPopup("Bravo ! Vous avez accompli une habitude", "success");
+		popup.newPopup("Bravo !", "success");
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);

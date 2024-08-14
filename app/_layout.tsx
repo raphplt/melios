@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -8,7 +8,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SessionProvider, useSession } from "../context/UserContext";
-import { DataProvider } from "../context/DataContext";
+import { DataContext, DataProvider, useData } from "../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import NotificationBox from "@components/Shared/NotificationBox";
 import usePopup from "@hooks/usePopup";
@@ -52,8 +52,9 @@ function MainNavigator() {
 		});
 	};
 
-	const { isLoading: isSessionLoading }: any = useSession();
-	const { message, isOpen, type } = usePopup();
+	const { isLoading: isSessionLoading }: any = useSession(); //TODO type
+	const { popup } = useData(); // Récupérez le popup ici
+	const { isOpen } = popup;
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -113,7 +114,7 @@ function MainNavigator() {
 						}}
 					/>
 				</Stack>
-				{isOpen && <NotificationBox message={message} type={type} />}
+				{isOpen && <NotificationBox />}
 			</ThemeProvider>
 		</ThemeContext.Provider>
 	);

@@ -1,50 +1,62 @@
+import { useData } from "@context/DataContext";
 import { ThemeContext } from "@context/ThemeContext";
-import usePopup from "@hooks/usePopup";
 import { useContext } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, View, StyleSheet } from "react-native";
 import { Iconify } from "react-native-iconify";
 
-export default function NotificationBox({
-	message,
-	type,
-}: {
-	message: string;
-	type: "success" | "error" | "info";
-}) {
+export default function NotificationBox() {
 	const { theme } = useContext(ThemeContext);
-	const { isOpen, openPopup, closePopup } = usePopup();
+	const { popup } = useData();
+	const { isOpen, message, type, closePopup } = popup;
 
-	const backgroundColor = {
+	const backgroundColor: any = {
 		success: theme.colors.greenSecondary,
 		error: theme.colors.redSecondary,
 		info: theme.colors.blueSecondary,
-	};
+	}; //TODO type
 
 	if (!isOpen) return null;
 
 	return (
-		<View
-			style={{ backgroundColor: backgroundColor[type] }}
-			className="z-[999] w-full absolute top-20  px-4 py-2 rounded-md flex flex-row justify-between items-center"
-		>
-			<Text
-				style={{
-					color: theme.colors.text,
-				}}
+		<View className="z-[999] bg-transparent w-screen absolute top-14 pt-2">
+			<View
+				className="w-[95%] mx-auto flex flex-row justify-between items-center py-5 px-3 rounded-md"
+				style={[
+					styles.shadow,
+					{
+						backgroundColor: backgroundColor[type],
+					},
+				]}
 			>
-				{message}
-			</Text>
-			<Pressable
-				onPress={() => {
-					close();
-				}}
-			>
-				<Iconify
-					icon="material-symbols:close"
-					size={24}
-					color={theme.colors.text}
-				/>
-			</Pressable>
+				<Text
+					style={{
+						color: theme.colors.text,
+					}}
+				>
+					{message}
+				</Text>
+				<Pressable
+					onPress={() => {
+						closePopup();
+					}}
+				>
+					<Iconify
+						icon="material-symbols:close"
+						size={24}
+						color={theme.colors.text}
+					/>
+				</Pressable>
+			</View>
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	shadow: {
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+		elevation: 5,
+	},
+});

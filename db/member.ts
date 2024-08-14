@@ -14,6 +14,7 @@ import { db } from ".";
 import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
 import { Member } from "../types/member";
+import { UserHabit } from "../types/userHabit";
 
 export const setMemberHabit = async (habit: any) => {
 	try {
@@ -112,7 +113,7 @@ export const getMemberHabits = async () => {
 	}
 };
 
-export const getMemberHabit = async (habitId: any) => {
+export const getMemberHabit = async (habitId: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -127,7 +128,7 @@ export const getMemberHabit = async (habitId: any) => {
 
 			const habits = memberDoc.data().habits;
 
-			const habit = habits.find((habit: any) => habit.id === habitId);
+			const habit = habits.find((habit: UserHabit) => habit.id === habitId);
 
 			return habit;
 		} else {
@@ -142,7 +143,11 @@ export const getMemberHabit = async (habitId: any) => {
 	}
 };
 
-export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
+export const setMemberHabitLog = async (
+	habitId: string,
+	date: any,
+	done: any
+) => {
 	try {
 		const uid = auth.currentUser?.uid;
 
@@ -167,10 +172,8 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 				);
 
 				if (existingLogIndex !== -1) {
-					// Mettre à jour le log existant
 					habit.logs[existingLogIndex].done = done;
 				} else {
-					// Ajouter un nouveau log
 					const newLog = { date, done };
 					habit.logs.push(newLog);
 				}
@@ -180,7 +183,6 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 				});
 			}
 		} else {
-			// Si le membre n'existe pas, renvoyer un tableau vide
 			return [];
 		}
 	} catch (error) {

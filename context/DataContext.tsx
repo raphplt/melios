@@ -12,6 +12,7 @@ import { Habit } from "../types/habit";
 import { Points } from "../types/points";
 import { Member } from "../types/member";
 import { UserHabit } from "../types/userHabit";
+import usePopup from "@hooks/usePopup";
 
 export const DataContext = createContext<any>({});
 
@@ -33,6 +34,7 @@ export const DataProvider = ({ children }: any) => {
 		odyssee: 0,
 	});
 	const [member, setMember] = useState<Member>();
+	const popup = usePopup();
 
 	const { AskNotification } = permissions();
 
@@ -67,7 +69,7 @@ export const DataProvider = ({ children }: any) => {
 					if (!snapshotMember) throw new Error("Member not found");
 					setMember(snapshotMember);
 
-					const snapshotRewards: any = await getRewards();
+					const snapshotRewards: any = await getRewards(); //TODO type rewards
 					setPoints(extractPoints(snapshotRewards));
 
 					const snapshotHabits = await getMemberHabits();
@@ -104,6 +106,7 @@ export const DataProvider = ({ children }: any) => {
 				setNotificationToggle,
 				member,
 				setMember,
+				popup,
 			}}
 		>
 			{children}
