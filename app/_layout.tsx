@@ -95,7 +95,6 @@ function MainNavigator() {
 						name="habitDetail"
 						options={{
 							headerShadowVisible: false,
-
 							title: "Détail de l'habitude",
 							presentation: "transparentModal",
 						}}
@@ -103,6 +102,7 @@ function MainNavigator() {
 					<Stack.Screen
 						name="account"
 						options={{
+							headerShadowVisible: false,
 							title: "Mon compte",
 						}}
 					/>

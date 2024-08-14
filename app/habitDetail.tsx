@@ -74,9 +74,9 @@ export default function HabitDetail() {
 			}
 		} else if (nextAppState === "background") {
 			sendPushNotification(expoPushToken, {
-				title: `${habitParsed?.name} en pause`,
+				title: `${habitParsed ? habitParsed.name : "Habitude"} en pause`,
 				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
-			}); //TODO supprimer quand on revient sur l'app
+			}); //TODO supprimer la notification quand on revient sur l'app
 			if (isTimerActive) {
 				await AsyncStorage.setItem("timerSeconds", timerSeconds.toString());
 

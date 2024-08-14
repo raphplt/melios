@@ -15,7 +15,7 @@ export default function TopRow({
 	return (
 		<View className="flex items-center justify-start flex-row w-[90%] bg-transparent mx-auto my-2">
 			<View
-				className="flex items-center justify-center rounded-full w-7 h-7 mr-2 "
+				className="flex items-center justify-center rounded-full w-6 h-6 mr-2"
 				style={{
 					backgroundColor: color,
 					borderColor: borderColor || theme.colors.primary,
@@ -30,7 +30,7 @@ export default function TopRow({
 				>{`${number}`}</Text>
 			</View>
 			<Text
-				className="font-semibold text-[16px]"
+				className="font-semibold italic ml-1 text-[16px]"
 				style={{
 					color: theme.colors.text,
 				}}

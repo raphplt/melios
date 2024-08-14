@@ -62,10 +62,11 @@ export default function Points() {
 			</TouchableOpacity>
 			{helpVisible && (
 				<View
-					className="absolute top-full mt-2 left-0 p-2 bg-white rounded-md shadow-md w-44 z-50"
+					className="absolute top-full mt-2 left-0 p-2 rounded-md shadow-md w-44 z-50"
 					style={{
 						borderColor: theme.colors.primary,
 						borderWidth: 1,
+						backgroundColor: theme.colors.background,
 					}}
 				>
 					<View>

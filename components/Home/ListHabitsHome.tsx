@@ -68,14 +68,7 @@ export default function ListHabitsHome() {
 							))}
 						{uncompletedHabitsData.filter((habit: Habit) => habit.moment >= hours)
 							.length > 3 ? (
-							<ButtonViewMore
-								onPress={updateShowNext}
-								text={
-									showMoreNext < uncompletedHabitsData.length
-										? "Voir plus"
-										: "Voir moins"
-								}
-							/>
+							<ButtonViewMore onPress={updateShowNext} text={null} />
 						) : null}
 					</View>
 					<View
@@ -108,14 +101,7 @@ export default function ListHabitsHome() {
 								))}
 
 							{completedHabitsData.length > 3 ? (
-								<ButtonViewMore
-									onPress={updateShowValidate}
-									text={
-										showMoreValidate < completedHabitsData.length
-											? "Voir plus"
-											: "Voir moins"
-									}
-								/>
+								<ButtonViewMore onPress={updateShowValidate} text={null} />
 							) : null}
 						</View>
 					</View>
@@ -151,13 +137,13 @@ export default function ListHabitsHome() {
 											))}
 										<ButtonViewMore
 											onPress={() => setShowMissingHabits(false)}
-											text="Cacher les habitudes manquées"
+											text={null}
 										/>
 									</View>
 								) : (
 									<ButtonViewMore
 										onPress={() => setShowMissingHabits(true)}
-										text="Voir les habitudes manquées"
+										text={null}
 									/>
 								)}
 							</View>

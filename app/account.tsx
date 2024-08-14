@@ -162,18 +162,18 @@ export default function Account() {
 					</View>
 					{member && Object.keys(member).length > 0 && <UserInfos data={member} />}
 					<LogoutButton handleLogout={handleLogout} theme={theme} />
-				</ScrollView>
-				<View
-					className="w-full mx-auto"
-					style={{ backgroundColor: theme.colors.background }}
-				>
-					<Text
-						className=" text-center text-sm"
-						style={{ color: theme.colors.text }}
+					<View
+						className="w-full mx-auto"
+						style={{ backgroundColor: theme.colors.background }}
 					>
-						Melios v1.1.2 - © 2024 Melios. Tous droits réservés.
-					</Text>
-				</View>
+						<Text
+							className=" text-center text-sm"
+							style={{ color: theme.colors.text }}
+						>
+							Melios v1.1.2 - © 2024 Melios. Tous droits réservés.
+						</Text>
+					</View>
+				</ScrollView>
 			</ThemeProvider>
 		</>
 	);

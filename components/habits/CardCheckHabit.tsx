@@ -11,16 +11,12 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
-import { ThemeContext } from "../../context/ThemeContext";
-import { useData } from "../../context/DataContext";
 import { getHabitById } from "@db/habits";
 import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
-
-interface Difficulty {
-	[key: number]: string;
-}
+import { ThemeContext } from "@context/ThemeContext";
+import { difficulties } from "@utils/habitsUtils";
 
 export default function CardCheckHabit({
 	habit = [],
@@ -32,15 +28,7 @@ export default function CardCheckHabit({
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
-	const { points, setPoints } = useData();
 	const { addOdysseePoints } = usePoints();
-	const difficulties: Difficulty[] = [
-		{ 1: "#E9C46A" },
-		{ 2: "#F4A261" },
-		{ 3: "#F4A261" },
-		{ 4: "#E76F51" },
-		{ 5: "#E63946" },
-	];
 
 	const navigation: any = useNavigation();
 	const translateX = useSharedValue(0);

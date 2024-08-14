@@ -154,7 +154,7 @@ export default function Select() {
 					displayedHabitsCount[item.category] > 0 &&
 					item.habits.length > displayedHabitsCount[item.category] ? (
 						<ButtonViewMore
-							text="Voir plus"
+							text={null}
 							onPress={() =>
 								setDisplayedHabitsCount((prevState: any) => ({
 									...prevState,
