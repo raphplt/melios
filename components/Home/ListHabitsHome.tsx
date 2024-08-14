@@ -1,11 +1,12 @@
-import TopRow from "@components/Habits/TopRow";
 import { View } from "react-native";
-import Congratulations from "./Congratulations";
-import CardCheckHabit from "@components/Habits/CardCheckHabit";
-import ButtonViewMore from "./ButtonViewMore";
-import NoHabits from "./NoHabits";
-import { Habit } from "../../types/habit";
+
+// Customs imports
 import useIndex from "@hooks/useIndex";
+import Congratulations from "./Congratulations";
+import NoHabits from "./NoHabits";
+import HabitSectionList from "./HabitSectionList";
+import MissedHabitsSection from "./MissedHabitSectionList";
+import { Habit } from "../../types/habit";
 
 export default function ListHabitsHome() {
 	const {
@@ -14,6 +15,7 @@ export default function ListHabitsHome() {
 		showMissingHabits,
 		showMoreValidate,
 		showMoreNext,
+		showMoreMissed,
 		missedHabitsCount,
 		uncompletedHabitsData,
 		completedHabitsData,
@@ -21,137 +23,72 @@ export default function ListHabitsHome() {
 		setShowMissingHabits,
 		updateShowValidate,
 		updateShowNext,
+		updateShowMissed,
 		handleHabitStatusChange,
+		resetShowNext,
+		resetShowValidate,
+		resetShowMissed,
 	} = useIndex();
+
+	if (userHabits.length === 0 || !userHabits) return <NoHabits theme={theme} />;
+
+	const nextHabits = uncompletedHabitsData.filter(
+		(habit: Habit) => habit.moment >= hours
+	);
+	const missedHabits = uncompletedHabitsData.filter(
+		(habit: Habit) => habit.moment < hours
+	);
+
 	return (
-		<>
-			{userHabits.length > 0 ? (
-				<View
-					className="flex flex-row flex-wrap justify-center mt-2"
-					style={{ backgroundColor: "transparent" }}
-				>
-					<View
-						className="flex flex-row flex-wrap justify-start py-2 mb-2"
-						style={{ backgroundColor: "transparent" }}
-					>
-						{uncompletedHabitsData.length > 0 &&
-						uncompletedHabitsData.filter((habit: Habit) => habit.moment + 1 > hours)
-							.length > 0 ? (
-							<TopRow
-								icon="close-circle"
-								color={theme.colors.background}
-								borderColor={theme.colors.primary}
-								textColor={theme.colors.primary}
-								text="Prochaines habitudes"
-								number={
-									uncompletedHabitsData.filter((habit: Habit) => habit.moment >= hours)
-										.length
-								}
-							/>
-						) : (
-							<Congratulations
-								theme={theme}
-								completedHabitsData={completedHabitsData}
-								userHabits={userHabits}
-							/>
-						)}
-
-						{uncompletedHabitsData
-							.filter((habit: Habit) => habit.moment >= hours)
-							.slice(0, showMoreNext)
-							.map((filteredHabit: any) => (
-								<CardCheckHabit
-									key={filteredHabit.id}
-									habit={filteredHabit}
-									onHabitStatusChange={handleHabitStatusChange}
-								/>
-							))}
-						{uncompletedHabitsData.filter((habit: Habit) => habit.moment >= hours)
-							.length > 3 ? (
-							<ButtonViewMore onPress={updateShowNext} text={null} />
-						) : null}
-					</View>
-					<View
-						className="flex flex-row flex-wrap justify-start py-2 mb-2"
-						style={{ backgroundColor: "transparent" }}
-					>
-						<TopRow
-							icon="checkmark-circle"
-							color={theme.colors.background}
-							borderColor={theme.colors.greenPrimary}
-							textColor={theme.colors.greenPrimary}
-							text="Validées"
-							number={completedHabitsData.length}
-						/>
-						<View className="w-full mx-auto">
-							{[
-								...new Map(
-									completedHabitsData.map((item: any) => [item.id, item])
-								).values(),
-							]
-								.slice(0, showMoreValidate)
-								.map((filteredHabit: any) => (
-									<CardCheckHabit
-										completed={true}
-										key={filteredHabit.id}
-										habit={filteredHabit}
-										onHabitStatusChange={handleHabitStatusChange}
-										disabled={true}
-									/>
-								))}
-
-							{completedHabitsData.length > 3 ? (
-								<ButtonViewMore onPress={updateShowValidate} text={null} />
-							) : null}
-						</View>
-					</View>
-					{uncompletedHabitsData.length > 0 &&
-						uncompletedHabitsData.filter((habit: any) => habit.moment < hours)
-							.length > 0 && (
-							<View
-								className="flex flex-row flex-wrap justify-start py-2 mb-2"
-								style={{ backgroundColor: "transparent" }}
-							>
-								<TopRow
-									icon="close-circle"
-									color={theme.colors.background}
-									borderColor={theme.colors.redPrimary}
-									textColor={theme.colors.redPrimary}
-									text="Manquées"
-									number={missedHabitsCount}
-								/>
-
-								{showMissingHabits ? (
-									<View
-										style={{ backgroundColor: "transparent" }}
-										className=" flex flex-col w-full"
-									>
-										{uncompletedHabitsData
-											.filter((habit: any) => habit.moment < hours)
-											.map((filteredHabit: any) => (
-												<CardCheckHabit
-													key={filteredHabit.id}
-													habit={filteredHabit}
-													onHabitStatusChange={handleHabitStatusChange}
-												/>
-											))}
-										<ButtonViewMore
-											onPress={() => setShowMissingHabits(false)}
-											text={null}
-										/>
-									</View>
-								) : (
-									<ButtonViewMore
-										onPress={() => setShowMissingHabits(true)}
-										text={null}
-									/>
-								)}
-							</View>
-						)}
-				</View>
+		<View
+			className="flex flex-row flex-wrap justify-center mt-2"
+			style={{ backgroundColor: "transparent" }}
+		>
+			{nextHabits.length > 0 ? (
+				<HabitSectionList
+					title="Prochaines habitudes"
+					icon="close-circle"
+					borderColor={theme.colors.primary}
+					textColor={theme.colors.primary}
+					habits={nextHabits}
+					showMore={showMoreNext}
+					onShowMore={updateShowNext}
+					onHabitStatusChange={handleHabitStatusChange}
+					resetShow={resetShowNext}
+				/>
 			) : (
-				<NoHabits theme={theme} />
+				<Congratulations
+					theme={theme}
+					completedHabitsData={completedHabitsData}
+					userHabits={userHabits}
+				/>
 			)}
-		</>
+
+			<HabitSectionList
+				title="Validées"
+				icon="checkmark-circle"
+				borderColor={theme.colors.greenPrimary}
+				textColor={theme.colors.greenPrimary}
+				habits={completedHabitsData}
+				showMore={showMoreValidate}
+				onShowMore={updateShowValidate}
+				onHabitStatusChange={handleHabitStatusChange}
+				completed={true}
+				disabled={true}
+				resetShow={resetShowValidate}
+			/>
+
+			{missedHabits.length > 0 && (
+				<MissedHabitsSection
+					habits={{ data: missedHabits, theme, missedHabitsCount }}
+					showMissingHabits={showMissingHabits}
+					toggleShowMissingHabits={() => setShowMissingHabits(!showMissingHabits)}
+					onHabitStatusChange={handleHabitStatusChange}
+					showMoreMissed={showMoreMissed}
+					updateShowMissed={updateShowMissed}
+					resetShowMissed={resetShowMissed}
+				/>
+			)}
+		</View>
 	);
 }

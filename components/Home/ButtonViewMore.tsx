@@ -6,9 +6,11 @@ import { Iconify } from "react-native-iconify";
 export default function ButtonViewMore({
 	onPress,
 	text,
+	listLength,
 }: {
 	onPress: () => void;
 	text: string | null;
+	listLength: number;
 }) {
 	const { theme } = useContext(ThemeContext);
 	return (
@@ -17,10 +19,15 @@ export default function ButtonViewMore({
 			style={{
 				borderColor: theme.colors.primary,
 				borderWidth: 1,
+				backgroundColor: theme.colors.background,
 			}}
 			onPress={onPress}
 		>
-			<Iconify icon="mdi:chevron-down" color={theme.colors.primary} size={20} />
+			{listLength > 0 ? (
+				<Iconify icon="mdi:chevron-down" color={theme.colors.primary} size={20} />
+			) : (
+				<Iconify icon="mdi:chevron-up" color={theme.colors.primary} size={20} />
+			)}
 			<Text
 				style={{
 					color: theme.colors.primary,

@@ -14,6 +14,7 @@ import { useData } from "@context/DataContext";
 import { UserHabit } from "../types/userHabit";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
+import { Habit } from "../types/habit";
 
 const useIndex = () => {
 	// Contexts
@@ -44,10 +45,11 @@ const useIndex = () => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
 
-	const [welcomeMessage, setWelcomeMessage] = useState("");
+	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const [showMoreValidate, setShowMoreValidate] = useState(5);
 	const [showMoreNext, setShowMoreNext] = useState(5);
+	const [showMoreMissed, setShowMoreMissed] = useState(5);
 
 	// Effects
 
@@ -121,6 +123,7 @@ const useIndex = () => {
 			setUserHabits(data);
 			setShowMoreValidate(5);
 			setShowMoreNext(5);
+			setShowMoreMissed(5);
 		} catch (error) {
 			handleError(error);
 		} finally {
@@ -128,17 +131,21 @@ const useIndex = () => {
 		}
 	};
 
-	//TODO type all
-	const handleHabitStatusChange = (habit: any, done: boolean) => {
+	// Function to handle the change of the habit status
+	const handleHabitStatusChange = (habit: Habit, done: boolean) => {
 		if (done) {
-			setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
-			setUncompletedHabitsData((prevHabits: any) =>
-				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
+			setCompletedHabitsData(
+				(prevHabits: Habit[]) => [...prevHabits, habit] as Habit[]
+			);
+			setUncompletedHabitsData((prevHabits: Habit[]) =>
+				prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
 			);
 		} else {
-			setUncompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
-			setCompletedHabitsData((prevHabits: any) =>
-				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
+			setUncompletedHabitsData(
+				(prevHabits: Habit[]) => [...prevHabits, habit] as Habit[]
+			);
+			setCompletedHabitsData((prevHabits: Habit[]) =>
+				prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
 			);
 		}
 	};
@@ -149,23 +156,59 @@ const useIndex = () => {
 	});
 
 	const missedHabitsCount = uncompletedHabitsData.filter(
-		(habit: any) => habit.moment < hours
+		(habit: Habit) => habit.moment < hours
 	).length;
 
-	const updateShowValidate = () => {
-		if (showMoreValidate < completedHabitsData.length) {
-			setShowMoreValidate((prev) => prev + 5);
+	const updateShowMore = (
+		currentValue: number,
+		listLength: number,
+		setState: React.Dispatch<React.SetStateAction<number>>
+	) => {
+		console.log("currentValue : ", currentValue, "listLength : ", listLength);
+		if (currentValue < listLength) {
+			setState((prev) => prev + 5);
 		} else {
-			setShowMoreValidate(3);
+			setState(0);
 		}
 	};
 
+	const updateShowValidate = () => {
+		updateShowMore(
+			showMoreValidate,
+			completedHabitsData.length,
+			setShowMoreValidate
+		);
+	};
+
 	const updateShowNext = () => {
-		if (showMoreNext < uncompletedHabitsData.length) {
-			setShowMoreNext((prev) => prev + 5);
-		} else {
-			setShowMoreNext(3);
-		}
+		updateShowMore(
+			showMoreNext,
+			uncompletedHabitsData.filter((habit: Habit) => habit.moment >= hours).length,
+			setShowMoreNext
+		);
+	};
+
+	const updateShowMissed = () => {
+		updateShowMore(showMoreMissed, missedHabitsCount, setShowMoreMissed);
+	};
+
+	const toggleShowMore = (
+		currentValue: number,
+		setValue: (value: number) => void
+	) => {
+		setValue(currentValue > 0 ? 0 : 5);
+	};
+
+	const resetShowValidate = () => {
+		toggleShowMore(showMoreValidate, setShowMoreValidate);
+	};
+
+	const resetShowNext = () => {
+		toggleShowMore(showMoreNext, setShowMoreNext);
+	};
+
+	const resetShowMissed = () => {
+		toggleShowMore(showMoreMissed, setShowMoreMissed);
 	};
 
 	const imageSource = isDayTime
@@ -205,6 +248,7 @@ const useIndex = () => {
 		showMissingHabits,
 		showMoreValidate,
 		showMoreNext,
+		showMoreMissed,
 		missedHabitsCount,
 		rotate,
 		imageSource,
@@ -219,10 +263,14 @@ const useIndex = () => {
 		setShowMissingHabits,
 		updateShowValidate,
 		updateShowNext,
+		updateShowMissed,
 		onRefresh,
 		handleHabitStatusChange,
 		handlePressIn,
 		handlePressOut,
+		resetShowValidate,
+		resetShowNext,
+		resetShowMissed,
 	};
 };
 
