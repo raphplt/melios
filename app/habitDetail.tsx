@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Customs imports
 import { Habit } from "../types/habit";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import TimerHabit from "@components/HabitDetail/TImerHabit";
+import TimerHabit from "@components/HabitDetail/TimerHabit";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
 import { ThemeContext } from "@context/ThemeContext";
 import useTimer from "@hooks/useTimer";

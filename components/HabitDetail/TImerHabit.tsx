@@ -13,7 +13,7 @@ export default function TimerHabit({
 	habitParsed: any;
 }) {
 	const [doneToday, setDoneToday] = useState(false);
-
+	const [touched, setTouched] = useState(false);
 	const { theme } = useContext(ThemeContext);
 	const { timerSeconds, isTimerActive, startTimer, stopTimer, date } =
 		useTimer();
@@ -39,10 +39,14 @@ export default function TimerHabit({
 							onPress={() => startTimer(habitParsed.duration, habitParsed)}
 							className="py-2 px-6 rounded-lg w-11/12 mx-auto justify-center mt-4 flex flex-row items-center"
 							style={{
-								backgroundColor: theme.colors.primary,
+								backgroundColor: touched
+									? theme.colors.bluePrimary
+									: theme.colors.primary,
 								borderColor: theme.colors.primary,
 								borderWidth: 2,
 							}}
+							onTouchStart={() => setTouched(true)}
+							onTouchEndCapture={() => setTouched(false)}
 						>
 							<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
 							<Text

@@ -164,7 +164,6 @@ const useIndex = () => {
 		listLength: number,
 		setState: React.Dispatch<React.SetStateAction<number>>
 	) => {
-		console.log("currentValue : ", currentValue, "listLength : ", listLength);
 		if (currentValue < listLength) {
 			setState((prev) => prev + 5);
 		} else {

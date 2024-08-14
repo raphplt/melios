@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Pressable } from "react-native";
+import { View, Pressable, ActivityIndicator } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
 import moment from "moment";
@@ -11,6 +11,8 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
+
+// Customs imports
 import { getHabitById } from "@db/habits";
 import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
@@ -28,8 +30,11 @@ export default function CardCheckHabit({
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
-	const { addOdysseePoints } = usePoints();
+	const [loading, setLoading] = useState(true);
+	const [isTouched, setIsTouched] = useState(false);
+	let touchStartTimeout: NodeJS.Timeout;
 
+	const { addOdysseePoints } = usePoints();
 	const navigation: any = useNavigation();
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
@@ -45,6 +50,7 @@ export default function CardCheckHabit({
 		async function getHabitInfos() {
 			const result = await getHabitById(habit.id);
 			setHabitInfos(result);
+			setLoading(false); // Le chargement est terminé
 		}
 		getHabitInfos();
 	}, []);
@@ -79,10 +85,22 @@ export default function CardCheckHabit({
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 	};
 
+	// Si le composant est encore en train de charger, affichez un placeholder
+	if (loading) {
+		return (
+			<View
+				className="w-[90%] mx-auto my-2 flex flex-row items-center justify-center rounded-xl"
+				style={{ backgroundColor: theme.colors.cardBackground }}
+			>
+				<ActivityIndicator size="large" color={theme.colors.primary} />
+			</View>
+		);
+	}
+
 	return (
 		<Animated.View
 			style={[animatedStyles]}
-			className="w-[90%] mx-auto my-2 flex flex-row items-center justify-evenly"
+			className="w-[90%] mx-auto my-[6px] flex flex-row items-center justify-evenly"
 		>
 			<Pressable
 				onPress={setHabitDone}
@@ -106,11 +124,24 @@ export default function CardCheckHabit({
 				}}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-xl w-[99%]"
+					className="flex items-center flex-row justify-around py-2 rounded-xl w-full"
 					style={{
 						borderColor: theme.colors.border,
 						borderWidth: 1,
-						backgroundColor: theme.colors.background,
+						backgroundColor: isTouched
+							? theme.colors.cardBackground
+							: theme.colors.background,
+					}}
+					onTouchStart={() => {
+						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
+					}}
+					onTouchEnd={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
+					}}
+					onTouchCancel={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
 					}}
 				>
 					<View
