@@ -160,7 +160,7 @@ export default function Account() {
 							/>
 						</View>
 					</View>
-					{member && Object.keys(member).length > 0 && <UserInfos data={member} />}
+					{member && Object.keys(member).length > 0 && <UserInfos member={member} />}
 					<LogoutButton handleLogout={handleLogout} theme={theme} />
 					<View
 						className="w-full mx-auto"

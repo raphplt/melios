@@ -13,7 +13,7 @@ import {
 import { db } from ".";
 import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Member } from "../types/member";
 
 export const setMemberHabit = async (habit: any) => {
 	try {
@@ -192,46 +192,42 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 	}
 };
 
-export const getMemberInfos = async () => {
+export const getMemberInfos = async (): Promise<Member | undefined> => {
 	try {
-		try {
-			const authPromise = new Promise<string>((resolve, reject) => {
-				const unsubscribe = onAuthStateChanged(auth, (user) => {
-					if (user) {
-						resolve(user.uid);
-					} else {
-						reject(new Error("User not authenticated"));
-					}
-					unsubscribe();
-				});
+		const authPromise = new Promise<string>((resolve, reject) => {
+			const unsubscribe = onAuthStateChanged(auth, (user) => {
+				if (user) {
+					resolve(user.uid);
+				} else {
+					reject(new Error("User not authenticated"));
+				}
+				unsubscribe();
 			});
+		});
 
-			const uid = await authPromise;
+		const uid = await authPromise;
 
-			const membersCollectionRef = collection(db, "members");
+		const membersCollectionRef = collection(db, "members");
 
-			const querySnapshot = await getDocs(
-				query(membersCollectionRef, where("uid", "==", uid))
-			);
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", uid))
+		);
 
-			if (!querySnapshot.empty) {
-				const memberDoc = querySnapshot.docs[0];
+		if (!querySnapshot.empty) {
+			const memberDoc = querySnapshot.docs[0];
+			const structureMember: Member = {
+				id: memberDoc.id,
+				nom: memberDoc.data().nom,
+				motivation: memberDoc.data().motivation,
+				objectifs: memberDoc.data().objectifs,
+				temps: memberDoc.data().temps,
+				aspects: memberDoc.data().aspects,
+				habits: memberDoc.data().habits,
+			};
 
-				const memberInfos = {
-					id: memberDoc.id,
-					...memberDoc.data(),
-				};
-
-				return memberInfos;
-			} else {
-				return [];
-			}
-		} catch (error) {
-			console.log(
-				"Erreur lors de la récupération du document dans la collection 'members':  ",
-				error
-			);
-			throw error;
+			return structureMember;
+		} else {
+			return undefined;
 		}
 	} catch (error) {
 		console.log(

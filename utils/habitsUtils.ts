@@ -1,6 +1,8 @@
 import { Difficulty } from "../types/difficultiesList";
+import { Habit } from "../types/habit";
+import { UserHabit } from "../types/userHabit";
 
-export const processHabits = (snapshotHabits: any, date: string) => {
+export const processHabits = (snapshotHabits: UserHabit[], date: string) => {
 	const uncompleted = snapshotHabits
 		.filter((habit: any) => {
 			if (habit.logs) {
@@ -16,10 +18,10 @@ export const processHabits = (snapshotHabits: any, date: string) => {
 				}
 			}
 		})
-		.sort((a: any, b: any) => a.moment - b.moment);
+		.sort((a: UserHabit, b: UserHabit) => a.moment - b.moment);
 
 	const completed = snapshotHabits
-		.filter((habit: any) => {
+		.filter((habit: UserHabit) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
 
@@ -28,7 +30,7 @@ export const processHabits = (snapshotHabits: any, date: string) => {
 				}
 			}
 		})
-		.sort((a: any, b: any) => a.moment - b.moment);
+		.sort((a: UserHabit, b: UserHabit) => a.moment - b.moment);
 
 	return { uncompleted, completed };
 };

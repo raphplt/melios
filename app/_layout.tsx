@@ -1,11 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
-import {
-	ActivityIndicator,
-	StatusBar,
-	Text,
-	View,
-	useColorScheme,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
@@ -13,8 +7,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SessionProvider, useSession } from "../context/UserContext"; // Utiliser useSession
+import { SessionProvider, useSession } from "../context/UserContext";
 import { DataProvider } from "../context/DataContext";
+import LoaderScreen from "@components/Shared/LoaderScreen";
+import NotificationBox from "@components/Shared/NotificationBox";
+import usePopup from "@hooks/usePopup";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -56,6 +53,7 @@ function MainNavigator() {
 	};
 
 	const { isLoading: isSessionLoading }: any = useSession();
+	const { message, isOpen, type } = usePopup();
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -65,16 +63,7 @@ function MainNavigator() {
 		}
 	}, [isSessionLoading]);
 
-	if (isLoading || !loaded) {
-		return (
-			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<ActivityIndicator size="large" color={theme.colors.primary} />
-				<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
-					Chargement du compte...
-				</Text>
-			</View>
-		);
-	}
+	if (isLoading || !loaded) return <LoaderScreen text="Chargement..." />;
 
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -124,6 +113,7 @@ function MainNavigator() {
 						}}
 					/>
 				</Stack>
+				{isOpen && <NotificationBox message={message} type={type} />}
 			</ThemeProvider>
 		</ThemeContext.Provider>
 	);

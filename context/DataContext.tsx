@@ -8,23 +8,31 @@ import { processHabits } from "../utils/habitsUtils";
 import { extractPoints } from "../utils/pointsUtils";
 import { getNotificationToken } from "../utils/notificationsUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Habit } from "../types/habit";
+import { Points } from "../types/points";
+import { Member } from "../types/member";
+import { UserHabit } from "../types/userHabit";
 
 export const DataContext = createContext<any>({});
 
 export const DataProvider = ({ children }: any) => {
 	const { isLoading: isSessionLoading, user } = useSession();
-	const [habits, setHabits]: any = useState();
-	const [uncompletedHabitsData, setUncompletedHabitsData]: any = useState([]);
-	const [completedHabitsData, setCompletedHabitsData]: any = useState([]);
+	const [habits, setHabits] = useState<Habit[]>();
+	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
+		UserHabit[]
+	>([]);
+	const [completedHabitsData, setCompletedHabitsData] = useState<UserHabit[]>(
+		[]
+	);
 	const [isLoading, setIsLoading]: any = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
 	const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
-	const [points, setPoints]: any = useState({
+	const [points, setPoints] = useState<Points>({
 		rewards: 0,
 		odyssee: 0,
 	});
-	const [member, setMember]: any = useState();
+	const [member, setMember] = useState<Member>();
 
 	const { AskNotification } = permissions();
 
@@ -56,6 +64,7 @@ export const DataProvider = ({ children }: any) => {
 					}
 
 					const snapshotMember = await getMemberInfos();
+					if (!snapshotMember) throw new Error("Member not found");
 					setMember(snapshotMember);
 
 					const snapshotRewards: any = await getRewards();
