@@ -18,7 +18,7 @@ const HabitSectionList = ({
 	resetShow,
 }: any) => (
 	<View
-		className="flex flex-row flex-wrap justify-start py-2 mb-2"
+		className="flex flex-row flex-wrap justify-start py-1 mb-2"
 		style={{ backgroundColor: "transparent" }}
 	>
 		<TopRow
@@ -42,7 +42,12 @@ const HabitSectionList = ({
 				/>
 			))}
 			{habits.length > 3 && showMore > 0 && (
-				<ButtonViewMore onPress={onShowMore} text={null} listLength={showMore} />
+				<ButtonViewMore
+					onPress={onShowMore}
+					text={null}
+					listLength={showMore}
+					maxLength={habits.length}
+				/>
 			)}
 		</View>
 	</View>

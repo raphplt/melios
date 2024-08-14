@@ -14,7 +14,7 @@ const MissedHabitsSection = ({
 	resetShowMissed,
 }: any) => (
 	<View
-		className="flex flex-row flex-wrap justify-start py-2 mb-2"
+		className="flex flex-row flex-wrap justify-start py-1 mb-2"
 		style={{ backgroundColor: "transparent" }}
 	>
 		<TopRow
@@ -27,28 +27,23 @@ const MissedHabitsSection = ({
 			resetShow={resetShowMissed}
 			showMore={showMoreMissed}
 		/>
-		{showMissingHabits ? (
-			<View className="flex flex-col w-full">
-				{habits.data.slice(0, showMoreMissed).map((habit: Habit) => (
-					<CardCheckHabit
-						key={habit.id}
-						habit={habit}
-						onHabitStatusChange={onHabitStatusChange}
-					/>
-				))}
+		<View className="flex flex-col w-full">
+			{habits.data.slice(0, showMoreMissed).map((habit: Habit) => (
+				<CardCheckHabit
+					key={habit.id}
+					habit={habit}
+					onHabitStatusChange={onHabitStatusChange}
+				/>
+			))}
+			{habits.data.length > 3 && showMoreMissed > 0 && (
 				<ButtonViewMore
 					onPress={updateShowMissed}
 					text={null}
 					listLength={showMoreMissed}
+					maxLength={habits.data.length}
 				/>
-			</View>
-		) : (
-			<ButtonViewMore
-				onPress={toggleShowMissingHabits}
-				text={null}
-				listLength={showMoreMissed}
-			/>
-		)}
+			)}
+		</View>
 	</View>
 );
 

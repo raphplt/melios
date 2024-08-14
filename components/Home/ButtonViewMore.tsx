@@ -7,10 +7,12 @@ export default function ButtonViewMore({
 	onPress,
 	text,
 	listLength,
+	maxLength,
 }: {
 	onPress: () => void;
 	text: string | null;
 	listLength: number;
+	maxLength: number;
 }) {
 	const { theme } = useContext(ThemeContext);
 	return (
@@ -23,7 +25,7 @@ export default function ButtonViewMore({
 			}}
 			onPress={onPress}
 		>
-			{listLength > 0 ? (
+			{listLength < maxLength ? (
 				<Iconify icon="mdi:chevron-down" color={theme.colors.primary} size={20} />
 			) : (
 				<Iconify icon="mdi:chevron-up" color={theme.colors.primary} size={20} />
