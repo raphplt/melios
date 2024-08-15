@@ -18,6 +18,7 @@ import ButtonViewMore from "../components/Home/ButtonViewMore";
 import { useData } from "../context/DataContext";
 import SearchBar from "../components/Select/SearchBar";
 import NumberSelected from "../components/Select/NumberSelected";
+import { Habit } from "../types/habit";
 
 export default function Select() {
 	const [habitsData, setHabitsData] = useState([]);
@@ -100,9 +101,7 @@ export default function Select() {
 	};
 
 	//TODO : add types
-	const renderHabit = ({ item }: any) => (
-		<CardHabit habit={item} navigation={navigation} />
-	);
+	const renderHabit = ({ item }: { item: Habit }) => <CardHabit habit={item} />;
 
 	const renderCategory = ({ item }: any) => (
 		<View key={item.category} className="mt-3">
@@ -161,6 +160,8 @@ export default function Select() {
 									[item.category]: prevState[item.category] + 10,
 								}))
 							}
+							listLength={item.habits.length}
+							maxLength={displayedHabitsCount[item.category]}
 						/>
 					) : null
 				}

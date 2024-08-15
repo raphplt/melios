@@ -16,6 +16,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Member } from "../types/member";
 import { UserHabit } from "../types/userHabit";
 import { Habit } from "../types/habit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
 
 export const setMemberHabit = async (habit: Habit) => {
 	try {
@@ -70,8 +73,17 @@ export const setMemberHabit = async (habit: Habit) => {
 	}
 };
 
-export const getMemberHabits = async () => {
+export const getMemberHabits = async (forceRefresh = false) => {
 	try {
+		if (!forceRefresh) {
+			const storedData = await AsyncStorage.getItem(
+				LOCAL_STORAGE_MEMBER_HABITS_KEY
+			);
+			if (storedData) {
+				return JSON.parse(storedData);
+			}
+		}
+
 		const authPromise = new Promise<string>((resolve, reject) => {
 			const unsubscribe = onAuthStateChanged(auth, (user) => {
 				if (user) {
@@ -97,6 +109,10 @@ export const getMemberHabits = async () => {
 
 			if (memberDocSnapshot.exists()) {
 				const habits = memberDocSnapshot.data().habits;
+				await AsyncStorage.setItem(
+					LOCAL_STORAGE_MEMBER_HABITS_KEY,
+					JSON.stringify(habits)
+				);
 				return habits;
 			} else {
 				return [];

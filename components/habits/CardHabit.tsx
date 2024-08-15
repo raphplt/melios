@@ -7,24 +7,43 @@ import { setMemberHabit } from "../../db/member";
 import { getMemberHabit } from "../../db/member";
 import { lightenColor } from "../../utils/colors";
 import { useData } from "../../context/DataContext";
+import { Habit } from "../../types/habit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LOCAL_STORAGE_MEMBER_HABITS_KEY } from "../../db/member";
 
-export default function CardHabit({ habit, navigation }: any) {
+export default function CardHabit({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
 	const { setUncompletedHabitsData } = useData();
 
 	const setHabit = async () => {
+		setToggleCheckBox(!toggleCheckBox);
 		await setMemberHabit(habit);
 
 		if (toggleCheckBox) {
-			setUncompletedHabitsData((prev: any) =>
-				prev.filter((h: any) => h.id !== habit.id)
+			setUncompletedHabitsData((prev: Habit[]) =>
+				prev.filter((h: Habit) => h.id !== habit.id)
 			);
 		} else {
-			setUncompletedHabitsData((prev: any) => [...prev, habit]);
+			setUncompletedHabitsData((prev: Habit[]) => [...prev, habit]);
 		}
-		setToggleCheckBox(!toggleCheckBox);
+
+		const storedHabits = await AsyncStorage.getItem(
+			LOCAL_STORAGE_MEMBER_HABITS_KEY
+		);
+		let habits = storedHabits ? JSON.parse(storedHabits) : [];
+
+		if (toggleCheckBox) {
+			habits = habits.filter((h: Habit) => h.id !== habit.id);
+		} else {
+			habits.push(habit);
+		}
+
+		await AsyncStorage.setItem(
+			LOCAL_STORAGE_MEMBER_HABITS_KEY,
+			JSON.stringify(habits)
+		);
 	};
 
 	useEffect(() => {
