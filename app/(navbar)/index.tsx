@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl, StatusBar, Image, Button } from "react-native";
+import { RefreshControl, StatusBar, Image } from "react-native";
 import { DarkTheme } from "@react-navigation/native";
 
 // Customs imports

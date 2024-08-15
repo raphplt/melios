@@ -20,6 +20,7 @@ import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
 import { useData } from "@context/DataContext";
+import CardPlaceHolder from "./CardPlaceHolder";
 
 export default function CardCheckHabit({
 	habit = [],
@@ -88,17 +89,7 @@ export default function CardCheckHabit({
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 	};
 
-	// Si le composant est encore en train de charger, affichez un placeholder
-	if (loading) {
-		return (
-			<View
-				className="w-[90%] mx-auto my-2 flex flex-row items-center justify-center rounded-xl"
-				style={{ backgroundColor: theme.colors.cardBackground }}
-			>
-				<ActivityIndicator size="large" color={theme.colors.primary} />
-			</View>
-		);
-	}
+	if (loading) return <CardPlaceHolder />;
 
 	return (
 		<Animated.View
