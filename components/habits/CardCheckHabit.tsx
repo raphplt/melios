@@ -81,7 +81,7 @@ export default function CardCheckHabit({
 
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
-		popup.newPopup("Bravo !", "success");
+		// popup.newPopup("Bravo !", "success");
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);

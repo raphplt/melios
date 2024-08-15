@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import moment from "moment";
 
 import { useIsFocused } from "@react-navigation/native";

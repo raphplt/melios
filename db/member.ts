@@ -15,8 +15,9 @@ import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
 import { Member } from "../types/member";
 import { UserHabit } from "../types/userHabit";
+import { Habit } from "../types/habit";
 
-export const setMemberHabit = async (habit: any) => {
+export const setMemberHabit = async (habit: Habit) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 

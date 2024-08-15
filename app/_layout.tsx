@@ -96,6 +96,13 @@ function MainNavigator() {
 							title: "Mon compte",
 						}}
 					/>
+					<Stack.Screen
+						name="trophies"
+						options={{
+							headerShadowVisible: false,
+							title: "Trophées",
+						}}
+					/>
 
 					<Stack.Screen
 						name="login"

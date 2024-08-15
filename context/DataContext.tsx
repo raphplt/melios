@@ -13,6 +13,9 @@ import { Points } from "../types/points";
 import { Member } from "../types/member";
 import { UserHabit } from "../types/userHabit";
 import usePopup from "@hooks/usePopup";
+import { useProgression } from "@hooks/useProgression";
+import { Trophy } from "../types/trophy";
+import { getAllTrophies } from "@db/trophiesList";
 
 export const DataContext = createContext<any>({});
 
@@ -34,6 +37,8 @@ export const DataProvider = ({ children }: any) => {
 		odyssee: 0,
 	});
 	const [member, setMember] = useState<Member>();
+	const [trophies, setTrophies] = useState<Trophy[]>([]);
+	const progression = useProgression();
 	const popup = usePopup();
 
 	const { AskNotification } = permissions();
@@ -75,6 +80,9 @@ export const DataProvider = ({ children }: any) => {
 					const snapshotHabits = await getMemberHabits();
 					setHabits(snapshotHabits);
 
+					const snapshotTrophies = await getAllTrophies();
+					setTrophies(snapshotTrophies);
+
 					const { uncompleted, completed } = processHabits(snapshotHabits, date);
 					setUncompletedHabitsData(uncompleted);
 					setCompletedHabitsData(completed);
@@ -107,6 +115,9 @@ export const DataProvider = ({ children }: any) => {
 				member,
 				setMember,
 				popup,
+				progression,
+				trophies,
+				setTrophies,
 			}}
 		>
 			{children}

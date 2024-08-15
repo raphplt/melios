@@ -5,10 +5,10 @@ import { db } from ".";
 const LOCAL_STORAGE_HABITS_KEY = "habits";
 const LOCAL_STORAGE_CATEGORIES_KEY = "categories";
 
-const fetchCollectionData = async (
-	collectionName: any,
-	storageKey: any,
-	forceRefresh: any
+export const fetchCollectionData = async (
+	collectionName: string,
+	storageKey: string,
+	forceRefresh: boolean
 ) => {
 	try {
 		if (!forceRefresh) {

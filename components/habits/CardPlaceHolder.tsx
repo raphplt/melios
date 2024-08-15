@@ -11,7 +11,7 @@ export default function CardPlaceHolder() {
 				style={{ backgroundColor: theme.colors.cardBackground }}
 			></View>
 			<View
-				className="w-10/12 h-10 mx-auto rounded-xl ml-2"
+				className="w-[89%] h-10 mx-auto rounded-xl ml-2"
 				style={{ backgroundColor: theme.colors.cardBackground }}
 			></View>
 		</View>
