@@ -12,7 +12,6 @@ import useIndex from "@hooks/useIndex";
 
 export default function Index() {
 	const {
-		theme,
 		navigation,
 		user,
 		userHabits,

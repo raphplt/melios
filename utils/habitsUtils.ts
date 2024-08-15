@@ -1,10 +1,9 @@
 import { Difficulty } from "../types/difficultiesList";
-import { Habit } from "../types/habit";
 import { UserHabit } from "../types/userHabit";
 
 export const processHabits = (snapshotHabits: UserHabit[], date: string) => {
 	const uncompleted = snapshotHabits
-		.filter((habit: any) => {
+		.filter((habit: UserHabit) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
 
