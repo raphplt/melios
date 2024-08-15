@@ -35,42 +35,46 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
 	);
 
 	return (
-		<>
-			<View className="fixed bottom-0 w-full bg-transparent">
-				<BlurGradientBackground />
-				<View
-					style={{
-						backgroundColor: theme.colors.primary,
-					}}
-					className="w-[95%] mx-auto flex flex-row justify-between items-center rounded-[30px] py-3 px-4 mb-5"
-				>
-					{state.routes.map((route, index) => {
-						const isFocused = state.index === index;
-						const iconColor = isFocused ? theme.colors.primary : "gray";
-						const backgroundColor = isFocused
-							? theme.colors.blueSecondary
-							: theme.colors.background;
+		<View
+			className="bottom-0 w-full"
+			style={{
+				position: "absolute",
+				elevation: 0,
+			}}
+		>
+			<BlurGradientBackground />
+			<View
+				style={{
+					backgroundColor: theme.colors.primary,
+				}}
+				className="w-[95%] mx-auto flex flex-row justify-between items-center rounded-[30px] py-3 px-4 mb-5"
+			>
+				{state.routes.map((route, index) => {
+					const isFocused = state.index === index;
+					const iconColor = isFocused ? theme.colors.primary : "gray";
+					const backgroundColor = isFocused
+						? theme.colors.blueSecondary
+						: theme.colors.background;
 
-						const onPress = () => {
-							if (!isFocused) {
-								navigation.navigate(route.name);
-							}
-						};
+					const onPress = () => {
+						if (!isFocused) {
+							navigation.navigate(route.name);
+						}
+					};
 
-						return (
-							<Pressable
-								key={index}
-								onPress={onPress}
-								className="flex flex-1 items-center rounded-3xl mx-2 h-10 justify-center"
-								style={[{ backgroundColor }]}
-							>
-								<IconComponent name={route.name} color={iconColor} />
-							</Pressable>
-						);
-					})}
-				</View>
+					return (
+						<Pressable
+							key={index}
+							onPress={onPress}
+							className="flex flex-1 items-center rounded-3xl mx-2 h-10 justify-center"
+							style={[{ backgroundColor }]}
+						>
+							<IconComponent name={route.name} color={iconColor} />
+						</Pressable>
+					);
+				})}
 			</View>
-		</>
+		</View>
 	);
 };
 

@@ -31,27 +31,25 @@ export default function Index() {
 	}
 
 	return (
-		<>
-			<ParallaxScrollView
-				habits={userHabits}
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}
-				headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-				headerImage={
-					<Image
-						source={imageSource}
-						style={{ width: "100%", height: 250, resizeMode: "cover" }}
-					/>
-				}
-				isDayTime={isDayTime}
-			>
-				<Background />
+		<ParallaxScrollView
+			habits={userHabits}
+			refreshControl={
+				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+			}
+			headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+			headerImage={
+				<Image
+					source={imageSource}
+					style={{ width: "100%", height: 250, resizeMode: "cover" }}
+				/>
+			}
+			isDayTime={isDayTime}
+		>
+			<Background />
 
-				<WelcomeRow />
-				<ListHabitsHome />
-				<ActivitiesContainer />
-			</ParallaxScrollView>
-		</>
+			<WelcomeRow />
+			<ListHabitsHome />
+			<ActivitiesContainer />
+		</ParallaxScrollView>
 	);
 }

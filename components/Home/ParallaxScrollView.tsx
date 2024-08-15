@@ -18,6 +18,7 @@ import { UserHabit } from "../../types/userHabit";
 import { useData } from "@context/DataContext";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const HEADER_HEIGHT = 250;
 
@@ -44,6 +45,8 @@ export default function ParallaxScrollView({
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [lastDaysCompleted, setLastDaysCompleted] = useState(0);
 	const { progression } = useData();
+
+	const tabBarHeight = useBottomTabBarHeight();
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -102,53 +105,59 @@ export default function ParallaxScrollView({
 	}, [habits, date]);
 
 	return (
-		<View>
-			<Animated.ScrollView
-				ref={scrollRef}
-				scrollEventThrottle={16}
-				showsVerticalScrollIndicator={false}
-				refreshControl={refreshControl}
+		<Animated.ScrollView
+			ref={scrollRef}
+			scrollEventThrottle={16}
+			showsVerticalScrollIndicator={false}
+			refreshControl={refreshControl}
+		>
+			<Animated.View
+				style={[
+					{ backgroundColor: headerBackgroundColor[colorScheme] },
+					headerAnimatedStyle,
+				]}
 			>
-				<Animated.View
-					style={[
-						{ backgroundColor: headerBackgroundColor[colorScheme] },
-						headerAnimatedStyle,
-					]}
-				>
-					<BlurBox position={{ top: 20, left: 20 }}>
-						<Image
-							source={require("../../assets/images/icons/flamme.png")}
-							style={{ width: 40, height: 40, resizeMode: "contain" }}
-						/>
-						<Text
-							style={{
-								color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
-							}}
-							className="text-xl mt-1 font-semibold"
-						>
-							{progression.scoreHabits}%
-						</Text>
-					</BlurBox>
+				<BlurBox position={{ top: 20, left: 20 }}>
+					<Image
+						source={require("../../assets/images/icons/flamme.png")}
+						style={{ width: 40, height: 40, resizeMode: "contain" }}
+					/>
+					<Text
+						style={{
+							color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+						}}
+						className="text-xl mt-1 font-semibold"
+					>
+						{progression.scoreHabits}%
+					</Text>
+				</BlurBox>
 
-					<BlurBox position={{ top: 20, right: 20 }}>
-						<Text
-							className="font-bold"
-							style={{
-								color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
-							}}
-						>
-							Série : {lastDaysCompleted} {lastDaysCompleted > 1 ? "jours" : "jour"}
-						</Text>
-					</BlurBox>
+				<BlurBox position={{ top: 20, right: 20 }}>
+					<Text
+						className="font-bold"
+						style={{
+							color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+						}}
+					>
+						Série : {lastDaysCompleted} {lastDaysCompleted > 1 ? "jours" : "jour"}
+					</Text>
+				</BlurBox>
 
-					<BlurBox position={{ bottom: 20, right: 20 }}>
-						<TrophiesMinView />
-					</BlurBox>
+				<BlurBox position={{ bottom: 20, right: 20 }}>
+					<TrophiesMinView />
+				</BlurBox>
 
-					{headerImage}
-				</Animated.View>
-				<View style={{ backgroundColor: theme.colors.background }}>{children}</View>
-			</Animated.ScrollView>
-		</View>
+				{headerImage}
+			</Animated.View>
+			<View
+				style={{
+					backgroundColor: theme.colors.background,
+
+					paddingBottom: tabBarHeight + 30,
+				}}
+			>
+				{children}
+			</View>
+		</Animated.ScrollView>
 	);
 }
