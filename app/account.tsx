@@ -16,6 +16,7 @@ import notifications from "../hooks/useNotifications";
 import LogoutButton from "../components/Account/LogoutButton";
 import UserInfos from "../components/Account/UserInfos";
 import LoginView from "../components/Account/LoginView";
+import LoaderScreen from "@components/Shared/LoaderScreen";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -74,11 +75,7 @@ export default function Account() {
 		}
 	};
 
-	const handleError = (error: any) => {
-		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
-	};
-
-	loading && <Text>Loading...</Text>;
+	loading && <LoaderScreen text="Chargement des données..." />;
 
 	return (
 		<>
@@ -93,7 +90,6 @@ export default function Account() {
 			<ThemeProvider value={theme}>
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					className="h-[100vh]"
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					{isSignedIn ? (

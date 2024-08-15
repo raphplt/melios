@@ -5,75 +5,74 @@ import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
 import Agora from "../../components/Svg/Aroga";
 import { ThemeContext } from "@context/ThemeContext";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { LinearGradient } from "expo-linear-gradient";
+import BlurGradientBackground from "./BlueGradiantBackground";
 
-const CustomTabBar = ({ state, descriptors, navigation }) => {
+interface CustomTabBarProps extends BottomTabBarProps {}
+
+const CustomTabBar: React.FC<CustomTabBarProps> = ({
+	state,
+	descriptors,
+	navigation,
+}) => {
 	const { theme } = useContext(ThemeContext);
 
-	const IconComponent = React.memo(({ name, color }) => {
-		switch (name) {
-			case "index":
-				return <Home color={color} />;
-			case "progression":
-				return <Progress color={color} />;
-			case "recompenses":
-				return <Gift color={color} />;
-			case "agora":
-				return <Agora color={color} />;
-			default:
-				return null;
+	const IconComponent = React.memo(
+		({ name, color }: { name: string; color: string }) => {
+			switch (name) {
+				case "index":
+					return <Home color={color} />;
+				case "progression":
+					return <Progress color={color} />;
+				case "recompenses":
+					return <Gift color={color} />;
+				case "agora":
+					return <Agora color={color} />;
+				default:
+					return null;
+			}
 		}
-	});
+	);
 
 	return (
-		<View style={styles.tabBarContainer}>
-			{state.routes.map((route, index) => {
-				const isFocused = state.index === index;
-				const iconColor = isFocused ? "#FFFFFF" : "#FF6347";
-				const backgroundColor = isFocused ? "#FF6347" : "#FFFFFF";
+		<>
+			<View className="fixed bottom-0 w-full">
+				<BlurGradientBackground />
+				<View
+					style={{
+						backgroundColor: theme.colors.primary,
+					}}
+					className="w-[95%] mx-auto flex flex-row justify-between items-center rounded-[30px] py-3 px-4 mb-5"
+				>
+					{state.routes.map((route, index) => {
+						const isFocused = state.index === index;
+						const iconColor = isFocused ? theme.colors.primary : "gray";
+						const backgroundColor = isFocused
+							? theme.colors.blueSecondary
+							: theme.colors.background;
 
-				const onPress = () => {
-					if (!isFocused) {
-						navigation.navigate(route.name);
-					}
-				};
+						const onPress = () => {
+							if (!isFocused) {
+								navigation.navigate(route.name);
+							}
+						};
 
-				return (
-					<Pressable
-						key={index}
-						onPress={onPress}
-						style={[styles.tabItem, { backgroundColor }]}
-					>
-						<IconComponent name={route.name} color={iconColor} />
-					</Pressable>
-				);
-			})}
-		</View>
+						return (
+							<Pressable
+								key={index}
+								onPress={onPress}
+								className="flex flex-1 items-center rounded-3xl mx-2 h-10 justify-center"
+								style={[{ backgroundColor }]}
+							>
+								<IconComponent name={route.name} color={iconColor} />
+							</Pressable>
+						);
+					})}
+				</View>
+			</View>
+		</>
 	);
 };
-
-const styles = StyleSheet.create({
-	tabBarContainer: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		backgroundColor: "rgb(8, 32, 159)",
-		borderRadius: 30,
-		paddingVertical: 10,
-		paddingHorizontal: 20,
-		marginHorizontal: 20,
-		marginBottom: 0,
-		elevation: 2,
-		position: "absolute",
-		bottom: 20,
-	},
-	tabItem: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		borderRadius: 20,
-		marginHorizontal: 5,
-		height: 40,
-	},
-});
 
 export default CustomTabBar;

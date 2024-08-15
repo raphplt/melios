@@ -11,8 +11,7 @@ interface BlurGradientBackgroundProps {
 }
 
 const BlurGradientBackground: React.FC<BlurGradientBackgroundProps> = ({
-	intensity = 70,
-	tint = "dark",
+
 	gradientColors = ["rgba(8, 32, 159, 0.7)", "rgba(255,255,255,0)"],
 	style,
 }) => {

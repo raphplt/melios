@@ -2,7 +2,7 @@ import { Answer } from "./answer";
 import { UserHabit } from "./userHabit";
 
 export interface Member {
-	id: string;
+	uid: string;
 	nom: string;
 	motivation: Answer;
 	objectifs: Answer[];

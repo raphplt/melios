@@ -23,6 +23,7 @@ const DefaultTheme: Theme = {
 		blueSecondary: "#D9EEF6",
 		purplePrimary: "#955CD3",
 		purpleSecondary: "#EADFF2",
+		grayPrimary: "#B0B0B0",
 	},
 };
 
@@ -49,6 +50,7 @@ const DarkTheme: Theme = {
 		blueSecondary: "#D9EEF6",
 		purplePrimary: "#955CD3",
 		purpleSecondary: "#EADFF2",
+		grayPrimary: "#B0B0B0",
 	},
 };
 

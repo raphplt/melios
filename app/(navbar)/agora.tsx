@@ -6,6 +6,7 @@ import { Iconify } from "react-native-iconify";
 import { useData } from "../../context/DataContext";
 import Filters from "../../components/Agora/Filters";
 import CardClassement from "../../components/Agora/CardClassement";
+import LoaderScreen from "@components/Shared/LoaderScreen";
 
 interface Reward {
 	id: string;
@@ -54,14 +55,8 @@ export default function Agora() {
 			}
 		});
 
-	if (loading) {
-		return (
-			<View className="flex items-center justify-center h-full">
-				<ActivityIndicator size="large" color={theme.colors.primary} />
-				<Text>Chargement...</Text>
-			</View>
-		);
-	}
+	if (loading) return <LoaderScreen text="Chargement du classement..." />;
+
 	return (
 		<ScrollView
 			contentContainerStyle={{ flexGrow: 1 }}

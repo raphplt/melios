@@ -19,6 +19,7 @@ import { Habit } from "../types/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
+export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
 export const setMemberHabit = async (habit: Habit) => {
 	try {
@@ -211,8 +212,17 @@ export const setMemberHabitLog = async (
 	}
 };
 
-export const getMemberInfos = async (): Promise<Member | undefined> => {
+export const getMemberInfos = async (
+	forceRefresh = false
+): Promise<Member | undefined> => {
 	try {
+		if (!forceRefresh) {
+			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
+			if (storedData) {
+				return JSON.parse(storedData);
+			}
+		}
+
 		const authPromise = new Promise<string>((resolve, reject) => {
 			const unsubscribe = onAuthStateChanged(auth, (user) => {
 				if (user) {
@@ -235,7 +245,7 @@ export const getMemberInfos = async (): Promise<Member | undefined> => {
 		if (!querySnapshot.empty) {
 			const memberDoc = querySnapshot.docs[0];
 			const structureMember: Member = {
-				id: memberDoc.id,
+				uid: memberDoc.data().uid,
 				nom: memberDoc.data().nom,
 				motivation: memberDoc.data().motivation,
 				objectifs: memberDoc.data().objectifs,
@@ -243,6 +253,11 @@ export const getMemberInfos = async (): Promise<Member | undefined> => {
 				aspects: memberDoc.data().aspects,
 				habits: memberDoc.data().habits,
 			};
+
+			await AsyncStorage.setItem(
+				LOCAL_STORAGE_MEMBER_INFO_KEY,
+				JSON.stringify(structureMember)
+			);
 
 			return structureMember;
 		} else {
