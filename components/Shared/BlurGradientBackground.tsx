@@ -11,12 +11,11 @@ interface BlurGradientBackgroundProps {
 }
 
 const BlurGradientBackground: React.FC<BlurGradientBackgroundProps> = ({
-
 	gradientColors = ["rgba(8, 32, 159, 0.7)", "rgba(255,255,255,0)"],
 	style,
 }) => {
 	return (
-		<View style={[styles.container, style]}>
+		<View style={[styles.container, style]} className="">
 			<LinearGradient
 				colors={gradientColors}
 				start={{ x: 0.5, y: 1 }}

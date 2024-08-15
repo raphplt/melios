@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import Home from "../../components/Svg/Home";
 import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
 import Agora from "../../components/Svg/Aroga";
 import { ThemeContext } from "@context/ThemeContext";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { LinearGradient } from "expo-linear-gradient";
-import BlurGradientBackground from "./BlueGradiantBackground";
+import BlurGradientBackground from "./BlurGradientBackground";
 
 interface CustomTabBarProps extends BottomTabBarProps {}
 
@@ -37,7 +36,7 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
 
 	return (
 		<>
-			<View className="fixed bottom-0 w-full">
+			<View className="fixed bottom-0 w-full bg-transparent">
 				<BlurGradientBackground />
 				<View
 					style={{

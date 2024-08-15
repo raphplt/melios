@@ -1,6 +1,5 @@
 import React from "react";
-import { RefreshControl, StatusBar, Image, Button } from "react-native";
-import { DarkTheme } from "@react-navigation/native";
+import { RefreshControl, Image } from "react-native";
 
 // Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
@@ -34,13 +33,6 @@ export default function Index() {
 
 	return (
 		<>
-			<StatusBar
-				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
-				backgroundColor={
-					theme === DarkTheme ? theme.colors.background : theme.colors.background
-				}
-			/>
-
 			<ParallaxScrollView
 				habits={userHabits}
 				refreshControl={

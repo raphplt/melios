@@ -1,12 +1,10 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState, useMemo } from "react";
 import {
 	useNavigation,
 	ParamListBase,
 	NavigationProp,
 	useIsFocused,
 } from "@react-navigation/native";
-
-// Customs imports
 import { ThemeContext } from "@context/ThemeContext";
 import { Animated } from "react-native";
 import { UserContext } from "@context/UserContext";
@@ -36,23 +34,40 @@ const useIndex = () => {
 	} = useData();
 
 	// Refs
-	const isMounted = useRef(true);
 	const rotation = useRef(new Animated.Value(0)).current;
+	const abortController = useRef<AbortController | null>(null);
 
 	// States
 	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
-
 	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const [showMoreValidate, setShowMoreValidate] = useState(5);
 	const [showMoreNext, setShowMoreNext] = useState(5);
 	const [showMoreMissed, setShowMoreMissed] = useState(5);
 
-	// Effects
+	// Memoized values
+	const missedHabitsCount = useMemo(() => {
+		return uncompletedHabitsData.filter((habit: Habit) => habit.moment < hours)
+			.length;
+	}, [uncompletedHabitsData, hours]);
 
+	const rotate = useMemo(() => {
+		return rotation.interpolate({
+			inputRange: [0, 1],
+			outputRange: ["0deg", "360deg"],
+		});
+	}, [rotation]);
+
+	const imageSource = useMemo(() => {
+		return isDayTime
+			? require("@assets/images/illustrations/temple_day.jpg")
+			: require("@assets/images/illustrations/temple_night.jpg");
+	}, [isDayTime]);
+
+	// Effects
 	useEffect(() => {
 		if (isFocused) {
 			backgroundRefresh();
@@ -70,13 +85,12 @@ const useIndex = () => {
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
-
-		return () => {
-			isMounted.current = false;
-		};
 	}, [habits, isLoading, completedHabitsData, uncompletedHabitsData]);
 
 	useEffect(() => {
+		abortController.current = new AbortController();
+		const signal = abortController.current.signal;
+
 		(async () => {
 			const username = member && member.nom;
 			const time = new Date().getHours();
@@ -96,42 +110,64 @@ const useIndex = () => {
 					message = `Bonjour${username ? ", " + username : ""} !`;
 			}
 
-			setWelcomeMessage(message);
+			if (!signal.aborted) {
+				setWelcomeMessage(message);
+			}
 		})();
+
+		return () => {
+			abortController.current?.abort();
+		};
 	}, [member]);
 
 	// Functions
 
 	const backgroundRefresh = async () => {
+		console.log("backgroundRefresh");
+		abortController.current = new AbortController();
+		const signal = abortController.current.signal;
+
 		try {
 			const data = await getMemberHabits();
 			const memberInfos = await getMemberInfos();
-			setMember(memberInfos);
-			setUserHabits(data);
+			if (!signal.aborted) {
+				setMember(memberInfos);
+				setUserHabits(data);
+			}
 		} catch (error) {
-			handleError(error);
+			if (!signal.aborted) {
+				handleError(error);
+			}
 		}
 	};
 
 	const onRefresh = async () => {
 		setRefreshing(true);
+		abortController.current = new AbortController();
+		const signal = abortController.current.signal;
+
 		try {
 			setShowMissingHabits(false);
 			const data = await getMemberHabits();
 			const memberInfos = await getMemberInfos();
-			setMember(memberInfos);
-			setUserHabits(data);
-			setShowMoreValidate(5);
-			setShowMoreNext(5);
-			setShowMoreMissed(5);
+			if (!signal.aborted) {
+				setMember(memberInfos);
+				setUserHabits(data);
+				setShowMoreValidate(5);
+				setShowMoreNext(5);
+				setShowMoreMissed(5);
+			}
 		} catch (error) {
-			handleError(error);
+			if (!signal.aborted) {
+				handleError(error);
+			}
 		} finally {
-			setRefreshing(false);
+			if (!signal.aborted) {
+				setRefreshing(false);
+			}
 		}
 	};
 
-	// Function to handle the change of the habit status
 	const handleHabitStatusChange = (habit: Habit, done: boolean) => {
 		if (done) {
 			setCompletedHabitsData(
@@ -149,15 +185,6 @@ const useIndex = () => {
 			);
 		}
 	};
-
-	const rotate = rotation.interpolate({
-		inputRange: [0, 1],
-		outputRange: ["0deg", "360deg"],
-	});
-
-	const missedHabitsCount = uncompletedHabitsData.filter(
-		(habit: Habit) => habit.moment < hours
-	).length;
 
 	const updateShowMore = (
 		currentValue: number,
@@ -209,10 +236,6 @@ const useIndex = () => {
 	const resetShowMissed = () => {
 		toggleShowMore(showMoreMissed, setShowMoreMissed);
 	};
-
-	const imageSource = isDayTime
-		? require("@assets/images/illustrations/temple_day.jpg")
-		: require("@assets/images/illustrations/temple_night.jpg");
 
 	// Handlers
 
