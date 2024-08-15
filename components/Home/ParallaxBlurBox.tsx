@@ -15,7 +15,7 @@ interface BlurBoxProps {
 const BlurBox: React.FC<BlurBoxProps> = ({ position, children }) => {
 	return (
 		<View style={[styles.container, position]}>
-			<BlurView intensity={50} style={styles.blurView} />
+			<BlurView intensity={70} style={styles.blurView} />
 			{children}
 		</View>
 	);
