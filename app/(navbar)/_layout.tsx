@@ -9,6 +9,7 @@ import Points from "../../components/Shared/Points";
 
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
 const createHeaderStyle = () => ({
 	backgroundColor: "transparent",
@@ -26,7 +27,6 @@ const createTabOptions = (
 	title,
 	headerTitleStyle: headerTitleStyleOverride || {},
 	headerStyle: createHeaderStyle(),
-
 	headerLeft,
 	headerRight,
 });
@@ -34,7 +34,7 @@ const createTabOptions = (
 const TabLayout: React.FC = () => {
 	const { user, isLoading } = useSession();
 	const { theme } = useContext(ThemeContext);
-	const navigation: any = useNavigation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
 		if (!isLoading && !user) {

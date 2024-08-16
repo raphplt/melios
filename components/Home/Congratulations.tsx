@@ -1,16 +1,23 @@
 import { Entypo } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
+interface CongratulationsProps {
+	theme: {
+		colors: {
+			primary: string;
+			cardBackground: string;
+			text: string;
+		};
+	};
+	completedHabitsData: any[];
+	userHabits: any[];
+}
+
 export default function Congratulations({
 	theme,
 	completedHabitsData,
 	userHabits,
-}: {
-	//TODO: Define props type
-	theme: any;
-	completedHabitsData: any;
-	userHabits: any;
-}) {
+}: CongratulationsProps) {
 	return (
 		<View
 			style={{

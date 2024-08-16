@@ -55,6 +55,7 @@ export default function Agora() {
 			refreshControl={
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
+			showsVerticalScrollIndicator={false}
 		>
 			<ClassementView
 				sortedRewards={sortedRewards}

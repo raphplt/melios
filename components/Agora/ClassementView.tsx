@@ -41,12 +41,14 @@ export default function ClassementView({
 					paddingBottom: paddingBottom,
 				}}
 			>
-				{sortedRewards.map((reward: Reward) => (
+				{sortedRewards.map((reward: Reward, index: number) => (
 					<CardClassement
 						key={reward.id}
+						rank={index + 1}
 						reward={reward}
 						member={member}
 						theme={theme}
+						filter={filter}
 					/>
 				))}
 			</View>
