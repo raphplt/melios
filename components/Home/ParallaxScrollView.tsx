@@ -19,7 +19,7 @@ import { useData } from "@context/DataContext";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import useIndex from "@hooks/useIndex";
+import { useTabBarPadding } from "@hooks/useTabBar";
 
 const HEADER_HEIGHT = 250;
 
@@ -47,7 +47,7 @@ export default function ParallaxScrollView({
 	const [lastDaysCompleted, setLastDaysCompleted] = useState(0);
 	const { progression } = useData();
 
-	const tabBarHeight = useBottomTabBarHeight();
+	const paddingBottom = useTabBarPadding();
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -129,7 +129,7 @@ export default function ParallaxScrollView({
 						}}
 						className="text-xl mt-1 font-semibold text-center"
 					>
-						{progression.todayScoreValue}%
+						{progression.todayScore}%
 					</Text>
 				</BlurBox>
 
@@ -154,7 +154,7 @@ export default function ParallaxScrollView({
 				style={{
 					backgroundColor: theme.colors.background,
 
-					paddingBottom: tabBarHeight + 30,
+					paddingBottom: paddingBottom,
 				}}
 			>
 				{children}

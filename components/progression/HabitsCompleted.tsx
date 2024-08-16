@@ -4,6 +4,7 @@ import HeaderContainer from "./HeaderContainer";
 import { Iconify } from "react-native-iconify";
 import { UserHabit } from "../../types/userHabit";
 import CardHabitCompleted from "./CardHabitCompleted";
+import { useTabBarPadding } from "@hooks/useTabBar";
 
 export default function HabitsCompleted({
 	habits,
@@ -12,6 +13,7 @@ export default function HabitsCompleted({
 	theme,
 }: any) {
 	const [dateLength, setDateLength] = useState(1);
+	const paddingBottom = useTabBarPadding();
 
 	useEffect(() => {
 		if (activeButton === "Jour") {
@@ -30,7 +32,11 @@ export default function HabitsCompleted({
 
 	return (
 		<View
-			style={{ backgroundColor: theme.colors.background, alignItems: "center" }}
+			style={{
+				backgroundColor: theme.colors.background,
+				alignItems: "center",
+				paddingBottom: paddingBottom,
+			}}
 		>
 			<HeaderContainer>
 				<Iconify

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useId } from "react";
 import { View, StyleSheet } from "react-native";
 import { BlurView } from "expo-blur";
+import useIndex from "@hooks/useIndex";
 
 interface BlurBoxProps {
 	position: {
@@ -13,23 +14,23 @@ interface BlurBoxProps {
 }
 
 const BlurBox: React.FC<BlurBoxProps> = ({ position, children }) => {
+	const { isDayTime } = useIndex();
 	return (
-		<View style={[styles.container, position]}>
-			<BlurView intensity={70} style={styles.blurView} />
+		<View
+			style={[position]}
+			className="absolute z-30 px-3 py-2 rounded-lg overflow-hidden"
+		>
+			<BlurView
+				intensity={50}
+				style={styles.blurView}
+				tint={isDayTime ? "light" : "dark"}
+			/>
 			{children}
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	container: {
-		position: "absolute",
-		zIndex: 30,
-		paddingHorizontal: 12,
-		paddingVertical: 8,
-		borderRadius: 10,
-		overflow: "hidden",
-	},
 	blurView: {
 		...StyleSheet.absoluteFillObject,
 		borderRadius: 10,

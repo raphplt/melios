@@ -45,6 +45,18 @@ export const useProgression = () => {
 		}, [habits, date]);
 	};
 
+	// Same fonction without useMemo
+	const calculateTodayScore = (habits: UserHabit[], date: string): number => {
+		if (habits.length === 0) return 0;
+
+		const score = habits.reduce((acc, habit) => {
+			const lastLog = habit.logs?.slice(-1)[0];
+			return acc + (lastLog && lastLog.date === date && lastLog.done ? 1 : 0);
+		}, 0);
+
+		return Math.floor((score / habits.length) * 100);
+	};
+
 	const useHabitCompletion = (
 		habits: UserHabit[],
 		activeButton: string
@@ -102,7 +114,9 @@ export const useProgression = () => {
 	};
 
 	const updateTodayScore = () => {
-		setTodayScore(useTodayScore(habits, useDate()));
+		console.log("updateTodayScore");
+		const score = calculateTodayScore(habits, moment().format("YYYY-MM-DD"));
+		setTodayScore(score);
 	};
 
 	const date = useDate();

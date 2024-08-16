@@ -40,9 +40,9 @@ export default function CardCheckHabit({
 	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
 	let touchStartTimeout: NodeJS.Timeout;
-	// const { updateTodayScore } = useProgression();
 
 	const { addOdysseePoints } = usePoints();
+	const { updateTodayScore } = useProgression();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
@@ -88,12 +88,12 @@ export default function CardCheckHabit({
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
 		// popup.newPopup("Bravo !", "success");
-		// updateTodayScore();
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
+		updateTodayScore();
 	};
 
 	if (loading) return <CardPlaceHolder />;

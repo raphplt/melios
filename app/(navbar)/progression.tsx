@@ -6,6 +6,7 @@ import ProgressionGraph from "../../components/Progression/ProgressionGraph";
 import DailyStats from "../../components/Progression/DailyStats";
 import HabitsCompleted from "../../components/Progression/HabitsCompleted";
 import { useProgression } from "../../hooks/useProgression";
+import { useTabBarPadding } from "@hooks/useTabBar";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
@@ -22,7 +23,9 @@ const Progression: React.FC = () => {
 
 	return (
 		<ScrollView
-			style={{ backgroundColor: theme.colors.background }}
+			style={{
+				backgroundColor: theme.colors.background,
+			}}
 			showsVerticalScrollIndicator={false}
 			refreshControl={
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
