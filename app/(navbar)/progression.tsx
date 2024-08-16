@@ -15,8 +15,8 @@ const Progression: React.FC = () => {
 		onRefresh,
 		activeButton,
 		setActiveButton,
-		scoreHabits,
-		habitLastDaysCompleted,
+		todayScoreValue,
+		habitCompletionValue,
 		comparedToYesterday,
 	} = useProgression();
 
@@ -35,13 +35,13 @@ const Progression: React.FC = () => {
 				theme={theme}
 			/>
 			<ProgressionGraph
-				habitLastDaysCompleted={habitLastDaysCompleted}
+				habitLastDaysCompleted={habitCompletionValue}
 				activeButton={activeButton}
 				theme={theme}
 			/>
 			{activeButton === "Jour" && (
 				<DailyStats
-					scoreHabits={scoreHabits}
+					scoreHabits={todayScoreValue}
 					comparedToYesterday={comparedToYesterday}
 					theme={theme}
 				/>
@@ -49,7 +49,7 @@ const Progression: React.FC = () => {
 			<ScrollView className="flex flex-col mt-2 mb-4">
 				<HabitsCompleted
 					habits={habits}
-					habitLastDaysCompleted={habitLastDaysCompleted}
+					habitLastDaysCompleted={habitCompletionValue}
 					activeButton={activeButton}
 					theme={theme}
 				/>

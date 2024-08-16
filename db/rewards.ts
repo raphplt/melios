@@ -8,9 +8,16 @@ import {
 } from "firebase/firestore";
 import { auth, db } from ".";
 
-export const getRewards = async () => {
+export const getRewards = async (
+	options: {
+		signal?: AbortSignal;
+		forceRefresh?: boolean;
+	} = {}
+) => {
 	try {
 		const uid: any = auth.currentUser?.uid || null;
+
+		if (options.signal?.aborted) throw new Error("Get rewards request aborted.");
 
 		const rewardsCollectionRef = collection(db, "rewards");
 

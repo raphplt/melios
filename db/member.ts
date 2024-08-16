@@ -74,9 +74,14 @@ export const setMemberHabit = async (habit: Habit) => {
 	}
 };
 
-export const getMemberHabits = async (forceRefresh = false) => {
+export const getMemberHabits = async (
+	options: {
+		signal?: AbortSignal;
+		forceRefresh?: boolean;
+	} = {}
+) => {
 	try {
-		if (!forceRefresh) {
+		if (!options.forceRefresh) {
 			const storedData = await AsyncStorage.getItem(
 				LOCAL_STORAGE_MEMBER_HABITS_KEY
 			);
@@ -97,6 +102,10 @@ export const getMemberHabits = async (forceRefresh = false) => {
 		});
 
 		const uid = await authPromise;
+
+		if (options.signal?.aborted) {
+			throw new Error("Get member habits request was aborted");
+		}
 
 		const membersCollectionRef = collection(db, "members");
 
@@ -213,10 +222,14 @@ export const setMemberHabitLog = async (
 };
 
 export const getMemberInfos = async (
-	forceRefresh = false
+	options: {
+		signal?: AbortSignal;
+		forceRefresh?: boolean;
+	} = {}
 ): Promise<Member | undefined> => {
 	try {
-		if (!forceRefresh) {
+		if (!options.forceRefresh) {
+			console.log(`[${new Date().toISOString()}] LocalStorage getMemberInfos`);
 			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
 			if (storedData) {
 				return JSON.parse(storedData);
@@ -236,11 +249,19 @@ export const getMemberInfos = async (
 
 		const uid = await authPromise;
 
+		if (options.signal?.aborted) {
+			throw new Error("Get member infos request was aborted");
+		}
+
 		const membersCollectionRef = collection(db, "members");
 
 		const querySnapshot = await getDocs(
 			query(membersCollectionRef, where("uid", "==", uid))
 		);
+
+		if (options.signal?.aborted) {
+			throw new Error("Request was aborted");
+		}
 
 		if (!querySnapshot.empty) {
 			const memberDoc = querySnapshot.docs[0];

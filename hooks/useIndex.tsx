@@ -152,8 +152,8 @@ const useIndex = () => {
 	}, [member]);
 
 	// Functions
+	
 	const backgroundRefresh = useCallback(async () => {
-		console.log("backgroundRefresh");
 		if (abortController.current) {
 			abortController.current.abort();
 		}

@@ -4,11 +4,23 @@ import { fetchCollectionData } from "./fetch";
 
 const LOCAL_STORAGE_TROPHIES_LIST_KEY = "trophiesList";
 
-export const getAllTrophies = async (forceRefresh = false) => {
+export const getAllTrophies = async (
+	options: {
+		signal?: AbortSignal;
+		forceRefresh?: boolean;
+	} = {}
+) => {
+	if (!options.forceRefresh) {
+		const storedData = localStorage.getItem(LOCAL_STORAGE_TROPHIES_LIST_KEY);
+		if (storedData) {
+			return JSON.parse(storedData);
+		}
+	}
+
 	return fetchCollectionData(
 		"trophiesList",
 		LOCAL_STORAGE_TROPHIES_LIST_KEY,
-		forceRefresh
+		options.forceRefresh || false
 	);
 };
 

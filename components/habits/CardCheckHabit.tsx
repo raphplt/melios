@@ -4,7 +4,11 @@ import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ParamListBase,
+	useNavigation,
+} from "@react-navigation/native";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
@@ -21,6 +25,7 @@ import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
 import { useData } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
+import { useProgression } from "@hooks/useProgression";
 
 export default function CardCheckHabit({
 	habit = [],
@@ -35,9 +40,10 @@ export default function CardCheckHabit({
 	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
 	let touchStartTimeout: NodeJS.Timeout;
+	// const { updateTodayScore } = useProgression();
 
 	const { addOdysseePoints } = usePoints();
-	const navigation: any = useNavigation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
 	const { popup } = useData();
@@ -82,6 +88,7 @@ export default function CardCheckHabit({
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
 		// popup.newPopup("Bravo !", "success");
+		// updateTodayScore();
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);

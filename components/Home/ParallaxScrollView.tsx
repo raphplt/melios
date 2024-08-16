@@ -19,6 +19,7 @@ import { useData } from "@context/DataContext";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import useIndex from "@hooks/useIndex";
 
 const HEADER_HEIGHT = 250;
 
@@ -126,9 +127,9 @@ export default function ParallaxScrollView({
 						style={{
 							color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
 						}}
-						className="text-xl mt-1 font-semibold"
+						className="text-xl mt-1 font-semibold text-center"
 					>
-						{progression.scoreHabits}%
+						{progression.todayScoreValue}%
 					</Text>
 				</BlurBox>
 
