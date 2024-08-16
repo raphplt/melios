@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext";
-import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SessionProvider, useSession } from "../context/UserContext";
-import { DataContext, DataProvider, useData } from "../context/DataContext";
+import { DataProvider, useData } from "../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import NotificationBox from "@components/Shared/NotificationBox";
-import usePopup from "@hooks/usePopup";
+import { HabitsProvider } from "@context/HabitsContext";
+import { DarkTheme, DefaultTheme } from "../constants/Theme";
+import { SessionProvider, useSession } from "@context/UserContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -147,7 +147,9 @@ export default function RootLayout() {
 	return (
 		<SessionProvider>
 			<DataProvider>
-				<MainNavigator />
+				<HabitsProvider>
+					<MainNavigator />
+				</HabitsProvider>
 			</DataProvider>
 		</SessionProvider>
 	);

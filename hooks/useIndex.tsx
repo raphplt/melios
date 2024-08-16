@@ -253,7 +253,7 @@ const useIndex = () => {
 	const handlePressIn = useCallback(() => {
 		Animated.timing(rotation, {
 			toValue: 1,
-			duration: 300,
+			duration: 200,
 			useNativeDriver: true,
 		}).start();
 	}, [rotation]);

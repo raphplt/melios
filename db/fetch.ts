@@ -1,6 +1,8 @@
 import { collection, getDocs } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from ".";
+import { Category } from "../types/category";
+import { Habit } from "../types/habit";
 
 const LOCAL_STORAGE_HABITS_KEY = "habits";
 const LOCAL_STORAGE_CATEGORIES_KEY = "categories";
@@ -58,7 +60,7 @@ export const getHabitsWithCategories = async (forceRefresh = false) => {
 		]);
 
 		// Associer les catégories aux habitudes
-		const categoriesMap = categories.reduce((acc: any, category: any) => {
+		const categoriesMap = categories.reduce((acc: any, category: Category) => {
 			acc[category.id] = category;
 			return acc;
 		}, {});

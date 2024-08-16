@@ -41,3 +41,10 @@ export const difficulties: Difficulty[] = [
 	{ 4: "#E76F51" },
 	{ 5: "#E63946" },
 ];
+
+export function normalizeAndLowerCase(str: string): string {
+	return str
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase();
+}

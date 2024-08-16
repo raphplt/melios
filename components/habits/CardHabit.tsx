@@ -3,13 +3,16 @@ import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import Checkbox from "expo-checkbox";
-import { setMemberHabit } from "../../db/member";
+import {
+	LOCAL_STORAGE_MEMBER_HABITS_KEY,
+	setMemberHabit,
+} from "../../db/member";
 import { getMemberHabit } from "../../db/member";
-import { lightenColor } from "../../utils/colors";
-import { useData } from "../../context/DataContext";
 import { Habit } from "../../types/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LOCAL_STORAGE_MEMBER_HABITS_KEY } from "../../db/member";
+import { Iconify } from "react-native-iconify";
+import { lightenColor } from "@utils/colors";
+import { useData } from "@context/DataContext";
 
 export default function CardHabit({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);
@@ -53,7 +56,7 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 		})();
 	}, []);
 
-	const lightenedColor = lightenColor(habit.category.color, 0.1);
+	const lightenedColor = lightenColor(habit.category.color, 0.09);
 
 	return (
 		<TouchableOpacity onPress={setHabit}>
@@ -61,28 +64,37 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 				<View>
 					<Checkbox
 						value={toggleCheckBox}
-						// disabled
 						onValueChange={setHabit}
 						color={habit.category.color || theme.colors.primary}
 					/>
 				</View>
 				<View
-					className="flex items-center flex-row bg-gray-200 py-2 rounded-lg basis-4/5"
+					className="flex items-center justify-between flex-row bg-gray-200 py-2 rounded-xl basis-5/6"
 					style={{
 						backgroundColor: lightenedColor,
 						borderColor: habit.category.color || theme.colors.text,
 						borderWidth: 1,
 					}}
 				>
-					<Text className="font-semibold" style={{ marginLeft: 15 }}>
-						{habit.moment}h
-					</Text>
 					<Text
-						style={{ color: theme.colors.text }}
-						className="ml-2 text-[15px] line-clamp-2 w-3/4"
+						style={{ color: habit.category.color }}
+						className="text-[14px] w-3/5 ml-3 font-semibold"
 					>
 						{habit.name}
 					</Text>
+					<View className="flex items-center justify-between flex-row mr-3">
+						<Iconify
+							icon="carbon:time"
+							color={habit.category.color || theme.colors.text}
+							size={20}
+						/>
+						<Text
+							className=" font-semibold w-6 text-end"
+							style={{ color: habit.category.color || theme.colors.text }}
+						>
+							{habit.moment}h
+						</Text>
+					</View>
 				</View>
 			</View>
 		</TouchableOpacity>
