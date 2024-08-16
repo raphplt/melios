@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { View, Pressable } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Pressable, Animated } from "react-native";
 import Home from "../../components/Svg/Home";
 import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
@@ -16,6 +16,7 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
 	navigation,
 }) => {
 	const { theme } = useContext(ThemeContext);
+	const [pressedIndex, setPressedIndex] = useState<number | null>(null);
 
 	const IconComponent = React.memo(
 		({ name, color }: { name: string; color: string }) => {
@@ -51,10 +52,12 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
 			>
 				{state.routes.map((route, index) => {
 					const isFocused = state.index === index;
-					const iconColor = isFocused ? theme.colors.primary : "gray";
-					const backgroundColor = isFocused
-						? theme.colors.blueSecondary
-						: theme.colors.background;
+					const isPressed = pressedIndex === index;
+					const iconColor = isFocused || isPressed ? theme.colors.primary : "gray";
+					const backgroundColor =
+						isFocused || isPressed
+							? theme.colors.blueSecondary
+							: theme.colors.background;
 
 					const onPress = () => {
 						if (!isFocused) {
@@ -67,7 +70,18 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
 							key={index}
 							onPress={onPress}
 							className="flex flex-1 items-center rounded-3xl mx-2 h-10 justify-center"
-							style={[{ backgroundColor }]}
+							style={[
+								{
+									backgroundColor,
+									transform: [{ scale: isPressed ? 0.95 : 1.0 }],
+								},
+							]}
+							onPressIn={() => {
+								setPressedIndex(index);
+							}}
+							onPressOut={() => {
+								setPressedIndex(null);
+							}}
 						>
 							<IconComponent name={route.name} color={iconColor} />
 						</Pressable>
