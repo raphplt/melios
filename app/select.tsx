@@ -1,4 +1,3 @@
-// Select.tsx
 import React, { useContext, useState, useEffect, useRef } from "react";
 import {
 	View,
@@ -32,6 +31,7 @@ export default function Select() {
 	const [selectedCategory, setSelectedCategory] = useState(null);
 	const { habits } = useData();
 	const [loaderFilter, setLoaderFilter] = useState(false);
+	const [isPageLoaded, setIsPageLoaded] = useState(false); // New state for page load
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -41,7 +41,6 @@ export default function Select() {
 
 	useEffect(() => {
 		if (!loading) {
-			setLoaderFilter(true);
 			const initialDisplayedCounts = habitsData.reduce(
 				(acc: any, habit: Habit) => {
 					const category = habit.category?.category || "Autres";
@@ -51,7 +50,7 @@ export default function Select() {
 				{}
 			);
 			setDisplayedHabitsCount(initialDisplayedCounts);
-			setLoaderFilter(false);
+			setIsPageLoaded(true); // Set page loaded to true once data is loaded
 		}
 	}, [loading, habitsData]);
 
@@ -84,20 +83,13 @@ export default function Select() {
 	}));
 
 	const handleNavigation = () => {
-		Animated.spring(translateY, {
-			toValue: -1000,
-			useNativeDriver: true,
-		}).start(() => {
-			navigation.navigate("(navbar)");
-		});
+		navigation.navigate("(navbar)");
 	};
 
-	if (loading || loaderFilter)
+	if (!isPageLoaded || loading || loaderFilter)
 		return <LoaderScreen text="Chargement des habitudes..." />;
 
 	const renderHabit = ({ item }: { item: Habit }) => <CardHabit habit={item} />;
-
-	console.log("loading", loading);
 
 	const renderCategory = ({ item }: any) => (
 		<View key={item.category} className="mt-3">

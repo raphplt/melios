@@ -79,6 +79,8 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 					<Text
 						style={{ color: habit.category.color }}
 						className="text-[14px] w-3/5 ml-3 font-semibold"
+						numberOfLines={1}
+						ellipsizeMode="tail"
 					>
 						{habit.name}
 					</Text>
@@ -89,7 +91,7 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 							size={20}
 						/>
 						<Text
-							className=" font-semibold w-6 text-end"
+							className=" font-semibold w-6 text-end ml-1"
 							style={{ color: habit.category.color || theme.colors.text }}
 						>
 							{habit.moment}h

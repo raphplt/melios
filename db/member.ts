@@ -229,7 +229,7 @@ export const getMemberInfos = async (
 ): Promise<Member | undefined> => {
 	try {
 		if (!options.forceRefresh) {
-			console.log(`[${new Date().toISOString()}] LocalStorage getMemberInfos`);
+			// console.log(`[${new Date().toISOString()}] LocalStorage getMemberInfos`);
 			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
 			if (storedData) {
 				return JSON.parse(storedData);

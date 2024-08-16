@@ -16,8 +16,17 @@ export default function Congratulations({
 			style={{
 				borderColor: theme.colors.primary,
 				borderWidth: 2,
+				backgroundColor: theme.colors.cardBackground,
+				shadowColor: theme.colors.text,
+				shadowOffset: {
+					width: 0,
+					height: 2,
+				},
+				shadowOpacity: 0.25,
+				shadowRadius: 3.84,
+				elevation: 5,
 			}}
-			className="rounded-lg flex-col flex items-center justify-center mx-auto w-[95%] py-2 px-4"
+			className="rounded-lg flex-col flex items-center justify-center mx-auto w-11/12 py-2 px-4 my-2 "
 		>
 			<View className="flex flex-row items-center justify-center w-10/12 mx-auto">
 				<View className="mx-2">

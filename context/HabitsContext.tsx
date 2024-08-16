@@ -18,7 +18,6 @@ export const HabitsProvider = ({ children }: any) => {
 		try {
 			const data = await getHabitsWithCategories();
 			if (!signal.aborted) {
-				console.log("HabitsProvider - data fetched");
 				setHabitsData(data);
 				setLoading(false);
 			}
