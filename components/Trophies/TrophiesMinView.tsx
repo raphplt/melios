@@ -15,15 +15,11 @@ export default function TrophiesMinView() {
 			onPress={() => navigation.navigate("trophies")}
 			className="flex flex-row items-center justify-center"
 		>
-			<Iconify
-				icon="mdi:trophy"
-				color={isDayTime ? theme.colors.text : theme.colors.textSecondary}
-				size={20}
-			/>
+			<Iconify icon="mdi:trophy" color={theme.colors.text} size={20} />
 			<Text
 				className="font-bold ml-1"
 				style={{
-					color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+					color: theme.colors.text,
 				}}
 			>
 				Voir mes trophées

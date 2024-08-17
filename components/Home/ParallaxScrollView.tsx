@@ -125,7 +125,7 @@ export default function ParallaxScrollView({
 					/>
 					<Text
 						style={{
-							color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+							color: theme.colors.text,
 						}}
 						className="text-xl mt-1 font-semibold text-center"
 					>
@@ -137,7 +137,7 @@ export default function ParallaxScrollView({
 					<Text
 						className="font-bold"
 						style={{
-							color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+							color: theme.colors.text,
 						}}
 					>
 						Série : {lastDaysCompleted} {lastDaysCompleted > 1 ? "jours" : "jour"}

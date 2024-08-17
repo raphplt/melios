@@ -10,6 +10,7 @@ export default function SearchBar({
 	setSearch: (text: string) => void;
 	theme: any;
 }) {
+
 	return (
 		<View
 			className="flex flex-row items-center rounded-3xl w-3/4 px-2 py-1 mx-1"
@@ -25,10 +26,13 @@ export default function SearchBar({
 				style={{ color: theme.colors.primary, marginRight: 10 }}
 			/>
 			<TextInput
-				style={{ color: theme.colors.text }}
+				style={{
+					color: theme.colors.text,
+				}}
 				onChangeText={(text) => setSearch(text)}
 				value={search}
 				placeholder="Rechercher une habitude"
+				placeholderTextColor={theme.colors.text}
 			/>
 			{search.length > 0 && (
 				<Pressable onPress={() => setSearch("")}>

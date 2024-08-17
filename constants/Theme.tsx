@@ -35,7 +35,7 @@ const DarkTheme: Theme = {
 		card: "#222222",
 		text: "rgb(229, 229, 231)",
 		textSecondary: "rgb(39, 39, 41)",
-		border: "rgb(39, 39, 41)",
+		border: "rgb(213, 213, 221)",
 		notification: "rgb(255, 69, 58)",
 		backgroundSecondary: "#424447",
 		backgroundTertiary: "rgb(128, 183, 255)",

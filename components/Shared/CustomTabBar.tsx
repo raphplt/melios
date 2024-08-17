@@ -48,7 +48,7 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
 				style={{
 					backgroundColor: theme.colors.primary,
 				}}
-				className="w-[95%] mx-auto flex flex-row justify-between items-center rounded-[30px] py-3 px-4 mb-5"
+				className="w-[95%] mx-auto flex flex-row justify-between items-center rounded-[30px] py-3 px-4 mb-5 mt-4"
 			>
 				{state.routes.map((route, index) => {
 					const isFocused = state.index === index;
