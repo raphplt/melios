@@ -10,7 +10,10 @@ export default function NumberSelected({ number }: { number: number }) {
 			style={{ backgroundColor: theme.colors.primary }}
 			className="px-2 rounded-3xl flex flex-row items-center py-1 mx-1"
 		>
-			<Text style={{ color: theme.colors.textSecondary }} className="w-fit">
+			<Text
+				style={{ color: theme.colors.textSecondary }}
+				className="w-fit font-bold"
+			>
 				{number} / 20
 			</Text>
 		</View>
