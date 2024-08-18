@@ -10,7 +10,6 @@ import WelcomeRow from "@components/Home/WelcomeRow";
 import ListHabitsHome from "@components/Home/ListHabitsHome";
 import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
-import { useProgression } from "@hooks/useProgression";
 
 export default function Index() {
 	const {

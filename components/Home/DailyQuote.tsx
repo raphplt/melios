@@ -23,7 +23,7 @@ export default function DailyQuote() {
 
 	return (
 		<View
-			className="w-11/12 mx-auto flex flex-col items-center justify-center rounded-xl mb-5"
+			className="w-11/12 mx-auto flex flex-col items-center justify-center rounded-xl mt-3 mb-8"
 			style={{
 				backgroundColor: theme.colors.blueSecondary,
 			}}
