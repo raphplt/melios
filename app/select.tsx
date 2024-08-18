@@ -3,19 +3,15 @@ import {
 	View,
 	Text,
 	Pressable,
-	ActivityIndicator,
 	Animated,
 	FlatList,
 	ScrollView,
 } from "react-native";
 import { useNavigation } from "expo-router";
-import { ThemeContext } from "../context/ThemeContext";
-import { useHabits } from "../context/HabitsContext"; // Import the context
-import CardHabit from "../components/Habits/CardHabit";
+
 import { AntDesign } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
-import NumberSelected from "../components/Select/NumberSelected";
 import { Habit } from "../types/habit";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonViewMore from "@components/Home/ButtonViewMore";
@@ -23,6 +19,10 @@ import SearchBar from "@components/Select/SearchBar";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import { useData } from "@context/DataContext";
 import { normalizeAndLowerCase } from "@utils/habitsUtils";
+import { useHabits } from "@context/HabitsContext";
+import { ThemeContext } from "@context/ThemeContext";
+import CardHabit from "@components/Habits/CardHabit";
+import NumberSelected from "@components/Select/NumberSelected";
 
 export default function Select() {
 	const { habitsData, loading } = useHabits();
@@ -31,7 +31,7 @@ export default function Select() {
 	const [selectedCategory, setSelectedCategory] = useState(null);
 	const { habits } = useData();
 	const [loaderFilter, setLoaderFilter] = useState(false);
-	const [isPageLoaded, setIsPageLoaded] = useState(false); // New state for page load
+	const [isPageLoaded, setIsPageLoaded] = useState(false);
 
 	const { theme } = useContext(ThemeContext);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -50,7 +50,7 @@ export default function Select() {
 				{}
 			);
 			setDisplayedHabitsCount(initialDisplayedCounts);
-			setIsPageLoaded(true); // Set page loaded to true once data is loaded
+			setIsPageLoaded(true);
 		}
 	}, [loading, habitsData]);
 

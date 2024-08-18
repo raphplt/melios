@@ -1,19 +1,30 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
-import { View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { View, Dimensions } from "react-native";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 
 export default function CardPlaceHolder() {
-	const { theme } = useContext(ThemeContext);
+	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
+	const screenWidth = Math.round(Dimensions.get("screen").width);
+
 	return (
-		<View className="w-11/12 flex flex-row items-center justify-center mx-auto my-2">
-			<View
-				className="w-8 h-8 rounded-xl"
-				style={{ backgroundColor: theme.colors.cardBackground }}
-			></View>
-			<View
-				className="w-[89%] h-10 mx-auto rounded-xl ml-2"
-				style={{ backgroundColor: theme.colors.cardBackground }}
-			></View>
+		<View className="w-11/12 flex flex-row items-center mx-auto justify-center my-[6px]">
+			<ShimmerPlaceholder
+				width={30}
+				height={30}
+				style={{
+					borderRadius: 10,
+				}}
+			/>
+
+			<ShimmerPlaceholder
+				width={screenWidth * 0.8}
+				height={40}
+				style={{
+					borderRadius: 10,
+					marginLeft: 10,
+				}}
+			/>
 		</View>
 	);
 }

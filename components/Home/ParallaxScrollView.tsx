@@ -18,7 +18,6 @@ import { UserHabit } from "../../types/userHabit";
 import { useData } from "@context/DataContext";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useTabBarPadding } from "@hooks/useTabBar";
 
 const HEADER_HEIGHT = 250;
@@ -125,7 +124,7 @@ export default function ParallaxScrollView({
 					/>
 					<Text
 						style={{
-							color: "white",
+							color: isDayTime ? "black" : "white",
 						}}
 						className="text-xl mt-1 font-semibold text-center"
 					>
@@ -137,7 +136,7 @@ export default function ParallaxScrollView({
 					<Text
 						className="font-bold"
 						style={{
-							color: "white",
+							color: isDayTime ? "black" : "white",
 						}}
 					>
 						Série : {lastDaysCompleted} {lastDaysCompleted > 1 ? "jours" : "jour"}

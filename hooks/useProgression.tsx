@@ -114,7 +114,6 @@ export const useProgression = () => {
 	};
 
 	const updateTodayScore = () => {
-		console.log("updateTodayScore");
 		const score = calculateTodayScore(habits, moment().format("YYYY-MM-DD"));
 		setTodayScore(score);
 	};

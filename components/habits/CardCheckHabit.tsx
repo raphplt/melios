@@ -23,7 +23,7 @@ import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
-import { useData } from "@context/DataContext";
+import { DataContext, useData } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
 import { useProgression } from "@hooks/useProgression";
 
@@ -35,7 +35,6 @@ export default function CardCheckHabit({
 }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
-	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
 	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
@@ -46,7 +45,7 @@ export default function CardCheckHabit({
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
-	const { popup } = useData();
+	const { date } = useContext(DataContext);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
@@ -65,17 +64,9 @@ export default function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		const interval = setInterval(() => {
-			setDate(moment().format("YYYY-MM-DD"));
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, []);
-
-	useEffect(() => {
-		opacity.value = withTiming(1, { duration: 500 });
+		opacity.value = withTiming(1, { duration: 300 });
 		return () => {
-			opacity.value = withTiming(0, { duration: 500 });
+			opacity.value = withTiming(0, { duration: 300 });
 		};
 	}, []);
 

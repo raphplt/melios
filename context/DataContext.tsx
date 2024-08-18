@@ -114,6 +114,7 @@ export const DataProvider = ({ children }: any) => {
 	return (
 		<DataContext.Provider
 			value={{
+				date,
 				isLoading,
 				points,
 				setPoints,
@@ -133,7 +134,6 @@ export const DataProvider = ({ children }: any) => {
 				progression,
 				trophies,
 				setTrophies,
-	
 			}}
 		>
 			{children}
