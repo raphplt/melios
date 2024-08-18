@@ -13,9 +13,9 @@ export default function SearchBar({
 
 	return (
 		<View
-			className="flex flex-row items-center justify-between rounded-3xl w-3/4 px-2 py-1 mx-1"
+			className="flex flex-row items-center justify-between rounded-3xl w-3/4 px-2 py-2 mx-1"
 			style={{
-				backgroundColor: theme.colors.cardBackground,
+				backgroundColor: theme.colors.background,
 				borderColor: theme.colors.primary,
 				borderWidth: 1,
 			}}
@@ -33,7 +33,6 @@ export default function SearchBar({
 					onChangeText={(text) => setSearch(text)}
 					value={search}
 					placeholder="Rechercher une habitude"
-					placeholderTextColor={theme.colors.text}
 				/>
 			</View>
 			{search.length > 0 && (

@@ -23,6 +23,7 @@ import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
 import CardHabit from "@components/Habits/CardHabit";
 import NumberSelected from "@components/Select/NumberSelected";
+import CategoryHeader from "@components/Select/CategoryHeader";
 
 export default function Select() {
 	const { habitsData, loading } = useHabits();
@@ -92,46 +93,13 @@ export default function Select() {
 	const renderHabit = ({ item }: { item: Habit }) => <CardHabit habit={item} />;
 
 	const renderCategory = ({ item }: any) => (
-		<View key={item.category} className="mt-3">
-			<Pressable
-				className="w-11/12 mx-auto flex flex-row items-center justify-between py-1 px-2 rounded-3xl mb-2 mt-4 drop-shadow-lg"
-				style={{
-					backgroundColor: theme.colors.cardBackground,
-					borderColor: item.color,
-					borderWidth: 1,
-				}}
-				onPress={() =>
-					setDisplayedHabitsCount((prevState: any) => ({
-						...prevState,
-						[item.category]: prevState[item.category] > 0 ? 0 : 5,
-					}))
-				}
-			>
-				<View
-					className="flex flex-row items-center"
-					style={{ backgroundColor: theme.colors.cardBackground }}
-				>
-					<FontAwesome6
-						name={item.icon}
-						size={20}
-						color={item.color}
-						style={{ marginRight: 5, marginLeft: 5 }}
-					/>
-					<Text
-						className="text-lg font-semibold px-1 italic"
-						style={{ color: item.color }}
-					>
-						{item.category}
-					</Text>
-				</View>
-				<View>
-					{displayedHabitsCount[item.category] === 5 ? (
-						<AntDesign name="caretup" size={24} color={item.color} />
-					) : (
-						<AntDesign name="caretdown" size={24} color={item.color} />
-					)}
-				</View>
-			</Pressable>
+		<View key={item.category} className="mt-2">
+			<CategoryHeader
+				item={item}
+				displayedHabitsCount={displayedHabitsCount}
+				setDisplayedHabitsCount={setDisplayedHabitsCount}
+				theme={theme}
+			/>
 			<FlatList
 				data={item.habits.slice(0, displayedHabitsCount[item.category])}
 				renderItem={renderHabit}
