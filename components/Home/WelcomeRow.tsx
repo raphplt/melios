@@ -18,7 +18,7 @@ export default function WelcomeRow() {
 			className="flex justify-between flex-row items-center mt-4 w-11/12 mx-auto"
 		>
 			<Text style={{ color: theme.colors.text }} className="text-xl font-bold">
-				{welcomeMessage}
+				{welcomeMessage || "Bienvenue"}
 			</Text>
 			<Animated.View style={{ transform: [{ rotate }] }}>
 				<Pressable
@@ -27,7 +27,7 @@ export default function WelcomeRow() {
 					onPress={() => {
 						navigation.navigate("select");
 					}}
-					className="rounded-full p-2"
+					className="rounded-full p-2 w-10 h-10"
 					style={{
 						backgroundColor: theme.colors.primary,
 					}}

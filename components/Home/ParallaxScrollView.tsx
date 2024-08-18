@@ -19,6 +19,7 @@ import { useData } from "@context/DataContext";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useTabBarPadding } from "@hooks/useTabBar";
+import { useProgression } from "@hooks/useProgression";
 
 const HEADER_HEIGHT = 250;
 
@@ -44,7 +45,7 @@ export default function ParallaxScrollView({
 	const { theme } = useContext(ThemeContext);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [lastDaysCompleted, setLastDaysCompleted] = useState(0);
-	const { progression } = useData();
+	const { todayScore } = useProgression();
 
 	const paddingBottom = useTabBarPadding();
 
@@ -128,7 +129,7 @@ export default function ParallaxScrollView({
 						}}
 						className="text-xl mt-1 font-semibold text-center"
 					>
-						{progression.todayScore}%
+						{todayScore}%
 					</Text>
 				</BlurBox>
 

@@ -2,12 +2,11 @@ import { useState, useEffect, useMemo, useRef, useContext } from "react";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 import { UserHabit } from "../types/userHabit";
-import { useHabits } from "./useHabits";
-import { DataContext } from "@context/DataContext";
+import useIndex from "./useIndex";
 
 export const useProgression = () => {
-	const { habits } = useHabits();
 	const isFocused = useIsFocused();
+	const { userHabits } = useIndex();
 	const [activeButton, setActiveButton] = useState<string>("Jour");
 	const abortController = useRef<AbortController | null>(null);
 	const [todayScore, setTodayScore] = useState<number>(0);
@@ -114,14 +113,14 @@ export const useProgression = () => {
 	};
 
 	const updateTodayScore = () => {
-		const score = calculateTodayScore(habits, moment().format("YYYY-MM-DD"));
+		const score = calculateTodayScore(userHabits, moment().format("YYYY-MM-DD"));
 		setTodayScore(score);
 	};
 
 	const date = useDate();
-	const todayScoreValue = useTodayScore(habits, date);
-	const habitCompletionValue = useHabitCompletion(habits, activeButton);
-	const comparedToYesterdayValue = useComparedToYesterday(habits, date);
+	const todayScoreValue = useTodayScore(userHabits, date);
+	const habitCompletionValue = useHabitCompletion(userHabits, activeButton);
+	const comparedToYesterdayValue = useComparedToYesterday(userHabits, date);
 
 	const onRefresh = () => {
 		setRefreshing(true);
@@ -146,7 +145,7 @@ export const useProgression = () => {
 		};
 	}, [
 		isFocused,
-		habits,
+		userHabits,
 		activeButton,
 		todayScoreValue,
 		habitCompletionValue,
@@ -154,7 +153,7 @@ export const useProgression = () => {
 	]);
 
 	return {
-		habits,
+		userHabits,
 		activeButton,
 		setActiveButton,
 		useDate,

@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import moment from "moment";
 import { getRewards } from "../db/rewards";
 import { useSession } from "./UserContext";
-import { getMemberHabits, getMemberInfos } from "../db/member";
 import permissions from "../hooks/usePermissions";
 import { processHabits } from "../utils/habitsUtils";
 import { extractPoints } from "../utils/pointsUtils";
@@ -16,6 +15,7 @@ import usePopup from "@hooks/usePopup";
 import { useProgression } from "@hooks/useProgression";
 import { Trophy } from "../types/trophy";
 import { getAllTrophies } from "@db/trophiesList";
+import { getMemberHabits, getMemberInfos } from "@db/member";
 
 export const DataContext = createContext<any>({});
 
@@ -35,7 +35,6 @@ export const DataProvider = ({ children }: any) => {
 	const [points, setPoints] = useState<Points>({ rewards: 0, odyssee: 0 });
 	const [member, setMember] = useState<Member>();
 	const [trophies, setTrophies] = useState<Trophy[]>([]);
-	const progression = useProgression();
 	const popup = usePopup();
 
 	const { AskNotification } = permissions();
@@ -106,10 +105,10 @@ export const DataProvider = ({ children }: any) => {
 			fetchData();
 
 			return () => {
-				abortController.abort(); // Annule les requêtes si le composant se démonte ou change rapidement
+				abortController.abort();
 			};
 		}
-	}, [isSessionLoading, user, date]);
+	}, [isSessionLoading, user]);
 
 	return (
 		<DataContext.Provider
@@ -131,7 +130,6 @@ export const DataProvider = ({ children }: any) => {
 				member,
 				setMember,
 				popup,
-				progression,
 				trophies,
 				setTrophies,
 			}}

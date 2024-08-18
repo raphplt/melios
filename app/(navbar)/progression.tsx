@@ -6,12 +6,10 @@ import ProgressionGraph from "../../components/Progression/ProgressionGraph";
 import DailyStats from "../../components/Progression/DailyStats";
 import HabitsCompleted from "../../components/Progression/HabitsCompleted";
 import { useProgression } from "../../hooks/useProgression";
-import { useTabBarPadding } from "@hooks/useTabBar";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
 	const {
-		habits,
 		refreshing,
 		onRefresh,
 		activeButton,
@@ -51,7 +49,6 @@ const Progression: React.FC = () => {
 			)}
 			<ScrollView className="flex flex-col mt-2 mb-4">
 				<HabitsCompleted
-					habits={habits}
 					habitLastDaysCompleted={habitCompletionValue}
 					activeButton={activeButton}
 					theme={theme}

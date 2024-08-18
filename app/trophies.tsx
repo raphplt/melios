@@ -7,7 +7,7 @@ export default function Trophies() {
 	const { theme } = useContext(ThemeContext);
 
 	return (
-		<View>
+		<>
 			<View
 				className="w-fit mx-auto p-2 rounded-xl my-1 px-5"
 				style={{
@@ -24,6 +24,6 @@ export default function Trophies() {
 				</Text>
 			</View>
 			<TrophyRoom />
-		</View>
+		</>
 	);
 }

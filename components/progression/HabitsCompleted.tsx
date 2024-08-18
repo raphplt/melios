@@ -5,15 +5,16 @@ import { Iconify } from "react-native-iconify";
 import { UserHabit } from "../../types/userHabit";
 import CardHabitCompleted from "./CardHabitCompleted";
 import { useTabBarPadding } from "@hooks/useTabBar";
+import useIndex from "@hooks/useIndex";
 
 export default function HabitsCompleted({
-	habits,
 	habitLastDaysCompleted,
 	activeButton,
 	theme,
 }: any) {
 	const [dateLength, setDateLength] = useState(1);
 	const paddingBottom = useTabBarPadding();
+	const { userHabits } = useIndex();
 
 	useEffect(() => {
 		if (activeButton === "Jour") {
@@ -52,7 +53,7 @@ export default function HabitsCompleted({
 				</Text>
 			</HeaderContainer>
 
-			{habits
+			{userHabits
 				.sort((a: UserHabit, b: UserHabit) => {
 					const aCompletion = habitLastDaysCompleted[a.name] || 0;
 					const bCompletion = habitLastDaysCompleted[b.name] || 0;

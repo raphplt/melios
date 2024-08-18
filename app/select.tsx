@@ -10,8 +10,6 @@ import {
 import { useNavigation } from "expo-router";
 
 import { AntDesign } from "@expo/vector-icons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-
 import { Habit } from "../types/habit";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonViewMore from "@components/Home/ButtonViewMore";
@@ -31,7 +29,6 @@ export default function Select() {
 	const [displayedHabitsCount, setDisplayedHabitsCount]: any = useState({});
 	const [selectedCategory, setSelectedCategory] = useState(null);
 	const { habits } = useData();
-	const [loaderFilter, setLoaderFilter] = useState(false);
 	const [isPageLoaded, setIsPageLoaded] = useState(false);
 
 	const { theme } = useContext(ThemeContext);
@@ -87,7 +84,7 @@ export default function Select() {
 		navigation.navigate("(navbar)");
 	};
 
-	if (!isPageLoaded || loading || loaderFilter)
+	if (!isPageLoaded || loading)
 		return <LoaderScreen text="Chargement des habitudes..." />;
 
 	const renderHabit = ({ item }: { item: Habit }) => <CardHabit habit={item} />;

@@ -46,6 +46,7 @@ const useIndex = () => {
 
 	// States
 	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
+	const [streak, setStreak] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
@@ -74,7 +75,6 @@ const useIndex = () => {
 			: require("@assets/images/illustrations/temple_night.jpg");
 	}, [isDayTime]);
 
-	// Centralized function for fetching member data
 	const fetchMemberData = useCallback(
 		async (signal: AbortSignal) => {
 			try {
@@ -83,8 +83,8 @@ const useIndex = () => {
 					getMemberInfos(),
 				]);
 				if (!signal.aborted) {
-					setMember(memberInfos);
 					setUserHabits(data);
+					setMember(memberInfos);
 				}
 			} catch (error) {
 				if (!signal.aborted) {
@@ -152,7 +152,7 @@ const useIndex = () => {
 	}, [member]);
 
 	// Functions
-	
+
 	const backgroundRefresh = useCallback(async () => {
 		if (abortController.current) {
 			abortController.current.abort();
