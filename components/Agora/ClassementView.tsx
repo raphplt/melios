@@ -27,7 +27,10 @@ export default function ClassementView({
 				<Iconify icon="mdi:trophy" size={20} color={theme.colors.text} />
 				<Text
 					className="text-xl text-center font-semibold"
-					style={{ color: theme.colors.text }}
+					style={{
+						color: theme.colors.text,
+						fontFamily: "Baskerville",
+					}}
 				>
 					Classement général
 				</Text>

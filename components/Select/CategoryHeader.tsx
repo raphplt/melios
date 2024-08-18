@@ -14,7 +14,7 @@ export default function CategoryHeader({
 }) {
 	return (
 		<Pressable
-			className="w-11/12 mx-auto flex flex-row items-center justify-between py-1 px-2 rounded-2xl mb-2 mt-4"
+			className="w-11/12 mx-auto flex flex-row items-center justify-between py-2 px-2 rounded-2xl mb-2 mt-4"
 			style={{
 				backgroundColor: theme.colors.background,
 				borderColor: item.color,
@@ -35,8 +35,11 @@ export default function CategoryHeader({
 					style={{ marginRight: 5, marginLeft: 5 }}
 				/>
 				<Text
-					className="text-lg font-semibold px-1 italic"
-					style={{ color: item.color }}
+					className="text-[16px] px-1"
+					style={{
+						color: item.color,
+						fontFamily: "BaskervilleBold",
+					}}
 				>
 					{item.category}
 				</Text>

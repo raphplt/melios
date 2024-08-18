@@ -34,7 +34,7 @@ export default function TopRow({
 					>{`${number}`}</Text>
 				</View>
 				<Text
-					className="font-semibold italic ml-1 text-[16px]"
+					className="font-semibold ml-1 text-[16px]"
 					style={{
 						color: theme.colors.text,
 					}}

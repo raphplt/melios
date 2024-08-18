@@ -28,6 +28,7 @@ export default function HabitDetailHeader({
 			<Text
 				style={{
 					color: habitParsed.category?.color,
+					fontFamily: "Baskerville",
 				}}
 				className="text-lg text-center font-semibold"
 			>

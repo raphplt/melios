@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, Button } from "react-native";
 
 // Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
@@ -9,6 +9,7 @@ import LoaderScreen from "@components/Shared/LoaderScreen";
 import WelcomeRow from "@components/Home/WelcomeRow";
 import ListHabitsHome from "@components/Home/ListHabitsHome";
 import useIndex from "@hooks/useIndex";
+import DailyQuote from "@components/Home/DailyQuote";
 
 export default function Index() {
 	const {
@@ -50,6 +51,7 @@ export default function Index() {
 			<WelcomeRow />
 			<ListHabitsHome />
 			<ActivitiesContainer />
+			<DailyQuote />
 		</ParallaxScrollView>
 	);
 }

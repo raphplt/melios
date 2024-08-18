@@ -19,7 +19,8 @@ SplashScreen.preventAutoHideAsync();
 
 function MainNavigator() {
 	const [loaded, error] = useFonts({
-		SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+		Baskerville: require("../assets/fonts/LibreBaskerville-Regular.ttf"),
+		BaskervilleBold: require("../assets/fonts/LibreBaskerville-Bold.ttf"),
 		...FontAwesome.font,
 	});
 

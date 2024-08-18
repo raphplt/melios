@@ -41,6 +41,12 @@
 					"icon": "./assets/images/icon.png",
 					"color": "#000000"
 				}
+			],
+			[
+				"expo-font",
+				{
+					"fonts": ["assets/fontsLibreBaskerville-Regular.ttf"]
+				}
 			]
 		],
 		"experiments": {

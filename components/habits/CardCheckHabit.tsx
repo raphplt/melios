@@ -102,7 +102,7 @@ export default function CardCheckHabit({
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
-					color={theme.colors.primary}
+					color={theme.colors.border}
 					disabled={disabled || toggleCheckBox}
 				/>
 			</Pressable>

@@ -17,7 +17,14 @@ export default function WelcomeRow() {
 			style={{ backgroundColor: "transparent" }}
 			className="flex justify-between flex-row items-center mt-4 w-11/12 mx-auto"
 		>
-			<Text style={{ color: theme.colors.text }} className="text-xl font-bold">
+			<Text
+				style={{
+					color: theme.colors.text,
+
+					fontFamily: "BaskervilleBold",
+				}}
+				className="text-lg"
+			>
 				{welcomeMessage || "Bienvenue"}
 			</Text>
 			<Animated.View style={{ transform: [{ rotate }] }}>
