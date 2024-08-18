@@ -13,7 +13,7 @@ export default function TrophyBox({ trophy }: { trophy: Trophy }) {
 			style={{
 				backgroundColor: theme.colors.backgroundSecondary,
 			}}
-			className="flex flex-col items-center justify-between p-2 rounded-2xl m-1 py-2 px-2 w-20 h-20"
+			className="flex flex-col items-center justify-between p-2 rounded-2xl m-2 py-2 px-2 w-20 h-20"
 		>
 			<Iconify size={24} color={theme.colors.text} icon="mdi:trophy" />
 

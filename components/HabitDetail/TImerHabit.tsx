@@ -43,7 +43,7 @@ export default function TimerHabit({
 									? theme.colors.bluePrimary
 									: theme.colors.primary,
 								borderColor: theme.colors.primary,
-								borderWidth: 2,
+								borderWidth: 1,
 							}}
 							onTouchStart={() => setTouched(true)}
 							onTouchEndCapture={() => setTouched(false)}

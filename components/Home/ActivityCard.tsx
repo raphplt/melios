@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { useContext, useEffect, useState, useRef } from "react";
+import { View, Text, Pressable, Animated } from "react-native";
 import tinycolor from "tinycolor2";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
@@ -7,12 +7,15 @@ import { UserHabit } from "../../types/userHabit";
 import { ThemeContext } from "@context/ThemeContext";
 import { getHabitById } from "@db/habits";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { lightenColor } from "@utils/colors";
 
 export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [habitInfos, setHabitInfos] = useState<any>({});
-
+	const [isTouched, setIsTouched] = useState(false);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const scaleAnim = useRef(new Animated.Value(1)).current;
 
 	useEffect(() => {
 		async function getHabitInfos() {
@@ -22,16 +25,37 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 		getHabitInfos();
 	}, []);
 
-	const lighterColor = tinycolor(habitInfos.category?.color)
-		.lighten(30)
-		.toString();
+	const lighterColor = lightenColor(
+		habitInfos.category?.color || theme.colors.text,
+		0.4
+	);
+
+	const handleTouchStart = () => {
+		setIsTouched(true);
+		Animated.spring(scaleAnim, {
+			toValue: 0.95,
+			useNativeDriver: true,
+		}).start();
+	};
+
+	const handleTouchEnd = () => {
+		setIsTouched(false);
+		Animated.spring(scaleAnim, {
+			toValue: 1,
+			useNativeDriver: true,
+		}).start();
+	};
 
 	return lighterColor ? (
-		<View
+		<Animated.View
 			className="h-64 w-40 mx-2 rounded-2xl"
 			style={{
 				backgroundColor: theme.colors.background,
+				transform: [{ scale: scaleAnim }],
 			}}
+			onTouchStart={handleTouchStart}
+			onTouchEnd={handleTouchEnd}
+			onTouchCancel={handleTouchEnd}
 		>
 			<Pressable
 				onPress={() => {
@@ -63,7 +87,10 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 						{habitInfos.category?.category}
 					</Text>
 				</View>
-				<View className="flex flex-col justify-around items-center mt-2 h-2/3">
+				<LinearGradient
+					colors={[theme.colors.background, lighterColor]}
+					className="flex flex-col justify-around items-center mt-2 h-[192px] rounded-b-xl"
+				>
 					<Text
 						className="text-md w-10/12 mx-auto font-semibold text-gray-900 text-center"
 						style={{
@@ -78,8 +105,8 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 						color={habitInfos.category?.color || theme.colors.text}
 						style={{ marginRight: 10 }}
 					/>
-				</View>
+				</LinearGradient>
 			</Pressable>
-		</View>
+		</Animated.View>
 	) : null;
 }

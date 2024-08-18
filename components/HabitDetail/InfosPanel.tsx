@@ -39,7 +39,7 @@ export default function InfosPanel({
 			style={{
 				backgroundColor: lightenedColor || theme.colors.cardBackground,
 				borderColor: habitInfos.category?.color,
-				borderWidth: 2,
+				borderWidth: 1,
 			}}
 		>
 			<Text
@@ -47,7 +47,7 @@ export default function InfosPanel({
 					color: theme.colors.text,
 					borderBottomColor: habitInfos.category?.color || theme.colors.border,
 				}}
-				className="text-[15px] text-center font-semibold pb-2 w-11/12 mx-auto border-b-2"
+				className="text-[15px] text-center font-semibold pb-2 w-11/12 mx-auto border-b"
 			>
 				{habitInfos.description}
 			</Text>

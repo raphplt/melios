@@ -16,7 +16,7 @@ export default function HabitDetailHeader({
 			style={{
 				backgroundColor: lightenedColor,
 				borderColor: habitParsed.category?.color,
-				borderWidth: 2,
+				borderWidth: 1,
 			}}
 		>
 			<FontAwesome6
