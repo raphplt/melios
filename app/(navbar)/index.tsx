@@ -1,6 +1,5 @@
 import React from "react";
-import { RefreshControl, StatusBar, Image } from "react-native";
-import { DarkTheme } from "@react-navigation/native";
+import { RefreshControl, Image } from "react-native";
 
 // Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
@@ -13,7 +12,6 @@ import useIndex from "@hooks/useIndex";
 
 export default function Index() {
 	const {
-		theme,
 		navigation,
 		user,
 		userHabits,
@@ -33,36 +31,25 @@ export default function Index() {
 	}
 
 	return (
-		<>
-			<StatusBar
-				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
-				backgroundColor={
-					theme === DarkTheme ? theme.colors.background : theme.colors.background
-				}
-			/>
+		<ParallaxScrollView
+			habits={userHabits}
+			refreshControl={
+				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+			}
+			headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+			headerImage={
+				<Image
+					source={imageSource}
+					style={{ width: "100%", height: 250, resizeMode: "cover" }}
+				/>
+			}
+			isDayTime={isDayTime}
+		>
+			<Background />
 
-			<ParallaxScrollView
-				habits={userHabits}
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}
-				headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-				headerImage={
-					<Image
-						source={imageSource}
-						style={{ width: "100%", height: 250, resizeMode: "cover" }}
-					/>
-				}
-				isDayTime={isDayTime}
-			>
-				<Background />
-
-				<WelcomeRow />
-
-				<ListHabitsHome />
-
-				<ActivitiesContainer />
-			</ParallaxScrollView>
-		</>
+			<WelcomeRow />
+			<ListHabitsHome />
+			<ActivitiesContainer />
+		</ParallaxScrollView>
 	);
 }

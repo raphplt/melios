@@ -1,13 +1,14 @@
 import React, { useContext, useState } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { UserDatas } from "../../types/user";
+import { Member } from "../../types/member";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "../../context/ThemeContext";
+import { UserHabit } from "../../types/userHabit";
 
-export default function UserInfos({ data }: { data: UserDatas }) {
+export default function UserInfos({ member }: { member: Member }) {
 	const [showHabits, setShowHabits] = useState(false);
-	const { theme, toggleTheme } = useContext(ThemeContext);
+	const { theme } = useContext(ThemeContext);
 
 	const toggleHabits = () => {
 		setShowHabits(!showHabits);
@@ -43,7 +44,7 @@ export default function UserInfos({ data }: { data: UserDatas }) {
 						</Text>
 					</View>
 					<Text className="mb-2 mt-1" style={{ color: theme.colors.text }}>
-						{data.nom}
+						{member.nom}
 					</Text>
 				</View>
 				<View className="flex w-full mx-auto mb-2 flex-col">
@@ -58,7 +59,7 @@ export default function UserInfos({ data }: { data: UserDatas }) {
 						</Text>
 					</View>
 					<Text className="mb-2" style={{ color: theme.colors.text }}>
-						{data.motivation.answer}
+						{member.motivation.answer}
 					</Text>
 				</View>
 				<View className="flex w-full mx-auto mb-2 flex-col">
@@ -68,7 +69,7 @@ export default function UserInfos({ data }: { data: UserDatas }) {
 							Objectifs
 						</Text>
 					</View>
-					{data.objectifs.map((objectif, index) => (
+					{member.objectifs.map((objectif, index) => (
 						<Text
 							key={index.toString()}
 							className="mb-2"
@@ -86,7 +87,7 @@ export default function UserInfos({ data }: { data: UserDatas }) {
 						</Text>
 					</View>
 					<Text className="mb-2" style={{ color: theme.colors.text }}>
-						{data.temps.answer}
+						{member.temps.answer}
 					</Text>
 				</View>
 			</View>
@@ -101,7 +102,7 @@ export default function UserInfos({ data }: { data: UserDatas }) {
 				>
 					Aspects
 				</Text>
-				{data.aspects.map((aspect, index) => (
+				{member.aspects.map((aspect, index) => (
 					<Text
 						key={index.toString()}
 						className="mb-2"
@@ -133,7 +134,7 @@ export default function UserInfos({ data }: { data: UserDatas }) {
 					/>
 				</Pressable>
 				{showHabits &&
-					data.habits.map((habit) => (
+					member.habits.map((habit: UserHabit) => (
 						<View
 							key={habit.id}
 							className="mb-4 p-4 rounded-lg shadow"

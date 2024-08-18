@@ -1,8 +1,9 @@
 import { Difficulty } from "../types/difficultiesList";
+import { UserHabit } from "../types/userHabit";
 
-export const processHabits = (snapshotHabits: any, date: string) => {
+export const processHabits = (snapshotHabits: UserHabit[], date: string) => {
 	const uncompleted = snapshotHabits
-		.filter((habit: any) => {
+		.filter((habit: UserHabit) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
 
@@ -16,10 +17,10 @@ export const processHabits = (snapshotHabits: any, date: string) => {
 				}
 			}
 		})
-		.sort((a: any, b: any) => a.moment - b.moment);
+		.sort((a: UserHabit, b: UserHabit) => a.moment - b.moment);
 
 	const completed = snapshotHabits
-		.filter((habit: any) => {
+		.filter((habit: UserHabit) => {
 			if (habit.logs) {
 				const lastLog = habit.logs[habit.logs.length - 1];
 
@@ -28,7 +29,7 @@ export const processHabits = (snapshotHabits: any, date: string) => {
 				}
 			}
 		})
-		.sort((a: any, b: any) => a.moment - b.moment);
+		.sort((a: UserHabit, b: UserHabit) => a.moment - b.moment);
 
 	return { uncompleted, completed };
 };
@@ -40,3 +41,10 @@ export const difficulties: Difficulty[] = [
 	{ 4: "#E76F51" },
 	{ 5: "#E63946" },
 ];
+
+export function normalizeAndLowerCase(str: string): string {
+	return str
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.toLowerCase();
+}

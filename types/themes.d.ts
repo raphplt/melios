@@ -22,5 +22,6 @@ export type Theme = {
 		blueSecondary: string;
 		purplePrimary: string;
 		purpleSecondary: string;
+		grayPrimary: string;
 	};
 };

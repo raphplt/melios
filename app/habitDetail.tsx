@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Customs imports
 import { Habit } from "../types/habit";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import TimerHabit from "@components/HabitDetail/TImerHabit";
+import TimerHabit from "@components/HabitDetail/TimerHabit";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
 import { ThemeContext } from "@context/ThemeContext";
 import useTimer from "@hooks/useTimer";
@@ -74,9 +74,9 @@ export default function HabitDetail() {
 			}
 		} else if (nextAppState === "background") {
 			sendPushNotification(expoPushToken, {
-				title: `${habitParsed?.name} en pause`,
+				title: `${habitParsed ? habitParsed.name : "Habitude"} en pause`,
 				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
-			}); //TODO supprimer quand on revient sur l'app
+			}); //TODO supprimer la notification quand on revient sur l'app
 			if (isTimerActive) {
 				await AsyncStorage.setItem("timerSeconds", timerSeconds.toString());
 

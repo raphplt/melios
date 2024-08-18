@@ -1,12 +1,17 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+	useMemo,
+	useCallback,
+} from "react";
 import {
 	useNavigation,
 	ParamListBase,
 	NavigationProp,
 	useIsFocused,
 } from "@react-navigation/native";
-
-// Customs imports
 import { ThemeContext } from "@context/ThemeContext";
 import { Animated } from "react-native";
 import { UserContext } from "@context/UserContext";
@@ -14,6 +19,7 @@ import { useData } from "@context/DataContext";
 import { UserHabit } from "../types/userHabit";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
+import { Habit } from "../types/habit";
 
 const useIndex = () => {
 	// Contexts
@@ -35,27 +41,71 @@ const useIndex = () => {
 	} = useData();
 
 	// Refs
-	const isMounted = useRef(true);
 	const rotation = useRef(new Animated.Value(0)).current;
+	const abortController = useRef<AbortController | null>(null);
 
 	// States
 	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
-
-	const [welcomeMessage, setWelcomeMessage] = useState("");
+	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
 	const [showMoreValidate, setShowMoreValidate] = useState(5);
 	const [showMoreNext, setShowMoreNext] = useState(5);
+	const [showMoreMissed, setShowMoreMissed] = useState(5);
+
+	// Memoized values
+	const missedHabitsCount = useMemo(() => {
+		return uncompletedHabitsData.filter((habit: Habit) => habit.moment < hours)
+			.length;
+	}, [uncompletedHabitsData, hours]);
+
+	const rotate = useMemo(() => {
+		return rotation.interpolate({
+			inputRange: [0, 1],
+			outputRange: ["0deg", "360deg"],
+		});
+	}, [rotation]);
+
+	const imageSource = useMemo(() => {
+		return isDayTime
+			? require("@assets/images/illustrations/temple_day.jpg")
+			: require("@assets/images/illustrations/temple_night.jpg");
+	}, [isDayTime]);
+
+	// Centralized function for fetching member data
+	const fetchMemberData = useCallback(
+		async (signal: AbortSignal) => {
+			try {
+				const [data, memberInfos] = await Promise.all([
+					getMemberHabits(),
+					getMemberInfos(),
+				]);
+				if (!signal.aborted) {
+					setMember(memberInfos);
+					setUserHabits(data);
+				}
+			} catch (error) {
+				if (!signal.aborted) {
+					handleError(error);
+				}
+			}
+		},
+		[setMember, setUserHabits]
+	);
 
 	// Effects
-
 	useEffect(() => {
-		if (isFocused) {
-			backgroundRefresh();
+		if (!isFocused) return;
+
+		if (abortController.current) {
+			abortController.current.abort();
 		}
-	}, [isFocused]);
+
+		abortController.current = new AbortController();
+		fetchMemberData(abortController.current.signal);
+	}, [isFocused, fetchMemberData]);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -68,131 +118,153 @@ const useIndex = () => {
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
-
-		return () => {
-			isMounted.current = false;
-		};
 	}, [habits, isLoading, completedHabitsData, uncompletedHabitsData]);
 
 	useEffect(() => {
+		if (abortController.current) {
+			abortController.current.abort();
+		}
+
+		abortController.current = new AbortController();
+		const signal = abortController.current.signal;
+
 		(async () => {
-			const username = member && member.nom;
+			const username = member?.nom || "";
 			const time = new Date().getHours();
 			let message = "";
 
-			switch (true) {
-				case time < 12:
-					message = `Bonjour${username ? ", " + username : ""} !`;
-					break;
-				case time >= 12 && time < 18:
-					message = `Bon après-midi${username ? ", " + username : ""} !`;
-					break;
-				case time >= 18:
-					message = `Bonsoir${username ? ", " + username : ""} !`;
-					break;
-				default:
-					message = `Bonjour${username ? ", " + username : ""} !`;
+			if (time < 12) {
+				message = `Bonjour${username ? ", " + username : ""} !`;
+			} else if (time >= 12 && time < 18) {
+				message = `Bon après-midi${username ? ", " + username : ""} !`;
+			} else {
+				message = `Bonsoir${username ? ", " + username : ""} !`;
 			}
 
-			setWelcomeMessage(message);
+			if (!signal.aborted) {
+				setWelcomeMessage(message);
+			}
 		})();
+
+		return () => {
+			abortController.current?.abort();
+		};
 	}, [member]);
 
 	// Functions
-
-	const backgroundRefresh = async () => {
-		try {
-			const data = await getMemberHabits();
-			const memberInfos = await getMemberInfos();
-			setMember(memberInfos);
-			setUserHabits(data);
-		} catch (error) {
-			handleError(error);
+	
+	const backgroundRefresh = useCallback(async () => {
+		if (abortController.current) {
+			abortController.current.abort();
 		}
-	};
+		abortController.current = new AbortController();
+		fetchMemberData(abortController.current.signal);
+	}, [fetchMemberData]);
 
-	const onRefresh = async () => {
+	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		try {
-			setShowMissingHabits(false);
-			const data = await getMemberHabits();
-			const memberInfos = await getMemberInfos();
-			setMember(memberInfos);
-			setUserHabits(data);
-			setShowMoreValidate(5);
-			setShowMoreNext(5);
-		} catch (error) {
-			handleError(error);
-		} finally {
-			setRefreshing(false);
+		if (abortController.current) {
+			abortController.current.abort();
 		}
-	};
+		abortController.current = new AbortController();
+		await fetchMemberData(abortController.current.signal);
+		setRefreshing(false);
+	}, [fetchMemberData]);
 
-	//TODO type all
-	const handleHabitStatusChange = (habit: any, done: boolean) => {
-		if (done) {
-			setCompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
-			setUncompletedHabitsData((prevHabits: any) =>
-				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
-			);
-		} else {
-			setUncompletedHabitsData((prevHabits: any) => [...prevHabits, habit] as any);
-			setCompletedHabitsData((prevHabits: any) =>
-				prevHabits.filter((oldHabit: any) => oldHabit.id !== habit.id)
-			);
-		}
-	};
+	const handleHabitStatusChange = useCallback(
+		(habit: Habit, done: boolean) => {
+			if (done) {
+				setCompletedHabitsData((prevHabits: Habit[]) => [...prevHabits, habit]);
+				setUncompletedHabitsData((prevHabits: Habit[]) =>
+					prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
+				);
+			} else {
+				setUncompletedHabitsData((prevHabits: Habit[]) => [...prevHabits, habit]);
+				setCompletedHabitsData((prevHabits: Habit[]) =>
+					prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
+				);
+			}
+		},
+		[setCompletedHabitsData, setUncompletedHabitsData]
+	);
 
-	const rotate = rotation.interpolate({
-		inputRange: [0, 1],
-		outputRange: ["0deg", "360deg"],
-	});
+	const updateShowMore = useCallback(
+		(
+			currentValue: number,
+			listLength: number,
+			setState: React.Dispatch<React.SetStateAction<number>>
+		) => {
+			if (currentValue < listLength) {
+				setState((prev) => prev + 5);
+			} else {
+				setState(0);
+			}
+		},
+		[]
+	);
 
-	const missedHabitsCount = uncompletedHabitsData.filter(
-		(habit: any) => habit.moment < hours
-	).length;
+	const updateShowValidate = useCallback(() => {
+		updateShowMore(
+			showMoreValidate,
+			completedHabitsData.length,
+			setShowMoreValidate
+		);
+	}, [showMoreValidate, completedHabitsData.length, updateShowMore]);
 
-	const updateShowValidate = () => {
-		if (showMoreValidate < completedHabitsData.length) {
-			setShowMoreValidate((prev) => prev + 5);
-		} else {
-			setShowMoreValidate(3);
-		}
-	};
+	const updateShowNext = useCallback(() => {
+		const filteredUncompletedHabits = uncompletedHabitsData.filter(
+			(habit: Habit) => habit.moment >= hours
+		);
+		updateShowMore(
+			showMoreNext,
+			filteredUncompletedHabits.length,
+			setShowMoreNext
+		);
+	}, [uncompletedHabitsData, hours, showMoreNext, updateShowMore]);
 
-	const updateShowNext = () => {
-		if (showMoreNext < uncompletedHabitsData.length) {
-			setShowMoreNext((prev) => prev + 5);
-		} else {
-			setShowMoreNext(3);
-		}
-	};
+	const updateShowMissed = useCallback(() => {
+		updateShowMore(showMoreMissed, missedHabitsCount, setShowMoreMissed);
+	}, [showMoreMissed, missedHabitsCount, updateShowMore]);
 
-	const imageSource = isDayTime
-		? require("@assets/images/illustrations/temple_day.jpg")
-		: require("@assets/images/illustrations/temple_night.jpg");
+	const toggleShowMore = useCallback(
+		(currentValue: number, setValue: (value: number) => void) => {
+			setValue(currentValue > 0 ? 0 : 5);
+		},
+		[]
+	);
+
+	const resetShowValidate = useCallback(() => {
+		toggleShowMore(showMoreValidate, setShowMoreValidate);
+	}, [showMoreValidate, toggleShowMore]);
+
+	const resetShowNext = useCallback(() => {
+		toggleShowMore(showMoreNext, setShowMoreNext);
+	}, [showMoreNext, toggleShowMore]);
+
+	const resetShowMissed = useCallback(() => {
+		toggleShowMore(showMoreMissed, setShowMoreMissed);
+	}, [showMoreMissed, toggleShowMore]);
 
 	// Handlers
-
-	const handleError = (error: any) => {
+	const handleError = useCallback((error: any) => {
 		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
-	};
+	}, []);
 
-	const handlePressIn = () => {
+	const handlePressIn = useCallback(() => {
 		Animated.timing(rotation, {
 			toValue: 1,
-			duration: 300,
+			duration: 200,
 			useNativeDriver: true,
 		}).start();
-	};
+	}, [rotation]);
 
-	const handlePressOut = () => {
+	const handlePressOut = useCallback(() => {
 		Animated.timing(rotation, {
 			toValue: 0,
 			duration: 300,
 			useNativeDriver: true,
 		}).start();
-	};
+	}, [rotation]);
 
 	return {
 		theme,
@@ -205,6 +277,7 @@ const useIndex = () => {
 		showMissingHabits,
 		showMoreValidate,
 		showMoreNext,
+		showMoreMissed,
 		missedHabitsCount,
 		rotate,
 		imageSource,
@@ -219,10 +292,15 @@ const useIndex = () => {
 		setShowMissingHabits,
 		updateShowValidate,
 		updateShowNext,
+		updateShowMissed,
 		onRefresh,
-		handleHabitStatusChange,
+		backgroundRefresh,
 		handlePressIn,
 		handlePressOut,
+		handleHabitStatusChange,
+		resetShowValidate,
+		resetShowNext,
+		resetShowMissed,
 	};
 };
 

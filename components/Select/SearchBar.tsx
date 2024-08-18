@@ -10,26 +10,31 @@ export default function SearchBar({
 	setSearch: (text: string) => void;
 	theme: any;
 }) {
+
 	return (
 		<View
-			className="flex flex-row items-center rounded-3xl w-3/4 px-2 py-1 mx-1"
+			className="flex flex-row items-center justify-between rounded-3xl w-3/4 px-2 py-2 mx-1"
 			style={{
-				backgroundColor: theme.colors.cardBackground,
+				backgroundColor: theme.colors.background,
 				borderColor: theme.colors.primary,
 				borderWidth: 1,
 			}}
 		>
-			<Ionicons
-				name="search"
-				size={24}
-				style={{ color: theme.colors.primary, marginRight: 10 }}
-			/>
-			<TextInput
-				style={{ color: theme.colors.text }}
-				onChangeText={(text) => setSearch(text)}
-				value={search}
-				placeholder="Rechercher une habitude"
-			/>
+			<View className="flex flex-row items-center">
+				<Ionicons
+					name="search"
+					size={24}
+					style={{ color: theme.colors.primary, marginRight: 10 }}
+				/>
+				<TextInput
+					style={{
+						color: theme.colors.text,
+					}}
+					onChangeText={(text) => setSearch(text)}
+					value={search}
+					placeholder="Rechercher une habitude"
+				/>
+			</View>
 			{search.length > 0 && (
 				<Pressable onPress={() => setSearch("")}>
 					<Ionicons

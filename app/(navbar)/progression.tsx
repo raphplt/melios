@@ -6,6 +6,7 @@ import ProgressionGraph from "../../components/Progression/ProgressionGraph";
 import DailyStats from "../../components/Progression/DailyStats";
 import HabitsCompleted from "../../components/Progression/HabitsCompleted";
 import { useProgression } from "../../hooks/useProgression";
+import { useTabBarPadding } from "@hooks/useTabBar";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
@@ -15,14 +16,16 @@ const Progression: React.FC = () => {
 		onRefresh,
 		activeButton,
 		setActiveButton,
-		scoreHabits,
-		habitLastDaysCompleted,
+		todayScoreValue,
+		habitCompletionValue,
 		comparedToYesterday,
 	} = useProgression();
 
 	return (
 		<ScrollView
-			style={{ backgroundColor: theme.colors.background }}
+			style={{
+				backgroundColor: theme.colors.background,
+			}}
 			showsVerticalScrollIndicator={false}
 			refreshControl={
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -35,13 +38,13 @@ const Progression: React.FC = () => {
 				theme={theme}
 			/>
 			<ProgressionGraph
-				habitLastDaysCompleted={habitLastDaysCompleted}
+				habitLastDaysCompleted={habitCompletionValue}
 				activeButton={activeButton}
 				theme={theme}
 			/>
 			{activeButton === "Jour" && (
 				<DailyStats
-					scoreHabits={scoreHabits}
+					scoreHabits={todayScoreValue}
 					comparedToYesterday={comparedToYesterday}
 					theme={theme}
 				/>
@@ -49,7 +52,7 @@ const Progression: React.FC = () => {
 			<ScrollView className="flex flex-col mt-2 mb-4">
 				<HabitsCompleted
 					habits={habits}
-					habitLastDaysCompleted={habitLastDaysCompleted}
+					habitLastDaysCompleted={habitCompletionValue}
 					activeButton={activeButton}
 					theme={theme}
 				/>

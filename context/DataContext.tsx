@@ -8,23 +8,35 @@ import { processHabits } from "../utils/habitsUtils";
 import { extractPoints } from "../utils/pointsUtils";
 import { getNotificationToken } from "../utils/notificationsUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Habit } from "../types/habit";
+import { Points } from "../types/points";
+import { Member } from "../types/member";
+import { UserHabit } from "../types/userHabit";
+import usePopup from "@hooks/usePopup";
+import { useProgression } from "@hooks/useProgression";
+import { Trophy } from "../types/trophy";
+import { getAllTrophies } from "@db/trophiesList";
 
 export const DataContext = createContext<any>({});
 
 export const DataProvider = ({ children }: any) => {
 	const { isLoading: isSessionLoading, user } = useSession();
-	const [habits, setHabits]: any = useState();
-	const [uncompletedHabitsData, setUncompletedHabitsData]: any = useState([]);
-	const [completedHabitsData, setCompletedHabitsData]: any = useState([]);
-	const [isLoading, setIsLoading]: any = useState(true);
+	const [habits, setHabits] = useState<Habit[]>();
+	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
+		UserHabit[]
+	>([]);
+	const [completedHabitsData, setCompletedHabitsData] = useState<UserHabit[]>(
+		[]
+	);
+	const [isLoading, setIsLoading] = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
 	const [notificationToggle, setNotificationToggle] = useState<boolean>(false);
-	const [points, setPoints]: any = useState({
-		rewards: 0,
-		odyssee: 0,
-	});
-	const [member, setMember]: any = useState();
+	const [points, setPoints] = useState<Points>({ rewards: 0, odyssee: 0 });
+	const [member, setMember] = useState<Member>();
+	const [trophies, setTrophies] = useState<Trophy[]>([]);
+	const progression = useProgression();
+	const popup = usePopup();
 
 	const { AskNotification } = permissions();
 
@@ -37,8 +49,11 @@ export const DataProvider = ({ children }: any) => {
 	}, []);
 
 	useEffect(() => {
-		if (!isSessionLoading) {
-			(async () => {
+		if (!isSessionLoading && user) {
+			const abortController = new AbortController();
+
+			const fetchData = async () => {
+				setIsLoading(true);
 				try {
 					await getNotificationToken(
 						AskNotification,
@@ -49,37 +64,57 @@ export const DataProvider = ({ children }: any) => {
 					const notificationEnabled = await AsyncStorage.getItem(
 						"notificationEnabled"
 					);
-					if (notificationEnabled === "true") {
-						setNotificationToggle(true);
-					} else {
-						setNotificationToggle(false);
-					}
+					setNotificationToggle(notificationEnabled === "true");
 
-					const snapshotMember = await getMemberInfos();
+					const snapshotMember = await getMemberInfos({
+						signal: abortController.signal,
+						forceRefresh: true,
+					});
+					if (!snapshotMember) throw new Error("Member not found");
 					setMember(snapshotMember);
 
-					const snapshotRewards: any = await getRewards();
+					const snapshotRewards = await getRewards({
+						signal: abortController.signal,
+						forceRefresh: true,
+					});
 					setPoints(extractPoints(snapshotRewards));
 
-					const snapshotHabits = await getMemberHabits();
+					const snapshotHabits = await getMemberHabits({
+						signal: abortController.signal,
+						forceRefresh: true,
+					});
 					setHabits(snapshotHabits);
+
+					const snapshotTrophies = await getAllTrophies({
+						signal: abortController.signal,
+						forceRefresh: true,
+					});
+					setTrophies(snapshotTrophies);
 
 					const { uncompleted, completed } = processHabits(snapshotHabits, date);
 					setUncompletedHabitsData(uncompleted);
 					setCompletedHabitsData(completed);
-
-					setIsLoading(false);
-				} catch (error) {
-					console.log("Erreur lors de la récupération des récompenses : ", error);
+				} catch (error: any) {
+					if (error.name !== "AbortError") {
+						console.log("Erreur lors de la récupération des données : ", error);
+					}
+				} finally {
 					setIsLoading(false);
 				}
-			})();
+			};
+
+			fetchData();
+
+			return () => {
+				abortController.abort(); // Annule les requêtes si le composant se démonte ou change rapidement
+			};
 		}
-	}, [isSessionLoading, user]);
+	}, [isSessionLoading, user, date]);
 
 	return (
 		<DataContext.Provider
 			value={{
+				date,
 				isLoading,
 				points,
 				setPoints,
@@ -95,6 +130,10 @@ export const DataProvider = ({ children }: any) => {
 				setNotificationToggle,
 				member,
 				setMember,
+				popup,
+				progression,
+				trophies,
+				setTrophies,
 			}}
 		>
 			{children}
@@ -105,7 +144,7 @@ export const DataProvider = ({ children }: any) => {
 export function useData() {
 	const value = useContext(DataContext);
 	if (value === undefined) {
-		throw new Error("useSession must be used within a DataProvider");
+		throw new Error("useData must be used within a DataProvider");
 	}
 	return value;
 }

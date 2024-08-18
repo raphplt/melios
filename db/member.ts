@@ -13,9 +13,15 @@ import {
 import { db } from ".";
 import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
+import { Member } from "../types/member";
+import { UserHabit } from "../types/userHabit";
+import { Habit } from "../types/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const setMemberHabit = async (habit: any) => {
+export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
+export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
+
+export const setMemberHabit = async (habit: Habit) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -68,8 +74,22 @@ export const setMemberHabit = async (habit: any) => {
 	}
 };
 
-export const getMemberHabits = async () => {
+export const getMemberHabits = async (
+	options: {
+		signal?: AbortSignal;
+		forceRefresh?: boolean;
+	} = {}
+) => {
 	try {
+		if (!options.forceRefresh) {
+			const storedData = await AsyncStorage.getItem(
+				LOCAL_STORAGE_MEMBER_HABITS_KEY
+			);
+			if (storedData) {
+				return JSON.parse(storedData);
+			}
+		}
+
 		const authPromise = new Promise<string>((resolve, reject) => {
 			const unsubscribe = onAuthStateChanged(auth, (user) => {
 				if (user) {
@@ -83,6 +103,10 @@ export const getMemberHabits = async () => {
 
 		const uid = await authPromise;
 
+		if (options.signal?.aborted) {
+			throw new Error("Get member habits request was aborted");
+		}
+
 		const membersCollectionRef = collection(db, "members");
 
 		const querySnapshot = await getDocs(
@@ -95,6 +119,10 @@ export const getMemberHabits = async () => {
 
 			if (memberDocSnapshot.exists()) {
 				const habits = memberDocSnapshot.data().habits;
+				await AsyncStorage.setItem(
+					LOCAL_STORAGE_MEMBER_HABITS_KEY,
+					JSON.stringify(habits)
+				);
 				return habits;
 			} else {
 				return [];
@@ -112,7 +140,7 @@ export const getMemberHabits = async () => {
 	}
 };
 
-export const getMemberHabit = async (habitId: any) => {
+export const getMemberHabit = async (habitId: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -127,7 +155,7 @@ export const getMemberHabit = async (habitId: any) => {
 
 			const habits = memberDoc.data().habits;
 
-			const habit = habits.find((habit: any) => habit.id === habitId);
+			const habit = habits.find((habit: UserHabit) => habit.id === habitId);
 
 			return habit;
 		} else {
@@ -142,7 +170,11 @@ export const getMemberHabit = async (habitId: any) => {
 	}
 };
 
-export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
+export const setMemberHabitLog = async (
+	habitId: string,
+	date: any,
+	done: any
+) => {
 	try {
 		const uid = auth.currentUser?.uid;
 
@@ -167,10 +199,8 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 				);
 
 				if (existingLogIndex !== -1) {
-					// Mettre à jour le log existant
 					habit.logs[existingLogIndex].done = done;
 				} else {
-					// Ajouter un nouveau log
 					const newLog = { date, done };
 					habit.logs.push(newLog);
 				}
@@ -180,7 +210,6 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 				});
 			}
 		} else {
-			// Si le membre n'existe pas, renvoyer un tableau vide
 			return [];
 		}
 	} catch (error) {
@@ -192,46 +221,68 @@ export const setMemberHabitLog = async (habitId: any, date: any, done: any) => {
 	}
 };
 
-export const getMemberInfos = async () => {
+export const getMemberInfos = async (
+	options: {
+		signal?: AbortSignal;
+		forceRefresh?: boolean;
+	} = {}
+): Promise<Member | undefined> => {
 	try {
-		try {
-			const authPromise = new Promise<string>((resolve, reject) => {
-				const unsubscribe = onAuthStateChanged(auth, (user) => {
-					if (user) {
-						resolve(user.uid);
-					} else {
-						reject(new Error("User not authenticated"));
-					}
-					unsubscribe();
-				});
-			});
-
-			const uid = await authPromise;
-
-			const membersCollectionRef = collection(db, "members");
-
-			const querySnapshot = await getDocs(
-				query(membersCollectionRef, where("uid", "==", uid))
-			);
-
-			if (!querySnapshot.empty) {
-				const memberDoc = querySnapshot.docs[0];
-
-				const memberInfos = {
-					id: memberDoc.id,
-					...memberDoc.data(),
-				};
-
-				return memberInfos;
-			} else {
-				return [];
+		if (!options.forceRefresh) {
+			// console.log(`[${new Date().toISOString()}] LocalStorage getMemberInfos`);
+			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
+			if (storedData) {
+				return JSON.parse(storedData);
 			}
-		} catch (error) {
-			console.log(
-				"Erreur lors de la récupération du document dans la collection 'members':  ",
-				error
+		}
+
+		const authPromise = new Promise<string>((resolve, reject) => {
+			const unsubscribe = onAuthStateChanged(auth, (user) => {
+				if (user) {
+					resolve(user.uid);
+				} else {
+					reject(new Error("User not authenticated"));
+				}
+				unsubscribe();
+			});
+		});
+
+		const uid = await authPromise;
+
+		if (options.signal?.aborted) {
+			throw new Error("Get member infos request was aborted");
+		}
+
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", uid))
+		);
+
+		if (options.signal?.aborted) {
+			throw new Error("Request was aborted");
+		}
+
+		if (!querySnapshot.empty) {
+			const memberDoc = querySnapshot.docs[0];
+			const structureMember: Member = {
+				uid: memberDoc.data().uid,
+				nom: memberDoc.data().nom,
+				motivation: memberDoc.data().motivation,
+				objectifs: memberDoc.data().objectifs,
+				temps: memberDoc.data().temps,
+				aspects: memberDoc.data().aspects,
+				habits: memberDoc.data().habits,
+			};
+
+			await AsyncStorage.setItem(
+				LOCAL_STORAGE_MEMBER_INFO_KEY,
+				JSON.stringify(structureMember)
 			);
-			throw error;
+
+			return structureMember;
+		} else {
+			return undefined;
 		}
 	} catch (error) {
 		console.log(

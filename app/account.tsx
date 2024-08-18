@@ -16,6 +16,7 @@ import notifications from "../hooks/useNotifications";
 import LogoutButton from "../components/Account/LogoutButton";
 import UserInfos from "../components/Account/UserInfos";
 import LoginView from "../components/Account/LoginView";
+import LoaderScreen from "@components/Shared/LoaderScreen";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -74,11 +75,7 @@ export default function Account() {
 		}
 	};
 
-	const handleError = (error: any) => {
-		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
-	};
-
-	loading && <Text>Loading...</Text>;
+	loading && <LoaderScreen text="Chargement des données..." />;
 
 	return (
 		<>
@@ -93,7 +90,6 @@ export default function Account() {
 			<ThemeProvider value={theme}>
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					className="h-[100vh]"
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					{isSignedIn ? (
@@ -160,20 +156,20 @@ export default function Account() {
 							/>
 						</View>
 					</View>
-					{member && Object.keys(member).length > 0 && <UserInfos data={member} />}
+					{member && Object.keys(member).length > 0 && <UserInfos member={member} />}
 					<LogoutButton handleLogout={handleLogout} theme={theme} />
-				</ScrollView>
-				<View
-					className="w-full mx-auto"
-					style={{ backgroundColor: theme.colors.background }}
-				>
-					<Text
-						className=" text-center text-sm"
-						style={{ color: theme.colors.text }}
+					<View
+						className="w-full mx-auto"
+						style={{ backgroundColor: theme.colors.background }}
 					>
-						Melios v1.1.2 - © 2024 Melios. Tous droits réservés.
-					</Text>
-				</View>
+						<Text
+							className=" text-center text-sm"
+							style={{ color: theme.colors.text }}
+						>
+							Melios v1.1.2 - © 2024 Melios. Tous droits réservés.
+						</Text>
+					</View>
+				</ScrollView>
 			</ThemeProvider>
 		</>
 	);

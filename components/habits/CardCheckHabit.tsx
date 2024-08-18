@@ -1,26 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Pressable } from "react-native";
+import { View, Pressable, ActivityIndicator } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ParamListBase,
+	useNavigation,
+} from "@react-navigation/native";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
-import { ThemeContext } from "../../context/ThemeContext";
-import { useData } from "../../context/DataContext";
+
+// Customs imports
 import { getHabitById } from "@db/habits";
 import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
-
-interface Difficulty {
-	[key: number]: string;
-}
+import { ThemeContext } from "@context/ThemeContext";
+import { difficulties } from "@utils/habitsUtils";
+import { DataContext, useData } from "@context/DataContext";
+import CardPlaceHolder from "./CardPlaceHolder";
+import { useProgression } from "@hooks/useProgression";
 
 export default function CardCheckHabit({
 	habit = [],
@@ -30,21 +35,17 @@ export default function CardCheckHabit({
 }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
-	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [habitInfos, setHabitInfos] = useState<any>({});
-	const { points, setPoints } = useData();
-	const { addOdysseePoints } = usePoints();
-	const difficulties: Difficulty[] = [
-		{ 1: "#E9C46A" },
-		{ 2: "#F4A261" },
-		{ 3: "#F4A261" },
-		{ 4: "#E76F51" },
-		{ 5: "#E63946" },
-	];
+	const [loading, setLoading] = useState(true);
+	const [isTouched, setIsTouched] = useState(false);
+	let touchStartTimeout: NodeJS.Timeout;
 
-	const navigation: any = useNavigation();
+	const { addOdysseePoints } = usePoints();
+	const { updateTodayScore } = useProgression();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
+	const { date } = useContext(DataContext);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
@@ -57,22 +58,15 @@ export default function CardCheckHabit({
 		async function getHabitInfos() {
 			const result = await getHabitById(habit.id);
 			setHabitInfos(result);
+			setLoading(false);
 		}
 		getHabitInfos();
 	}, []);
 
 	useEffect(() => {
-		const interval = setInterval(() => {
-			setDate(moment().format("YYYY-MM-DD"));
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, []);
-
-	useEffect(() => {
-		opacity.value = withTiming(1, { duration: 500 });
+		opacity.value = withTiming(1, { duration: 300 });
 		return () => {
-			opacity.value = withTiming(0, { duration: 500 });
+			opacity.value = withTiming(0, { duration: 300 });
 		};
 	}, []);
 
@@ -84,17 +78,21 @@ export default function CardCheckHabit({
 
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
+		// popup.newPopup("Bravo !", "success");
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
+		updateTodayScore();
 	};
+
+	if (loading) return <CardPlaceHolder />;
 
 	return (
 		<Animated.View
 			style={[animatedStyles]}
-			className="w-[90%] mx-auto my-2 flex flex-row items-center justify-evenly"
+			className="w-[90%] mx-auto my-[6px] flex flex-row items-center justify-evenly"
 		>
 			<Pressable
 				onPress={setHabitDone}
@@ -118,11 +116,24 @@ export default function CardCheckHabit({
 				}}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-xl w-[99%]"
+					className="flex items-center flex-row justify-around py-2 rounded-xl w-full"
 					style={{
 						borderColor: theme.colors.border,
 						borderWidth: 1,
-						backgroundColor: theme.colors.background,
+						backgroundColor: isTouched
+							? theme.colors.cardBackground
+							: theme.colors.background,
+					}}
+					onTouchStart={() => {
+						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
+					}}
+					onTouchEnd={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
+					}}
+					onTouchCancel={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
 					}}
 				>
 					<View

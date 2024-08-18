@@ -2,7 +2,12 @@ import React from "react";
 import { Pressable } from "react-native";
 import Checkbox from "expo-checkbox";
 
-const HabitCheckbox = ({ toggleCheckBox, setHabitDone, theme, disabled }) => (
+const HabitCheckbox = ({
+	toggleCheckBox,
+	setHabitDone,
+	theme,
+	disabled,
+}: any) => (
 	<Pressable
 		onPress={setHabitDone}
 		className="flex items-center justify-center px-3 py-2"

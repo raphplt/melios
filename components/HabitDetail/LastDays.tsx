@@ -63,15 +63,15 @@ export default function LastDays({ theme, habit }: { theme: any; habit: any }) {
 									? theme.colors.greenPrimary
 									: theme.colors.redPrimary,
 							}}
-							className="px-1 border rounded-lg flex flex-col items-center mx-1 my-1"
+							className="px-2 py-1 border rounded-lg flex flex-col items-center mx-1 my-1"
 						>
 							{day.done ? (
-								<Iconify size={24} color={theme.colors.text} icon="mdi:check" />
+								<Iconify size={24} color={"black"} icon="mdi:check" />
 							) : (
-								<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
+								<Iconify size={24} color={"black"} icon="mdi:close" />
 							)}
-							<Text style={{ color: theme.colors.text }}>
-								{moment(day.date, "YYYY-MM-DD").format("DD/MM")}{" "}
+							<Text style={{ color: "black" }}>
+								{moment(day.date, "YYYY-MM-DD").format("DD/MM")}
 							</Text>
 						</View>
 					))}
