@@ -10,6 +10,7 @@ import WelcomeRow from "@components/Home/WelcomeRow";
 import ListHabitsHome from "@components/Home/ListHabitsHome";
 import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
+import { useProgression } from "@hooks/useProgression";
 
 export default function Index() {
 	const {
@@ -38,13 +39,13 @@ export default function Index() {
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
 			headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+			isDayTime={isDayTime}
 			headerImage={
 				<Image
 					source={imageSource}
 					style={{ width: "100%", height: 250, resizeMode: "cover" }}
 				/>
 			}
-			isDayTime={isDayTime}
 		>
 			<Background />
 

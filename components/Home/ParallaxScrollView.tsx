@@ -15,7 +15,6 @@ import Animated, {
 import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
 import { UserHabit } from "../../types/userHabit";
-import { useData } from "@context/DataContext";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useTabBarPadding } from "@hooks/useTabBar";
@@ -129,7 +128,7 @@ export default function ParallaxScrollView({
 						}}
 						className="text-xl mt-1 font-semibold text-center"
 					>
-						{todayScore}%
+						{todayScore ? todayScore : 0}%
 					</Text>
 				</BlurBox>
 

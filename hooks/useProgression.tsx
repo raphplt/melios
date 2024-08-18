@@ -3,14 +3,15 @@ import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 import { UserHabit } from "../types/userHabit";
 import useIndex from "./useIndex";
+import { useData } from "@context/DataContext";
 
 export const useProgression = () => {
 	const isFocused = useIsFocused();
 	const { userHabits } = useIndex();
 	const [activeButton, setActiveButton] = useState<string>("Jour");
 	const abortController = useRef<AbortController | null>(null);
-	const [todayScore, setTodayScore] = useState<number>(0);
 	const [refreshing, setRefreshing] = useState(false);
+	const { todayScore, setTodayScore } = useData();
 
 	const [habitCompletion, setHabitCompletion] = useState<Record<string, number>>(
 		{}
@@ -33,7 +34,7 @@ export const useProgression = () => {
 
 	const useTodayScore = (habits: UserHabit[], date: string): number => {
 		return useMemo(() => {
-			if (habits.length === 0) return 0;
+			if (!habits || habits.length === 0) return 0;
 
 			const score = habits.reduce((acc, habit) => {
 				const lastLog = habit.logs?.slice(-1)[0];
@@ -46,7 +47,7 @@ export const useProgression = () => {
 
 	// Same fonction without useMemo
 	const calculateTodayScore = (habits: UserHabit[], date: string): number => {
-		if (habits.length === 0) return 0;
+		if (!habits || habits.length === 0) return 0;
 
 		const score = habits.reduce((acc, habit) => {
 			const lastLog = habit.logs?.slice(-1)[0];

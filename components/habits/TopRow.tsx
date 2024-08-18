@@ -4,7 +4,6 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 
 export default function TopRow({
-	icon,
 	color,
 	text,
 	number,
@@ -27,7 +26,7 @@ export default function TopRow({
 					}}
 				>
 					<Text
-						className="font-bold text-[14px]"
+						className="font-bold text-[13px]"
 						style={{
 							color: textColor || theme.colors.text,
 						}}

@@ -12,7 +12,6 @@ import { Points } from "../types/points";
 import { Member } from "../types/member";
 import { UserHabit } from "../types/userHabit";
 import usePopup from "@hooks/usePopup";
-import { useProgression } from "@hooks/useProgression";
 import { Trophy } from "../types/trophy";
 import { getAllTrophies } from "@db/trophiesList";
 import { getMemberHabits, getMemberInfos } from "@db/member";
@@ -35,6 +34,8 @@ export const DataProvider = ({ children }: any) => {
 	const [points, setPoints] = useState<Points>({ rewards: 0, odyssee: 0 });
 	const [member, setMember] = useState<Member>();
 	const [trophies, setTrophies] = useState<Trophy[]>([]);
+	const [todayScore, setTodayScore] = useState<number>(0);
+
 	const popup = usePopup();
 
 	const { AskNotification } = permissions();
@@ -132,6 +133,8 @@ export const DataProvider = ({ children }: any) => {
 				popup,
 				trophies,
 				setTrophies,
+				todayScore,
+				setTodayScore,
 			}}
 		>
 			{children}

@@ -23,7 +23,7 @@ import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
-import { DataContext, useData } from "@context/DataContext";
+import { DataContext } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
 import { useProgression } from "@hooks/useProgression";
 
