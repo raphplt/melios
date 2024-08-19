@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Pressable, ActivityIndicator } from "react-native";
+import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
-import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
 import {
 	NavigationProp,
@@ -26,26 +25,44 @@ import { difficulties } from "@utils/habitsUtils";
 import { DataContext } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
 import { useProgression } from "@hooks/useProgression";
+import { Habit } from "../../types/habit";
+import useTrophies from "@hooks/useTrophies";
 
 export default function CardCheckHabit({
-	habit = [],
+	habit,
 	onHabitStatusChange,
 	completed,
 	disabled,
-}: any) {
+}: {
+	habit: Habit;
+	onHabitStatusChange: (habit: Habit, completed: boolean) => void;
+	completed: boolean;
+	disabled: boolean;
+}) {
+	// Imports et Contextes
 	const { theme } = useContext(ThemeContext);
+	const { date } = useContext(DataContext);
+
+	// États
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
-	const [habitInfos, setHabitInfos] = useState<any>({});
+	const [habitInfos, setHabitInfos] = useState<Habit>();
 	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
+
+	// Variables
 	let touchStartTimeout: NodeJS.Timeout;
 
+	// Hooks personnalisés
 	const { addOdysseePoints } = usePoints();
 	const { updateTodayScore } = useProgression();
+	const { addHabitToQueue } = useTrophies();
+
+	// Navigation
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+	// Animations
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
-	const { date } = useContext(DataContext);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
@@ -64,9 +81,9 @@ export default function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		opacity.value = withTiming(1, { duration: 300 });
+		opacity.value = withTiming(1, { duration: 200 });
 		return () => {
-			opacity.value = withTiming(0, { duration: 300 });
+			opacity.value = withTiming(0, { duration: 200 });
 		};
 	}, []);
 
@@ -76,18 +93,18 @@ export default function CardCheckHabit({
 		}
 	}, [completed]);
 
+	if (loading || !habitInfos) return <CardPlaceHolder />;
+
 	const setHabitDone = async () => {
-		setToggleCheckBox(true);
-		// popup.newPopup("Bravo !", "success");
+		setToggleCheckBox(true); // Optimistic UI
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		await setMemberHabitLog(habit.id, date, true);
+		await setMemberHabitLog(habit.id, date, true); // Update DB
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 		updateTodayScore();
+		addHabitToQueue(habitInfos);
 	};
-
-	if (loading) return <CardPlaceHolder />;
 
 	return (
 		<Animated.View
