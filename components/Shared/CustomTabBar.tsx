@@ -53,11 +53,10 @@ const CustomTabBar: React.FC<CustomTabBarProps> = ({
 				{state.routes.map((route, index) => {
 					const isFocused = state.index === index;
 					const isPressed = pressedIndex === index;
-					const iconColor = isFocused || isPressed ? theme.colors.primary : "gray";
+					const iconColor =
+						isFocused || isPressed ? theme.colors.primary : theme.colors.border;
 					const backgroundColor =
-						isFocused || isPressed
-							? theme.colors.blueSecondary
-							: theme.colors.background;
+						isFocused || isPressed ? theme.colors.background : "transparent";
 
 					const onPress = () => {
 						if (!isFocused) {
