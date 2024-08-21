@@ -4,6 +4,7 @@ import { getAllTrophies } from "@db/trophiesList";
 import { useContext, useEffect } from "react";
 import { Habit } from "../types/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { runTests } from "@utils/habits";
 
 const useTrophies = () => {
 	const { trophies, setTrophies } = useContext(DataContext);
@@ -27,6 +28,7 @@ const useTrophies = () => {
 
 	useEffect(() => {
 		console.log("trophies", habitQueue);
+		runTests(habitQueue);
 	}, [habitQueue]);
 
 	return { addHabitToQueue };

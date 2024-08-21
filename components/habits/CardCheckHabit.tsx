@@ -103,7 +103,7 @@ export default function CardCheckHabit({
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 		updateTodayScore();
-		addHabitToQueue(habitInfos);
+		addHabitToQueue(habit);
 	};
 
 	return (
