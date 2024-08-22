@@ -26,10 +26,10 @@ const useTrophies = () => {
 		AsyncStorage.setItem("habitQueue", JSON.stringify([...habitQueue, habit]));
 	};
 
-	useEffect(() => {
-		console.log("trophies", habitQueue);
-		runTests(habitQueue);
-	}, [habitQueue]);
+	// useEffect(() => {
+	// console.log("trophies", habitQueue);
+	// 	runTests(habitQueue);
+	// }, [habitQueue]);
 
 	return { addHabitToQueue };
 };
