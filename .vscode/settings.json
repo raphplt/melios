@@ -9,7 +9,9 @@
 		"Firestore",
 		"Ionicons",
 		"melios",
+		"nativewind",
 		"Pressable",
+		"tailwindcss",
 		"tinycolor"
 	],
 	"cSpell.language": "fr, en-GB, en-US"

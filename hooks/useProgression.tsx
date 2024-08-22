@@ -7,7 +7,7 @@ import { useData } from "@context/DataContext";
 
 export const useProgression = () => {
 	const isFocused = useIsFocused();
-	const { userHabits } = useIndex();
+	const { userHabits, uncompletedHabitsData, completedHabitsData } = useIndex();
 	const [activeButton, setActiveButton] = useState<string>("Jour");
 	const abortController = useRef<AbortController | null>(null);
 	const [refreshing, setRefreshing] = useState(false);
@@ -34,27 +34,37 @@ export const useProgression = () => {
 
 	const useTodayScore = (habits: UserHabit[], date: string): number => {
 		return useMemo(() => {
-			if (!habits || habits.length === 0) return 0;
+			if (
+				!uncompletedHabitsData ||
+				uncompletedHabitsData.length === 0 ||
+				!completedHabitsData ||
+				completedHabitsData.length === 0
+			)
+				return 0;
 
-			const score = habits.reduce((acc, habit) => {
-				const lastLog = habit.logs?.slice(-1)[0];
-				return acc + (lastLog && lastLog.date === date && lastLog.done ? 1 : 0);
-			}, 0);
 
-			return Math.floor((score / habits.length) * 100);
+			const score =
+				completedHabitsData.length /
+				(completedHabitsData.length + uncompletedHabitsData.length);
+
+			return Math.floor(score * 100);
 		}, [habits, date]);
 	};
 
 	// Same fonction without useMemo
-	const calculateTodayScore = (habits: UserHabit[], date: string): number => {
-		if (!habits || habits.length === 0) return 0;
+	const calculateTodayScore = (): number => {
+		if (
+			!uncompletedHabitsData ||
+			uncompletedHabitsData.length === 0 ||
+			!completedHabitsData ||
+			completedHabitsData.length === 0
+		)
+			return 0;
 
-		const score = habits.reduce((acc, habit) => {
-			const lastLog = habit.logs?.slice(-1)[0];
-			return acc + (lastLog && lastLog.date === date && lastLog.done ? 1 : 0);
-		}, 0);
-
-		return Math.floor((score / habits.length) * 100);
+			const score =
+				completedHabitsData.length /
+				(completedHabitsData.length + uncompletedHabitsData.length);
+		return Math.floor(score * 100);
 	};
 
 	const useHabitCompletion = (
@@ -114,8 +124,7 @@ export const useProgression = () => {
 	};
 
 	const updateTodayScore = () => {
-		const score = calculateTodayScore(userHabits, moment().format("YYYY-MM-DD"));
-		console.log("Updating today score", score);
+		const score = calculateTodayScore();
 		setTodayScore(score);
 	};
 

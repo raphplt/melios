@@ -20,6 +20,7 @@ import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useTabBarPadding } from "@hooks/useTabBar";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
+import useIndex from "@hooks/useIndex";
 
 const HEADER_HEIGHT = 250;
 
