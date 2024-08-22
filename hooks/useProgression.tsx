@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useContext } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 import { UserHabit } from "../types/userHabit";
@@ -115,6 +115,7 @@ export const useProgression = () => {
 
 	const updateTodayScore = () => {
 		const score = calculateTodayScore(userHabits, moment().format("YYYY-MM-DD"));
+		console.log("Updating today score", score);
 		setTodayScore(score);
 	};
 

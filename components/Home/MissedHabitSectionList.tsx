@@ -6,7 +6,6 @@ import ButtonViewMore from "./ButtonViewMore";
 
 const MissedHabitsSection = ({
 	habits,
-
 	onHabitStatusChange,
 	showMoreMissed,
 	updateShowMissed,
