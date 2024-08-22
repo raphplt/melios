@@ -23,7 +23,6 @@ export default function Account() {
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 
 	const [isSignedIn, setIsSignedIn] = useState(false);
-	const isMounted = useRef(true);
 	const [loading, setLoading] = useState(true);
 	const {
 		setHabits,
