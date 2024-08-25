@@ -88,6 +88,7 @@ function MainNavigator() {
 							headerShadowVisible: false,
 							title: "Détail de l'habitude",
 							presentation: "transparentModal",
+							gestureEnabled: true,
 						}}
 					/>
 					<Stack.Screen
