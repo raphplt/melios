@@ -14,7 +14,8 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"supportsTablet": true
+			"supportsTablet": true,
+			"bundleIdentifier": "com.raphplt.melios"
 		},
 		"android": {
 			"versionCode": 8,
@@ -25,7 +26,6 @@
 			},
 			"package": "com.raphplt.melios",
 			"permissions": ["NOTIFICATIONS"]
-			// "googleServicesFile": "./google-services/google-services.json"
 		},
 		"web": {
 			"bundler": "metro",
@@ -45,7 +45,7 @@
 			[
 				"expo-font",
 				{
-					"fonts": ["assets/fontsLibreBaskerville-Regular.ttf"]
+					"fonts": ["assets/fonts/LibreBaskerville-Regular.ttf"]
 				}
 			]
 		],

@@ -18,34 +18,45 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-	const { setUncompletedHabitsData } = useData();
+	const { setUncompletedHabitsData, setHabits, habits } = useData();
 
 	const setHabit = async () => {
-		setToggleCheckBox(!toggleCheckBox);
+		const newToggleValue = !toggleCheckBox;
+		setToggleCheckBox(newToggleValue);
+
 		await setMemberHabit(habit);
 
-		if (toggleCheckBox) {
+		// Met à jour la liste des habitudes non complétées
+		if (newToggleValue) {
+			setUncompletedHabitsData((prev: Habit[]) => [...prev, habit]);
+		} else {
 			setUncompletedHabitsData((prev: Habit[]) =>
 				prev.filter((h: Habit) => h.id !== habit.id)
 			);
-		} else {
-			setUncompletedHabitsData((prev: Habit[]) => [...prev, habit]);
 		}
 
+		// Met à jour la liste globale des habitudes dans le contexte
+		if (newToggleValue) {
+			setHabits((prev: Habit[]) => [...prev, habit]);
+		} else {
+			setHabits((prev: Habit[]) => prev.filter((h: Habit) => h.id !== habit.id));
+		}
+
+		// Mise à jour du stockage local (AsyncStorage)
 		const storedHabits = await AsyncStorage.getItem(
 			LOCAL_STORAGE_MEMBER_HABITS_KEY
 		);
-		let habits = storedHabits ? JSON.parse(storedHabits) : [];
+		let localHabits = storedHabits ? JSON.parse(storedHabits) : [];
 
-		if (toggleCheckBox) {
-			habits = habits.filter((h: Habit) => h.id !== habit.id);
+		if (newToggleValue) {
+			localHabits.push(habit);
 		} else {
-			habits.push(habit);
+			localHabits = localHabits.filter((h: Habit) => h.id !== habit.id);
 		}
 
 		await AsyncStorage.setItem(
 			LOCAL_STORAGE_MEMBER_HABITS_KEY,
-			JSON.stringify(habits)
+			JSON.stringify(localHabits)
 		);
 	};
 

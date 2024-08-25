@@ -5,20 +5,21 @@ import {
 	type PropsWithChildren,
 	type ReactElement,
 } from "react";
-import { Image, Text, View, useColorScheme } from "react-native";
+import { Text, View, useColorScheme } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedRef,
 	useAnimatedStyle,
 	useScrollViewOffset,
 } from "react-native-reanimated";
-import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
 import { UserHabit } from "../../types/userHabit";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useTabBarPadding } from "@hooks/useTabBar";
-import { useProgression } from "@hooks/useProgression";
+import Flamme from "@components/Svg/Flamme";
+import { useData } from "@context/DataContext";
+import { ThemeContext } from "@context/ThemeContext";
 
 const HEADER_HEIGHT = 250;
 
@@ -42,19 +43,11 @@ export default function ParallaxScrollView({
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
 	const scrollOffset = useScrollViewOffset(scrollRef);
 	const { theme } = useContext(ThemeContext);
-	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [lastDaysCompleted, setLastDaysCompleted] = useState(0);
-	const { todayScore } = useProgression();
+	const { todayScore } = useData();
+	const [flammeColor, setFlammeColor] = useState("#FFD580");
 
 	const paddingBottom = useTabBarPadding();
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setDate(moment().format("YYYY-MM-DD"));
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, []);
 
 	const headerAnimatedStyle = useAnimatedStyle(() => {
 		return {
@@ -76,6 +69,20 @@ export default function ParallaxScrollView({
 			],
 		};
 	});
+
+	useEffect(() => {
+		if (todayScore) {
+			if (todayScore >= 0 && todayScore < 30) {
+				setFlammeColor("#FFD580");
+			}
+			if (todayScore >= 30 && todayScore < 60) {
+				setFlammeColor("#FFB347");
+			}
+			if (todayScore >= 60 && todayScore < 100) {
+				setFlammeColor("#FF6961");
+			}
+		}
+	}, [todayScore]);
 
 	useEffect(() => {
 		let lastDaysCompleted = 0;
@@ -102,7 +109,7 @@ export default function ParallaxScrollView({
 		}
 
 		setLastDaysCompleted(lastDaysCompleted);
-	}, [habits, date]);
+	}, [habits]);
 
 	return (
 		<Animated.ScrollView
@@ -118,10 +125,7 @@ export default function ParallaxScrollView({
 				]}
 			>
 				<BlurBox position={{ top: 20, left: 20 }}>
-					<Image
-						source={require("../../assets/images/icons/flamme.png")}
-						style={{ width: 40, height: 40, resizeMode: "contain" }}
-					/>
+					<Flamme color={flammeColor ?? theme.colors.redSecondary} />
 					<Text
 						style={{
 							color: isDayTime ? "black" : "white",
