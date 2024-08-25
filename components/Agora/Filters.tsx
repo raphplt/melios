@@ -29,7 +29,7 @@ export default function Filters({
 							filter === "odyssee" ? theme.colors.textSecondary : theme.colors.text,
 					}}
 				>
-					Odyssee
+					Points Odyssée
 				</Text>
 			</TouchableOpacity>
 			<TouchableOpacity
@@ -49,7 +49,7 @@ export default function Filters({
 							filter === "rewards" ? theme.colors.textSecondary : theme.colors.text,
 					}}
 				>
-					Rewards
+					Points Melios
 				</Text>
 			</TouchableOpacity>
 		</View>

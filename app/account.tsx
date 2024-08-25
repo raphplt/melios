@@ -1,13 +1,8 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
-import ToggleButton from "../components/Account/Switch";
 import { onAuthStateChanged } from "firebase/auth";
-import { Image, StatusBar, Text, View, ScrollView } from "react-native";
-import {
-	DarkTheme,
-	ThemeProvider,
-	useNavigation,
-} from "@react-navigation/native";
+import { ScrollView } from "react-native";
+import { ThemeProvider, useNavigation } from "@react-navigation/native";
 import { disconnectUser } from "../db/users";
 import { auth } from "../db";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,14 +11,15 @@ import notifications from "../hooks/useNotifications";
 import LogoutButton from "../components/Account/LogoutButton";
 import UserInfos from "../components/Account/UserInfos";
 import LoginView from "../components/Account/LoginView";
-import LoaderScreen from "@components/Shared/LoaderScreen";
+import Version from "@components/Account/Version";
+import ToggleList from "@components/Account/ToggleList";
+import MemberInfos from "@components/Account/MemberInfos";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 
 	const [isSignedIn, setIsSignedIn] = useState(false);
-	const [loading, setLoading] = useState(true);
 	const {
 		setHabits,
 		setUncompletedHabitsData,
@@ -74,100 +70,28 @@ export default function Account() {
 		}
 	};
 
-	loading && <LoaderScreen text="Chargement des données..." />;
-
 	return (
 		<>
-			<StatusBar
-				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
-				backgroundColor={
-					theme === DarkTheme
-						? theme.colors.backgroundSecondary
-						: theme.colors.backgroundSecondary
-				}
-			/>
 			<ThemeProvider value={theme}>
 				<ScrollView
 					showsVerticalScrollIndicator={false}
 					style={{ backgroundColor: theme.colors.background }}
 				>
 					{isSignedIn ? (
-						<View
-							style={{ backgroundColor: theme.colors.background }}
-							className="mb-4"
-						>
-							<View
-								className="mx-auto flex flex-row pt-6 justify-center w-11/12 items-center mb-12"
-								style={{ backgroundColor: theme.colors.background }}
-							>
-								<Image
-									source={require("../assets/images/pfp.jpg")}
-									className="rounded-full mx-auto mt-4"
-									style={{ width: 120, height: 120 }}
-								/>
-								<View
-									className="mx-auto flex flex-col gap-5 max-w-[50%]"
-									style={{ backgroundColor: theme.colors.background }}
-								>
-									<Text
-										className=" ml-6 mb-4 text-xl mt-3"
-										style={{ color: theme.colors.text }}
-									>
-										{member?.nom}
-									</Text>
-									<Text
-										className=" ml-6 mb-4 text-lg mt-3"
-										style={{ color: theme.colors.text }}
-									>
-										{auth.currentUser?.email}
-									</Text>
-								</View>
-							</View>
-						</View>
+						<MemberInfos member={member} auth={auth} theme={theme} />
 					) : (
 						<LoginView theme={theme} navigation={navigation} />
 					)}
-					<View
-						className="p-4 mb-6 w-[95%] mx-auto rounded-xl"
-						style={{ backgroundColor: theme.colors.textSecondary }}
-					>
-						<View className="flex w-full font-semibold mx-auto mb-4 flex-row items-center ">
-							<Text
-								className=" text-lg font-semibold ml-3"
-								style={{ color: theme.colors.text }}
-							>
-								Paramètres généraux
-							</Text>
-						</View>
-						<View
-							className="p-4 rounded-lg shadow-md mb-4"
-							style={{ backgroundColor: theme.colors.background }}
-						>
-							<ToggleButton
-								title="Mode sombre"
-								onToggle={handleToggleTheme}
-								value={isDarkTheme}
-							/>
-							<ToggleButton
-								title="Notifications"
-								onToggle={handleToggleNotifications}
-								value={notificationToggle}
-							/>
-						</View>
-					</View>
+					<ToggleList
+						isDarkTheme={isDarkTheme}
+						handleToggleTheme={handleToggleTheme}
+						notificationToggle={notificationToggle}
+						handleToggleNotifications={handleToggleNotifications}
+						theme={theme}
+					/>
 					{member && Object.keys(member).length > 0 && <UserInfos member={member} />}
 					<LogoutButton handleLogout={handleLogout} theme={theme} />
-					<View
-						className="w-full mx-auto"
-						style={{ backgroundColor: theme.colors.background }}
-					>
-						<Text
-							className=" text-center text-sm"
-							style={{ color: theme.colors.text }}
-						>
-							Melios v1.1.2 - © 2024 Melios. Tous droits réservés.
-						</Text>
-					</View>
+					<Version />
 				</ScrollView>
 			</ThemeProvider>
 		</>
