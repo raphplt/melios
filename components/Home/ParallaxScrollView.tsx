@@ -12,7 +12,6 @@ import Animated, {
 	useAnimatedStyle,
 	useScrollViewOffset,
 } from "react-native-reanimated";
-import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
 import { UserHabit } from "../../types/userHabit";
 import BlurBox from "./ParallaxBlurBox";
@@ -20,7 +19,7 @@ import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useTabBarPadding } from "@hooks/useTabBar";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
-import useIndex from "@hooks/useIndex";
+import { ThemeContext } from "@context/ThemeContext";
 
 const HEADER_HEIGHT = 250;
 

@@ -6,18 +6,23 @@
 		"preview": {
 			"android": {
 				"buildType": "app-bundle"
+			},
+			"ios": {
+				"simulator": false
 			}
 		},
 		"production": {
 			"android": {
 				"buildType": "app-bundle"
+			},
+			"ios": {
+				"simulator": false
 			}
 		}
 	},
 	"submit": {
 		"production": {
 			"android": {
-				// "serviceAccountKeyPath": "google-services/google-services.json",
 				"track": "internal"
 			}
 		}
