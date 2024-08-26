@@ -34,7 +34,10 @@ export const DataProvider = ({ children }: any) => {
 	const [points, setPoints] = useState<Points>({ rewards: 0, odyssee: 0 });
 	const [member, setMember] = useState<Member>();
 	const [trophies, setTrophies] = useState<Trophy[]>([]);
+
+	// Progression
 	const [todayScore, setTodayScore] = useState<number>(0);
+	const [streak, setStreak] = useState<number>(0);
 
 	const popup = usePopup();
 
@@ -66,6 +69,7 @@ export const DataProvider = ({ children }: any) => {
 					);
 					setNotificationToggle(notificationEnabled === "true");
 
+					// Member infos
 					const snapshotMember = await getMemberInfos({
 						signal: abortController.signal,
 						forceRefresh: true,
@@ -73,24 +77,28 @@ export const DataProvider = ({ children }: any) => {
 					if (!snapshotMember) throw new Error("Member not found");
 					setMember(snapshotMember);
 
+					//Rewards
 					const snapshotRewards = await getRewards({
 						signal: abortController.signal,
 						forceRefresh: true,
 					});
 					setPoints(extractPoints(snapshotRewards));
 
+					// Habits
 					const snapshotHabits = await getMemberHabits({
 						signal: abortController.signal,
 						forceRefresh: true,
 					});
 					setHabits(snapshotHabits);
 
+					// Trophies
 					const snapshotTrophies = await getAllTrophies({
 						signal: abortController.signal,
 						forceRefresh: true,
 					});
 					setTrophies(snapshotTrophies);
 
+					// Calculate today's score
 					const { uncompleted, completed } = processHabits(snapshotHabits, date);
 					setUncompletedHabitsData(uncompleted);
 					setCompletedHabitsData(completed);
@@ -135,6 +143,8 @@ export const DataProvider = ({ children }: any) => {
 				setTrophies,
 				todayScore,
 				setTodayScore,
+				streak,
+				setStreak
 			}}
 		>
 			{children}
