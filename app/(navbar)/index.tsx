@@ -49,8 +49,11 @@ export default function Index() {
 			<Background />
 
 			<WelcomeRow />
+
 			<ListHabitsHome />
+
 			<ActivitiesContainer />
+			
 			<DailyQuote />
 		</ParallaxScrollView>
 	);

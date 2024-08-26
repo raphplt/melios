@@ -2,7 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { onAuthStateChanged } from "firebase/auth";
 import { ScrollView } from "react-native";
-import { ThemeProvider, useNavigation } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ParamListBase,
+	ThemeProvider,
+	useNavigation,
+} from "@react-navigation/native";
 import { disconnectUser } from "../db/users";
 import { auth } from "../db";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,12 +19,12 @@ import LoginView from "../components/Account/LoginView";
 import Version from "@components/Account/Version";
 import ToggleList from "@components/Account/ToggleList";
 import MemberInfos from "@components/Account/MemberInfos";
+import LoaderScreen from "@components/Shared/LoaderScreen";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 
-	const [isSignedIn, setIsSignedIn] = useState(false);
 	const {
 		setHabits,
 		setUncompletedHabitsData,
@@ -28,16 +33,10 @@ export default function Account() {
 		notificationToggle,
 		setNotificationToggle,
 		member,
+		isLoading,
 	} = useData();
+
 	const { scheduleDailyNotification, cancelAllNotifications } = notifications();
-
-	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			setIsSignedIn(!!user);
-		});
-
-		return () => unsubscribe();
-	}, []);
 
 	const handleToggleTheme = async () => {
 		toggleTheme();
@@ -55,8 +54,6 @@ export default function Account() {
 		await disconnectUser();
 	};
 
-	const navigation: any = useNavigation();
-
 	const handleToggleNotifications = async () => {
 		const notificationEnabled = await AsyncStorage.getItem("notificationEnabled");
 		if (notificationEnabled === "true") {
@@ -70,30 +67,27 @@ export default function Account() {
 		}
 	};
 
+	if (isLoading) return <LoaderScreen text="Chargement du profil" />;
+
 	return (
 		<>
-			<ThemeProvider value={theme}>
-				<ScrollView
-					showsVerticalScrollIndicator={false}
-					style={{ backgroundColor: theme.colors.background }}
-				>
-					{isSignedIn ? (
-						<MemberInfos member={member} auth={auth} theme={theme} />
-					) : (
-						<LoginView theme={theme} navigation={navigation} />
-					)}
-					<ToggleList
-						isDarkTheme={isDarkTheme}
-						handleToggleTheme={handleToggleTheme}
-						notificationToggle={notificationToggle}
-						handleToggleNotifications={handleToggleNotifications}
-						theme={theme}
-					/>
-					{member && Object.keys(member).length > 0 && <UserInfos member={member} />}
-					<LogoutButton handleLogout={handleLogout} theme={theme} />
-					<Version />
-				</ScrollView>
-			</ThemeProvider>
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				style={{ backgroundColor: theme.colors.background }}
+			>
+				<MemberInfos member={member} auth={auth} />
+
+				<ToggleList
+					isDarkTheme={isDarkTheme}
+					handleToggleTheme={handleToggleTheme}
+					notificationToggle={notificationToggle}
+					handleToggleNotifications={handleToggleNotifications}
+					theme={theme}
+				/>
+				{member && Object.keys(member).length > 0 && <UserInfos member={member} />}
+				<LogoutButton handleLogout={handleLogout} theme={theme} />
+				<Version />
+			</ScrollView>
 		</>
 	);
 }
