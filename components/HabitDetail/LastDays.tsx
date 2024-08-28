@@ -58,12 +58,9 @@ export default function LastDays({ theme, habit }: { theme: any; habit: any }) {
 							style={{
 								backgroundColor: day.done
 									? theme.colors.greenSecondary
-									: theme.colors.redSecondary,
-								borderColor: day.done
-									? theme.colors.greenPrimary
-									: theme.colors.redPrimary,
+									: theme.colors.cardBackground,
 							}}
-							className="px-2 py-1 border rounded-lg flex flex-col items-center mx-1 my-1"
+							className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
 						>
 							{day.done ? (
 								<Iconify size={24} color={"black"} icon="mdi:check" />

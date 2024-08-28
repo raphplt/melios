@@ -96,7 +96,7 @@ export default function HabitDetail() {
 
 	const lightenedColor = lightenColor(
 		habitParsed?.category?.color || theme.colors.primary,
-		0.05
+		0.1
 	);
 
 	if (!habitParsed) return <LoaderScreen text="Chargement des détails" />;

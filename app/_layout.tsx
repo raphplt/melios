@@ -53,8 +53,8 @@ function MainNavigator() {
 		});
 	};
 
-	const { isLoading: isSessionLoading }: any = useSession(); //TODO type
-	const { popup } = useData(); // Récupérez le popup ici
+	const { isLoading: isSessionLoading }: any = useSession();
+	const { popup } = useData();
 	const { isOpen } = popup;
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -87,7 +87,6 @@ function MainNavigator() {
 						options={{
 							headerShadowVisible: false,
 							title: "Détail de l'habitude",
-							presentation: "transparentModal",
 							gestureEnabled: true,
 						}}
 					/>

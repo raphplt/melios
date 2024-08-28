@@ -88,11 +88,10 @@ export default function TimerHabit({
 				</View>
 			) : (
 				<View
-					className="py-3 rounded-lg mb-6 mt-10 w-11/12 mx-auto"
+					className="py-3 rounded-lg mt-6 w-11/12 mx-auto"
 					style={{
-						backgroundColor: theme.colors.cardBackground,
+						backgroundColor: theme.colors.blueSecondary,
 						borderColor: theme.colors.primary,
-						borderWidth: 2,
 					}}
 				>
 					<Ionicons
@@ -102,7 +101,7 @@ export default function TimerHabit({
 						style={{ alignSelf: "center" }}
 					/>
 					<Text
-						className="text-lg text-center font-semibold"
+						className="text-[16px] mt-3 text-center font-bold"
 						style={{
 							color: theme.colors.primary,
 							maxWidth: "90%",
