@@ -4,7 +4,6 @@ import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { ThemeContext } from "../context/ThemeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataProvider, useData } from "../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
@@ -12,6 +11,7 @@ import NotificationBox from "@components/Shared/NotificationBox";
 import { HabitsProvider } from "@context/HabitsContext";
 import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import { SessionProvider, useSession } from "@context/UserContext";
+import { ThemeContext } from "@context/ThemeContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -97,6 +97,15 @@ function MainNavigator() {
 							title: "Mon compte",
 						}}
 					/>
+
+					<Stack.Screen
+						name="editProfil"
+						options={{
+							headerShadowVisible: false,
+							title: "Éditer le profil",
+						}}
+					/>
+
 					<Stack.Screen
 						name="trophies"
 						options={{

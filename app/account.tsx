@@ -1,21 +1,18 @@
-import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../context/ThemeContext";
-import { onAuthStateChanged } from "firebase/auth";
+import { useContext, useState } from "react";
 import { ScrollView } from "react-native";
-
-
-import { disconnectUser } from "../db/users";
-import { auth } from "../db";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useData } from "../context/DataContext";
-import notifications from "../hooks/useNotifications";
-import LogoutButton from "../components/Account/LogoutButton";
-import UserInfos from "../components/Account/UserInfos";
-import LoginView from "../components/Account/LoginView";
+
 import Version from "@components/Account/Version";
 import ToggleList from "@components/Account/ToggleList";
 import MemberInfos from "@components/Account/MemberInfos";
 import LoaderScreen from "@components/Shared/LoaderScreen";
+import LogoutButton from "@components/Account/LogoutButton";
+import UserInfos from "@components/Account/UserInfos";
+import { useData } from "@context/DataContext";
+import { ThemeContext } from "@context/ThemeContext";
+import { auth } from "@db/index";
+import { disconnectUser } from "@db/users";
+import useNotifications from "@hooks/useNotifications";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -32,7 +29,8 @@ export default function Account() {
 		isLoading,
 	} = useData();
 
-	const { scheduleDailyNotification, cancelAllNotifications } = notifications();
+	const { scheduleDailyNotification, cancelAllNotifications } =
+		useNotifications();
 
 	const handleToggleTheme = async () => {
 		toggleTheme();

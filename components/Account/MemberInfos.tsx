@@ -1,6 +1,8 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext } from "react";
 import { View, Text, Image, Pressable } from "react-native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 export default function MemberInfos({
 	member,
@@ -10,6 +12,8 @@ export default function MemberInfos({
 	auth: any;
 }) {
 	const { theme } = useContext(ThemeContext);
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
 	return (
 		<View style={{ backgroundColor: theme.colors.background }} className="mb-4">
 			<View
@@ -46,7 +50,7 @@ export default function MemberInfos({
 						className="flex flex-row items-center py-3 px-8 rounded-full"
 						style={{ backgroundColor: theme.colors.primary }}
 						onPress={() => {
-							console.log("pressed");
+							navigation.navigate("editProfil");
 						}}
 					>
 						<Text
