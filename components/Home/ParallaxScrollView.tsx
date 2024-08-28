@@ -43,9 +43,9 @@ export default function ParallaxScrollView({
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
 	const scrollOffset = useScrollViewOffset(scrollRef);
 	const { theme } = useContext(ThemeContext);
-	const [lastDaysCompleted, setLastDaysCompleted] = useState(0);
 	const { todayScore } = useData();
 	const [flammeColor, setFlammeColor] = useState("#FFD580");
+	const { streak } = useData();
 
 	const paddingBottom = useTabBarPadding();
 
@@ -84,33 +84,6 @@ export default function ParallaxScrollView({
 		}
 	}, [todayScore]);
 
-	useEffect(() => {
-		let lastDaysCompleted = 0;
-		if (habits.length === 0) return setLastDaysCompleted(0);
-		const days = 7;
-
-		for (let i = 0; i < days; i++) {
-			const date = moment().subtract(i, "days").format("YYYY-MM-DD");
-
-			let dayCompleted = false;
-			habits.forEach((habit: UserHabit) => {
-				if (habit.logs) {
-					const lastLog = habit.logs[habit.logs.length - 1];
-
-					if (lastLog && lastLog.date === date && lastLog.done === true) {
-						dayCompleted = true;
-					}
-				}
-			});
-
-			if (dayCompleted) {
-				lastDaysCompleted += 1;
-			}
-		}
-
-		setLastDaysCompleted(lastDaysCompleted);
-	}, [habits]);
-
 	return (
 		<Animated.ScrollView
 			ref={scrollRef}
@@ -143,7 +116,7 @@ export default function ParallaxScrollView({
 							color: isDayTime ? "black" : "white",
 						}}
 					>
-						Série : {lastDaysCompleted} {lastDaysCompleted > 1 ? "jours" : "jour"}
+						Série : {streak} {streak > 1 ? "jours" : "jour"}
 					</Text>
 				</BlurBox>
 

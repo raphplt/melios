@@ -2,13 +2,7 @@ import { Entypo } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 interface CongratulationsProps {
-	theme: {
-		colors: {
-			primary: string;
-			cardBackground: string;
-			text: string;
-		};
-	};
+	theme: any;
 	completedHabitsData: any[];
 	userHabits: any[];
 }
@@ -23,7 +17,9 @@ export default function Congratulations({
 			style={{
 				borderColor: theme.colors.primary,
 				borderWidth: 2,
-				backgroundColor: theme.colors.cardBackground,
+				backgroundColor: theme.dark
+					? theme.colors.background
+					: theme.colors.cardBackground,
 				shadowColor: theme.colors.text,
 				shadowOffset: {
 					width: 0,

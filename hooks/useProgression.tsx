@@ -11,25 +11,44 @@ export const useProgression = () => {
 	const [activeButton, setActiveButton] = useState<string>("Jour");
 	const abortController = useRef<AbortController | null>(null);
 	const [refreshing, setRefreshing] = useState(false);
-	const { todayScore, setTodayScore } = useData();
-
+	const { todayScore, setTodayScore, date, streak, setStreak } = useData();
+	const [comparedToYesterday, setComparedToYesterday] = useState<number>(0);
 	const [habitCompletion, setHabitCompletion] = useState<Record<string, number>>(
 		{}
 	);
-	const [comparedToYesterday, setComparedToYesterday] = useState<number>(0);
 
-	const useDate = (): string => {
-		const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
+	// Fonction pour calculer la streak
+	const calculateStreak = (habits: UserHabit[]): number => {
+		if (habits.length === 0) return 0;
 
-		useEffect(() => {
-			const interval = setInterval(() => {
-				setDate(moment().format("YYYY-MM-DD"));
-			}, 1000);
+		let streakCount = 0;
+		let daysBack = 0;
+		let streakActive = true;
 
-			return () => clearInterval(interval);
-		}, []);
+		while (streakActive) {
+			const date = moment().subtract(daysBack, "days").format("YYYY-MM-DD");
+			let dayCompleted = false;
 
-		return date;
+			for (const habit of habits) {
+				if (habit.logs) {
+					const logForDay = habit.logs.find((log) => log.date === date && log.done);
+					if (logForDay) {
+						dayCompleted = true;
+						break;
+					}
+				}
+			}
+
+			if (dayCompleted) {
+				streakCount += 1;
+			} else {
+				streakActive = false;
+			}
+
+			daysBack += 1;
+		}
+
+		return streakCount;
 	};
 
 	const useTodayScore = (habits: UserHabit[], date: string): number => {
@@ -42,29 +61,12 @@ export const useProgression = () => {
 			)
 				return 0;
 
-
 			const score =
 				completedHabitsData.length /
 				(completedHabitsData.length + uncompletedHabitsData.length);
 
 			return Math.floor(score * 100);
 		}, [habits, date]);
-	};
-
-	// Same fonction without useMemo
-	const calculateTodayScore = (): number => {
-		if (
-			!uncompletedHabitsData ||
-			uncompletedHabitsData.length === 0 ||
-			!completedHabitsData ||
-			completedHabitsData.length === 0
-		)
-			return 0;
-
-			const score =
-				completedHabitsData.length /
-				(completedHabitsData.length + uncompletedHabitsData.length);
-		return Math.floor(score * 100);
 	};
 
 	const useHabitCompletion = (
@@ -124,14 +126,14 @@ export const useProgression = () => {
 	};
 
 	const updateTodayScore = () => {
-		const score = calculateTodayScore();
+		const score = updateTodayScore();
 		setTodayScore(score);
 	};
 
-	const date = useDate();
 	const todayScoreValue = useTodayScore(userHabits, date);
 	const habitCompletionValue = useHabitCompletion(userHabits, activeButton);
 	const comparedToYesterdayValue = useComparedToYesterday(userHabits, date);
+	const streakValue = calculateStreak(userHabits); // Calculer la streak
 
 	const onRefresh = () => {
 		setRefreshing(true);
@@ -150,6 +152,7 @@ export const useProgression = () => {
 		setTodayScore(todayScoreValue);
 		setHabitCompletion(habitCompletionValue);
 		setComparedToYesterday(comparedToYesterdayValue);
+		setStreak(streakValue); // Mettre à jour la streak
 
 		return () => {
 			abortController.current?.abort();
@@ -161,18 +164,19 @@ export const useProgression = () => {
 		todayScoreValue,
 		habitCompletionValue,
 		comparedToYesterdayValue,
+		streakValue,
 	]);
 
 	return {
 		userHabits,
 		activeButton,
 		setActiveButton,
-		useDate,
 		useTodayScore,
 		useHabitCompletion,
 		todayScore,
 		habitCompletion,
 		comparedToYesterday,
+		streak, 
 		onRefresh,
 		refreshing,
 		habitCompletionValue,

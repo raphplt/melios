@@ -3,6 +3,9 @@ import { Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { Habit } from "../../types/habit";
 import { useEffect, useState } from "react";
+import Melios from "@components/Svg/Melios";
+import MoneyMelios from "@components/Svg/MoneyMelios";
+import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 
 export default function InfosPanel({
 	habitInfos,
@@ -99,8 +102,29 @@ export default function InfosPanel({
 						Difficulté
 					</Text>
 				</View>
-
 				<Text style={{ color: theme.colors.text }}>{difficulty}</Text>
+			</View>
+			<View className={rowStyle}>
+				<View className={rowBox}>
+					<Iconify size={24} color={theme.colors.text} icon="ph:coin" />
+					<Text style={{ color: theme.colors.text }} className="text-md">
+						Points
+					</Text>
+				</View>
+				<View className="flex flex-row gap-3">
+					<View className="flex flex-row items-center">
+						<MoneyOdyssee />
+						<Text style={{ color: theme.colors.text }} className="ml-1">
+							{Math.round(habitInfos.reward * (habitInfos.difficulty / 2))}
+						</Text>
+					</View>
+					<View className="flex flex-row items-center gap4">
+						<MoneyMelios />
+						<Text style={{ color: theme.colors.text }} className="ml-1">
+							{habitInfos.difficulty}
+						</Text>
+					</View>
+				</View>
 			</View>
 		</View>
 	);

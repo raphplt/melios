@@ -4,13 +4,14 @@ import { setRewards } from "@db/rewards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { useState, useRef, useEffect } from "react";
+import usePoints from "./usePoints";
 
 const useTimer = () => {
 	const [timerSeconds, setTimerSeconds] = useState(0);
 	const [isTimerActive, setIsTimerActive] = useState(false);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const date = moment().format("YYYY-MM-DD");
-	const [doneToday, setDoneToday] = useState(false);
+	const { addOdysseePoints } = usePoints();
 
 	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
 		useData();
@@ -62,8 +63,8 @@ const useTimer = () => {
 			setPoints({
 				...points,
 				rewards: points.rewards + habitParsed.reward,
-				odyssee: points.odyssee + habitParsed.reward + habitParsed.difficulty,
 			});
+			addOdysseePoints(habitParsed.reward, habitParsed.difficulty);
 			//TODO done today ?
 			setCompletedHabitsData(
 				(prevHabits: any) => [...prevHabits, habitParsed] as any

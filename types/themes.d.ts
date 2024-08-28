@@ -6,6 +6,7 @@ export type Theme = {
 		card: string;
 		text: string;
 		textSecondary: string;
+		textTertiary: string;
 		border: string;
 		notification: string;
 		primary: string;
