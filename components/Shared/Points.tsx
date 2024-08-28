@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { ThemeContext } from "../../context/ThemeContext";
-import { useData } from "../../context/DataContext";
-import MoneyMelios from "../Svg/MoneyMelios";
-import MoneyOdyssee from "../Svg/MoneyOdyssee";
+import MoneyMelios from "@components/Svg/MoneyMelios";
+import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
+import { useData } from "@context/DataContext";
+import { ThemeContext } from "@context/ThemeContext";
 
 export default function Points() {
 	const { theme } = useContext(ThemeContext);
@@ -60,9 +60,10 @@ export default function Points() {
 					<MoneyMelios />
 				</View>
 			</TouchableOpacity>
+
 			{helpVisible && (
 				<View
-					className="absolute top-full mt-2 left-0 p-2 rounded-md shadow-md w-44 z-50"
+					className="absolute top-full mt-1 left-0 p-2 rounded-md shadow-md w-44"
 					style={{
 						borderColor: theme.colors.primary,
 						borderWidth: 1,
