@@ -83,7 +83,7 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 						</Text>
 					</View>
 					<Text
-						className="font-semibold w-2/3 italic ml-3 mt-2"
+						className="font-semibold w-3/5 italic ml-3 mt-2"
 						style={{
 							color: theme.colors.text,
 						}}
