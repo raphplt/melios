@@ -120,9 +120,9 @@ export default function ParallaxScrollView({
 					</Text>
 				</BlurBox>
 
-				<BlurBox position={{ bottom: 20, right: 20 }}>
+				{/* <BlurBox position={{ bottom: 20, right: 20 }}>
 					<TrophiesMinView />
-				</BlurBox>
+				</BlurBox> */}
 
 				{headerImage}
 			</Animated.View>

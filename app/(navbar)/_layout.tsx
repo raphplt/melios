@@ -1,16 +1,15 @@
 import { Tabs, useNavigation } from "expo-router";
 import { Pressable, View, StatusBar } from "react-native";
 import { useContext, useEffect } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
-import Melios from "../../components/Svg/Melios";
 import { AntDesign } from "@expo/vector-icons";
-import { useSession } from "../../context/UserContext";
-import Points from "../../components/Shared/Points";
-
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useSession } from "@context/UserContext";
+import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme } from "../../constants/Theme";
+import Melios from "@components/Svg/Melios";
+import Points from "@components/Shared/Points";
 
 const createHeaderStyle = () => ({
 	backgroundColor: "transparent",

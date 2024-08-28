@@ -38,11 +38,9 @@ export default function InfosPanel({
 
 	return (
 		<View
-			className="flex flex-col items-center justify-between w-11/12 mx-auto py-2 rounded-lg mt-6"
+			className="flex flex-col items-center justify-between w-11/12 mx-auto py-4 rounded-lg mt-6"
 			style={{
 				backgroundColor: lightenedColor || theme.colors.cardBackground,
-				borderColor: habitInfos.category?.color,
-				borderWidth: 1,
 			}}
 		>
 			<Text
@@ -50,7 +48,7 @@ export default function InfosPanel({
 					color: theme.colors.text,
 					borderBottomColor: habitInfos.category?.color || theme.colors.border,
 				}}
-				className="text-[15px] text-center font-semibold pb-2 w-11/12 mx-auto border-b"
+				className="text-[15px] text-pretty ml-4  font-semibold pb-2 w-11/12 mx-auto border-b"
 			>
 				{habitInfos.description}
 			</Text>

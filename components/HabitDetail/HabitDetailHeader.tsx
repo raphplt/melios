@@ -12,23 +12,21 @@ export default function HabitDetailHeader({
 }) {
 	return (
 		<View
-			className="py-2 px-6 rounded-lg w-11/12 mx-auto flex items-center flex-row justify-center"
+			className="py-3 px-6 rounded-lg w-11/12 mx-auto flex items-center flex-row justify-center"
 			style={{
 				backgroundColor: lightenedColor,
-				borderColor: habitParsed.category?.color,
-				borderWidth: 1,
 			}}
 		>
 			<FontAwesome6
 				name={habitParsed.category?.icon || "question"}
 				size={24}
 				color={habitParsed.category?.color || theme.colors.text}
-				style={{ marginRight: 10 }}
+				style={{ marginRight: 14 }}
 			/>
 			<Text
 				style={{
 					color: habitParsed.category?.color,
-					fontFamily: "Baskerville",
+					fontFamily: "BaskervilleBold",
 				}}
 				className="text-lg text-center font-semibold"
 			>

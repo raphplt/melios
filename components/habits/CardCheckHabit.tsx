@@ -55,7 +55,6 @@ export default function CardCheckHabit({
 	// Hooks personnalisés
 	const { addOdysseePoints } = usePoints();
 	const { updateTodayScore } = useProgression();
-	const { addHabitToQueue } = useTrophies();
 
 	// Navigation
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -102,8 +101,6 @@ export default function CardCheckHabit({
 		await setMemberHabitLog(habit.id, date, true); // Update DB
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
-		updateTodayScore();
-		addHabitToQueue(habit);
 	};
 
 	return (

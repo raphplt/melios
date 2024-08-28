@@ -126,8 +126,7 @@ export const useProgression = () => {
 	};
 
 	const updateTodayScore = () => {
-		const score = updateTodayScore();
-		setTodayScore(score);
+		setTodayScore(useTodayScore(userHabits, date));
 	};
 
 	const todayScoreValue = useTodayScore(userHabits, date);
@@ -176,7 +175,7 @@ export const useProgression = () => {
 		todayScore,
 		habitCompletion,
 		comparedToYesterday,
-		streak, 
+		streak,
 		onRefresh,
 		refreshing,
 		habitCompletionValue,

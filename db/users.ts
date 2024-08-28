@@ -4,9 +4,10 @@ import {
 	signInWithEmailAndPassword,
 	onAuthStateChanged,
 	fetchSignInMethodsForEmail,
+	deleteUser,
 } from "firebase/auth";
 import { auth } from ".";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -120,4 +121,27 @@ export const checkEmailExists = async (email: string) => {
 	const auth = getAuth();
 	const signInMethods = await fetchSignInMethodsForEmail(auth, email);
 	return signInMethods.length > 0;
+};
+
+export const deleteUserAccount = async () => {
+	try {
+		const user = getAuth().currentUser;
+		if (user) {
+			const userDocRef = doc(db, "members", user.uid);
+			await deleteDoc(userDocRef);
+
+			await deleteUser(user);
+
+			await AsyncStorage.removeItem("user");
+			await AsyncStorage.removeItem("isAuthenticated");
+			await AsyncStorage.removeItem("habitsData");
+			await AsyncStorage.removeItem("habits");
+
+			console.log("Utilisateur supprimé avec succès.");
+		} else {
+			console.error("Aucun utilisateur authentifié trouvé.");
+		}
+	} catch (error) {
+		console.error("Erreur lors de la suppression de l'utilisateur : ", error);
+	}
 };
