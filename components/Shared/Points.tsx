@@ -33,7 +33,7 @@ export default function Points() {
 				>
 					<Text
 						style={{
-							color: theme.colors.primary,
+							color: theme.dark ? theme.colors.text : theme.colors.primary,
 							fontSize: 16,
 						}}
 						className="font-bold mr-1"

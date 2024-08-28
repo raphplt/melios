@@ -27,7 +27,7 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 
 	const lighterColor = lightenColor(
 		habitInfos.category?.color || theme.colors.text,
-		0.4
+		0.5
 	);
 
 	const handleTouchStart = () => {
@@ -73,17 +73,21 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 				>
 					<View>
 						<Text
-							className=" text-[16px] italic font-semibold text-gray-900 right-2 top-2 absolute rounded-2xl px-2 border-[1px]"
+							className="text-[16px]  font-semibold right-2 top-2 absolute rounded-2xl px-2 py-[2px]"
 							style={{
-								color: theme.colors.textSecondary,
-								backgroundColor: theme.colors.text,
-								borderColor: theme.colors.border,
+								color: theme.colors.text,
+								backgroundColor: theme.colors.textSecondary,
 							}}
 						>
 							{habitInfos.duration}''
 						</Text>
 					</View>
-					<Text className="italic font-semibold text-gray-900 w-1/2 ml-3 mt-2">
+					<Text
+						className="font-semibold w-2/3 italic ml-3 mt-2"
+						style={{
+							color: theme.colors.text,
+						}}
+					>
 						{habitInfos.category?.category}
 					</Text>
 				</View>

@@ -3,7 +3,7 @@ import { Iconify } from "react-native-iconify";
 import Filters from "./Filters";
 import CardClassement from "./CardClassement";
 import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Reward } from "../../types/reward";
 import { useTabBarPadding } from "@hooks/useTabBar";
 
@@ -20,6 +20,13 @@ export default function ClassementView({
 }) {
 	const { theme } = useContext(ThemeContext);
 	const paddingBottom = useTabBarPadding();
+	const [displayedItemCount, setDisplayedItemCount] = useState(10);
+
+	const userPosition = sortedRewards.findIndex(
+		(reward: Reward) => reward.uid === member.uid
+	);
+
+	const isUserVisible = userPosition >= 0 && userPosition < displayedItemCount;
 
 	return (
 		<View className="w-full pb-10">
@@ -44,16 +51,42 @@ export default function ClassementView({
 					paddingBottom: paddingBottom,
 				}}
 			>
-				{sortedRewards.map((reward: Reward, index: number) => (
-					<CardClassement
-						key={reward.id}
-						rank={index + 1}
-						reward={reward}
-						member={member}
-						theme={theme}
-						filter={filter}
-					/>
-				))}
+				{sortedRewards
+					.slice(0, displayedItemCount)
+					.map((reward: Reward, index: number) => (
+						<CardClassement
+							key={reward.id}
+							rank={index + 1}
+							reward={reward}
+							member={member}
+							theme={theme}
+							filter={filter}
+						/>
+					))}
+
+				{!isUserVisible && userPosition >= 0 && (
+					<>
+						<View className="mt-4 mb-2">
+							<Text
+								className="text-center text-sm"
+								style={{
+									color: theme.colors.text,
+									fontStyle: "italic",
+								}}
+							>
+								Vous êtes classé ici :
+							</Text>
+						</View>
+						<CardClassement
+							key={sortedRewards[userPosition].id}
+							rank={userPosition + 1}
+							reward={sortedRewards[userPosition]}
+							member={member}
+							theme={theme}
+							filter={filter}
+						/>
+					</>
+				)}
 			</View>
 		</View>
 	);

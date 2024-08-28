@@ -49,7 +49,7 @@ const DarkTheme: Theme = {
 		redPrimary: "#B84E4A",
 		redSecondary: "#FBEAEA",
 		bluePrimary: "#448BAD",
-		blueSecondary: "#EAF7FB",
+		blueSecondary: "#1E3A8A",
 		purplePrimary: "#955CD3",
 		purpleSecondary: "#F5EAFB",
 		grayPrimary: "#B0B0B0",

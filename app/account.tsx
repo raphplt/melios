@@ -2,12 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { onAuthStateChanged } from "firebase/auth";
 import { ScrollView } from "react-native";
-import {
-	NavigationProp,
-	ParamListBase,
-	ThemeProvider,
-	useNavigation,
-} from "@react-navigation/native";
+
+
 import { disconnectUser } from "../db/users";
 import { auth } from "../db";
 import AsyncStorage from "@react-native-async-storage/async-storage";
