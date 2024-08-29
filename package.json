@@ -36,7 +36,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
-    "firebase": "^10.7.1",
+    "firebase": "^10.13.1",
     "moment": "^2.29.4",
     "nativewind": "^2.0.11",
     "react": "18.3.1",

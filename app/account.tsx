@@ -13,6 +13,8 @@ import { ThemeContext } from "@context/ThemeContext";
 import { auth } from "@db/index";
 import { disconnectUser } from "@db/users";
 import useNotifications from "@hooks/useNotifications";
+import General from "@components/Account/General";
+import Preferences from "@components/Account/Preferences";
 
 export default function Account() {
 	const { theme, toggleTheme } = useContext(ThemeContext);
@@ -23,7 +25,6 @@ export default function Account() {
 		setUncompletedHabitsData,
 		setCompletedHabitsData,
 		setPoints,
-		notificationToggle,
 		setNotificationToggle,
 		member,
 		isLoading,
@@ -70,15 +71,16 @@ export default function Account() {
 				style={{ backgroundColor: theme.colors.background }}
 			>
 				<MemberInfos member={member} auth={auth} />
-
-				<ToggleList
+				<General />
+				<Preferences />
+				{/* <ToggleList
 					isDarkTheme={isDarkTheme}
 					handleToggleTheme={handleToggleTheme}
 					notificationToggle={notificationToggle}
 					handleToggleNotifications={handleToggleNotifications}
 					theme={theme}
 				/>
-				{member && Object.keys(member).length > 0 && <UserInfos member={member} />}
+				{member && Object.keys(member).length > 0 && <UserInfos member={member} />} */}
 				<LogoutButton handleLogout={handleLogout} theme={theme} />
 				<Version />
 			</ScrollView>
