@@ -2,25 +2,20 @@ import { Switch, Text, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 
-function ToggleButton({ title, onToggle, value }: any) {
+function ToggleButton({ onToggle, value }: any) {
 	const { theme } = useContext(ThemeContext);
 
 	return (
 		<TouchableOpacity
 			onPress={onToggle}
-			style={{
-				flexDirection: "row",
-				justifyContent: "space-between",
-				alignItems: "center",
-				padding: 10,
-			}}
+			className="h-6 flex items-center justify-center"
 		>
-			<Text style={{ color: theme.colors.text }}>{title}</Text>
 			<Switch
+				className=""
 				value={value}
 				onValueChange={onToggle}
 				trackColor={{
-					false: theme.colors.textSecondary,
+					false: theme.colors.grayPrimary,
 					true: theme.colors.primary,
 				}}
 				thumbColor={value ? theme.colors.textSecondary : theme.colors.primary}

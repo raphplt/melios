@@ -15,9 +15,9 @@ export default function MemberInfos({
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	return (
-		<View style={{ backgroundColor: theme.colors.background }} className="mb-4">
+		<View style={{ backgroundColor: theme.colors.background }} className="mb-5">
 			<View
-				className="mx-auto flex flex-col pt-6 justify-center w-11/12 items-center mb-12"
+				className="mx-auto flex flex-col pt-6 justify-center w-11/12 items-center"
 				style={{ backgroundColor: theme.colors.background }}
 			>
 				<Image

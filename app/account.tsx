@@ -73,15 +73,7 @@ export default function Account() {
 				<MemberInfos member={member} auth={auth} />
 				<General />
 				<Preferences />
-				{/* <ToggleList
-					isDarkTheme={isDarkTheme}
-					handleToggleTheme={handleToggleTheme}
-					notificationToggle={notificationToggle}
-					handleToggleNotifications={handleToggleNotifications}
-					theme={theme}
-				/>
-				{member && Object.keys(member).length > 0 && <UserInfos member={member} />} */}
-				<LogoutButton handleLogout={handleLogout} theme={theme} />
+
 				<Version />
 			</ScrollView>
 		</>

@@ -16,7 +16,7 @@ export default function UserInfos({ member }: { member: Member }) {
 
 	return (
 		<ScrollView
-			className="p-4 mb-6 w-[95%] mx-auto rounded-xl"
+			className="p-4 w-[95%] mx-auto rounded-xl"
 			style={{ backgroundColor: theme.colors.textSecondary }}
 		>
 			<View className="flex w-full font-semibold mx-auto mb-4 flex-row items-center ">

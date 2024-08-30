@@ -12,7 +12,7 @@ export default function AccountBlock({
 	const { theme } = useContext(ThemeContext);
 
 	return (
-		<View className="w-11/12 mx-auto">
+		<View className="w-11/12 mx-auto mt-4">
 			<Text
 				style={{
 					color: theme.colors.textTertiary,
