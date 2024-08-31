@@ -78,17 +78,31 @@ export const loginUser = async (email: string, password: string) => {
 		);
 		const user = userCredential.user;
 
+		await AsyncStorage.removeItem("user");
+		await AsyncStorage.removeItem("isAuthenticated");
+
 		await AsyncStorage.setItem("user", JSON.stringify(user));
 		await AsyncStorage.setItem("isAuthenticated", "true");
 
 		return user;
 	} catch (error: any) {
-		console.error("Erreur lors de la connexion : ", error, error.code);
-		if (error.code === "auth/user-not-found") {
-			return { error: "L'utilisateur n'existe pas." };
-		}
-		if (error.code === "auth/invalid-credential") {
-			return { error: "Le couple email/mot de passe est invalide." };
+		console.log("Erreur lors de la connexion : ", error);
+
+		switch (error.code) {
+			case "auth/user-not-found":
+				return {
+					error:
+						"L'utilisateur n'existe pas. Veuillez vérifier votre email et réessayer.",
+				};
+			case "auth/invalid-credential":
+				return {
+					error: "Le couple email/mot de passe est invalide. Veuillez réessayer.",
+				};
+			default:
+				return {
+					error:
+						"Une erreur est survenue lors de la connexion. Veuillez réessayer plus tard.",
+				};
 		}
 	}
 };
