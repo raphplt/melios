@@ -26,7 +26,6 @@ import { DataContext } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
 import { useProgression } from "@hooks/useProgression";
 import { Habit } from "../../types/habit";
-import useTrophies from "@hooks/useTrophies";
 
 export default function CardCheckHabit({
 	habit,
