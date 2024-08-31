@@ -46,12 +46,7 @@ const TabLayout: React.FC = () => {
 
 	return (
 		<>
-			<StatusBar
-				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
-				backgroundColor={
-					theme === DarkTheme ? theme.colors.background : theme.colors.background
-				}
-			/>
+
 			<Tabs tabBar={(props) => <CustomTabBar {...props} />}>
 				<Tabs.Screen
 					name="index"

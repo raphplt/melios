@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useColorScheme } from "react-native";
+import { StatusBar, useColorScheme } from "react-native";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
@@ -70,6 +70,12 @@ function MainNavigator() {
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
 			<ThemeProvider value={theme}>
+				<StatusBar
+					barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
+					backgroundColor={
+						theme === DarkTheme ? theme.colors.background : theme.colors.background
+					}
+				/>
 				<Stack>
 					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
 					<Stack.Screen

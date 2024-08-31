@@ -20,9 +20,9 @@ export default function CustomTextInput({
 	const { theme } = useContext(ThemeContext);
 
 	return (
-		<View className="flex flex-col justify-center w-11/12 mt-5 mx-auto">
+		<View className="flex flex-col justify-center w-full mt-5 mx-auto">
 			<Text
-				style={{ color: theme.colors.textTertiary }}
+				style={{ color: "rgb(28, 28, 30)" }}
 				className="mb-2 ml-2 font-semibold text-[15px]"
 			>
 				{label}
@@ -35,10 +35,10 @@ export default function CustomTextInput({
 				autoCorrect={false}
 				onFocus={onFocus}
 				style={{
-					borderColor: theme.colors.border,
 					color: theme.colors.text,
+					backgroundColor: theme.colors.cardBackground,
 				}}
-				className="px-5 py-2 w-full mx-auto border rounded-3xl"
+				className="px-5 py-2 w-full mx-auto rounded-3xl"
 				placeholderTextColor={theme.colors.grayPrimary}
 				cursorColor={theme.colors.text}
 				{...props}

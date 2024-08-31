@@ -1,19 +1,16 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import {
 	View,
-	TextInput,
 	Pressable,
 	Text,
 	Image,
 	ScrollView,
 	KeyboardAvoidingView,
 	Platform,
-	Keyboard,
+	ImageBackground,
+	StatusBar,
 } from "react-native";
-import { loginUser } from "../db/users";
-import { ThemeContext } from "../context/ThemeContext";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { useSession } from "../context/UserContext";
+
 import {
 	useNavigation,
 	ParamListBase,
@@ -22,6 +19,10 @@ import {
 import CustomTextInput from "@components/Shared/CustomTextInput";
 import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
 import ButtonNavigate from "@components/Shared/ButtonNavigate";
+import { BlurView } from "expo-blur";
+import { ThemeContext } from "@context/ThemeContext";
+import { useSession } from "@context/UserContext";
+import { loginUser } from "@db/users";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -65,98 +66,127 @@ export default function Login() {
 		}
 	};
 
+	const isDisabled = email === "" || password === "";
+
 	return (
 		<KeyboardAvoidingView
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1 }}
 		>
+			<StatusBar
+				translucent
+				backgroundColor="transparent"
+				barStyle="light-content"
+			/>
 			<ScrollView
 				ref={scrollViewRef}
 				style={{ backgroundColor: theme.colors.background }}
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ flexGrow: 1 }}
+				contentContainerStyle={{
+					flexGrow: 1,
+				}}
 			>
-				<View className="flex flex-col mt-24 items-center w-full">
-					<Image
-						source={require("../assets/images/icon.png")}
-						style={{ width: 100, height: 100 }}
-						className="mb-5 mt-12"
-					/>
-					<View className="flex flex-col justify-center items-center w-full">
-						<Text style={{ color: theme.colors.text }} className="text-3xl ">
-							Bienvenue sur
-						</Text>
-						<Text style={{ color: theme.colors.text }} className="text-3xl font-bold">
-							Melios
-						</Text>
-					</View>
-					<View className="flex flex-col justify-center items-center w-full mt-5">
-						<CustomTextInput
-							label="Votre email"
-							placeholder="melios@gmail.com"
-							value={email}
-							onChangeText={setEmail}
-							keyboardType="email-address"
-							autoCapitalize="none"
-							autoCorrect={false}
-							onFocus={() => {
-								scrollViewRef.current?.scrollToEnd({ animated: true });
-							}}
-						/>
-
-						<CustomPasswordInput
-							onChangeText={setPassword}
-							label="Votre mot de passe"
-							placeholder="********"
-							value={password}
-							error=""
-							showPassword={showPassword}
-							setShowPassword={setShowPassword}
-							secureTextEntry={!showPassword}
-							onFocus={() => {
-								scrollViewRef.current?.scrollToEnd({ animated: true });
-							}}
-						/>
-					</View>
-
-					<Pressable
-						onPress={login}
-						disabled={email === "" || password === ""}
+				<ImageBackground
+					source={require("../assets/images/illustrations/login-bg.jpg")}
+					resizeMode="cover"
+					style={{
+						flex: 1,
+						justifyContent: "center",
+					}}
+				>
+					<BlurView
+						intensity={70}
+						className="w-11/12 mx-auto p-5 rounded-xl"
 						style={{
-							backgroundColor: theme.colors.primary,
-							opacity: email === "" || password === "" ? 0.5 : 1,
-						}}
-						className="w-11/12 mx-auto py-3 rounded-3xl focus:bg-blue-800 mt-10 mb-5 flex items-center"
-					>
-						<Text
-							style={{ color: theme.colors.textSecondary }}
-							className="text-[18px] text-center"
-						>
-							Se connecter
-						</Text>
-					</Pressable>
-
-					<View
-						className=" mx-auto rounded-2xl mb-4"
-						style={{
-							backgroundColor: theme.colors.redSecondary,
-							opacity: error === "" ? 0 : 1,
-							padding: 10,
+							overflow: "hidden",
 						}}
 					>
-						<Text
-							style={{
-								color: theme.colors.redPrimary,
-							}}
-						>
-							{error}
-						</Text>
-					</View>
-					<ButtonNavigate
-						text="Je n'ai pas de compte"
-						onPress={() => navigation.navigate("register")}
-					/>
-				</View>
+						<View className="flex flex-col items-center w-full py-3 rounded-xl">
+							<Image
+								source={require("../assets/images/icon.png")}
+								style={{ width: 100, height: 100 }}
+								className="mb-5"
+							/>
+							<View className="flex flex-col justify-center items-center w-full">
+								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl ">
+									Bienvenue sur
+								</Text>
+								<Text
+									style={{ color: "rgb(28, 28, 30)" }}
+									className="text-3xl font-bold"
+								>
+									Melios
+								</Text>
+							</View>
+							<View className="flex flex-col justify-center items-center w-full mt-5">
+								<CustomTextInput
+									label="Votre email"
+									placeholder="melios@gmail.com"
+									value={email}
+									onChangeText={setEmail}
+									keyboardType="email-address"
+									autoCapitalize="none"
+									autoCorrect={false}
+									onFocus={() => {
+										scrollViewRef.current?.scrollToEnd({ animated: true });
+									}}
+								/>
+
+								<CustomPasswordInput
+									onChangeText={setPassword}
+									label="Votre mot de passe"
+									placeholder="********"
+									value={password}
+									showPassword={showPassword}
+									setShowPassword={setShowPassword}
+									secureTextEntry={!showPassword}
+									onFocus={() => {
+										scrollViewRef.current?.scrollToEnd({ animated: true });
+									}}
+								/>
+							</View>
+
+							<Pressable
+								onPress={login}
+								disabled={isDisabled}
+								style={{
+									backgroundColor: isDisabled
+										? theme.colors.grayPrimary
+										: theme.colors.primary,
+								}}
+								className="w-11/12 mx-auto py-3 rounded-3xl focus:bg-blue-800 mt-10 mb-5 flex items-center"
+							>
+								<Text
+									style={{ color: "#F8F9FF" }}
+									className="text-[18px] text-center font-semibold"
+								>
+									Se connecter
+								</Text>
+							</Pressable>
+
+							<View
+								className=" mx-auto rounded-2xl"
+								style={{
+									backgroundColor: theme.colors.redSecondary,
+									opacity: error === "" ? 0 : 1,
+									padding: 10,
+								}}
+							>
+								<Text
+									style={{
+										color: theme.colors.redPrimary,
+									}}
+								>
+									{error}
+								</Text>
+							</View>
+							<ButtonNavigate
+								text="Je n'ai pas de compte"
+								onPress={() => navigation.navigate("register")}
+							/>
+						</View>
+					</BlurView>
+				</ImageBackground>
 			</ScrollView>
 		</KeyboardAvoidingView>
 	);

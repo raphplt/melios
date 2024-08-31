@@ -11,7 +11,6 @@ interface CustomPasswordInputProps extends TextInputProps {
 	secureTextEntry?: boolean;
 	showPassword: boolean;
 	setShowPassword: (value: boolean) => void;
-	error: string;
 }
 
 export default function CustomPasswordInput({
@@ -22,25 +21,24 @@ export default function CustomPasswordInput({
 	secureTextEntry = false,
 	showPassword,
 	setShowPassword,
-	error,
 	...props
 }: CustomPasswordInputProps) {
 	const { theme } = useContext(ThemeContext);
 	const textInputRef = useRef<TextInput>(null);
 
 	return (
-		<View className="flex flex-col justify-center w-11/12 mt-5 mx-auto">
+		<View className="flex flex-col justify-center mt-5 mx-auto">
 			<Text
-				style={{ color: theme.colors.textTertiary }}
+				style={{ color: "rgb(28, 28, 30)" }}
 				className="mb-2 ml-2 font-semibold text-[15px]"
 			>
 				{label}
 			</Text>
 			<View
 				style={{
-					borderColor: error ? theme.colors.redPrimary : theme.colors.border,
+					backgroundColor: theme.colors.cardBackground,
 				}}
-				className="flex flex-row items-center justify-between px-5 w-full mx-auto border rounded-3xl"
+				className="flex flex-row items-center justify-between px-5 w-full mx-auto rounded-3xl"
 			>
 				<TextInput
 					ref={textInputRef}
@@ -53,6 +51,10 @@ export default function CustomPasswordInput({
 					placeholderTextColor={theme.colors.grayPrimary}
 					cursorColor={theme.colors.text}
 					{...props}
+					style={{
+						color: theme.colors.text,
+						backgroundColor: theme.colors.cardBackground,
+					}}
 				/>
 				<Pressable
 					onPress={() => {
