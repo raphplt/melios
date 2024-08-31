@@ -7,9 +7,14 @@ import { Iconify } from "react-native-iconify";
 interface ButtonNavigateProps {
 	text: string;
 	onPress: () => void;
+	color?: string;
 }
 
-export default function ButtonNavigate({ text, onPress }: ButtonNavigateProps) {
+export default function ButtonNavigate({
+	text,
+	onPress,
+	color,
+}: ButtonNavigateProps) {
 	const { theme } = useContext(ThemeContext);
 
 	return (
@@ -18,15 +23,19 @@ export default function ButtonNavigate({ text, onPress }: ButtonNavigateProps) {
 			style={{
 				backgroundColor: "transparent",
 			}}
-			className="w-2/3 mx-auto rounded-3xl fixed bottom-0 flex flex-row items-center justify-center px-2"
+			className="w-2/3 mx-auto rounded-3xl flex flex-row items-center justify-center px-2"
 		>
 			<Text
 				className="text-[15px] text-center py-2 mr-2 font-semibold"
-				style={{ color: "rgb(8, 32, 159)" }}
+				style={{ color: color ?? "rgb(8, 32, 159)" }}
 			>
 				{text}
 			</Text>
-			<Iconify icon="tabler:arrow-right" color="rgb(8, 32, 159)" size={20} />
+			<Iconify
+				icon="tabler:arrow-right"
+				color={color || "rgb(8, 32, 159)"}
+				size={20}
+			/>
 		</Pressable>
 	);
 }

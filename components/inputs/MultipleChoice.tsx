@@ -1,10 +1,20 @@
 import React, { useState, useContext } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
+import { Iconify } from "react-native-iconify";
+import RegisterPressable from "./RegisterPressable";
+import ButtonNext from "@components/LoginRegister/ButtonNext";
 
-export default function MultipleChoice(props: any) {
+export default function MultipleChoice({
+	question,
+	answers,
+	goToNextQuestion,
+}: {
+	question: string;
+	answers: any;
+	goToNextQuestion: (selectedAnswers: any) => void;
+}) {
 	const { theme } = useContext(ThemeContext);
-
 	const [selectedAnswers, setSelectedAnswers]: any = useState([]);
 
 	const toggleAnswer = (answer: any) => {
@@ -18,67 +28,37 @@ export default function MultipleChoice(props: any) {
 	};
 
 	return (
-		<View className="w-screen">
+		<View className=" w-full flex flex-col justify-between">
 			<Text
-				style={{ color: theme.colors.text }}
-				className="text-xl text-center mb-4 w-11/12 mx-auto"
+				style={{ color: theme.colors.textSecondary }}
+				className="text-[18px] my-4 w-11/12 font-semibold mx-auto leading-6 break-words"
 			>
-				{props.question}
+				{question}
 			</Text>
-			{props.answers.map((answer: any, index: any) => (
-				<Pressable
-					key={index}
-					onPress={() => toggleAnswer(answer)}
-					style={({ pressed }) => [
-						{
-							backgroundColor: pressed
-								? theme.colors.cardBackground
-								: theme.colors.backgroundSecondary,
-							borderColor: theme.colors.border,
-							borderWidth: 1,
-							borderRadius: 15,
-							flexDirection: "row",
-							alignItems: "center",
-							padding: 10,
-							marginVertical: 7,
-							width: "90%",
-							alignSelf: "center",
-						},
-					]}
-				>
-					<View
-						style={{
-							width: 20,
-							height: 20,
-							borderRadius: 10,
-							backgroundColor: selectedAnswers.includes(answer)
-								? theme.colors.primary
-								: theme.colors.inprimary,
-							marginRight: 10,
-							borderWidth: 1,
-							borderColor: theme.colors.primary,
-						}}
+			<View className="flex flex-col">
+				{answers.map((answer: any, index: any) => (
+					<RegisterPressable
+						key={index}
+						text={answer.answer}
+						onPress={() => toggleAnswer(answer)}
+						icon={
+							<Iconify
+								icon="tabler:circle-check"
+								color={
+									selectedAnswers.includes(answer) ? theme.colors.primary : "transparent"
+								}
+								size={24}
+							/>
+						}
+						selected={selectedAnswers.includes(answer)}
 					/>
-					<Text style={{ color: theme.colors.text }} className="text-[1">
-						{answer.answer}
-					</Text>
-				</Pressable>
-			))}
+				))}
+			</View>
 
-			<Pressable
-				className=" text-white font-bold py-2 px-4 rounded-2xl my-3 mt-12 w-11/12 mx-auto"
-				style={{ backgroundColor: theme.colors.primary }}
-				onPress={() => {
-					props.goToNextQuestion(selectedAnswers);
-				}}
-			>
-				<Text
-					style={{ color: theme.colors.textSecondary }}
-					className="text-lg text-center"
-				>
-					Continuer
-				</Text>
-			</Pressable>
+			<ButtonNext
+				selectedAnswer={selectedAnswers.length > 0 ? selectedAnswers : null}
+				goToNextQuestion={() => goToNextQuestion(selectedAnswers)}
+			/>
 		</View>
 	);
 }

@@ -18,11 +18,11 @@ import {
 } from "@react-navigation/native";
 import CustomTextInput from "@components/Shared/CustomTextInput";
 import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
-import ButtonNavigate from "@components/Shared/ButtonNavigate";
 import { BlurView } from "expo-blur";
 import { ThemeContext } from "@context/ThemeContext";
 import { useSession } from "@context/UserContext";
 import { loginUser } from "@db/users";
+import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -109,7 +109,7 @@ export default function Login() {
 							/>
 							<View className="flex flex-col justify-center items-center w-full">
 								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl ">
-									Bienvenue sur
+									Bon retour sur
 								</Text>
 								<Text
 									style={{ color: "rgb(28, 28, 30)" }}
