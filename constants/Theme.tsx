@@ -4,6 +4,7 @@ const DefaultTheme: Theme = {
 	dark: false,
 	colors: {
 		primary: "rgb(8, 32, 159)",
+		primaryLight: "rgb(8, 32, 159, 0.5)",
 		background: "#ffffff",
 		card: "#ffffff",
 		text: "rgb(28, 28, 30)",
@@ -32,6 +33,7 @@ const DarkTheme: Theme = {
 	dark: true,
 	colors: {
 		primary: "rgb(10, 132, 255)",
+		primaryLight: "rgb(10, 132, 255, 0.5)",
 		background: "#222222",
 		card: "#222222",
 		text: "rgb(229, 229, 231)",

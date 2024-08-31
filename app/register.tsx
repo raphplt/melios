@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Pressable, BackHandler, Alert } from "react-native";
+import {
+	View,
+	Text,
+	Pressable,
+	BackHandler,
+	Alert,
+	Button,
+} from "react-native";
 import { createUser } from "../db/users";
 import { ThemeContext } from "../context/ThemeContext";
 import { useNavigation } from "expo-router";
@@ -10,6 +17,7 @@ import { AntDesign } from "@expo/vector-icons";
 import InputPassword from "../components/Inputs/Password";
 import { checkEmailExists } from "../db/users";
 import { Questions } from "../constants/Slides";
+import ButtonNavigate from "@components/Shared/ButtonNavigate";
 
 export default function Register() {
 	const { theme } = useContext(ThemeContext);
@@ -168,26 +176,10 @@ export default function Register() {
 				</Text>
 			)}
 
-			<Pressable
-				onPress={() => {
-					navigation.navigate("login");
-				}}
-				style={{
-					borderWidth: 1,
-					borderColor: theme.colors.primary,
-					backgroundColor: theme.colors.cardBackground,
-				}}
-				className=" p-2 rounded-xl mt-4 w-1/3 mx-auto absolute bottom-0 mb-8 border-[1px]"
-			>
-				<Text
-					style={{
-						color: theme.colors.primary,
-					}}
-					className="text-center text-md font-semibold"
-				>
-					Ou Se connecter
-				</Text>
-			</Pressable>
+			<ButtonNavigate
+				text="J'ai déjà un compte"
+				onPress={() => navigation.navigate("login")}
+			/>
 		</View>
 	);
 }

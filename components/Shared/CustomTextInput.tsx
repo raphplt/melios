@@ -1,54 +1,47 @@
+import React, { useContext } from "react";
+import { View, Text, TextInput, TextInputProps } from "react-native";
 import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
-import { View, Text, TextInput } from "react-native";
+
+interface CustomTextInputProps extends TextInputProps {
+	label: string;
+	placeholder: string;
+	value: string;
+	onChangeText: (text: string) => void;
+}
 
 export default function CustomTextInput({
 	label,
 	placeholder,
 	value,
 	onChangeText,
-	secureTextEntry = false,
-	keyboardType = "default",
-	autoCapitalize = "none",
-	autoCorrect = false,
-	error,
+	onFocus,
 	...props
-}: {
-	label: string;
-	placeholder: string;
-	value: string;
-	onChangeText: (text: string) => void;
-	secureTextEntry?: boolean;
-	keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
-	autoCapitalize?: "none" | "sentences" | "words" | "characters";
-	autoCorrect?: boolean;
-	error: string;
-}) {
+}: CustomTextInputProps) {
 	const { theme } = useContext(ThemeContext);
+
 	return (
 		<View className="flex flex-col justify-center w-11/12 mt-5 mx-auto">
 			<Text
 				style={{ color: theme.colors.textTertiary }}
-				className="mb-2 ml-1 font-semibold text-[15px]"
+				className="mb-2 ml-2 font-semibold text-[15px]"
 			>
 				{label}
 			</Text>
 			<TextInput
-				autoFocus={true}
 				onChangeText={onChangeText}
-				cursorColor={theme.colors.text}
 				value={value}
 				placeholder={placeholder}
-				keyboardType={keyboardType}
-				autoCapitalize={autoCapitalize}
-				autoCorrect={autoCorrect}
-				secureTextEntry={secureTextEntry}
-				placeholderTextColor={theme.colors.grayPrimary}
-				className=" w-full mx-auto pl-6 pb-1 border py-2 rounded-2xl"
-				{...props}
+				autoCapitalize="none"
+				autoCorrect={false}
+				onFocus={onFocus}
 				style={{
-					borderColor: error ? theme.colors.redPrimary : theme.colors.border,
+					borderColor: theme.colors.border,
+					color: theme.colors.text,
 				}}
+				className="px-5 py-2 w-full mx-auto border rounded-3xl"
+				placeholderTextColor={theme.colors.grayPrimary}
+				cursorColor={theme.colors.text}
+				{...props}
 			/>
 		</View>
 	);

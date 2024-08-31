@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
 	View,
 	TextInput,
@@ -8,6 +8,7 @@ import {
 	ScrollView,
 	KeyboardAvoidingView,
 	Platform,
+	Keyboard,
 } from "react-native";
 import { loginUser } from "../db/users";
 import { ThemeContext } from "../context/ThemeContext";
@@ -20,6 +21,7 @@ import {
 } from "@react-navigation/native";
 import CustomTextInput from "@components/Shared/CustomTextInput";
 import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
+import ButtonNavigate from "@components/Shared/ButtonNavigate";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -27,6 +29,7 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const scrollViewRef = useRef<ScrollView>(null);
 
 	const { user, isLoading } = useSession();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -66,11 +69,12 @@ export default function Login() {
 		<KeyboardAvoidingView
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1 }}
-			className="h-fit"
 		>
 			<ScrollView
+				ref={scrollViewRef}
 				style={{ backgroundColor: theme.colors.background }}
 				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ flexGrow: 1 }}
 			>
 				<View className="flex flex-col mt-24 items-center w-full">
 					<Image
@@ -95,7 +99,9 @@ export default function Login() {
 							keyboardType="email-address"
 							autoCapitalize="none"
 							autoCorrect={false}
-							error=""
+							onFocus={() => {
+								scrollViewRef.current?.scrollToEnd({ animated: true });
+							}}
 						/>
 
 						<CustomPasswordInput
@@ -107,6 +113,9 @@ export default function Login() {
 							showPassword={showPassword}
 							setShowPassword={setShowPassword}
 							secureTextEntry={!showPassword}
+							onFocus={() => {
+								scrollViewRef.current?.scrollToEnd({ animated: true });
+							}}
 						/>
 					</View>
 
@@ -128,7 +137,7 @@ export default function Login() {
 					</Pressable>
 
 					<View
-						className=" mx-auto rounded-2xl"
+						className=" mx-auto rounded-2xl mb-4"
 						style={{
 							backgroundColor: theme.colors.redSecondary,
 							opacity: error === "" ? 0 : 1,
@@ -143,22 +152,10 @@ export default function Login() {
 							{error}
 						</Text>
 					</View>
-
-					<Pressable
+					<ButtonNavigate
+						text="Je n'ai pas de compte"
 						onPress={() => navigation.navigate("register")}
-						style={{
-							borderColor: theme.colors.primary,
-							backgroundColor: theme.colors.cardBackground,
-						}}
-						className="p-2 rounded-xl mt-8 w-1/3 mx-auto border-[1px] border-gray-300"
-					>
-						<Text
-							className="text-center text-md font-semibold"
-							style={{ color: theme.colors.primary }}
-						>
-							Ou S'inscrire
-						</Text>
-					</Pressable>
+					/>
 				</View>
 			</ScrollView>
 		</KeyboardAvoidingView>
