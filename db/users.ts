@@ -5,6 +5,7 @@ import {
 	onAuthStateChanged,
 	fetchSignInMethodsForEmail,
 	deleteUser,
+	sendEmailVerification,
 } from "firebase/auth";
 import { auth } from ".";
 import { collection, addDoc, deleteDoc, doc } from "firebase/firestore";
@@ -29,9 +30,6 @@ export const createUser = async (form: any) => {
 			throw new Error("Email or password is empty.");
 		}
 
-		console.log("Email : ", email);
-		console.log("Password : ", password);
-
 		let userCredential;
 		try {
 			userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -42,6 +40,14 @@ export const createUser = async (form: any) => {
 		}
 
 		const user = userCredential.user;
+
+		try {
+			await sendEmailVerification(user);
+			console.log("Email de vérification envoyé.");
+		} catch (error: any) {
+			console.error("Erreur lors de l'envoi de l'email de vérification : ", error);
+			throw new Error("Failed to send verification email: " + error.message);
+		}
 
 		const membersCollectionRef = collection(db, "members");
 
@@ -60,19 +66,6 @@ export const createUser = async (form: any) => {
 			form.find((item: any) => item.slug === "temps")?.answers[0]?.answer || "";
 		const nom =
 			form.find((item: any) => item.slug === "nom")?.answers[0]?.answer || "";
-
-		console.log(
-			"Objectifs : ",
-			objectifs,
-			"Aspects : ",
-			aspects,
-			"Motivation : ",
-			motivation,
-			"Temps : ",
-			temps,
-			"Nom : ",
-			nom
-		);
 
 		try {
 			await addDoc(membersCollectionRef, {

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar, useColorScheme } from "react-native";
-import { ThemeProvider } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ParamListBase,
+	ThemeProvider,
+} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
@@ -145,11 +149,11 @@ function MainNavigator() {
 
 export default function RootLayout() {
 	const { user, isLoading: isSessionLoading }: any = useSession();
-	const navigation: any = useNavigation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [isNavigationReady, setIsNavigationReady] = useState(false);
 
 	useEffect(() => {
-		return navigation.addListener("ready", () => {
+		return navigation.addListener("state", () => {
 			setIsNavigationReady(true);
 		});
 	}, [navigation]);
