@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useColorScheme } from "react-native";
-import { ThemeProvider } from "@react-navigation/native";
+import { StatusBar, useColorScheme } from "react-native";
+import {
+	NavigationProp,
+	ParamListBase,
+	ThemeProvider,
+} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
@@ -70,6 +74,12 @@ function MainNavigator() {
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
 			<ThemeProvider value={theme}>
+				<StatusBar
+					barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
+					backgroundColor={
+						theme === DarkTheme ? theme.colors.background : theme.colors.background
+					}
+				/>
 				<Stack>
 					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
 					<Stack.Screen
@@ -130,6 +140,12 @@ function MainNavigator() {
 							gestureEnabled: false,
 						}}
 					/>
+					<Stack.Screen
+						name="resetPassword"
+						options={{
+							title: "Réinitialisation du mot de passe",
+						}}
+					/>
 				</Stack>
 				{isOpen && <NotificationBox />}
 			</ThemeProvider>
@@ -139,11 +155,11 @@ function MainNavigator() {
 
 export default function RootLayout() {
 	const { user, isLoading: isSessionLoading }: any = useSession();
-	const navigation: any = useNavigation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [isNavigationReady, setIsNavigationReady] = useState(false);
 
 	useEffect(() => {
-		return navigation.addListener("ready", () => {
+		return navigation.addListener("state", () => {
 			setIsNavigationReady(true);
 		});
 	}, [navigation]);

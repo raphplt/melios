@@ -153,6 +153,7 @@ const useIndex = () => {
 
 	// Functions
 
+	//TODO pas utile ?
 	const backgroundRefresh = useCallback(async () => {
 		if (abortController.current) {
 			abortController.current.abort();

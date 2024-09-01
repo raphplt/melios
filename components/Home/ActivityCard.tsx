@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState, useRef } from "react";
 import { View, Text, Pressable, Animated } from "react-native";
-import tinycolor from "tinycolor2";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { UserHabit } from "../../types/userHabit";
@@ -13,7 +12,6 @@ import { lightenColor } from "@utils/colors";
 export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [habitInfos, setHabitInfos] = useState<any>({});
-	const [isTouched, setIsTouched] = useState(false);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -31,7 +29,6 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 	);
 
 	const handleTouchStart = () => {
-		setIsTouched(true);
 		Animated.spring(scaleAnim, {
 			toValue: 0.95,
 			useNativeDriver: true,
@@ -39,7 +36,6 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 	};
 
 	const handleTouchEnd = () => {
-		setIsTouched(false);
 		Animated.spring(scaleAnim, {
 			toValue: 1,
 			useNativeDriver: true,

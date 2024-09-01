@@ -1,4 +1,18 @@
-export const Questions = [
+export interface Answer {
+	answer: string;
+	value: number;
+	icon?: string;
+}
+
+export interface Question {
+	question: string;
+	slug: string;
+	answers: Answer[];
+	questionType: string;
+	tips: string;
+}
+
+export const Questions: Question[] = [
 	{
 		question: "Bienvenue sur Melios ! Êtes-vous prêt à commencer votre aventure?",
 		slug: "welcome",
@@ -61,17 +75,20 @@ export const Questions = [
 		slug: "nom",
 		answers: [],
 		questionType: "Text",
+		tips: "",
 	},
 	{
 		question: "Votre adresse email",
 		slug: "email",
 		answers: [],
 		questionType: "Text",
+		tips: "",
 	},
 	{
-		question: "Choisir un mot de passe",
+		question: "Une dernière étape...",
 		slug: "password",
 		answers: [],
 		questionType: "Password",
+		tips: "",
 	},
 ];

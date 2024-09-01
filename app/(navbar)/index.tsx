@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl, Image, Button } from "react-native";
+import { RefreshControl, Image } from "react-native";
 
 // Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
@@ -23,9 +23,6 @@ export default function Index() {
 		isDayTime,
 		onRefresh,
 	} = useIndex();
-
-	// Redirect if user is not connected
-	!user && navigation.navigate("login");
 
 	if (loading || !userHabits || isLoading) {
 		return <LoaderScreen text="Chargement de vos habitudes..." />;
@@ -53,7 +50,7 @@ export default function Index() {
 			<ListHabitsHome />
 
 			<ActivitiesContainer />
-			
+
 			<DailyQuote />
 		</ParallaxScrollView>
 	);

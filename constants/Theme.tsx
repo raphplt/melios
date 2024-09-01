@@ -4,6 +4,7 @@ const DefaultTheme: Theme = {
 	dark: false,
 	colors: {
 		primary: "rgb(8, 32, 159)",
+		primaryLight: "rgb(8, 32, 159, 0.5)",
 		background: "#ffffff",
 		card: "#ffffff",
 		text: "rgb(28, 28, 30)",
@@ -18,7 +19,7 @@ const DefaultTheme: Theme = {
 		greenSecondary: "#E6F5E8",
 		yellowPrimary: "#D1A916",
 		yellowSecondary: "#FFFBEA",
-		redPrimary: "#B84E4A",
+		redPrimary: "#FF6F61",
 		redSecondary: "#FBEAEA",
 		bluePrimary: "#448BAD",
 		blueSecondary: "#EAF7FB",
@@ -32,6 +33,7 @@ const DarkTheme: Theme = {
 	dark: true,
 	colors: {
 		primary: "rgb(10, 132, 255)",
+		primaryLight: "rgb(10, 132, 255, 0.5)",
 		background: "#222222",
 		card: "#222222",
 		text: "rgb(229, 229, 231)",
@@ -46,7 +48,7 @@ const DarkTheme: Theme = {
 		greenSecondary: "#E6F5E8",
 		yellowPrimary: "#D1A916",
 		yellowSecondary: "#FFFBEA",
-		redPrimary: "#B84E4A",
+		redPrimary: "#FF6F61",
 		redSecondary: "#FBEAEA",
 		bluePrimary: "#448BAD",
 		blueSecondary: "#1E3A8A",

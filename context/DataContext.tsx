@@ -20,7 +20,7 @@ export const DataContext = createContext<any>({});
 
 export const DataProvider = ({ children }: any) => {
 	const { isLoading: isSessionLoading, user } = useSession();
-	const [habits, setHabits] = useState<Habit[]>();
+	const [habits, setHabits] = useState<Habit[]>([]);
 	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
 		UserHabit[]
 	>([]);

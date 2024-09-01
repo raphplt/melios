@@ -2,6 +2,7 @@ export type Theme = {
 	dark: boolean;
 	colors: {
 		primary: string;
+		primaryLight: string;
 		background: string;
 		card: string;
 		text: string;

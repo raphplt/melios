@@ -1,193 +1,60 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Pressable, BackHandler, Alert } from "react-native";
-import { createUser } from "../db/users";
-import { ThemeContext } from "../context/ThemeContext";
-import { useNavigation } from "expo-router";
-import MultipleChoice from "../components/Inputs/MultipleChoice";
-import InputText from "../components/Inputs/Text";
-import SingleChoice from "../components/Inputs/SingleChoice";
-import { AntDesign } from "@expo/vector-icons";
-import InputPassword from "../components/Inputs/Password";
-import { checkEmailExists } from "../db/users";
-import { Questions } from "../constants/Slides";
+import React from "react";
+import { View, Image, ImageBackground } from "react-native";
+import { BlurView } from "expo-blur";
+import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
+import ButtonBackRegister from "@components/LoginRegister/ButtonBackRegister";
+import useFormHandler from "@hooks/useRegister";
 
 export default function Register() {
-	const { theme } = useContext(ThemeContext);
-	const [form, setForm]: any = useState([]);
-	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const navigation: any = useNavigation();
-
-	const goToNextQuestion = async (answer: any) => {
-		if (Questions[currentQuestionIndex].slug === "email") {
-			const emailExists = await checkEmailExists(answer);
-			if (emailExists) {
-				Alert.alert("Erreur", "Cette adresse e-mail est déjà utilisée.", [
-					{ text: "OK" },
-				]);
-				return;
-			} else {
-				console.log("Cette adresse e-mail est disponible.");
-			}
-		}
-
-		if (Questions[currentQuestionIndex].slug === "welcome") {
-			if (answer.value === 2) {
-				return;
-			}
-		}
-
-		if (currentQuestionIndex < Questions.length - 1) {
-			setForm((prevForm: any) => [
-				...prevForm,
-				{ [Questions[currentQuestionIndex].slug]: answer },
-			]);
-			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-		} else {
-			try {
-				const updatedForm = [
-					...form,
-					{ [Questions[currentQuestionIndex].slug]: answer },
-				];
-				const user = await createUser(updatedForm);
-				if (user) {
-					console.log("Redirection");
-					navigation.navigate("select");
-				}
-			} catch (error) {
-				console.error("Erreur lors de la création de l'utilisateur : ", error);
-			}
-		}
-	};
-
-	const goBack = () => {
-		if (currentQuestionIndex > 0) {
-			setCurrentQuestionIndex(currentQuestionIndex - 1);
-			form.pop();
-			return true;
-		}
-
-		Alert.alert("Quitter", "Voulez-vous quitter l'application ?", [
-			{ text: "Non" },
-			{ text: "Oui", onPress: () => BackHandler.exitApp() },
-		]);
-
-		return true;
-	};
-
-	useEffect(() => {
-		BackHandler.addEventListener("hardwareBackPress", goBack);
-
-		return () => {
-			BackHandler.removeEventListener("hardwareBackPress", goBack);
-		};
-	}, [currentQuestionIndex, form]);
+	const {
+		currentQuestionIndex,
+		form,
+		setCurrentQuestionIndex,
+		setForm,
+		renderQuestion,
+		navigation,
+	} = useFormHandler();
 
 	return (
-		<View
-			style={{ backgroundColor: theme.colors.background }}
-			className="h-[100vh] flex flex-col justify-evenly items-center w-screen"
-		>
-			{currentQuestionIndex > 0 && (
-				<Pressable
-					onPress={() => {
-						setCurrentQuestionIndex(currentQuestionIndex - 1);
-						form.pop();
-					}}
-					className="absolute top-12 left-0 mt-8 ml-8 flex flex-row items-center"
-				>
-					<AntDesign
-						name="left"
-						size={18}
-						color={theme.colors.text}
-						style={{ textAlign: "center" }}
-					/>
-					<Text
-						style={{ color: theme.colors.text }}
-						className="text-center text-md font-semibold ml-2"
-					>
-						Précédent
-					</Text>
-				</Pressable>
-			)}
-			{currentQuestionIndex - 1 < Questions.length ? (
-				<View className="flex flex-col ">
-					{Questions[currentQuestionIndex].questionType &&
-						Questions[currentQuestionIndex].questionType === "MultipleChoice" && (
-							<MultipleChoice
-								question={Questions[currentQuestionIndex].question}
-								answers={Questions[currentQuestionIndex].answers}
-								form={form}
-								setForm={setForm}
-								slug={Questions[currentQuestionIndex].slug}
-								goToNextQuestion={goToNextQuestion}
-							/>
-						)}
-
-					{Questions[currentQuestionIndex].questionType &&
-						Questions[currentQuestionIndex].questionType === "SingleChoice" && (
-							<SingleChoice
-								question={Questions[currentQuestionIndex].question}
-								answers={Questions[currentQuestionIndex].answers}
-								slug={Questions[currentQuestionIndex].slug}
-								form={form}
-								setForm={setForm}
-								goToNextQuestion={goToNextQuestion}
-								singleChoice={true}
-							/>
-						)}
-
-					{Questions[currentQuestionIndex].questionType &&
-						Questions[currentQuestionIndex].questionType === "Text" && (
-							<InputText
-								question={Questions[currentQuestionIndex].question}
-								answers={Questions[currentQuestionIndex].answers}
-								slug={Questions[currentQuestionIndex].slug}
-								form={form}
-								setForm={setForm}
-								goToNextQuestion={goToNextQuestion}
-							/>
-						)}
-					{Questions[currentQuestionIndex].questionType &&
-						Questions[currentQuestionIndex].questionType === "Password" && (
-							<InputPassword
-								question={Questions[currentQuestionIndex].question}
-								answers={Questions[currentQuestionIndex].answers}
-								slug={Questions[currentQuestionIndex].slug}
-								form={form}
-								setForm={setForm}
-								goToNextQuestion={goToNextQuestion}
-							/>
-						)}
-				</View>
-			) : (
-				<Text
-					style={{ color: theme.colors.text }}
-					className="text-center text-2xl mt-24"
-				>
-					Fin du questionnaire
-				</Text>
-			)}
-
-			<Pressable
-				onPress={() => {
-					navigation.navigate("login");
-				}}
+		<View style={{ flex: 1 }}>
+			<ImageBackground
+				source={require("../assets/images/illustrations/register-bg.jpg")}
+				resizeMode="cover"
 				style={{
-					borderWidth: 1,
-					borderColor: theme.colors.primary,
-					backgroundColor: theme.colors.cardBackground,
+					flex: 1,
+					justifyContent: "center",
 				}}
-				className=" p-2 rounded-xl mt-4 w-1/3 mx-auto absolute bottom-0 mb-8 border-[1px]"
 			>
-				<Text
+				{currentQuestionIndex > 0 && (
+					<ButtonBackRegister
+						setCurrentQuestionIndex={setCurrentQuestionIndex}
+						currentQuestionIndex={currentQuestionIndex}
+						form={form}
+						setForm={setForm}
+					/>
+				)}
+				<BlurView
+					intensity={70}
+					className="mx-auto p-5 rounded-xl w-11/12"
 					style={{
-						color: theme.colors.primary,
+						overflow: "hidden",
 					}}
-					className="text-center text-md font-semibold"
 				>
-					Ou Se connecter
-				</Text>
-			</Pressable>
+					<View className="flex flex-col items-center">
+						<Image
+							source={require("../assets/images/icon.png")}
+							style={{ width: 100, height: 100 }}
+							className="mb-5"
+						/>
+						{renderQuestion()}
+					</View>
+				</BlurView>
+				<ButtonNavigate
+					text="J'ai déjà un compte"
+					color="white"
+					onPress={() => navigation.navigate("login")}
+				/>
+			</ImageBackground>
 		</View>
 	);
 }

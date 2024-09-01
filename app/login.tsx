@@ -1,23 +1,32 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
 	View,
-	TextInput,
-	Pressable,
-	Text,
-	Image,
 	ScrollView,
 	KeyboardAvoidingView,
 	Platform,
+	ImageBackground,
+	StatusBar,
+	Text,
+	Image,
+	Pressable,
 } from "react-native";
-import { loginUser } from "../db/users";
-import { ThemeContext } from "../context/ThemeContext";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { useSession } from "../context/UserContext";
 import {
 	useNavigation,
 	ParamListBase,
 	NavigationProp,
+	useIsFocused,
 } from "@react-navigation/native";
+import { Iconify } from "react-native-iconify";
+import { BlurView } from "expo-blur";
+
+//Custom imports
+import CustomTextInput from "@components/Shared/CustomTextInput";
+import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
+import { ThemeContext } from "@context/ThemeContext";
+import { useSession } from "@context/UserContext";
+import { loginUser } from "@db/users";
+import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
+import ButtonLogin from "@components/LoginRegister/ButtonLogin";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -25,6 +34,9 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const scrollViewRef = useRef<ScrollView>(null);
+	const passwordInputRef = useRef(null);
+	const isFocused = useIsFocused();
 
 	const { user, isLoading } = useSession();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -43,6 +55,14 @@ export default function Login() {
 		}
 	}, [isLoading, user, navigation]);
 
+	useEffect(() => {
+		if (!isFocused) {
+			setEmail("");
+			setPassword("");
+			setError("");
+		}
+	}, [isFocused]);
+
 	const login = async () => {
 		try {
 			const snapshot: any = await loginUser(email, password);
@@ -56,94 +76,138 @@ export default function Login() {
 			}
 		} catch (error) {
 			setError("Erreur lors de la connexion.");
-			console.error("Erreur lors de la création de l'utilisateur : ", error);
+			console.log("Erreur lors de la création de l'utilisateur : ", error);
 		}
 	};
+
+	const isDisabled = email === "" || password === "";
 
 	return (
 		<KeyboardAvoidingView
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			style={{ flex: 1 }}
 		>
+			<StatusBar
+				translucent
+				backgroundColor="transparent"
+				barStyle="light-content"
+			/>
 			<ScrollView
+				ref={scrollViewRef}
 				style={{ backgroundColor: theme.colors.background }}
 				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{
+					flexGrow: 1,
+				}}
 			>
-				<View className="flex flex-col h-[90vh] justify-start mt-24 items-center w-full">
-					<Image
-						source={require("../assets/images/icon.png")}
-						style={{ width: 100, height: 100 }}
-						className="mb-10 mt-12"
-					/>
-					<Text style={{ color: theme.colors.text }} className="text-3xl font-bold">
-						Connexion à Melios
-					</Text>
-					<View className="flex flex-col justify-center items-center w-full mt-10 mx-auto">
-						<TextInput
-							onChangeText={setEmail}
-							value={email}
-							placeholder="Email"
-							keyboardType="email-address"
-							autoCapitalize="none"
-							autoComplete="email"
-							style={{ color: theme.colors.text }}
-							placeholderTextColor={"#333333"}
-							className="text-lg w-10/12 mx-auto pl-2 py-5 pb-1 border-b-2 "
-						/>
-						<View className="flex flex-row w-10/12 mx-auto items-start justify-between border-b-2 mt-10 py-1">
-							<TextInput
-								onChangeText={setPassword}
-								value={password}
-								placeholder="Mot de passe"
-								secureTextEntry={!showPassword}
-								style={{ color: theme.colors.text }}
-								placeholderTextColor={"#333333"}
-								className="text-lg pl-2"
+				<ImageBackground
+					source={require("../assets/images/illustrations/login-bg.jpg")}
+					resizeMode="cover"
+					style={{
+						flex: 1,
+						justifyContent: "center",
+					}}
+				>
+					<BlurView
+						intensity={70}
+						className="w-11/12 mx-auto p-5 rounded-xl"
+						style={{
+							overflow: "hidden",
+						}}
+					>
+						<View className="flex flex-col items-center w-full py-3 rounded-xl">
+							<Image
+								source={require("../assets/images/icon.png")}
+								style={{ width: 100, height: 100 }}
+								className="mb-4"
 							/>
-							<Pressable onPress={() => setShowPassword(!showPassword)} style={{}}>
-								<FontAwesome5
-									name={showPassword ? "eye-slash" : "eye"}
-									size={20}
-									color={theme.colors.text}
+							<View className="flex flex-col justify-center items-center w-full">
+								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
+									Bon retour sur
+								</Text>
+								<Text
+									style={{ color: "rgb(28, 28, 30)" }}
+									className="text-3xl font-bold"
+								>
+									Melios
+								</Text>
+							</View>
+							<View className="flex flex-col justify-center items-center w-full mt-3">
+								<CustomTextInput
+									label="Votre email"
+									placeholder="melios@gmail.com"
+									value={email}
+									onChangeText={setEmail}
+									keyboardType="email-address"
+									autoCapitalize="none"
+									autoCorrect={false}
+									onFocus={() => {
+										scrollViewRef.current?.scrollToEnd({ animated: true });
+									}}
+									onSubmitEditing={() =>
+										passwordInputRef.current && (passwordInputRef.current as any).focus()
+									}
+									returnKeyType="next"
 								/>
-							</Pressable>
+								<View>
+									<CustomPasswordInput
+										ref={passwordInputRef}
+										onChangeText={setPassword}
+										label="Votre mot de passe"
+										placeholder="********"
+										value={password}
+										showPassword={showPassword}
+										setShowPassword={setShowPassword}
+										secureTextEntry={!showPassword}
+										onFocus={() => {
+											scrollViewRef.current?.scrollToEnd({ animated: true });
+										}}
+										onSubmitEditing={login}
+										returnKeyType="done"
+									/>
+									<Pressable>
+										<Text
+											style={{
+												color: theme.colors.primary,
+											}}
+											className="mt-1 ml-2"
+											onPress={() => navigation.navigate("resetPassword")}
+										>
+											Mot de passe oublié ?
+										</Text>
+									</Pressable>
+								</View>
+							</View>
+
+							<ButtonLogin login={login} isDisabled={isDisabled} theme={theme} />
+							<View
+								className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
+								style={{
+									backgroundColor: theme.colors.redSecondary,
+									display: error === "" ? "none" : "flex",
+								}}
+							>
+								<Iconify
+									icon="material-symbols:error"
+									color={theme.colors.redPrimary}
+									size={20}
+								/>
+								<Text
+									style={{
+										color: theme.colors.redPrimary,
+									}}
+									className="ml-2"
+								>
+									{error}
+								</Text>
+							</View>
 						</View>
-					</View>
-					<Text className="text-center text-lg mt-6 text-red-500 mb-12">
-						{error}
-					</Text>
-					<Pressable
-						onPress={login}
-						disabled={email === "" || password === ""}
-						style={{
-							backgroundColor: theme.colors.primary,
-							opacity: email === "" || password === "" ? 0.5 : 1,
-						}}
-						className="w-10/12 mx-auto py-2 rounded-3xl focus:bg-blue-800 mb-4 flex items-center"
-					>
-						<Text
-							style={{ color: theme.colors.textSecondary }}
-							className="text-xl text-center"
-						>
-							Se connecter
-						</Text>
-					</Pressable>
-					<Pressable
+					</BlurView>
+					<ButtonNavigate
+						text="Je n'ai pas de compte"
 						onPress={() => navigation.navigate("register")}
-						style={{
-							borderColor: theme.colors.primary,
-							backgroundColor: theme.colors.cardBackground,
-						}}
-						className="p-2 rounded-xl mt-8 w-1/3 mx-auto border-[1px] border-gray-300"
-					>
-						<Text
-							className="text-center text-md font-semibold"
-							style={{ color: theme.colors.primary }}
-						>
-							Ou S'inscrire
-						</Text>
-					</Pressable>
-				</View>
+					/>
+				</ImageBackground>
 			</ScrollView>
 		</KeyboardAvoidingView>
 	);
