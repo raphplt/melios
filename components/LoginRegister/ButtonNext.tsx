@@ -31,8 +31,6 @@ export default function ButtonNext({
 		}).start();
 	};
 
-	console.log(isDisabled);
-
 	return (
 		<Animated.View
 			style={{

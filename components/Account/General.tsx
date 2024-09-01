@@ -5,10 +5,13 @@ import AccountBlock from "./AccountBlock";
 import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
 import RowBlock from "./RowBlock";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 export default function General() {
 	const { theme } = useContext(ThemeContext);
 	const { habits } = useData();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	return (
 		<AccountBlock title="Général">
@@ -25,8 +28,9 @@ export default function General() {
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}
+				onPress={() => navigation.navigate("editHabits")}
 			/>
-			<View className="w-full my-3 h-[1px] bg-gray-300"></View>
+			<View className="w-full h-[1px] bg-gray-300"></View>
 			<RowBlock
 				icon={<Iconify icon="ph:target" size={24} color={theme.colors.text} />}
 				title="Mes objectifs"

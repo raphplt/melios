@@ -26,7 +26,7 @@ export default function AccountBlock({
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 				}}
-				className="rounded-xl py-4 px-3 mb-4"
+				className="rounded-xl mb-4"
 			>
 				{children}
 			</View>

@@ -12,7 +12,8 @@
 		"nativewind",
 		"Pressable",
 		"tailwindcss",
-		"tinycolor"
+		"tinycolor",
+		"zondicons"
 	],
 	"cSpell.language": "fr, en-GB, en-US"
 }

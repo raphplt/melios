@@ -1,14 +1,23 @@
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getCategoryById } from "./category";
+import { Habit } from "../types/habit";
+import { LAST_FETCH_KEY, ONE_WEEK_IN_MS } from "./category";
 
 const LOCAL_STORAGE_KEY = "habitsData";
 
 // Fonction pour récupérer tous les documents de la collection "habits"
 export const getAllHabits = async (forceRefresh = false) => {
 	try {
-		if (!forceRefresh) {
+		const now = new Date().getTime();
+		const lastFetchDate = await AsyncStorage.getItem(LAST_FETCH_KEY);
+
+		if (
+			!forceRefresh &&
+			lastFetchDate &&
+			now - parseInt(lastFetchDate, 10) < ONE_WEEK_IN_MS
+		) {
 			const storedHabits = await AsyncStorage.getItem(LOCAL_STORAGE_KEY);
 
 			if (storedHabits) {
@@ -18,6 +27,7 @@ export const getAllHabits = async (forceRefresh = false) => {
 
 		const habitsCollection = collection(db, "habits");
 		const habitsSnapshot = await getDocs(habitsCollection);
+		console.log("[FETCH] - Database fetch for habits");
 
 		const habitsData = habitsSnapshot.docs.map((doc) => ({
 			id: doc.id,
@@ -25,6 +35,8 @@ export const getAllHabits = async (forceRefresh = false) => {
 		}));
 
 		await AsyncStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(habitsData));
+		await AsyncStorage.setItem(LAST_FETCH_KEY, now.toString());
+
 		return habitsData;
 	} catch (error) {
 		console.error(
@@ -39,12 +51,12 @@ export const getAllHabits = async (forceRefresh = false) => {
 export const getHabitsByCategory = async () => {
 	try {
 		const habits = await getAllHabits();
-		return habits.reduce((acc: any, habit: any) => {
+		return habits.reduce((acc: any, habit: Habit) => {
 			const category = habit.category;
-			if (!acc[category]) {
-				acc[category] = [];
+			if (!acc[category.id]) {
+				acc[category.id] = [];
 			}
-			acc[category].push(habit);
+			acc[category.id].push(habit);
 			return acc;
 		}, {});
 	} catch (error) {
@@ -56,10 +68,10 @@ export const getHabitsByCategory = async () => {
 	}
 };
 
-export const getHabitById = async (id: any) => {
+export const getHabitById = async (id: string) => {
 	try {
 		const habits = await getAllHabits();
-		const habit = habits.find((habit: any) => habit.id === id);
+		const habit = habits.find((habit: Habit) => habit.id === id);
 		if (habit) {
 			const category = await getCategoryById(habit.category);
 			return { ...habit, category };

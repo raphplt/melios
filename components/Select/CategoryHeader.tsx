@@ -1,5 +1,7 @@
 import { FontAwesome6, AntDesign } from "@expo/vector-icons";
-import { Pressable, View, Text } from "react-native";
+import { Pressable, View, Text, Animated } from "react-native";
+import { Iconify } from "react-native-iconify";
+import { useState, useEffect, useRef } from "react";
 
 export default function CategoryHeader({
 	item,
@@ -12,20 +14,41 @@ export default function CategoryHeader({
 	setDisplayedHabitsCount: any;
 	theme: any;
 }) {
+	const [isExpanded, setIsExpanded] = useState(
+		displayedHabitsCount[item.category] === 5
+	);
+	const rotateAnim = useRef(new Animated.Value(0)).current;
+
+	useEffect(() => {
+		Animated.timing(rotateAnim, {
+			toValue: isExpanded ? 1 : 0,
+			duration: 200,
+			useNativeDriver: true,
+		}).start();
+	}, [isExpanded]);
+
+	const rotate = rotateAnim.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "180deg"],
+	});
+
+	const handlePress = () => {
+		setIsExpanded(!isExpanded);
+		setDisplayedHabitsCount((prevState: any) => ({
+			...prevState,
+			[item.category]: prevState[item.category] > 0 ? 0 : 5,
+		}));
+	};
+
 	return (
 		<Pressable
-			className="w-11/12 mx-auto flex flex-row items-center justify-between py-2 px-2 rounded-2xl mb-2 mt-4"
+			className="w-[95%] mx-auto flex flex-row items-center justify-between py-2 px-2 rounded-3xl mb-2 mt-4"
 			style={{
 				backgroundColor: theme.colors.background,
 				borderColor: item.color,
 				borderWidth: 1,
 			}}
-			onPress={() =>
-				setDisplayedHabitsCount((prevState: any) => ({
-					...prevState,
-					[item.category]: prevState[item.category] > 0 ? 0 : 5,
-				}))
-			}
+			onPress={handlePress}
 		>
 			<View className="flex flex-row items-center">
 				<FontAwesome6
@@ -44,13 +67,13 @@ export default function CategoryHeader({
 					{item.category}
 				</Text>
 			</View>
-			<View>
+			<Animated.View style={{ transform: [{ rotate }] }}>
 				{displayedHabitsCount[item.category] === 5 ? (
-					<AntDesign name="caretup" size={20} color={item.color} />
+					<Iconify icon="mingcute:up-line" size={20} color={item.color} />
 				) : (
-					<AntDesign name="caretdown" size={20} color={item.color} />
+					<Iconify icon="mdi:chevron-down" size={20} color={item.color} />
 				)}
-			</View>
+			</Animated.View>
 		</Pressable>
 	);
 }

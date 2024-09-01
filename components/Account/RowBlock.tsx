@@ -1,5 +1,5 @@
 import { ThemeContext } from "@context/ThemeContext";
-import React, { useContext } from "react";
+import { useContext, useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import HabitsCount from "./HabitCount";
 
@@ -9,6 +9,7 @@ interface RowBlockProps {
 	count?: number;
 	onPress?: () => void;
 	rightContent?: React.ReactNode;
+	color?: string;
 }
 
 export default function RowBlock({
@@ -17,20 +18,30 @@ export default function RowBlock({
 	count,
 	onPress,
 	rightContent,
+	color,
 }: RowBlockProps) {
 	const { theme } = useContext(ThemeContext);
+	const [isTouching, setIsTouching] = useState(false);
 
 	return (
 		<Pressable
-			className="flex flex-row items-center justify-between py-1 "
+			className="flex flex-row items-center justify-between py-4 px-3 rounded-xl"
 			onPress={onPress}
+			onTouchStart={() => setIsTouching(true)}
+			onTouchEnd={() => setIsTouching(false)}
+			onTouchCancel={() => setIsTouching(false)}
+			style={{
+				backgroundColor: isTouching
+					? theme.colors.backgroundSecondary
+					: theme.colors.cardBackground,
+			}}
 		>
 			<View className="flex flex-row items-center">
 				{icon}
 				<Text
 					className="text-[16px] ml-2 mr-2"
 					style={{
-						color: theme.colors.text,
+						color: color ?? theme.colors.text,
 					}}
 				>
 					{title}

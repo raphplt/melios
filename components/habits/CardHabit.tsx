@@ -18,7 +18,7 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-	const { setUncompletedHabitsData, setHabits, habits } = useData();
+	const { setUncompletedHabitsData, setHabits } = useData();
 
 	const setHabit = async () => {
 		const newToggleValue = !toggleCheckBox;

@@ -149,7 +149,7 @@ export default function Select() {
 							ref={scrollViewRef}
 							horizontal
 							showsHorizontalScrollIndicator={false}
-							className="pt-4 ml-4"
+							className="pt-4 ml-4 mb-3"
 						>
 							{categories.map((category) => (
 								<Pressable

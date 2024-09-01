@@ -15,8 +15,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const createUser = async (form: any) => {
 	try {
-		console.log("Form : ", JSON.stringify(form, null, 2));
-
 		const emailQuestion = form.find((item: any) => item.slug === "email");
 		const passwordQuestion = form.find((item: any) => item.slug === "password");
 
@@ -85,6 +83,7 @@ export const createUser = async (form: any) => {
 		try {
 			await AsyncStorage.setItem("user", JSON.stringify(user));
 			await AsyncStorage.setItem("isAuthenticated", "true");
+			await AsyncStorage.setItem("lastFetchDate", "0");
 		} catch (error: any) {
 			throw new Error(
 				"Failed to save user data to AsyncStorage: " + String(error.message)

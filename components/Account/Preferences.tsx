@@ -72,7 +72,7 @@ export default function Preferences() {
 					<ToggleButton onToggle={handleToggleTheme} value={isDarkTheme} />
 				}
 			/>
-			<View className="w-full my-3 h-[1px] bg-gray-300"></View>
+			<View className="w-full h-[1px] bg-gray-300"></View>
 
 			<RowBlock
 				icon={
@@ -87,14 +87,14 @@ export default function Preferences() {
 					/>
 				}
 			/>
-			<View className="w-full my-3 h-[1px] bg-gray-300"></View>
+			<View className="w-full h-[1px] bg-gray-300"></View>
 
 			<RowBlock
 				title="Langue"
 				icon={<Iconify icon="mdi:earth" size={24} color={theme.colors.text} />}
 				rightContent={<Text style={{ color: theme.colors.text }}>Français</Text>}
 			/>
-			<View className="w-full my-3 h-[1px] bg-gray-300"></View>
+			<View className="w-full h-[1px] bg-gray-300"></View>
 
 			<RowBlock
 				title="Aide"
@@ -103,7 +103,7 @@ export default function Preferences() {
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}
 			/>
-			<View className="w-full my-3 h-[1px] bg-gray-300"></View>
+			<View className="w-full h-[1px] bg-gray-300"></View>
 			<RowBlock
 				title="À propos"
 				icon={
@@ -113,11 +113,14 @@ export default function Preferences() {
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}
 			/>
-			<View className="w-full my-3 h-[1px] bg-gray-300"></View>
+			<View className="w-full h-[1px] bg-gray-300"></View>
 			<RowBlock
 				title="Déconnexion"
 				onPress={handleLogout}
-				icon={<Iconify icon="mdi:logout" size={22} color={theme.colors.text} />}
+				color={theme.colors.redPrimary}
+				icon={
+					<Iconify icon="mdi:logout" size={22} color={theme.colors.redPrimary} />
+				}
 			/>
 
 			<CustomModal

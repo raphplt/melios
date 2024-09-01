@@ -146,6 +146,13 @@ function MainNavigator() {
 							title: "Réinitialisation du mot de passe",
 						}}
 					/>
+					<Stack.Screen
+						name="editHabits"
+						options={{
+							title: "Éditer les habitudes",
+							headerShadowVisible: false,
+						}}
+					/>
 				</Stack>
 				{isOpen && <NotificationBox />}
 			</ThemeProvider>
