@@ -46,6 +46,7 @@ export default function useFormHandler() {
 					answers: [answer],
 				};
 				const updatedForm = [...form, updatedQuestion];
+
 				const user = await createUser(updatedForm);
 				if (user) {
 					navigation.navigate("select");

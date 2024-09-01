@@ -13,49 +13,97 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const createUser = async (form: any) => {
 	try {
-		const email =
-			form.find((item: any) => item.hasOwnProperty("email"))?.email || "";
-		const password =
-			form.find((item: any) => item.hasOwnProperty("password"))?.password || "";
+		console.log("Form : ", JSON.stringify(form, null, 2));
 
-		const userCredential = await createUserWithEmailAndPassword(
-			auth,
-			email,
-			password
-		);
+		const emailQuestion = form.find((item: any) => item.slug === "email");
+		const passwordQuestion = form.find((item: any) => item.slug === "password");
+
+		if (!emailQuestion || !passwordQuestion) {
+			throw new Error("Email or password question is missing in the form.");
+		}
+
+		const email = emailQuestion.answers[0]?.answer || "";
+		const password = passwordQuestion.answers[0]?.answer || "";
+
+		if (!email || !password) {
+			throw new Error("Email or password is empty.");
+		}
+
+		console.log("Email : ", email);
+		console.log("Password : ", password);
+
+		let userCredential;
+		try {
+			userCredential = await createUserWithEmailAndPassword(auth, email, password);
+		} catch (error: any) {
+			throw new Error(
+				"Failed to create user with email and password: " + String(error.message)
+			);
+		}
+
 		const user = userCredential.user;
-
-		await AsyncStorage.setItem("user", JSON.stringify(user));
-		await AsyncStorage.setItem("isAuthenticated", "true");
 
 		const membersCollectionRef = collection(db, "members");
 
 		const objectifs =
-			form.find((item: any) => item.hasOwnProperty("objectifs"))?.objectifs || "";
+			form
+				.find((item: any) => item.slug === "objectifs")
+				?.answers.flatMap((a: any) => a.map((ans: any) => ans.answer)) || [];
 		const aspects =
-			form.find((item: any) => item.hasOwnProperty("aspects"))?.aspects || "";
+			form
+				.find((item: any) => item.slug === "aspects")
+				?.answers.flatMap((a: any) => a.map((ans: any) => ans.answer)) || [];
 		const motivation =
-			form.find((item: any) => item.hasOwnProperty("motivation"))?.motivation ||
+			form.find((item: any) => item.slug === "motivation")?.answers[0]?.answer ||
 			"";
 		const temps =
-			form.find((item: any) => item.hasOwnProperty("temps"))?.temps || "";
-		const nom = form.find((item: any) => item.hasOwnProperty("nom"))?.nom || "";
+			form.find((item: any) => item.slug === "temps")?.answers[0]?.answer || "";
+		const nom =
+			form.find((item: any) => item.slug === "nom")?.answers[0]?.answer || "";
 
-		await addDoc(membersCollectionRef, {
-			uid: user.uid,
-			habits: [],
-			objectifs: objectifs,
-			aspects: aspects,
-			motivation: motivation,
-			temps: temps,
-			nom: nom,
-		});
+		console.log(
+			"Objectifs : ",
+			objectifs,
+			"Aspects : ",
+			aspects,
+			"Motivation : ",
+			motivation,
+			"Temps : ",
+			temps,
+			"Nom : ",
+			nom
+		);
+
+		try {
+			await addDoc(membersCollectionRef, {
+				uid: user.uid,
+				habits: [],
+				objectifs: objectifs,
+				aspects: aspects,
+				motivation: motivation,
+				temps: temps,
+				nom: nom,
+			});
+		} catch (error: any) {
+			throw new Error("Failed to add user data to Firestore: " + error.message);
+		}
+
+		try {
+			await AsyncStorage.setItem("user", JSON.stringify(user));
+			await AsyncStorage.setItem("isAuthenticated", "true");
+		} catch (error: any) {
+			throw new Error(
+				"Failed to save user data to AsyncStorage: " + String(error.message)
+			);
+		}
 
 		return user;
 	} catch (error) {
 		console.error("Erreur lors de la création de l'utilisateur : ", error);
+		throw error;
 	}
 };
+
 
 export const disconnectUser = async () => {
 	try {
