@@ -8,13 +8,13 @@ export default function NumberSelected({ number }: { number: number }) {
 	return (
 		<View
 			style={{ backgroundColor: theme.colors.primary }}
-			className="px-3 rounded-3xl flex flex-row items-center  mx-1"
+			className="px-3 rounded-3xl flex flex-row items-center py-3 mx-1"
 		>
 			<Text
 				style={{ color: theme.colors.textSecondary }}
 				className="w-fit font-bold"
 			>
-				{number} / 20
+				{number}/20
 			</Text>
 		</View>
 	);

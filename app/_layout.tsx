@@ -149,7 +149,7 @@ function MainNavigator() {
 					<Stack.Screen
 						name="editHabits"
 						options={{
-							title: "Éditer les habitudes",
+							title: "Éditer mes habitudes",
 							headerShadowVisible: false,
 						}}
 					/>

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { Habit } from "../../types/habit";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "@context/ThemeContext";
@@ -7,10 +7,14 @@ import { getHabitById } from "@db/habits";
 import CardPlaceHolder from "@components/Habits/CardPlaceHolder";
 import { UserHabit } from "../../types/userHabit";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useData } from "@context/DataContext";
+import { LOCAL_STORAGE_MEMBER_HABITS_KEY, setMemberHabit } from "@db/member";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [habitInfos, setHabitInfos] = useState<Habit>();
+	const { setHabits } = useData();
 
 	const [loading, setLoading] = useState(true);
 	// console.log(habit);
@@ -25,6 +29,20 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	}, []);
 
 	if (loading || !habitInfos) return <CardPlaceHolder />;
+
+	const deleteHabit = async (habit: UserHabit) => {
+		await setMemberHabit(habitInfos);
+
+		setHabits((prev: UserHabit[]) =>
+			prev.filter((h: UserHabit) => h.id !== habit.id)
+		);
+
+		const storedHabits = await AsyncStorage.getItem(
+			LOCAL_STORAGE_MEMBER_HABITS_KEY
+		);
+		let localHabits = storedHabits ? JSON.parse(storedHabits) : [];
+		localHabits = localHabits.filter((h: Habit) => h.id !== habit.id);
+	};
 
 	return (
 		<View
@@ -52,7 +70,13 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 					{habit.name}
 				</Text>
 			</View>
-			<Iconify icon="mdi:trash" size={26} color={theme.colors.redPrimary} />
+			<Pressable onPress={() => deleteHabit(habit)}>
+				<Iconify
+					icon="mdi:trash-outline"
+					size={26}
+					color={theme.colors.redPrimary}
+				/>
+			</Pressable>
 		</View>
 	);
 }

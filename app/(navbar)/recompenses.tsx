@@ -2,7 +2,6 @@ import { Text, View } from "react-native";
 import { useContext } from "react";
 import { Image } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useData } from "@context/DataContext";
 import ViewPoints from "@components/Recompenses/ViewPoints";
 import { ThemeContext } from "@context/ThemeContext";
 

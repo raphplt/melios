@@ -1,18 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "react-native";
-import { ThemeContext } from "../../context/ThemeContext";
 import Checkbox from "expo-checkbox";
-import {
-	LOCAL_STORAGE_MEMBER_HABITS_KEY,
-	setMemberHabit,
-} from "../../db/member";
-import { getMemberHabit } from "../../db/member";
-import { Habit } from "../../types/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Iconify } from "react-native-iconify";
+
+// Custom imports
 import { lightenColor } from "@utils/colors";
 import { useData } from "@context/DataContext";
+import { ThemeContext } from "@context/ThemeContext";
+import {
+	setMemberHabit,
+	LOCAL_STORAGE_MEMBER_HABITS_KEY,
+	getMemberHabit,
+} from "@db/member";
+import { Habit } from "../../types/habit";
 
 export default function CardHabit({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);

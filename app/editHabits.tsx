@@ -2,13 +2,14 @@ import EditHabitCard from "@components/EditHabits/EditHabitCard";
 import { useData } from "@context/DataContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useState } from "react";
-import { ScrollView, Text, TextInput, View } from "react-native";
+import { ScrollView, TextInput, View } from "react-native";
 import { UserHabit } from "../types/userHabit";
 import { Iconify } from "react-native-iconify";
+import NumberSelected from "@components/Select/NumberSelected";
 
 export default function EditHabits() {
 	const { theme } = useContext(ThemeContext);
-	const { habits } = useData();
+	const { habits, setHabits } = useData();
 	const [searchText, setSearchText] = useState("");
 
 	const filteredHabits = habits.filter((habit: UserHabit) =>
@@ -21,29 +22,30 @@ export default function EditHabits() {
 				showsVerticalScrollIndicator={false}
 				style={{ backgroundColor: theme.colors.background }}
 			>
-				<View
-					className="w-11/12 mx-auto my-6 py-3 px-4 rounded-xl"
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-					}}
-				>
-					<Iconify
-						icon="mdi:magnify"
-						size={20}
-						color={theme.colors.text}
-						className="absolute ml-3"
-					/>
-					<TextInput
-						placeholder="Rechercher une habitude"
-						placeholderTextColor={theme.colors.text}
-						className=""
-						value={searchText}
+				<View className="w-11/12 flex flex-row items-center mx-auto">
+					<View
+						className="flex flex-row items-center w-10/12 my-6 py-2 px-4 rounded-3xl"
 						style={{
-							color: theme.colors.text,
+							backgroundColor: theme.colors.background,
+							borderColor: theme.colors.primary,
+							borderWidth: 1,
 						}}
-						onChangeText={setSearchText}
-					/>
+					>
+						<Iconify icon="mdi:magnify" size={20} color={theme.colors.text} />
+						<TextInput
+							placeholder="Rechercher une habitude"
+							placeholderTextColor={theme.colors.text}
+							className="ml-1"
+							value={searchText}
+							style={{
+								color: theme.colors.text,
+							}}
+							onChangeText={setSearchText}
+						/>
+					</View>
+					<NumberSelected number={habits.length} />
 				</View>
+
 				{filteredHabits.map((habit: UserHabit) => (
 					<EditHabitCard key={habit.id} habit={habit} />
 				))}
