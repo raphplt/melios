@@ -140,6 +140,12 @@ function MainNavigator() {
 							gestureEnabled: false,
 						}}
 					/>
+					<Stack.Screen
+						name="resetPassword"
+						options={{
+							title: "Réinitialisation du mot de passe",
+						}}
+					/>
 				</Stack>
 				{isOpen && <NotificationBox />}
 			</ThemeProvider>

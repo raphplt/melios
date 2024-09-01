@@ -6,6 +6,7 @@ import {
 	fetchSignInMethodsForEmail,
 	deleteUser,
 	sendEmailVerification,
+	sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from ".";
 import { collection, addDoc, deleteDoc, doc } from "firebase/firestore";
@@ -94,6 +95,24 @@ export const createUser = async (form: any) => {
 	} catch (error) {
 		console.error("Erreur lors de la création de l'utilisateur : ", error);
 		throw error;
+	}
+};
+
+export const sendEmailResetPassword = async (email: string) => {
+	try {
+		if (!email) {
+			throw new Error("L'adresse e-mail est requise.");
+		}
+
+		await sendPasswordResetEmail(auth, email);
+		console.log("Email de réinitialisation de mot de passe envoyé à " + email);
+		return { success: true, message: "Email de réinitialisation envoyé." };
+	} catch (error: any) {
+		console.error(
+			"Erreur lors de l'envoi de l'email de réinitialisation : ",
+			error
+		);
+		throw new Error("Failed to send password reset email: " + error.message);
 	}
 };
 
