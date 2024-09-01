@@ -1,9 +1,10 @@
 import React, { useState, useContext } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 import RegisterPressable from "./RegisterPressable";
 import ButtonNext from "@components/LoginRegister/ButtonNext";
+import { Answer } from "../../constants/Slides";
 
 export default function SingleChoice({
 	question,
@@ -12,13 +13,20 @@ export default function SingleChoice({
 }: {
 	question: string;
 	answers: any;
-	goToNextQuestion: (selectedAnswer: any) => void;
+	goToNextQuestion: (selectedAnswer: Answer) => void;
 }) {
 	const { theme } = useContext(ThemeContext);
-	const [selectedAnswer, setSelectedAnswer]: any = useState(null);
+	const [selectedAnswer, setSelectedAnswer] = useState<Answer>();
+
+	const goNext = () => {
+		if (selectedAnswer) {
+			goToNextQuestion(selectedAnswer);
+			setSelectedAnswer(undefined);
+		}
+	};
 
 	return (
-		<View className=" w-full flex flex-col justify-between">
+		<View className="w-full flex flex-col justify-between">
 			<Text
 				style={{ color: theme.colors.textSecondary }}
 				className="text-[18px] my-4 w-11/12 font-semibold mx-auto leading-6 break-words "
@@ -43,10 +51,7 @@ export default function SingleChoice({
 				))}
 			</View>
 
-			<ButtonNext
-				selectedAnswer={selectedAnswer}
-				goToNextQuestion={goToNextQuestion}
-			/>
+			<ButtonNext selectedAnswer={selectedAnswer} goToNextQuestion={goNext} />
 		</View>
 	);
 }

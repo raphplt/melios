@@ -1,28 +1,31 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import {
 	View,
-	Pressable,
-	Text,
-	Image,
 	ScrollView,
 	KeyboardAvoidingView,
 	Platform,
 	ImageBackground,
 	StatusBar,
+	Text,
+	Image,
 } from "react-native";
-
 import {
 	useNavigation,
 	ParamListBase,
 	NavigationProp,
+	useIsFocused,
 } from "@react-navigation/native";
+import { Iconify } from "react-native-iconify";
+import { BlurView } from "expo-blur";
+
+//Custom imports
 import CustomTextInput from "@components/Shared/CustomTextInput";
 import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
-import { BlurView } from "expo-blur";
 import { ThemeContext } from "@context/ThemeContext";
 import { useSession } from "@context/UserContext";
 import { loginUser } from "@db/users";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
+import ButtonLogin from "@components/LoginRegister/ButtonLogin";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -31,6 +34,8 @@ export default function Login() {
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const scrollViewRef = useRef<ScrollView>(null);
+	const passwordInputRef = useRef(null);
+	const isFocused = useIsFocused();
 
 	const { user, isLoading } = useSession();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -48,6 +53,14 @@ export default function Login() {
 			navigation.navigate("(navbar)");
 		}
 	}, [isLoading, user, navigation]);
+
+	useEffect(() => {
+		if (!isFocused) {
+			setEmail("");
+			setPassword("");
+			setError("");
+		}
+	}, [isFocused]);
 
 	const login = async () => {
 		try {
@@ -105,10 +118,10 @@ export default function Login() {
 							<Image
 								source={require("../assets/images/icon.png")}
 								style={{ width: 100, height: 100 }}
-								className="mb-5"
+								className="mb-4"
 							/>
 							<View className="flex flex-col justify-center items-center w-full">
-								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl ">
+								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
 									Bon retour sur
 								</Text>
 								<Text
@@ -118,7 +131,7 @@ export default function Login() {
 									Melios
 								</Text>
 							</View>
-							<View className="flex flex-col justify-center items-center w-full mt-5">
+							<View className="flex flex-col justify-center items-center w-full mt-3">
 								<CustomTextInput
 									label="Votre email"
 									placeholder="melios@gmail.com"
@@ -130,9 +143,14 @@ export default function Login() {
 									onFocus={() => {
 										scrollViewRef.current?.scrollToEnd({ animated: true });
 									}}
+									onSubmitEditing={() =>
+										passwordInputRef.current && (passwordInputRef.current as any).focus()
+									}
+									returnKeyType="next"
 								/>
 
 								<CustomPasswordInput
+									ref={passwordInputRef}
 									onChangeText={setPassword}
 									label="Votre mot de passe"
 									placeholder="********"
@@ -143,49 +161,39 @@ export default function Login() {
 									onFocus={() => {
 										scrollViewRef.current?.scrollToEnd({ animated: true });
 									}}
+									onSubmitEditing={login} 
+									returnKeyType="done"
 								/>
 							</View>
 
-							<Pressable
-								onPress={login}
-								disabled={isDisabled}
-								style={{
-									backgroundColor: isDisabled
-										? theme.colors.grayPrimary
-										: theme.colors.primary,
-								}}
-								className="w-11/12 mx-auto py-3 rounded-3xl focus:bg-blue-800 mt-10 mb-5 flex items-center"
-							>
-								<Text
-									style={{ color: "#F8F9FF" }}
-									className="text-[18px] text-center font-semibold"
-								>
-									Se connecter
-								</Text>
-							</Pressable>
-
+							<ButtonLogin login={login} isDisabled={isDisabled} theme={theme} />
 							<View
-								className=" mx-auto rounded-2xl"
+								className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
 								style={{
 									backgroundColor: theme.colors.redSecondary,
-									opacity: error === "" ? 0 : 1,
-									padding: 10,
+									display: error === "" ? "none" : "flex",
 								}}
 							>
+								<Iconify
+									icon="material-symbols:error"
+									color={theme.colors.redPrimary}
+									size={20}
+								/>
 								<Text
 									style={{
 										color: theme.colors.redPrimary,
 									}}
+									className="ml-2"
 								>
 									{error}
 								</Text>
 							</View>
-							<ButtonNavigate
-								text="Je n'ai pas de compte"
-								onPress={() => navigation.navigate("register")}
-							/>
 						</View>
 					</BlurView>
+					<ButtonNavigate
+						text="Je n'ai pas de compte"
+						onPress={() => navigation.navigate("register")}
+					/>
 				</ImageBackground>
 			</ScrollView>
 		</KeyboardAvoidingView>

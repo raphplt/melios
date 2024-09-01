@@ -23,19 +23,15 @@ export default function ButtonNavigate({
 			style={{
 				backgroundColor: "transparent",
 			}}
-			className="w-2/3 mx-auto rounded-3xl flex flex-row items-center justify-center px-2"
+			className="w-2/3 mx-auto rounded-3xl flex flex-row items-center justify-center px-2 mt-3"
 		>
 			<Text
 				className="text-[15px] text-center py-2 mr-2 font-semibold"
-				style={{ color: color ?? "rgb(8, 32, 159)" }}
+				style={{ color: color ?? "white" }}
 			>
 				{text}
 			</Text>
-			<Iconify
-				icon="tabler:arrow-right"
-				color={color || "rgb(8, 32, 159)"}
-				size={20}
-			/>
+			<Iconify icon="tabler:arrow-right" color={color || "white"} size={20} />
 		</Pressable>
 	);
 }

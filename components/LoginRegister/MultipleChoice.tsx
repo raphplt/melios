@@ -4,6 +4,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 import RegisterPressable from "./RegisterPressable";
 import ButtonNext from "@components/LoginRegister/ButtonNext";
+import { Answer } from "../../constants/Slides";
 
 export default function MultipleChoice({
 	question,
@@ -17,13 +18,20 @@ export default function MultipleChoice({
 	const { theme } = useContext(ThemeContext);
 	const [selectedAnswers, setSelectedAnswers]: any = useState([]);
 
-	const toggleAnswer = (answer: any) => {
+	const toggleAnswer = (answer: Answer) => {
 		if (selectedAnswers.includes(answer)) {
-			setSelectedAnswers((prevSelected: any) =>
-				prevSelected.filter((selected: any) => selected !== answer)
+			setSelectedAnswers((prevSelected: Answer[]) =>
+				prevSelected.filter((selected: Answer) => selected !== answer)
 			);
 		} else {
-			setSelectedAnswers((prevSelected: any) => [...prevSelected, answer]);
+			setSelectedAnswers((prevSelected: Answer[]) => [...prevSelected, answer]);
+		}
+	};
+
+	const goNext = () => {
+		if (selectedAnswers.length > 0) {
+			goToNextQuestion(selectedAnswers);
+			setSelectedAnswers([]);
 		}
 	};
 
@@ -36,7 +44,7 @@ export default function MultipleChoice({
 				{question}
 			</Text>
 			<View className="flex flex-col">
-				{answers.map((answer: any, index: any) => (
+				{answers.map((answer: Answer, index: string) => (
 					<RegisterPressable
 						key={index}
 						text={answer.answer}
@@ -57,7 +65,7 @@ export default function MultipleChoice({
 
 			<ButtonNext
 				selectedAnswer={selectedAnswers.length > 0 ? selectedAnswers : null}
-				goToNextQuestion={() => goToNextQuestion(selectedAnswers)}
+				goToNextQuestion={goNext}
 			/>
 		</View>
 	);

@@ -1,6 +1,6 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useRef } from "react";
-import { Animated, Pressable, Text } from "react-native";
+import { Animated, Pressable, Text, View } from "react-native";
 
 export default function RegisterPressable({
 	text,
@@ -37,7 +37,7 @@ export default function RegisterPressable({
 			}}
 		>
 			<Pressable
-				className=" w-full rounded-3xl px-6 py-3 flex flex-row items-center justify-start x mx-auto my-1"
+				className=" w-full rounded-3xl px-6 py-3 flex flex-row items-center justify-start x mx-auto my-2"
 				onPress={onPress}
 				style={{
 					backgroundColor: selected
@@ -48,16 +48,18 @@ export default function RegisterPressable({
 				onTouchEnd={handleTouchEnd}
 				onTouchCancel={handleTouchEnd}
 			>
-				{icon}
+				<View className="flex flex-row items-center">
+					{icon}
 
-				<Text
-					className="font-bold text-[16px] ml-3"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					{text}
-				</Text>
+					<Text
+						className="font-bold text-[16px] ml-3"
+						style={{
+							color: theme.colors.text,
+						}}
+					>
+						{text}
+					</Text>
+				</View>
 			</Pressable>
 		</Animated.View>
 	);

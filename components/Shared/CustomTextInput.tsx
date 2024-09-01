@@ -7,6 +7,14 @@ interface CustomTextInputProps extends TextInputProps {
 	placeholder: string;
 	value: string;
 	onChangeText: (text: string) => void;
+	textColor?: string;
+	keyboardType?:
+		| "default"
+		| "number-pad"
+		| "decimal-pad"
+		| "numeric"
+		| "email-address"
+		| "phone-pad";
 }
 
 export default function CustomTextInput({
@@ -15,6 +23,8 @@ export default function CustomTextInput({
 	value,
 	onChangeText,
 	onFocus,
+	textColor,
+	keyboardType,
 	...props
 }: CustomTextInputProps) {
 	const { theme } = useContext(ThemeContext);
@@ -22,7 +32,7 @@ export default function CustomTextInput({
 	return (
 		<View className="flex flex-col justify-center w-full mt-5 mx-auto">
 			<Text
-				style={{ color: "rgb(28, 28, 30)" }}
+				style={{ color: textColor || "rgb(28, 28, 30)" }}
 				className="mb-2 ml-2 font-semibold text-[15px]"
 			>
 				{label}
@@ -30,6 +40,7 @@ export default function CustomTextInput({
 			<TextInput
 				onChangeText={onChangeText}
 				value={value}
+				keyboardType={keyboardType || "default"}
 				placeholder={placeholder}
 				autoCapitalize="none"
 				autoCorrect={false}
