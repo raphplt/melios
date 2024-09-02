@@ -2,7 +2,7 @@ import { useContext, useEffect, useState, useRef } from "react";
 import { View, Text, Pressable, Animated } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import { UserHabit } from "../../types/userHabit";
+import { UserHabit } from "../../type/userHabit";
 import { ThemeContext } from "@context/ThemeContext";
 import { getHabitById } from "@db/habits";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -25,7 +25,7 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 
 	const lighterColor = lightenColor(
 		habitInfos.category?.color || theme.colors.text,
-		0.5
+		0.6
 	);
 
 	const handleTouchStart = () => {
@@ -42,9 +42,9 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 		}).start();
 	};
 
-	return lighterColor ? (
+	return (
 		<Animated.View
-			className="h-64 w-40 mx-2 rounded-2xl"
+			className="h-64 w-40 mx-2 rounded-xl"
 			style={{
 				backgroundColor: theme.colors.background,
 				transform: [{ scale: scaleAnim }],
@@ -108,5 +108,5 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 				</LinearGradient>
 			</Pressable>
 		</Animated.View>
-	) : null;
+	);
 }

@@ -1,7 +1,7 @@
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { Habit } from "../../types/habit";
+import { Habit } from "../../type/habit";
 import { useEffect, useState } from "react";
 import Melios from "@components/Svg/Melios";
 import MoneyMelios from "@components/Svg/MoneyMelios";

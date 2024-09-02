@@ -1,30 +1,30 @@
 import moment from "moment";
 import { Text, View, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useEffect, useState } from "react";
-import { DayStatus } from "../../app/habitDetail";
+import { useContext, useEffect, useState } from "react";
+import { Log, UserHabit } from "../../type/userHabit";
+import { ThemeContext } from "@context/ThemeContext";
 import HeaderContainer from "@components/Progression/HeaderContainer";
+import { DayStatus } from "../../app/habitDetail";
 
-export default function LastDays({ theme, habit }: { theme: any; habit: any }) {
+export default function LastDays({ habit }: { habit: UserHabit }) {
+	const { theme } = useContext(ThemeContext);
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 
 	useEffect(() => {
-		if (typeof habit === "string" && habit) {
-			try {
-				const parsedHabit = JSON.parse(habit);
-				const lastDaySnapshot: DayStatus[] = [];
-				for (let i = 14; i >= 1; i--) {
-					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-					const log = parsedHabit?.logs?.find((log: any) => log.date === day);
-					lastDaySnapshot.push({
-						date: day,
-						done: log ? log.done : false,
-					});
-				}
-				setLastDays(lastDaySnapshot.reverse());
-			} catch (error) {
-				console.error("Failed to parse habit:", error);
+		try {
+			const lastDaySnapshot: DayStatus[] = [];
+			for (let i = 14; i >= 1; i--) {
+				const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+				const log = habit.logs?.find((log: Log) => log.date === day);
+				lastDaySnapshot.push({
+					date: day,
+					done: log ? log.done : false,
+				});
 			}
+			setLastDays(lastDaySnapshot.reverse());
+		} catch (error) {
+			console.error("Failed to parse habit:", error);
 		}
 	}, [habit]);
 

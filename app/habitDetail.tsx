@@ -1,11 +1,9 @@
-import { useContext, useEffect, useState, useRef } from "react";
-import { View, Animated, AppState, AppStateStatus } from "react-native";
+import { useContext, useEffect, useRef } from "react";
+import { View, Animated, AppState, AppStateStatus, Text } from "react-native";
 import * as Notifications from "expo-notifications";
-import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Customs imports
-import { Habit } from "../types/habit";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
 import { ThemeContext } from "@context/ThemeContext";
@@ -16,7 +14,8 @@ import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import useNotifications from "@hooks/useNotifications";
 import { DataContext } from "@context/DataContext";
-import TimerHabit from "@components/HabitDetail/TImerHabit";
+import { HabitsContext } from "@context/HabitsContext";
+import TimerHabit from "@components/HabitDetail/TimerHabit";
 
 export interface DayStatus {
 	date: string;
@@ -24,8 +23,9 @@ export interface DayStatus {
 }
 
 export default function HabitDetail() {
-	const params = useLocalSearchParams();
-	let { habit = "", habitInfos = "" } = params;
+	const { currentHabit } = useContext(HabitsContext);
+
+	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
 
 	// Contexts
 	const { theme } = useContext(ThemeContext);
@@ -34,19 +34,7 @@ export default function HabitDetail() {
 
 	const translateY = useRef(new Animated.Value(1000)).current;
 	const appState = useRef(AppState.currentState);
-	const [habitParsed, setHabitParsed] = useState<Habit | null>(null);
 	const { expoPushToken } = useContext(DataContext);
-
-	useEffect(() => {
-		if (typeof habitInfos === "string" && habitInfos) {
-			try {
-				const snapshot = JSON.parse(habitInfos) as Habit;
-				setHabitParsed(snapshot);
-			} catch (error) {
-				console.error("Failed to parse habitInfos:", error);
-			}
-		}
-	}, [habitInfos]);
 
 	useEffect(() => {
 		Animated.spring(translateY, {
@@ -70,11 +58,11 @@ export default function HabitDetail() {
 		) {
 			const remainingSeconds = await AsyncStorage.getItem("timerSeconds");
 			if (remainingSeconds) {
-				startTimer(parseInt(remainingSeconds) / 60, habitParsed);
+				startTimer(parseInt(remainingSeconds) / 60, currentHabit.habit);
 			}
 		} else if (nextAppState === "background") {
 			sendPushNotification(expoPushToken, {
-				title: `${habitParsed ? habitParsed.name : "Habitude"} en pause`,
+				title: `${currentHabit.habit.name || "Habitude"} en pause`,
 				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
 			}); //TODO supprimer la notification quand on revient sur l'app
 			if (isTimerActive) {
@@ -95,36 +83,34 @@ export default function HabitDetail() {
 	};
 
 	const lightenedColor = lightenColor(
-		habitParsed?.category?.color || theme.colors.primary,
+		currentHabit.habit.category.color || theme.colors.primary,
 		0.1
 	);
 
-	if (!habitParsed) return <LoaderScreen text="Chargement des détails" />;
+	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
 
 	return (
 		<Animated.View
 			style={{
 				backgroundColor: theme.colors.background,
-				transform: [{ translateY }],
 			}}
 			className="h-screen w-full overflow-y-auto top-0 absolute pt-4"
 		>
 			<View className="mt-4 w-full mx-auto flex justify-center flex-col">
 				<HabitDetailHeader
-					habitParsed={habitParsed}
+					habitParsed={currentHabit.habit}
 					theme={theme}
 					lightenedColor={lightenedColor}
 				/>
-
-				<TimerHabit habit={habit} habitParsed={habitParsed} />
 
 				<InfosPanel
-					habitInfos={habitParsed}
+					habitInfos={currentHabit.habit}
 					theme={theme}
 					lightenedColor={lightenedColor}
 				/>
 
-				<LastDays habit={habit} theme={theme} />
+				<LastDays habit={currentHabit.userHabit} />
+				<TimerHabit habit={currentHabit.habit} userHabit={currentHabit.userHabit} />
 			</View>
 		</Animated.View>
 	);

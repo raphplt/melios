@@ -13,9 +13,9 @@ import {
 import { db } from ".";
 import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
-import { Member } from "../types/member";
-import { UserHabit } from "../types/userHabit";
-import { Habit } from "../types/habit";
+import { Member } from "../type/member";
+import { UserHabit } from "../type/userHabit";
+import { Habit } from "../type/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 

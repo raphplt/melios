@@ -10,7 +10,7 @@ import {
 import { useNavigation } from "expo-router";
 
 import { AntDesign } from "@expo/vector-icons";
-import { Habit } from "../types/habit";
+import { Habit } from "../type/habit";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonViewMore from "@components/Home/ButtonViewMore";
 import SearchBar from "@components/Select/SearchBar";

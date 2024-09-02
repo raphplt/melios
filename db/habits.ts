@@ -2,7 +2,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getCategoryById } from "./category";
-import { Habit } from "../types/habit";
+import { Habit } from "../type/habit";
 import { LAST_FETCH_KEY, ONE_WEEK_IN_MS } from "./category";
 
 const LOCAL_STORAGE_KEY = "habitsData";

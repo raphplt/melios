@@ -1,6 +1,6 @@
 import TopRow from "@components/Habits/TopRow";
 import { View } from "react-native";
-import { Habit } from "../../types/habit";
+import { Habit } from "../../type/habit";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import ButtonViewMore from "./ButtonViewMore";
 

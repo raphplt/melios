@@ -24,8 +24,9 @@ import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
 import { DataContext } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
-import { useProgression } from "@hooks/useProgression";
-import { Habit } from "../../types/habit";
+import { Habit } from "../../type/habit";
+import { HabitsContext } from "@context/HabitsContext";
+import { UserHabit } from "@type/userHabit";
 
 export default function CardCheckHabit({
 	habit,
@@ -33,14 +34,15 @@ export default function CardCheckHabit({
 	completed,
 	disabled,
 }: {
-	habit: Habit;
-	onHabitStatusChange: (habit: Habit, completed: boolean) => void;
+	habit: UserHabit;
+	onHabitStatusChange: (habit: UserHabit, completed: boolean) => void;
 	completed: boolean;
 	disabled: boolean;
 }) {
 	// Imports et Contextes
 	const { theme } = useContext(ThemeContext);
 	const { date } = useContext(DataContext);
+	const { setCurrentHabit } = useContext(HabitsContext);
 
 	// États
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -53,7 +55,7 @@ export default function CardCheckHabit({
 
 	// Hooks personnalisés
 	const { addOdysseePoints } = usePoints();
-	const { updateTodayScore } = useProgression();
+	// const { updateTodayScore } = useProgression();
 
 	// Navigation
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -93,6 +95,15 @@ export default function CardCheckHabit({
 
 	if (loading || !habitInfos) return <CardPlaceHolder />;
 
+	// Go to habit detail
+	const goHabitDetail = () => {
+		setCurrentHabit({
+			habit: habitInfos,
+			userHabit: habit,
+		});
+		navigation.navigate("habitDetail");
+	};
+
 	const setHabitDone = async () => {
 		setToggleCheckBox(true); // Optimistic UI
 		onHabitStatusChange(habit, true);
@@ -122,10 +133,11 @@ export default function CardCheckHabit({
 			<Pressable
 				className="px-3"
 				onPress={() => {
-					navigation.navigate("habitDetail", {
-						habit: JSON.stringify(habit),
-						habitInfos: JSON.stringify(habitInfos),
-					});
+					goHabitDetail();
+					// navigation.navigate("habitDetail", {
+					// 	habit: JSON.stringify(habit),
+					// 	habitInfos: JSON.stringify(habitInfos),
+					// });
 				}}
 			>
 				<View

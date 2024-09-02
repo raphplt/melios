@@ -3,7 +3,7 @@ import { useData } from "@context/DataContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useState } from "react";
 import { ScrollView, TextInput, View } from "react-native";
-import { UserHabit } from "../types/userHabit";
+import { UserHabit } from "../type/userHabit";
 import { Iconify } from "react-native-iconify";
 import NumberSelected from "@components/Select/NumberSelected";
 

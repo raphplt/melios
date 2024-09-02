@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { Trophy } from "../../types/trophy";
+import { Trophy } from "../../type/trophy";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext } from "react";
 

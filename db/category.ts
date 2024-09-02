@@ -1,7 +1,7 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Category } from "../types/category";
+import { Category } from "../type/category";
 
 const LOCAL_STORAGE_KEY = "categoriesData";
 export const LAST_FETCH_KEY = "lastFetchDate";

@@ -1,7 +1,7 @@
 import { fetchDailyQuote } from "@db/quote";
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { Quote } from "../../types/quote";
+import { Quote } from "../../type/quote";
 import { ThemeContext } from "@context/ThemeContext";
 
 export default function DailyQuote() {

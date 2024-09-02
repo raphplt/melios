@@ -1,8 +1,8 @@
 import { collection, getDocs } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from ".";
-import { Category } from "../types/category";
-import { Habit } from "../types/habit";
+import { Category } from "../type/category";
+import { Habit } from "../type/habit";
 
 const LOCAL_STORAGE_HABITS_KEY = "habits";
 const LOCAL_STORAGE_CATEGORIES_KEY = "categories";

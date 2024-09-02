@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
-import { UserHabit } from "../types/userHabit";
+import { UserHabit } from "../type/userHabit";
 import useIndex from "./useIndex";
 import { useData } from "@context/DataContext";
 

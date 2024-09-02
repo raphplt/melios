@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { UserHabit } from "../../types/userHabit";
+import { UserHabit } from "../../type/userHabit";
 import { Iconify } from "react-native-iconify";
 
 export default function CardHabitCompleted({

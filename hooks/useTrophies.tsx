@@ -2,7 +2,7 @@ import { DataContext } from "@context/DataContext";
 import { useHabits } from "@context/HabitsContext";
 import { getAllTrophies } from "@db/trophiesList";
 import { useContext, useEffect } from "react";
-import { Habit } from "../types/habit";
+import { Habit } from "../type/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { runTests } from "@utils/habits";
 

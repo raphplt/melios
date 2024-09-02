@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getHabitsWithCategories } from "../db/fetch";
-import { Habit } from "../types/habit";
+import { Habit } from "../type/habit";
 
 const useHabitsData = () => {
 	const [habitsData, setHabitsData] = useState([]);

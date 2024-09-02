@@ -4,7 +4,7 @@ import Filters from "./Filters";
 import CardClassement from "./CardClassement";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useState } from "react";
-import { Reward } from "../../types/reward";
+import { Reward } from "../../type/reward";
 import { useTabBarPadding } from "@hooks/useTabBar";
 
 export default function ClassementView({

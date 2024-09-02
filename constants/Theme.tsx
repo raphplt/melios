@@ -1,4 +1,4 @@
-import { Theme } from "../types/themes";
+import { Theme } from "../type/themes";
 
 const DefaultTheme: Theme = {
 	dark: false,

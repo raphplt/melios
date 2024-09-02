@@ -7,12 +7,12 @@ import { processHabits } from "../utils/habitsUtils";
 import { extractPoints } from "../utils/pointsUtils";
 import { getNotificationToken } from "../utils/notificationsUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Habit } from "../types/habit";
-import { Points } from "../types/points";
-import { Member } from "../types/member";
-import { UserHabit } from "../types/userHabit";
+import { Habit } from "../type/habit";
+import { Points } from "../type/points";
+import { Member } from "../type/member";
+import { UserHabit } from "../type/userHabit";
 import usePopup from "@hooks/usePopup";
-import { Trophy } from "../types/trophy";
+import { Trophy } from "../type/trophy";
 import { getAllTrophies } from "@db/trophiesList";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 

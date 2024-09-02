@@ -13,7 +13,7 @@ import Animated, {
 	useScrollViewOffset,
 } from "react-native-reanimated";
 import moment from "moment";
-import { UserHabit } from "../../types/userHabit";
+import { UserHabit } from "../../type/userHabit";
 import BlurBox from "./ParallaxBlurBox";
 import TrophiesMinView from "@components/Trophies/TrophiesMinView";
 import { useTabBarPadding } from "@hooks/useTabBar";

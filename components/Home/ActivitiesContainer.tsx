@@ -2,7 +2,7 @@ import { useContext } from "react";
 import Activity from "./ActivityCard";
 import { ScrollView, View, Text } from "react-native";
 import { ThemeContext } from "@context/ThemeContext";
-import { UserHabit } from "../../types/userHabit";
+import { UserHabit } from "../../type/userHabit";
 import useIndex from "@hooks/useIndex";
 
 export default function ActivitiesContainer() {

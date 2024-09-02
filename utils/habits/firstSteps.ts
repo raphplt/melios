@@ -1,4 +1,4 @@
-import { Habit } from "../../types/habit";
+import { Habit } from "../../type/habit";
 
 export const firstSteps = (habitsQueue: Habit[]): Habit[] => {
 	// console.log("trophies", habitsQueue);

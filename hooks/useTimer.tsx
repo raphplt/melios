@@ -5,10 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { useState, useRef, useEffect } from "react";
 import usePoints from "./usePoints";
+import { Habit } from "../type/habit";
 
 const useTimer = () => {
 	const [timerSeconds, setTimerSeconds] = useState(0);
 	const [isTimerActive, setIsTimerActive] = useState(false);
+	const [isTimerVisible, setIsTimerVisible] = useState(false);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const date = moment().format("YYYY-MM-DD");
 	const { addOdysseePoints } = usePoints();
@@ -24,17 +26,18 @@ const useTimer = () => {
 		};
 	}, []);
 
-	//TODO type
-	const startTimer = (duration: number, habitParsed: any) => {
+	const startTimer = (duration: number, habitParsed: Habit) => {
 		if (!isTimerActive) {
 			const durationSeconds = Math.round(duration * 60);
 			setTimerSeconds(durationSeconds);
 			setIsTimerActive(true);
+			setIsTimerVisible(true);
 			timerRef.current = setInterval(() => {
 				setTimerSeconds((prevSeconds) => {
 					if (prevSeconds <= 1) {
 						clearInterval(timerRef.current!);
 						setIsTimerActive(false);
+						setIsTimerVisible(false);
 						onTimerEnd(habitParsed);
 						return 0;
 					}
@@ -49,9 +52,30 @@ const useTimer = () => {
 			clearInterval(timerRef.current);
 		}
 		setIsTimerActive(false);
+		setIsTimerVisible(false);
 	};
 
-	const onTimerEnd = async (habitParsed: any) => {
+	const pauseTimer = () => {
+		if (isTimerActive) {
+			clearInterval(timerRef.current!);
+			setIsTimerActive(false);
+		} else {
+			timerRef.current = setInterval(() => {
+				setTimerSeconds((prevSeconds) => {
+					if (prevSeconds <= 1) {
+						clearInterval(timerRef.current!);
+						setIsTimerActive(false);
+						setIsTimerVisible(false);
+						return 0;
+					}
+					return prevSeconds - 1;
+				});
+			}, 1000);
+			setIsTimerActive(true);
+		}
+	};
+
+	const onTimerEnd = async (habitParsed: Habit) => {
 		try {
 			if (!habitParsed) {
 				return;
@@ -65,12 +89,12 @@ const useTimer = () => {
 				rewards: points.rewards + habitParsed.reward,
 			});
 			addOdysseePoints(habitParsed.reward, habitParsed.difficulty);
-			//TODO done today ?
-			setCompletedHabitsData(
-				(prevHabits: any) => [...prevHabits, habitParsed] as any
-			);
-			setUncompletedHabitsData((prevHabits: any) =>
-				prevHabits.filter((oldHabit: any) => oldHabit.id !== habitParsed.id)
+			setCompletedHabitsData((prevHabits: Habit[]) => [
+				...prevHabits,
+				habitParsed,
+			]);
+			setUncompletedHabitsData((prevHabits: Habit[]) =>
+				prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habitParsed.id)
 			);
 			await AsyncStorage.removeItem("timerSeconds");
 		} catch (error) {
@@ -78,7 +102,15 @@ const useTimer = () => {
 		}
 	};
 
-	return { timerSeconds, isTimerActive, startTimer, stopTimer, date };
+	return {
+		timerSeconds,
+		isTimerActive,
+		isTimerVisible,
+		startTimer,
+		pauseTimer,
+		stopTimer,
+		date,
+	};
 };
 
 export default useTimer;

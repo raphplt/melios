@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { Member } from "../../types/member";
+import { Member } from "../../type/member";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "../../context/ThemeContext";
-import { UserHabit } from "../../types/userHabit";
+import { UserHabit } from "../../type/userHabit";
 
 export default function UserInfos({ member }: { member: Member }) {
 	const [showHabits, setShowHabits] = useState(false);

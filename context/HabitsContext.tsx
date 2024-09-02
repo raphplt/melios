@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { getHabitsWithCategories } from "../db/fetch";
-import { Habit } from "../types/habit";
+import { Habit } from "../type/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserHabit } from "../type/userHabit";
 
 interface HabitsContextProps {
 	habitsData: Habit[];
@@ -9,14 +10,32 @@ interface HabitsContextProps {
 	refreshHabits: () => void;
 	habitQueue: Habit[];
 	setHabitQueue: React.Dispatch<React.SetStateAction<Habit[]>>;
+	currentHabit: CombinedHabits | null;
+	setCurrentHabit: React.Dispatch<React.SetStateAction<CombinedHabits | null>>;
 }
 
-const HabitsContext = createContext<HabitsContextProps | undefined>(undefined);
+export type CombinedHabits = {
+	habit: Habit;
+	userHabit: UserHabit;
+};
+
+export const HabitsContext = createContext<HabitsContextProps>({
+	habitsData: [],
+	loading: false,
+	refreshHabits: function (): void {},
+	habitQueue: [],
+	setHabitQueue: function (value: React.SetStateAction<Habit[]>): void {},
+	currentHabit: null,
+	setCurrentHabit: function (
+		value: React.SetStateAction<CombinedHabits | null>
+	): void {},
+});
 
 export const HabitsProvider = ({ children }: any) => {
 	const [habitsData, setHabitsData] = useState<Habit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [habitQueue, setHabitQueue] = useState<Habit[]>([]);
+	const [currentHabit, setCurrentHabit] = useState<CombinedHabits | null>(null);
 
 	const fetchHabitsData = async (signal: AbortSignal) => {
 		try {
@@ -57,6 +76,8 @@ export const HabitsProvider = ({ children }: any) => {
 				refreshHabits: () => fetchHabitsData(new AbortController().signal),
 				habitQueue,
 				setHabitQueue,
+				currentHabit,
+				setCurrentHabit,
 			}}
 		>
 			{children}

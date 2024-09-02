@@ -1,9 +1,11 @@
 export type UserHabit = {
 	id: string;
-	logs: Array<{
-		date: string;
-		done: boolean;
-	}>;
+	logs: Array<Log>;
 	moment: number;
 	name: string;
+};
+
+export type Log = {
+	date: string;
+	done: boolean;
 };

@@ -1,7 +1,7 @@
 import { DataContext } from "@context/DataContext";
 import { useContext } from "react";
 import { Text, View } from "react-native";
-import { Trophy } from "../../types/trophy";
+import { Trophy } from "../../type/trophy";
 import { ScrollView } from "react-native";
 import { ThemeContext } from "@context/ThemeContext";
 import TrophyBox from "./Trophy";

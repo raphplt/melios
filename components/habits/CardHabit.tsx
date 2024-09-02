@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Pressable } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,7 +14,7 @@ import {
 	LOCAL_STORAGE_MEMBER_HABITS_KEY,
 	getMemberHabit,
 } from "@db/member";
-import { Habit } from "../../types/habit";
+import { Habit } from "../../type/habit";
 
 export default function CardHabit({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);
@@ -69,10 +69,10 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 		})();
 	}, []);
 
-	const lightenedColor = lightenColor(habit.category.color, 0.09);
+	const lightenedColor = lightenColor(habit.category.color, 0.05);
 
 	return (
-		<TouchableOpacity onPress={setHabit}>
+		<Pressable onPress={setHabit}>
 			<View className="w-full mx-auto my-1 flex flex-row items-center justify-evenly">
 				<View>
 					<Checkbox
@@ -82,7 +82,7 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 					/>
 				</View>
 				<View
-					className="flex items-center justify-between flex-row bg-gray-200 py-2 rounded-xl basis-5/6"
+					className="flex items-center justify-between flex-row py-2 rounded-lg basis-5/6"
 					style={{
 						backgroundColor: lightenedColor,
 						borderColor: habit.category.color || theme.colors.text,
@@ -112,6 +112,6 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 					</View>
 				</View>
 			</View>
-		</TouchableOpacity>
+		</Pressable>
 	);
 }

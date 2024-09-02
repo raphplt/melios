@@ -4,7 +4,7 @@ import { getAllRewards } from "../../db/rewards";
 import { useData } from "../../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import ClassementView from "@components/Agora/ClassementView";
-import { Reward } from "../../types/reward";
+import { Reward } from "../../type/reward";
 
 export default function Agora() {
 	const [usersRewards, setUsersRewards] = useState<Reward[]>([]);

@@ -10,7 +10,8 @@
 			"@utils/*": ["./utils/*"],
 			"@components/*": ["./components/*"],
 			"@context/*": ["./context/*"],
-			"@assets/*": ["./assets/*"]
+			"@assets/*": ["./assets/*"],
+			"@type/*": ["./type/*"]
 		},
 		"plugins": [{ "name": "nativewind/typescript-plugin" }]
 	},

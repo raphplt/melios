@@ -4,114 +4,106 @@ import useTimer from "@hooks/useTimer";
 import { formatTime } from "@utils/timeUtils";
 import { useContext, useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import DoneToday from "./DoneToday";
+import { Habit } from "@type/habit";
+import { Log, UserHabit } from "@type/userHabit";
+import { Iconify } from "react-native-iconify";
 
 export default function TimerHabit({
 	habit,
-	habitParsed,
+	userHabit,
 }: {
-	habit: any;
-	habitParsed: any;
+	habit: Habit;
+	userHabit: UserHabit;
 }) {
 	const [doneToday, setDoneToday] = useState(false);
-	const [touched, setTouched] = useState(false);
 	const { theme } = useContext(ThemeContext);
-	const { timerSeconds, isTimerActive, startTimer, stopTimer, date } =
-		useTimer();
-
-	useEffect(() => {
-		if (typeof habit === "string" && habit) {
-			try {
-				const parsedHabit = JSON.parse(habit);
-				const log = parsedHabit?.logs?.find((log: any) => log.date === date);
-				setDoneToday(log ? log.done : false);
-			} catch (error) {
-				console.error("Failed to parse habit:", error);
-			}
-		}
-	}, [habit]);
+	const {
+		timerSeconds,
+		isTimerActive,
+		isTimerVisible,
+		startTimer,
+		stopTimer,
+		date,
+		pauseTimer,
+	} = useTimer();
 
 	return (
-		<>
-			{!doneToday ? (
-				<View className="py-10">
-					{!isTimerActive ? (
-						<Pressable
-							onPress={() => startTimer(habitParsed.duration, habitParsed)}
-							className="py-2 px-6 rounded-lg w-11/12 mx-auto justify-center mt-4 flex flex-row items-center"
-							style={{
-								backgroundColor: touched
-									? theme.colors.bluePrimary
-									: theme.colors.primary,
-								borderColor: theme.colors.primary,
-								borderWidth: 1,
-							}}
-							onTouchStart={() => setTouched(true)}
-							onTouchEndCapture={() => setTouched(false)}
-						>
-							<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
-							<Text
-								className="text-lg text-center font-semibold ml-2"
-								style={{ color: theme.colors.textSecondary }}
-							>
-								Commencer l'habitude
-							</Text>
-						</Pressable>
-					) : (
-						<Pressable
-							onPress={stopTimer}
-							className="py-2 px-6 rounded-xl w-11/12 mx-auto flex flex-row items-center justify-center"
-							style={{
-								backgroundColor: theme.colors.primary,
-								borderColor: theme.colors.primary,
-								borderWidth: 2,
-								marginTop: 10,
-							}}
-						>
-							<Ionicons name="pause" size={24} color={theme.colors.textSecondary} />
-							<Text
-								className="text-lg text-center font-semibold ml-2 "
-								style={{ color: theme.colors.textSecondary }}
-							>
-								Arrêter l'habitude
-							</Text>
-						</Pressable>
-					)}
-
-					{isTimerActive && (
-						<Text
-							className="text-4xl font-bold text-center mt-8"
-							style={{ color: theme.colors.text }}
-						>
-							{formatTime(timerSeconds)}
-						</Text>
-					)}
-				</View>
-			) : (
-				<View
-					className="py-3 rounded-lg mt-6 w-11/12 mx-auto"
+		<View className="py-10">
+			{isTimerVisible && (
+				<Text
+					className="text-7xl font-bold text-center mt-8"
+					style={{ color: theme.colors.text }}
+				>
+					{formatTime(timerSeconds)}
+				</Text>
+			)}
+			{!isTimerActive && !isTimerVisible ? (
+				<Pressable
+					onPress={() => startTimer(habit.duration, habit)}
+					className="py-2 px-6 rounded-lg w-11/12 mx-auto justify-center mt-4 flex flex-row items-center"
 					style={{
-						backgroundColor: theme.colors.blueSecondary,
-						borderColor: theme.colors.primary,
+						backgroundColor: theme.colors.primary,
 					}}
 				>
-					<Ionicons
-						name="checkmark-circle"
-						size={50}
-						color={theme.colors.primary}
-						style={{ alignSelf: "center" }}
-					/>
+					<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
 					<Text
-						className="text-[16px] mt-3 text-center font-bold"
+						className="text-lg text-center font-semibold ml-2"
+						style={{ color: theme.colors.textSecondary }}
+					>
+						Commencer l'habitude
+					</Text>
+				</Pressable>
+			) : (
+				<View className="flex flex-row items-center justify-center w-full mt-8 mx-auto">
+					<Pressable
+						onPress={pauseTimer}
+						className="py-2 rounded-xl w-1/3 mx-auto flex flex-row items-center justify-center"
 						style={{
-							color: theme.colors.primary,
-							maxWidth: "90%",
-							alignSelf: "center",
+							backgroundColor: theme.colors.primary,
 						}}
 					>
-						Vous avez déjà fait cette habitude aujourd'hui
-					</Text>
+						{isTimerActive ? (
+							<Iconify
+								icon="material-symbols:pause"
+								size={24}
+								color={theme.colors.textSecondary}
+							/>
+						) : (
+							<Iconify
+								icon="material-symbols:play-arrow"
+								size={24}
+								color={theme.colors.textSecondary}
+							/>
+						)}
+						<Text
+							className="text-lg text-center font-semibold ml-2"
+							style={{ color: theme.colors.textSecondary }}
+						>
+							{isTimerActive ? "Pause" : "Reprendre"}
+						</Text>
+					</Pressable>
+					<Pressable
+						onPress={stopTimer}
+						className="py-2 rounded-xl w-1/3 mx-auto flex flex-row items-center justify-center"
+						style={{
+							backgroundColor: theme.colors.primary,
+						}}
+					>
+						<Iconify
+							icon="material-symbols:stop"
+							size={24}
+							color={theme.colors.textSecondary}
+						/>
+						<Text
+							className="text-lg text-center font-semibold ml-2 "
+							style={{ color: theme.colors.textSecondary }}
+						>
+							Stop
+						</Text>
+					</Pressable>
 				</View>
 			)}
-		</>
+		</View>
 	);
 }

@@ -1,5 +1,5 @@
-import { Difficulty } from "../types/difficultiesList";
-import { UserHabit } from "../types/userHabit";
+import { Difficulty } from "../type/difficultiesList";
+import { UserHabit } from "../type/userHabit";
 
 export const processHabits = (snapshotHabits: UserHabit[], date: string) => {
 	const uncompleted = snapshotHabits

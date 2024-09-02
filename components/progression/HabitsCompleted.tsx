@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import HeaderContainer from "./HeaderContainer";
 import { Iconify } from "react-native-iconify";
-import { UserHabit } from "../../types/userHabit";
+import { UserHabit } from "../../type/userHabit";
 import CardHabitCompleted from "./CardHabitCompleted";
 import { useTabBarPadding } from "@hooks/useTabBar";
 import useIndex from "@hooks/useIndex";

@@ -16,10 +16,10 @@ import { ThemeContext } from "@context/ThemeContext";
 import { Animated } from "react-native";
 import { UserContext } from "@context/UserContext";
 import { useData } from "@context/DataContext";
-import { UserHabit } from "../types/userHabit";
+import { UserHabit } from "../type/userHabit";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
-import { Habit } from "../types/habit";
+import { Habit } from "../type/habit";
 
 const useIndex = () => {
 	// Contexts

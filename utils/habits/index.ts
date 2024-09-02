@@ -1,4 +1,4 @@
-import { Habit } from "../../types/habit";
+import { Habit } from "../../type/habit";
 import { firstSteps } from "./firstSteps";
 
 export const runTests = (habitQueue: Habit[]) => {

@@ -6,7 +6,7 @@ import Congratulations from "./Congratulations";
 import NoHabits from "./NoHabits";
 import HabitSectionList from "./HabitSectionList";
 import MissedHabitsSection from "./MissedHabitSectionList";
-import { Habit } from "../../types/habit";
+import { Habit } from "../../type/habit";
 
 export default function ListHabitsHome() {
 	const {
