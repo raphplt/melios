@@ -1,30 +1,14 @@
 import { DarkTheme } from "@constants/Theme";
 import { useState } from "react";
-import { Calendar, LocaleConfig } from "react-native-calendars";
+import { Calendar } from "react-native-calendars";
+import { useData } from "@context/DataContext";
+import useCompletedHabitPeriods from "@hooks/useCompletedHabitPeriods";
+import LoaderScreen from "@components/Shared/LoaderScreen";
 
 const CalendarHabits = () => {
-	const [selected, setSelected] = useState("");
+	const completedHabitPeriods = useCompletedHabitPeriods();
 
-	return (
-		<Calendar
-			markingType={"period"}
-			markedDates={{
-				"2024-09-11": { startingDay: true, color: "green", textColor: "white" },
-				"2024-09-12": {
-					selected: true,
-					endingDay: true,
-					color: "green",
-					textColor: "white",
-				},
-				"2012-05-04": {
-					disabled: true,
-					startingDay: true,
-					color: "green",
-					endingDay: true,
-				},
-			}}
-		/>
-	);
+	return <Calendar markingType={"period"} markedDates={completedHabitPeriods} />;
 };
 
 export default CalendarHabits;
