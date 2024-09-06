@@ -13,9 +13,9 @@ import { DataProvider, useData } from "../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import NotificationBox from "@components/Shared/NotificationBox";
 import { HabitsProvider } from "@context/HabitsContext";
-import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
+import { DarkTheme, DefaultTheme } from "@constants/Theme";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -92,6 +92,7 @@ function MainNavigator() {
 							headerShadowVisible: false,
 						}}
 					/>
+
 					<Stack.Screen
 						name="habitDetail"
 						options={{

@@ -173,16 +173,19 @@ const useIndex = () => {
 	}, [fetchMemberData]);
 
 	const handleHabitStatusChange = useCallback(
-		(habit: Habit, done: boolean) => {
+		(habit: UserHabit, done: boolean) => {
 			if (done) {
-				setCompletedHabitsData((prevHabits: Habit[]) => [...prevHabits, habit]);
-				setUncompletedHabitsData((prevHabits: Habit[]) =>
-					prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
+				setCompletedHabitsData((prevHabits: UserHabit[]) => [...prevHabits, habit]);
+				setUncompletedHabitsData((prevHabits: UserHabit[]) =>
+					prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
 				);
 			} else {
-				setUncompletedHabitsData((prevHabits: Habit[]) => [...prevHabits, habit]);
-				setCompletedHabitsData((prevHabits: Habit[]) =>
-					prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
+				setUncompletedHabitsData((prevHabits: UserHabit[]) => [
+					...prevHabits,
+					habit,
+				]);
+				setCompletedHabitsData((prevHabits: UserHabit[]) =>
+					prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
 				);
 			}
 		},

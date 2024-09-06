@@ -13,8 +13,7 @@ import DailyQuote from "@components/Home/DailyQuote";
 
 export default function Index() {
 	const {
-		navigation,
-		user,
+
 		userHabits,
 		loading,
 		refreshing,

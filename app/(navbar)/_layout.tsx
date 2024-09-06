@@ -1,5 +1,5 @@
 import { Tabs, useNavigation } from "expo-router";
-import { Pressable, View, StatusBar } from "react-native";
+import { Pressable, View } from "react-native";
 import { useContext, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import LoaderScreen from "@components/Shared/LoaderScreen";
@@ -7,14 +7,12 @@ import CustomTabBar from "@components/Shared/CustomTabBar";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
-import { DarkTheme } from "../../constants/Theme";
 import Melios from "@components/Svg/Melios";
 import Points from "@components/Shared/Points";
 
-const createHeaderStyle = () => ({
-	backgroundColor: "transparent",
-	borderBottomLeftRadius: 10,
-	borderBottomRightRadius: 10,
+const createHeaderStyle = (backgroundColor: string) => ({
+	backgroundColor,
+
 	shadowColor: "transparent",
 });
 
@@ -22,11 +20,12 @@ const createTabOptions = (
 	title: string,
 	headerLeft?: () => JSX.Element,
 	headerRight?: () => JSX.Element,
-	headerTitleStyleOverride?: object
+	headerTitleStyleOverride?: object,
+	headerBackgroundColor: string = "transparent"
 ) => ({
 	title,
 	headerTitleStyle: headerTitleStyleOverride || {},
-	headerStyle: createHeaderStyle(),
+	headerStyle: createHeaderStyle(headerBackgroundColor),
 	headerLeft,
 	headerRight,
 });
@@ -46,13 +45,11 @@ const TabLayout: React.FC = () => {
 
 	return (
 		<>
-
 			<Tabs tabBar={(props) => <CustomTabBar {...props} />}>
 				<Tabs.Screen
 					name="index"
 					options={createTabOptions(
 						"Accueil",
-
 						() => (
 							<View style={{ marginLeft: 15 }}>
 								<Melios fill={theme.colors.text} />
@@ -77,7 +74,16 @@ const TabLayout: React.FC = () => {
 						{ display: "none" }
 					)}
 				/>
-				<Tabs.Screen name="progression" options={createTabOptions("Progression")} />
+				<Tabs.Screen
+					name="progression"
+					options={createTabOptions(
+						"Progression",
+						undefined,
+						undefined,
+						undefined,
+						theme.colors.backgroundTertiary
+					)}
+				/>
 				<Tabs.Screen name="recompenses" options={createTabOptions("Récompenses")} />
 				<Tabs.Screen name="agora" options={createTabOptions("Agora")} />
 			</Tabs>
