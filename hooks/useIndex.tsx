@@ -46,7 +46,6 @@ const useIndex = () => {
 
 	// States
 	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
-	// const [streak, setStreak] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());

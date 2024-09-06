@@ -17,12 +17,11 @@ export const useProgression = () => {
 		{}
 	);
 
-	// Fonction pour calculer la streak
 	const calculateStreak = (habits: UserHabit[]): number => {
 		if (habits.length === 0) return 0;
-
+	
 		let streakCount = 0;
-		let daysBack = 0;
+		let daysBack = 1; // Start from the previous day
 		let streakActive = true;
 
 		while (streakActive) {
@@ -47,7 +46,7 @@ export const useProgression = () => {
 
 			daysBack += 1;
 		}
-
+	
 		return streakCount;
 	};
 

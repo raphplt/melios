@@ -26,49 +26,63 @@ const useCompletedHabitPeriods = () => {
 		const sortedDates = Array.from(completedDates).sort();
 		const periods: Record<string, any> = {};
 
-		let start = sortedDates[0];
-		let end = start;
+let start = sortedDates[0];
+let end = start;
 
-		for (let i = 1; i < sortedDates.length; i++) {
-			const currentDate = sortedDates[i];
-			const previousDate = moment(sortedDates[i - 1]);
+for (let i = 1; i < sortedDates.length; i++) {
+	const currentDate = sortedDates[i];
+	const previousDate = moment(sortedDates[i - 1]);
 
-			if (moment(currentDate).diff(previousDate, "days") === 1) {
-				end = currentDate;
-			} else {
-				periods[start] = {
-					startingDay: true,
-					color: bgColor,
-					textColor: "white",
-				};
-				periods[end] = { endingDay: true, color: bgColor, textColor: "white" };
+	if (moment(currentDate).diff(previousDate, "days") === 1) {
+		end = currentDate;
+	} else {
+		if (start === end) {
+			periods[start] = {
+				startingDay: true,
+				endingDay: true,
+				color: bgColor,
+				textColor: "white",
+			};
+		} else {
+			periods[start] = {
+				startingDay: true,
+				color: bgColor,
+				textColor: "white",
+			};
+			periods[end] = { endingDay: true, color: bgColor, textColor: "white" };
 
-				for (
-					let j = moment(start).add(1, "days");
-					j.isBefore(end);
-					j.add(1, "days")
-				) {
-					periods[j.format("YYYY-MM-DD")] = { color: bgColor, textColor: "white" };
-				}
-
-				start = currentDate;
-				end = start;
+			for (
+				let j = moment(start).add(1, "days");
+				j.isBefore(end);
+				j.add(1, "days")
+			) {
+				periods[j.format("YYYY-MM-DD")] = { color: bgColor, textColor: "white" };
 			}
 		}
 
-		// Handle the last period
-		periods[start] = { startingDay: true, color: bgColor, textColor: "white" };
-		periods[end] = { endingDay: true, color: bgColor, textColor: "white" };
+		start = currentDate;
+		end = start;
+	}
+}
 
-		for (
-			let j = moment(start).add(1, "days");
-			j.isBefore(end);
-			j.add(1, "days")
-		) {
-			periods[j.format("YYYY-MM-DD")] = { color: bgColor, textColor: "white" };
-		}
+// Handle the last period
+if (start === end) {
+	periods[start] = {
+		startingDay: true,
+		endingDay: true,
+		color: bgColor,
+		textColor: "white",
+	};
+} else {
+	periods[start] = { startingDay: true, color: bgColor, textColor: "white" };
+	periods[end] = { endingDay: true, color: bgColor, textColor: "white" };
 
-		return periods;
+	for (let j = moment(start).add(1, "days"); j.isBefore(end); j.add(1, "days")) {
+		periods[j.format("YYYY-MM-DD")] = { color: bgColor, textColor: "white" };
+	}
+}
+
+return periods;
 	}, [habits]);
 };
 
