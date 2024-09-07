@@ -19,7 +19,7 @@ import { useData } from "@context/DataContext";
 import { UserHabit } from "../type/userHabit";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
-import { Habit } from "../type/habit";
+import { Habit } from "@type/habit";
 
 const useIndex = () => {
 	// Contexts
@@ -45,7 +45,7 @@ const useIndex = () => {
 	const abortController = useRef<AbortController | null>(null);
 
 	// States
-	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
+	const [userHabits, setUserHabits] = useState<Habit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
@@ -57,8 +57,9 @@ const useIndex = () => {
 
 	// Memoized values
 	const missedHabitsCount = useMemo(() => {
-		return uncompletedHabitsData.filter((habit: Habit) => habit.moment < hours)
-			.length;
+		return uncompletedHabitsData.filter(
+			(habit: UserHabit) => habit.moment < hours
+		).length;
 	}, [uncompletedHabitsData, hours]);
 
 	const rotate = useMemo(() => {
@@ -216,7 +217,7 @@ const useIndex = () => {
 
 	const updateShowNext = useCallback(() => {
 		const filteredUncompletedHabits = uncompletedHabitsData.filter(
-			(habit: Habit) => habit.moment >= hours
+			(habit: UserHabit) => habit.moment >= hours
 		);
 		updateShowMore(
 			showMoreNext,

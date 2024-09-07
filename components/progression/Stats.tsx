@@ -18,9 +18,8 @@ export default function Stats() {
 		>
 			<StatCard
 				title="Complétées aujourd'hui"
-				value={completedHabitsData.length}
+				value={String(completedHabitsData.length)}
 				color="red"
-				icon={<MoneyOdyssee />}
 			/>
 			<StatCard title="Habits" value="12" color="red" icon={<MoneyOdyssee />} />
 		</View>

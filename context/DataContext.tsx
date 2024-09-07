@@ -6,24 +6,26 @@ import React, {
 	ReactNode,
 } from "react";
 import moment from "moment";
-import { getRewards } from "../db/rewards";
-import { useSession } from "./UserContext";
+
 import permissions from "../hooks/usePermissions";
-import { processHabits } from "../utils/habitsUtils";
-import { extractPoints } from "../utils/pointsUtils";
-import { getNotificationToken } from "../utils/notificationsUtils";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Habit } from "../type/habit";
-import { Points } from "../type/points";
-import { Member } from "../type/member";
-import { UserHabit } from "../type/userHabit";
+
 import usePopup from "@hooks/usePopup";
-import { Trophy } from "../type/trophy";
 import { getAllTrophies } from "@db/trophiesList";
 import { getMemberHabits, getMemberInfos } from "@db/member";
-import { useProgression } from "@hooks/useProgression";
 import { calculateStreak } from "@utils/progressionUtils";
 import { DataContextType } from "@type/dataContext";
+import { Habit } from "@type/habit";
+import { Member } from "@type/member";
+import { Points } from "@type/points";
+import { UserHabit } from "@type/userHabit";
+import { getRewards } from "@db/rewards";
+import { useSession } from "./UserContext";
+import { Trophy } from "@type/trophy";
+import { processHabits } from "@utils/habitsUtils";
+import { extractPoints } from "@utils/pointsUtils";
+import { getNotificationToken } from "@utils/notificationsUtils";
 
 interface DataProviderProps {
 	children: ReactNode;

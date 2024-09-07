@@ -10,7 +10,7 @@ export default function Streak() {
 
 	return (
 		<View
-			className="w-full mx-auto flex flex-row items-center justify-between px-3"
+			className="w-full mx-auto flex flex-row items-center justify-between px-3 pt-4"
 			style={{
 				backgroundColor: theme.colors.backgroundTertiary,
 			}}

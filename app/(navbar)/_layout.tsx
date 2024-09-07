@@ -1,18 +1,17 @@
 import { Tabs, useNavigation } from "expo-router";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { useContext, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import Melios from "@components/Svg/Melios";
-import Points from "@components/Shared/Points";
+import LayoutTopRight from "@components/Shared/LayoutTopRight";
+import { FontAwesome } from "@expo/vector-icons";
 
 const createHeaderStyle = (backgroundColor: string) => ({
 	backgroundColor,
-
 	shadowColor: "transparent",
 });
 
@@ -56,33 +55,16 @@ const TabLayout: React.FC = () => {
 							</View>
 						),
 						() => (
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Points />
-								<Pressable
-									onPress={() => navigation.navigate("account")}
-									className="ml-3"
-								>
-									<AntDesign
-										name="user"
-										size={24}
-										color={theme.colors.text}
-										style={{ marginRight: 20 }}
-									/>
-								</Pressable>
-							</View>
+							<LayoutTopRight />
 						),
 						{ display: "none" }
 					)}
 				/>
 				<Tabs.Screen
 					name="progression"
-					options={createTabOptions(
-						"Progression",
-						undefined,
-						undefined,
-						undefined,
-						theme.colors.backgroundTertiary
-					)}
+					options={createTabOptions("Progression", undefined, () => (
+						<LayoutTopRight />
+					))}
 				/>
 				<Tabs.Screen name="recompenses" options={createTabOptions("Récompenses")} />
 				<Tabs.Screen name="agora" options={createTabOptions("Agora")} />

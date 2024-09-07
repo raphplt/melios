@@ -10,14 +10,14 @@ export default function StatCard({
 }: {
 	title: string;
 	value: string;
-	color: string;
-	icon: ReactNode;
+	color?: string;
+	icon?: ReactNode;
 }) {
 	const { theme } = useContext(ThemeContext);
 
 	return (
 		<View
-			className="flex flex-row justify-between items-center w-2/5 mx-2 py-2 px-2 rounded-lg"
+			className="flex flex-row justify-between items-center w-2/5 mx-2 py-2 px-3 rounded-lg"
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 			}}
@@ -26,18 +26,21 @@ export default function StatCard({
 				style={{
 					color: theme.colors.text,
 				}}
-				className="w-2/3"
+				className="w-2/3 font-semibold"
 			>
 				{title}
 			</Text>
-			<Text
-				className="text-xl"
-				style={{
-					color: theme.colors.text,
-				}}
-			>
-				{value}
-			</Text>
+			<View className="flex flex-row">
+				<View className="mr-2">{icon}</View>
+				<Text
+					className="text-xl font-bold"
+					style={{
+						color: theme.colors.text,
+					}}
+				>
+					{value}
+				</Text>
+			</View>
 		</View>
 	);
 }
