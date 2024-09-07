@@ -12,16 +12,8 @@ import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
 
 export default function Index() {
-	const {
-
-		userHabits,
-		loading,
-		refreshing,
-		imageSource,
-		isLoading,
-		isDayTime,
-		onRefresh,
-	} = useIndex();
+	const { loading, refreshing, imageSource, isLoading, userHabits, onRefresh } =
+		useIndex();
 
 	if (loading || !userHabits || isLoading) {
 		return <LoaderScreen text="Chargement de vos habitudes..." />;
@@ -29,12 +21,9 @@ export default function Index() {
 
 	return (
 		<ParallaxScrollView
-			habits={userHabits}
 			refreshControl={
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
-			headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-			isDayTime={isDayTime}
 			headerImage={
 				<Image
 					source={imageSource}

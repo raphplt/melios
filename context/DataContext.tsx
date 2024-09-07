@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, {
+	createContext,
+	useState,
+	useContext,
+	useEffect,
+	ReactNode,
+} from "react";
 import moment from "moment";
 import { getRewards } from "../db/rewards";
 import { useSession } from "./UserContext";
@@ -15,10 +21,18 @@ import usePopup from "@hooks/usePopup";
 import { Trophy } from "../type/trophy";
 import { getAllTrophies } from "@db/trophiesList";
 import { getMemberHabits, getMemberInfos } from "@db/member";
+import { useProgression } from "@hooks/useProgression";
+import { calculateStreak } from "@utils/progressionUtils";
+import { DataContextType } from "@type/dataContext";
 
-export const DataContext = createContext<any>({});
+interface DataProviderProps {
+	children: ReactNode;
+}
+export const DataContext = createContext<DataContextType | undefined>(
+	undefined
+);
 
-export const DataProvider = ({ children }: any) => {
+export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const { isLoading: isSessionLoading, user } = useSession();
 	const [habits, setHabits] = useState<Habit[]>([]);
 	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
@@ -102,6 +116,10 @@ export const DataProvider = ({ children }: any) => {
 					const { uncompleted, completed } = processHabits(snapshotHabits, date);
 					setUncompletedHabitsData(uncompleted);
 					setCompletedHabitsData(completed);
+
+					// Calculate streak
+					const streak = calculateStreak(snapshotHabits);
+					setStreak(streak);
 				} catch (error: any) {
 					if (error.name !== "AbortError") {
 						console.log("Erreur lors de la récupération des données : ", error);
@@ -144,7 +162,7 @@ export const DataProvider = ({ children }: any) => {
 				todayScore,
 				setTodayScore,
 				streak,
-				setStreak
+				setStreak,
 			}}
 		>
 			{children}

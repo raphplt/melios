@@ -21,29 +21,25 @@ import { useData } from "@context/DataContext";
 import { ThemeContext } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
 import { DarkTheme } from "@constants/Theme";
+import { Iconify } from "react-native-iconify";
 
 const HEADER_HEIGHT = 250;
 
 type Props = PropsWithChildren<{
 	headerImage: ReactElement;
-	headerBackgroundColor: { dark: string; light: string };
 	refreshControl?: ReactElement;
-	habits: UserHabit[];
-	isDayTime: boolean;
 }>;
 
 export default function ParallaxScrollView({
 	children,
 	headerImage,
-	headerBackgroundColor,
 	refreshControl,
-	habits,
-	isDayTime,
 }: Props) {
-	const colorScheme = useColorScheme() ?? "light";
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
 	const scrollOffset = useScrollViewOffset(scrollRef);
+
 	const { theme } = useContext(ThemeContext);
+	const { isDayTime } = useIndex();
 	const { streak } = useData();
 
 	const { completedHabitsData, uncompletedHabitsData } = useIndex();
@@ -91,9 +87,10 @@ export default function ParallaxScrollView({
 		}
 	}, [todayScore]);
 
+	const color = isDayTime ? "black" : "white";
+
 	return (
 		<>
-
 			<Animated.ScrollView
 				ref={scrollRef}
 				scrollEventThrottle={16}
@@ -101,16 +98,13 @@ export default function ParallaxScrollView({
 				refreshControl={refreshControl}
 			>
 				<Animated.View
-					style={[
-						{ backgroundColor: headerBackgroundColor[colorScheme] },
-						headerAnimatedStyle,
-					]}
+					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 				>
 					<BlurBox position={{ top: 20, left: 20 }}>
 						<Flamme color={flammeColor ?? theme.colors.redSecondary} />
 						<Text
 							style={{
-								color: isDayTime ? "black" : "white",
+								color: color,
 							}}
 							className="text-xl mt-1 font-semibold text-center"
 						>
@@ -119,14 +113,17 @@ export default function ParallaxScrollView({
 					</BlurBox>
 
 					<BlurBox position={{ top: 20, right: 20 }}>
-						<Text
-							className="font-bold"
-							style={{
-								color: isDayTime ? "black" : "white",
-							}}
-						>
-							Série : {streak} {streak > 1 ? "jours" : "jour"}
-						</Text>
+						<View className="flex flex-row items-center gap-2">
+							<Iconify icon="mdi:calendar" color={color} size={22} />
+							<Text
+								className="font-semibold  text-[15px]"
+								style={{
+									color: color,
+								}}
+							>
+								Série : {streak} {streak > 1 ? "jours" : "jour"}
+							</Text>
+						</View>
 					</BlurBox>
 
 					{/* <BlurBox position={{ bottom: 20, right: 20 }}>
