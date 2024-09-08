@@ -130,12 +130,11 @@ const useIndex = () => {
 
 		(async () => {
 			const username = member?.nom || "";
-			const time = new Date().getHours();
 			let message = "";
 
-			if (time < 12) {
+			if (hours < 12) {
 				message = `Bonjour${username ? ", " + username : ""} !`;
-			} else if (time >= 12 && time < 18) {
+			} else if (hours >= 12 && hours < 18) {
 				message = `Bon après-midi${username ? ", " + username : ""} !`;
 			} else {
 				message = `Bonsoir${username ? ", " + username : ""} !`;

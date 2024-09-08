@@ -8,6 +8,7 @@ import DoneToday from "./DoneToday";
 import { Habit } from "@type/habit";
 import { Log, UserHabit } from "@type/userHabit";
 import { Iconify } from "react-native-iconify";
+import { useHabits } from "@context/HabitsContext";
 
 export default function TimerHabit({
 	habit,
@@ -16,15 +17,15 @@ export default function TimerHabit({
 	habit: Habit;
 	userHabit: UserHabit;
 }) {
-	const [doneToday, setDoneToday] = useState(false);
 	const { theme } = useContext(ThemeContext);
+	const { showHabitDetail } = useHabits();
+
 	const {
 		timerSeconds,
 		isTimerActive,
 		isTimerVisible,
-		startTimer,
+
 		stopTimer,
-		date,
 		pauseTimer,
 	} = useTimer();
 
@@ -38,23 +39,7 @@ export default function TimerHabit({
 					{formatTime(timerSeconds)}
 				</Text>
 			)}
-			{!isTimerActive && !isTimerVisible ? (
-				<Pressable
-					onPress={() => startTimer(habit.duration, habit)}
-					className="py-2 px-6 rounded-lg w-11/12 mx-auto justify-center mt-4 flex flex-row items-center"
-					style={{
-						backgroundColor: theme.colors.primary,
-					}}
-				>
-					<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
-					<Text
-						className="text-lg text-center font-semibold ml-2"
-						style={{ color: theme.colors.textSecondary }}
-					>
-						Commencer l'habitude
-					</Text>
-				</Pressable>
-			) : (
+			{!isTimerActive && (
 				<View className="flex flex-row items-center justify-center w-full mt-8 mx-auto">
 					<Pressable
 						onPress={pauseTimer}

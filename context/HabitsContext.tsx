@@ -12,6 +12,8 @@ interface HabitsContextProps {
 	setHabitQueue: React.Dispatch<React.SetStateAction<Habit[]>>;
 	currentHabit: CombinedHabits | null;
 	setCurrentHabit: React.Dispatch<React.SetStateAction<CombinedHabits | null>>;
+	showHabitDetail?: boolean;
+	setShowHabitDetail?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type CombinedHabits = {
@@ -29,6 +31,8 @@ export const HabitsContext = createContext<HabitsContextProps>({
 	setCurrentHabit: function (
 		value: React.SetStateAction<CombinedHabits | null>
 	): void {},
+	showHabitDetail: false,
+	setShowHabitDetail: function (value: React.SetStateAction<boolean>): void {},
 });
 
 export const HabitsProvider = ({ children }: any) => {
@@ -36,6 +40,7 @@ export const HabitsProvider = ({ children }: any) => {
 	const [loading, setLoading] = useState(true);
 	const [habitQueue, setHabitQueue] = useState<Habit[]>([]);
 	const [currentHabit, setCurrentHabit] = useState<CombinedHabits | null>(null);
+	const [showHabitDetail, setShowHabitDetail] = useState(false);
 
 	const fetchHabitsData = async (signal: AbortSignal) => {
 		try {
@@ -78,6 +83,8 @@ export const HabitsProvider = ({ children }: any) => {
 				setHabitQueue,
 				currentHabit,
 				setCurrentHabit,
+				showHabitDetail,
+				setShowHabitDetail,
 			}}
 		>
 			{children}

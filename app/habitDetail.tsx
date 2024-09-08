@@ -13,9 +13,10 @@ import { lightenColor } from "@utils/colors";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import useNotifications from "@hooks/useNotifications";
-import { DataContext } from "@context/DataContext";
-import { HabitsContext } from "@context/HabitsContext";
+import { useData } from "@context/DataContext";
+import { HabitsContext, useHabits } from "@context/HabitsContext";
 import TimerHabit from "@components/HabitDetail/TimerHabit";
+import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
 
 export interface DayStatus {
 	date: string;
@@ -31,10 +32,11 @@ export default function HabitDetail() {
 	const { theme } = useContext(ThemeContext);
 	const { timerSeconds, isTimerActive, startTimer } = useTimer();
 	const { sendPushNotification } = useNotifications();
+	const { showHabitDetail } = useHabits();
 
 	const translateY = useRef(new Animated.Value(1000)).current;
 	const appState = useRef(AppState.currentState);
-	const { expoPushToken } = useContext(DataContext);
+	const { expoPushToken } = useData();
 
 	useEffect(() => {
 		Animated.spring(translateY, {
@@ -61,6 +63,9 @@ export default function HabitDetail() {
 				startTimer(parseInt(remainingSeconds) / 60, currentHabit.habit);
 			}
 		} else if (nextAppState === "background") {
+			if (!expoPushToken) {
+				throw new Error("No expoPushToken");
+			}
 			sendPushNotification(expoPushToken, {
 				title: `${currentHabit.habit.name || "Habitude"} en pause`,
 				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
@@ -97,19 +102,24 @@ export default function HabitDetail() {
 			className="h-screen w-full overflow-y-auto top-0 absolute pt-4"
 		>
 			<View className="mt-4 w-full mx-auto flex justify-center flex-col">
-				<HabitDetailHeader
-					habitParsed={currentHabit.habit}
-					theme={theme}
-					lightenedColor={lightenedColor}
-				/>
+				{!showHabitDetail && (
+					<>
+						<HabitDetailHeader
+							habitParsed={currentHabit.habit}
+							theme={theme}
+							lightenedColor={lightenedColor}
+						/>
 
-				<InfosPanel
-					habitInfos={currentHabit.habit}
-					theme={theme}
-					lightenedColor={lightenedColor}
-				/>
+						<InfosPanel
+							habitInfos={currentHabit.habit}
+							theme={theme}
+							lightenedColor={lightenedColor}
+						/>
+					</>
+				)}
 
 				<LastDays habit={currentHabit.userHabit} />
+				<ButtonStartHabit habit={currentHabit.habit} />
 				<TimerHabit habit={currentHabit.habit} userHabit={currentHabit.userHabit} />
 			</View>
 		</Animated.View>

@@ -16,6 +16,7 @@ import { HabitsProvider } from "@context/HabitsContext";
 import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
+import ButtonSettings from "@components/Shared/ButtonSettings";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -69,6 +70,8 @@ function MainNavigator() {
 		}
 	}, [isSessionLoading]);
 
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
 	if (isLoading || !loaded) return <LoaderScreen text="Chargement..." />;
 
 	return (
@@ -90,6 +93,13 @@ function MainNavigator() {
 							presentation: "transparentModal",
 							headerShown: true,
 							headerShadowVisible: false,
+							headerRight: () => (
+								<ButtonSettings
+									onPress={() => {
+										navigation.navigate("editHabits");
+									}}
+								/>
+							),
 						}}
 					/>
 

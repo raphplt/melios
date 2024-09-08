@@ -21,7 +21,12 @@ export default function Stats() {
 				value={String(completedHabitsData.length)}
 				color="red"
 			/>
-			<StatCard title="Habits" value="12" color="red" icon={<MoneyOdyssee />} />
+			<StatCard
+				title="Points gagnés"
+				value="12"
+				color="red"
+				icon={<MoneyOdyssee />}
+			/>
 		</View>
 	);
 }
