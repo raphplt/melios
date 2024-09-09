@@ -1,6 +1,6 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
-import useTimer from "@hooks/useTimer";
+import useHabitTimer from "@hooks/useHabitTimer";
 import { Habit } from "@type/habit";
 import { useContext } from "react";
 import { Pressable, Text } from "react-native";
@@ -8,7 +8,7 @@ import { Pressable, Text } from "react-native";
 export default function ButtonStartHabit({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);
 
-	const { startTimer } = useTimer();
+	const { startTimer } = useHabitTimer();
 
 	return (
 		<Pressable

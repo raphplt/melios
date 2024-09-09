@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import { View, Animated, AppState, AppStateStatus, Text } from "react-native";
+import { View, Animated, AppState, AppStateStatus } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -7,7 +7,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
 import { ThemeContext } from "@context/ThemeContext";
-import useTimer from "@hooks/useTimer";
 import { formatTime } from "@utils/timeUtils";
 import { lightenColor } from "@utils/colors";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
@@ -17,6 +16,8 @@ import { useData } from "@context/DataContext";
 import { HabitsContext, useHabits } from "@context/HabitsContext";
 import TimerHabit from "@components/HabitDetail/TimerHabit";
 import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
+import { TimerProvider, useTimer } from "@context/TimerContext";
+import useHabitTimer from "@hooks/useHabitTimer";
 
 export interface DayStatus {
 	date: string;
@@ -30,7 +31,8 @@ export default function HabitDetail() {
 
 	// Contexts
 	const { theme } = useContext(ThemeContext);
-	const { timerSeconds, isTimerActive, startTimer } = useTimer();
+	const { timerSeconds, isTimerActive } = useTimer();
+	const { startTimer } = useHabitTimer();
 	const { sendPushNotification } = useNotifications();
 	const { showHabitDetail } = useHabits();
 
@@ -94,34 +96,37 @@ export default function HabitDetail() {
 
 	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
 
+	console.log("timerSeconds", timerSeconds);
+
 	return (
-		<Animated.View
-			style={{
-				backgroundColor: theme.colors.background,
-			}}
-			className="h-screen w-full overflow-y-auto top-0 absolute pt-4"
-		>
-			<View className="mt-4 w-full mx-auto flex justify-center flex-col">
+		<TimerProvider>
+			<Animated.View
+				style={{
+					backgroundColor: theme.colors.background,
+				}}
+				className="h-screen w-full overflow-y-auto top-0 absolute"
+			>
 				{!showHabitDetail && (
-					<>
-						<HabitDetailHeader
-							habitParsed={currentHabit.habit}
-							theme={theme}
-							lightenedColor={lightenedColor}
-						/>
+					<View className="mt-4 w-full mx-auto flex justify-center flex-col  pt-4">
+						<>
+							<HabitDetailHeader
+								habit={currentHabit.habit}
+								theme={theme}
+								lightenedColor={lightenedColor}
+							/>
 
-						<InfosPanel
-							habitInfos={currentHabit.habit}
-							theme={theme}
-							lightenedColor={lightenedColor}
-						/>
-					</>
+							<InfosPanel
+								habit={currentHabit.habit}
+								theme={theme}
+								lightenedColor={lightenedColor}
+							/>
+							<LastDays habit={currentHabit.userHabit} />
+							<ButtonStartHabit habit={currentHabit.habit} />
+						</>
+					</View>
 				)}
-
-				<LastDays habit={currentHabit.userHabit} />
-				<ButtonStartHabit habit={currentHabit.habit} />
-				<TimerHabit habit={currentHabit.habit} userHabit={currentHabit.userHabit} />
-			</View>
-		</Animated.View>
+				<TimerHabit />
+			</Animated.View>
+		</TimerProvider>
 	);
 }

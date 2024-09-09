@@ -2,11 +2,11 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 export default function HabitDetailHeader({
-	habitParsed,
+	habit,
 	theme,
 	lightenedColor,
 }: {
-	habitParsed: any;
+	habit: any;
 	theme: any;
 	lightenedColor: string;
 }) {
@@ -18,19 +18,19 @@ export default function HabitDetailHeader({
 			}}
 		>
 			<FontAwesome6
-				name={habitParsed.category?.icon || "question"}
+				name={habit.category?.icon || "question"}
 				size={24}
-				color={habitParsed.category?.color || theme.colors.text}
+				color={habit.category?.color || theme.colors.text}
 				style={{ marginRight: 14 }}
 			/>
 			<Text
 				style={{
-					color: habitParsed.category?.color,
+					color: habit.category?.color,
 					fontFamily: "BaskervilleBold",
 				}}
 				className="text-lg text-center font-semibold"
 			>
-				{habitParsed.name}
+				{habit.name}
 			</Text>
 		</View>
 	);

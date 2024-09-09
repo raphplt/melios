@@ -3,33 +3,43 @@ import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import usePoints from "./usePoints";
 import { Habit } from "../type/habit";
+import { useHabits } from "@context/HabitsContext";
+import { UserHabit } from "@type/userHabit";
+import { useTimer } from "@context/TimerContext";
 
-const useTimer = () => {
-	const [timerSeconds, setTimerSeconds] = useState(0);
-	const [isTimerActive, setIsTimerActive] = useState(false);
-	const [isTimerVisible, setIsTimerVisible] = useState(false);
-	const timerRef = useRef<NodeJS.Timeout | null>(null);
+const useHabitTimer = () => {
 	const date = moment().format("YYYY-MM-DD");
 	const { addOdysseePoints } = usePoints();
+	const { setShowHabitDetail } = useHabits();
+
+	const {
+		setTimerSeconds,
+		isTimerActive,
+		setIsTimerActive,
+		setIsTimerVisible,
+		timerRef,
+	} = useTimer();
 
 	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
 		useData();
 
-	useEffect(() => {
-		return () => {
-			if (timerRef.current) {
-				clearInterval(timerRef.current);
-			}
-		};
-	}, []);
+	// useEffect(() => {
+	// 	return () => {
+	// 		if (timerRef.current) {
+	// 			clearInterval(timerRef.current);
+	// 		}
+	// 	};
+	// }, []);
 
 	const startTimer = (duration: number, habitParsed: Habit) => {
 		if (!isTimerActive) {
 			const durationSeconds = Math.round(duration * 60);
 			setTimerSeconds(durationSeconds);
+			console.log("startTimer -> durationSeconds", durationSeconds);
+			setShowHabitDetail(true);
 			setIsTimerActive(true);
 			setIsTimerVisible(true);
 			timerRef.current = setInterval(() => {
@@ -57,9 +67,11 @@ const useTimer = () => {
 
 	const pauseTimer = () => {
 		if (isTimerActive) {
+			console.log("PAUSE pauseTimer -> timerRef.current", timerRef.current);
 			clearInterval(timerRef.current!);
 			setIsTimerActive(false);
 		} else {
+			console.log("PLAY pauseTimer -> timerRef.current", timerRef.current);
 			timerRef.current = setInterval(() => {
 				setTimerSeconds((prevSeconds) => {
 					if (prevSeconds <= 1) {
@@ -89,12 +101,12 @@ const useTimer = () => {
 				rewards: points.rewards + habitParsed.reward,
 			});
 			addOdysseePoints(habitParsed.reward, habitParsed.difficulty);
-			setCompletedHabitsData((prevHabits: Habit[]) => [
+			setCompletedHabitsData((prevHabits: UserHabit[]) => [
 				...prevHabits,
 				habitParsed,
 			]);
-			setUncompletedHabitsData((prevHabits: Habit[]) =>
-				prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habitParsed.id)
+			setUncompletedHabitsData((prevHabits: UserHabit[]) =>
+				prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habitParsed.id)
 			);
 			await AsyncStorage.removeItem("timerSeconds");
 		} catch (error) {
@@ -103,14 +115,10 @@ const useTimer = () => {
 	};
 
 	return {
-		timerSeconds,
-		isTimerActive,
-		isTimerVisible,
 		startTimer,
 		pauseTimer,
 		stopTimer,
-		date,
 	};
 };
 
-export default useTimer;
+export default useHabitTimer;
