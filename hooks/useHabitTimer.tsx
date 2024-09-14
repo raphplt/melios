@@ -3,7 +3,6 @@ import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
-import { useRef, useEffect } from "react";
 import usePoints from "./usePoints";
 import { Habit } from "../type/habit";
 import { useHabits } from "@context/HabitsContext";
@@ -26,20 +25,11 @@ const useHabitTimer = () => {
 	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
 		useData();
 
-	// useEffect(() => {
-	// 	return () => {
-	// 		if (timerRef.current) {
-	// 			clearInterval(timerRef.current);
-	// 		}
-	// 	};
-	// }, []);
-
 	const startTimer = (duration: number, habitParsed: Habit) => {
 		if (!isTimerActive) {
 			const durationSeconds = Math.round(duration * 60);
 			setTimerSeconds(durationSeconds);
-			console.log("startTimer -> durationSeconds", durationSeconds);
-			setShowHabitDetail(true);
+			setShowHabitDetail(false);
 			setIsTimerActive(true);
 			setIsTimerVisible(true);
 			timerRef.current = setInterval(() => {

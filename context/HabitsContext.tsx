@@ -42,7 +42,7 @@ export const HabitsProvider = ({ children }: any) => {
 	const [currentHabit, setCurrentHabit] = useState<CombinedHabits | null>(null);
 
 	// Timer state
-	const [showHabitDetail, setShowHabitDetail] = useState(false);
+	const [showHabitDetail, setShowHabitDetail] = useState(true);
 
 	const fetchHabitsData = async (signal: AbortSignal) => {
 		try {

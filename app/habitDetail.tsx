@@ -1,5 +1,11 @@
 import { useContext, useEffect, useRef } from "react";
-import { View, Animated, AppState, AppStateStatus } from "react-native";
+import {
+	View,
+	AppState,
+	AppStateStatus,
+	SafeAreaView,
+	StatusBar,
+} from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -18,6 +24,10 @@ import TimerHabit from "@components/HabitDetail/TimerHabit";
 import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
 import { TimerProvider, useTimer } from "@context/TimerContext";
 import useHabitTimer from "@hooks/useHabitTimer";
+import { DarkTheme } from "@constants/Theme";
+import ButtonBack from "@components/Shared/ButtonBack";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 export interface DayStatus {
 	date: string;
@@ -35,17 +45,9 @@ export default function HabitDetail() {
 	const { startTimer } = useHabitTimer();
 	const { sendPushNotification } = useNotifications();
 	const { showHabitDetail } = useHabits();
-
-	const translateY = useRef(new Animated.Value(1000)).current;
-	const appState = useRef(AppState.currentState);
 	const { expoPushToken } = useData();
-
-	useEffect(() => {
-		Animated.spring(translateY, {
-			toValue: 0,
-			useNativeDriver: true,
-		}).start();
-	}, []);
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const appState = useRef(AppState.currentState);
 
 	useEffect(() => {
 		const subscription = AppState.addEventListener(
@@ -94,21 +96,18 @@ export default function HabitDetail() {
 		0.1
 	);
 
-	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
-
-	console.log("timerSeconds", timerSeconds);
-
 	return (
 		<TimerProvider>
-			<Animated.View
+			<View
 				style={{
-					backgroundColor: theme.colors.background,
+					flex: 1,
+					paddingTop: StatusBar.currentHeight,
 				}}
-				className="h-screen w-full overflow-y-auto top-0 absolute"
 			>
-				{!showHabitDetail && (
-					<View className="mt-4 w-full mx-auto flex justify-center flex-col  pt-4">
-						<>
+				{showHabitDetail && (
+					<>
+						<ButtonBack handleQuit={() => navigation.goBack()} />
+						<View className="w-full mx-auto flex justify-center flex-col pt-1">
 							<HabitDetailHeader
 								habit={currentHabit.habit}
 								theme={theme}
@@ -122,11 +121,11 @@ export default function HabitDetail() {
 							/>
 							<LastDays habit={currentHabit.userHabit} />
 							<ButtonStartHabit habit={currentHabit.habit} />
-						</>
-					</View>
+						</View>
+					</>
 				)}
 				<TimerHabit />
-			</Animated.View>
+			</View>
 		</TimerProvider>
 	);
 }
