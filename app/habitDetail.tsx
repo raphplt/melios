@@ -1,11 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import {
-	View,
-	AppState,
-	AppStateStatus,
-	SafeAreaView,
-	StatusBar,
-} from "react-native";
+import { View, AppState, AppStateStatus, Text, StatusBar } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

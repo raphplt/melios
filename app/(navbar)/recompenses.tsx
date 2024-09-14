@@ -59,7 +59,7 @@ export default function Recompenses() {
 				}}
 			>
 				<Image
-					source={require("../../assets/images/illustrations/not_available.png")}
+					source={require("@assets/images/illustrations/not_available.png")}
 					alt="Illustration de récompenses non disponibles"
 					className="w-3/4 h-3/4"
 				/>
