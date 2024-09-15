@@ -6,13 +6,14 @@ import { ScrollView, TextInput, View } from "react-native";
 import { UserHabit } from "../type/userHabit";
 import { Iconify } from "react-native-iconify";
 import NumberSelected from "@components/Select/NumberSelected";
+import { Habit } from "@type/habit";
 
 export default function EditHabits() {
 	const { theme } = useContext(ThemeContext);
 	const { habits, setHabits } = useData();
 	const [searchText, setSearchText] = useState("");
 
-	const filteredHabits = habits.filter((habit: UserHabit) =>
+	const filteredHabits = habits.filter((habit: Habit) =>
 		habit.name.toLowerCase().includes(searchText.toLowerCase())
 	);
 
@@ -46,7 +47,7 @@ export default function EditHabits() {
 					<NumberSelected number={habits.length} />
 				</View>
 
-				{filteredHabits.map((habit: UserHabit) => (
+				{filteredHabits.map((habit: Habit) => (
 					<EditHabitCard key={habit.id} habit={habit} />
 				))}
 			</ScrollView>

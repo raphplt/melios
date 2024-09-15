@@ -53,6 +53,7 @@ const useHabitTimer = () => {
 		}
 		setIsTimerActive(false);
 		setIsTimerVisible(false);
+		setShowHabitDetail(true);
 	};
 
 	const pauseTimer = () => {

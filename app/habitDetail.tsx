@@ -13,12 +13,10 @@ import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
-import { HabitsContext, useHabits } from "@context/HabitsContext";
-import TimerHabit from "@components/HabitDetail/TimerHabit";
+import { HabitsContext } from "@context/HabitsContext";
 import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
 import { TimerProvider, useTimer } from "@context/TimerContext";
 import useHabitTimer from "@hooks/useHabitTimer";
-import { DarkTheme } from "@constants/Theme";
 import ButtonBack from "@components/Shared/ButtonBack";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
@@ -38,7 +36,6 @@ export default function HabitDetail() {
 	const { timerSeconds, isTimerActive } = useTimer();
 	const { startTimer } = useHabitTimer();
 	const { sendPushNotification } = useNotifications();
-	const { showHabitDetail } = useHabits();
 	const { expoPushToken } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const appState = useRef(AppState.currentState);
@@ -91,35 +88,29 @@ export default function HabitDetail() {
 	);
 
 	return (
-		<TimerProvider>
 			<View
 				style={{
 					flex: 1,
 					paddingTop: StatusBar.currentHeight,
 				}}
 			>
-				{showHabitDetail && (
-					<>
-						<ButtonBack handleQuit={() => navigation.goBack()} />
-						<View className="w-full mx-auto flex justify-center flex-col pt-1">
-							<HabitDetailHeader
-								habit={currentHabit.habit}
-								theme={theme}
-								lightenedColor={lightenedColor}
-							/>
+				<ButtonBack handleQuit={() => navigation.goBack()} />
+				<View className="w-full mx-auto flex justify-center flex-col pt-1">
+					<HabitDetailHeader
+						habit={currentHabit.habit}
+						theme={theme}
+						lightenedColor={lightenedColor}
+					/>
 
-							<InfosPanel
-								habit={currentHabit.habit}
-								theme={theme}
-								lightenedColor={lightenedColor}
-							/>
-							<LastDays habit={currentHabit.userHabit} />
-							<ButtonStartHabit habit={currentHabit.habit} />
-						</View>
-					</>
-				)}
-				<TimerHabit />
+					<InfosPanel
+						habit={currentHabit.habit}
+						theme={theme}
+						lightenedColor={lightenedColor}
+					/>
+					<LastDays habit={currentHabit.userHabit} />
+					<ButtonStartHabit habit={currentHabit.habit} />
+					{/* TODO: bouton compléter normalement ? */}
+				</View>
 			</View>
-		</TimerProvider>
 	);
 }

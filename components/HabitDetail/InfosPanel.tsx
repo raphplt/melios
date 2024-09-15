@@ -94,7 +94,7 @@ export default function InfosPanel({
 						Difficulté
 					</Text>
 				</View>
-				<Text style={{ color: theme.colors.text }}>{difficulty}</Text>
+				<Text style={{ color: theme.colors.text }}>{difficulty ?? ""}</Text>
 			</View>
 			<View className={rowStyle}>
 				<View className={rowBox}>

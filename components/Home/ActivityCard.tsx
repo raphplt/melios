@@ -8,13 +8,17 @@ import { getHabitById } from "@db/habits";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { lightenColor } from "@utils/colors";
+import { HabitsContext } from "@context/HabitsContext";
+import { Habit } from "@type/habit";
 
 export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
-	const [habitInfos, setHabitInfos] = useState<any>({});
+	const [habitInfos, setHabitInfos] = useState<Habit | null>(null);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const scaleAnim = useRef(new Animated.Value(1)).current;
+	const { setCurrentHabit } = useContext(HabitsContext);
 
+	// Console log La !!!!!!!!!!! Changer ca immédiatement
 	useEffect(() => {
 		async function getHabitInfos() {
 			const result = await getHabitById(userHabit.id);
@@ -22,6 +26,8 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 		}
 		getHabitInfos();
 	}, []);
+
+	if (!habitInfos) return null;
 
 	const lighterColor = lightenColor(
 		habitInfos.category?.color || theme.colors.text,
@@ -42,6 +48,15 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 		}).start();
 	};
 
+	// Go to habit detail
+	const goHabitDetail = () => {
+		setCurrentHabit({
+			habit: habitInfos,
+			userHabit: userHabit,
+		});
+		navigation.navigate("habitDetail");
+	};
+
 	return (
 		<Animated.View
 			className="h-64 w-40 mx-2 rounded-xl"
@@ -55,10 +70,7 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 		>
 			<Pressable
 				onPress={() => {
-					navigation.navigate("habitDetail", {
-						habit: JSON.stringify(userHabit),
-						habitInfos: JSON.stringify(habitInfos),
-					});
+					goHabitDetail();
 				}}
 			>
 				<View

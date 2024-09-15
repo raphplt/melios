@@ -22,11 +22,11 @@ import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
-import { DataContext } from "@context/DataContext";
+import { useData } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
-import { Habit } from "../../type/habit";
 import { HabitsContext } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
+import { Habit } from "@type/habit";
 
 export default function CardCheckHabit({
 	habit,
@@ -41,8 +41,9 @@ export default function CardCheckHabit({
 }) {
 	// Imports et Contextes
 	const { theme } = useContext(ThemeContext);
-	const { date } = useContext(DataContext);
 	const { setCurrentHabit } = useContext(HabitsContext);
+	const { addOdysseePoints } = usePoints();
+	const { date } = useData();
 
 	// États
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -52,10 +53,6 @@ export default function CardCheckHabit({
 
 	// Variables
 	let touchStartTimeout: NodeJS.Timeout;
-
-	// Hooks personnalisés
-	const { addOdysseePoints } = usePoints();
-	// const { updateTodayScore } = useProgression();
 
 	// Navigation
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -134,10 +131,6 @@ export default function CardCheckHabit({
 				className="px-3"
 				onPress={() => {
 					goHabitDetail();
-					// navigation.navigate("habitDetail", {
-					// 	habit: JSON.stringify(habit),
-					// 	habitInfos: JSON.stringify(habitInfos),
-					// });
 				}}
 			>
 				<View

@@ -17,6 +17,7 @@ import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
 import ButtonSettings from "@components/Shared/ButtonSettings";
+import { TimerProvider } from "@context/TimerContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -162,6 +163,12 @@ function MainNavigator() {
 							headerShadowVisible: false,
 						}}
 					/>
+					<Stack.Screen
+						name="timerHabit"
+						options={{
+							headerShown: false,
+						}}
+					/>
 				</Stack>
 				{isOpen && <NotificationBox />}
 			</ThemeProvider>
@@ -188,11 +195,13 @@ export default function RootLayout() {
 
 	return (
 		<SessionProvider>
-			<DataProvider>
-				<HabitsProvider>
-					<MainNavigator />
-				</HabitsProvider>
-			</DataProvider>
+			<TimerProvider>
+				<DataProvider>
+					<HabitsProvider>
+						<MainNavigator />
+					</HabitsProvider>
+				</DataProvider>
+			</TimerProvider>
 		</SessionProvider>
 	);
 }
