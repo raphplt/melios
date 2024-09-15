@@ -6,7 +6,7 @@ import Congratulations from "./Congratulations";
 import NoHabits from "./NoHabits";
 import HabitSectionList from "./HabitSectionList";
 import MissedHabitsSection from "./MissedHabitSectionList";
-import { Habit } from "../../type/habit";
+import { UserHabit } from "@type/userHabit";
 
 export default function ListHabitsHome() {
 	const {
@@ -33,10 +33,10 @@ export default function ListHabitsHome() {
 	if (userHabits.length === 0 || !userHabits) return <NoHabits theme={theme} />;
 
 	const nextHabits = uncompletedHabitsData.filter(
-		(habit: Habit) => habit.moment >= hours
+		(habit: UserHabit) => habit.moment >= hours
 	);
 	const missedHabits = uncompletedHabitsData.filter(
-		(habit: Habit) => habit.moment < hours
+		(habit: UserHabit) => habit.moment < hours
 	);
 
 	return (

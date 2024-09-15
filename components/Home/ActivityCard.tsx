@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef, memo } from "react";
 import { View, Text, Pressable, Animated } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
@@ -10,18 +10,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import { lightenColor } from "@utils/colors";
 import { HabitsContext } from "@context/HabitsContext";
 import { Habit } from "@type/habit";
+import useIndex from "@hooks/useIndex";
 
-export default function Activity({ userHabit }: { userHabit: UserHabit }) {
+function Activity({ userHabit }: { userHabit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
-	const [habitInfos, setHabitInfos] = useState<Habit | null>(null);
+	const [habitInfos, setHabitInfos] = useState<Habit>();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 	const { setCurrentHabit } = useContext(HabitsContext);
+	const { getHabitDetails } = useIndex();
 
-	// Console log La !!!!!!!!!!! Changer ca immédiatement
 	useEffect(() => {
 		async function getHabitInfos() {
-			const result = await getHabitById(userHabit.id);
+			const result = getHabitDetails(userHabit.id);
 			setHabitInfos(result);
 		}
 		getHabitInfos();
@@ -122,3 +123,5 @@ export default function Activity({ userHabit }: { userHabit: UserHabit }) {
 		</Animated.View>
 	);
 }
+
+export default memo(Activity);

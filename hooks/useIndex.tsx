@@ -20,6 +20,7 @@ import { UserHabit } from "../type/userHabit";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
 import { Habit } from "@type/habit";
+import { useHabits } from "@context/HabitsContext";
 
 const useIndex = () => {
 	// Contexts
@@ -40,9 +41,12 @@ const useIndex = () => {
 		setCompletedHabitsData,
 	} = useData();
 
+	const { habitsData } = useHabits();
+
 	// Refs
 	const rotation = useRef(new Animated.Value(0)).current;
-	const abortController = useRef<AbortController | null>(null);
+	const abortControllerHabits = useRef<AbortController | null>(null);
+	const abortControllerMember = useRef<AbortController | null>(null);
 
 	// States
 	const [userHabits, setUserHabits] = useState<Habit[]>([]);
@@ -75,15 +79,33 @@ const useIndex = () => {
 			: require("@assets/images/illustrations/temple_night.jpg");
 	}, [isDayTime]);
 
-	const fetchMemberData = useCallback(
+	const fetchMemberHabitsData = useCallback(
 		async (signal: AbortSignal) => {
+			if (userHabits.length > 0) return; // Évite de refaire l'appel si les habitudes sont déjà chargées.
+
 			try {
-				const [data, memberInfos] = await Promise.all([
-					getMemberHabits(),
-					getMemberInfos(),
-				]);
+				console.log("Fetching member habits data");
+				const data = await getMemberHabits();
 				if (!signal.aborted) {
 					setUserHabits(data);
+				}
+			} catch (error) {
+				if (!signal.aborted) {
+					handleError(error);
+				}
+			}
+		},
+		[userHabits] // Ajoute la dépendance correcte ici.
+	);
+
+	const fetchMemberInfosData = useCallback(
+		async (signal: AbortSignal) => {
+			if (member) return; // Évite de refaire l'appel si les infos sont déjà chargées.
+
+			try {
+				console.log("Fetching member infos data");
+				const memberInfos = await getMemberInfos();
+				if (!signal.aborted) {
 					setMember(memberInfos);
 				}
 			} catch (error) {
@@ -92,20 +114,34 @@ const useIndex = () => {
 				}
 			}
 		},
-		[setMember, setUserHabits]
+		[member] // Ajoute la dépendance correcte ici.
 	);
+
+	const getHabitDetails = (habitId: string) => {
+		const habit = habitsData.find((habit: Habit) => habit.id === habitId);
+		return habit;
+	};
 
 	// Effects
 	useEffect(() => {
 		if (!isFocused) return;
 
-		if (abortController.current) {
-			abortController.current.abort();
+		if (!userHabits.length && abortControllerHabits.current) {
+			abortControllerHabits.current.abort();
+			abortControllerHabits.current = new AbortController();
+			fetchMemberHabitsData(abortControllerHabits.current.signal);
 		}
+	}, [isFocused]); // Ne pas inclure `fetchMemberHabitsData` ici.
 
-		abortController.current = new AbortController();
-		fetchMemberData(abortController.current.signal);
-	}, [isFocused, fetchMemberData]);
+	useEffect(() => {
+		if (!isFocused) return;
+
+		if (!member && abortControllerMember.current) {
+			abortControllerMember.current.abort();
+			abortControllerMember.current = new AbortController();
+			fetchMemberInfosData(abortControllerMember.current.signal);
+		}
+	}, [isFocused]); // Ne pas inclure `fetchMemberInfosData` ici.
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -118,15 +154,26 @@ const useIndex = () => {
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
-	}, [habits, isLoading, completedHabitsData, uncompletedHabitsData]);
+
+		// console.log(
+		// 	"habits",
+		// 	habits.length,
+		// 	"isLoading",
+		// 	isLoading,
+		// 	"completedHabitsData",
+		// 	completedHabitsData.length,
+		// 	"uncompletedHabitsData",
+		// 	uncompletedHabitsData.length
+		// );
+	}, [habits, isLoading]); //TODO vérifier si on doit ajouter completedHabitsData et uncompletedHabitsData
 
 	useEffect(() => {
-		if (abortController.current) {
-			abortController.current.abort();
+		if (abortControllerMember.current) {
+			abortControllerMember.current.abort();
 		}
 
-		abortController.current = new AbortController();
-		const signal = abortController.current.signal;
+		abortControllerMember.current = new AbortController();
+		const signal = abortControllerMember.current.signal;
 
 		(async () => {
 			const username = member?.nom || "";
@@ -146,7 +193,7 @@ const useIndex = () => {
 		})();
 
 		return () => {
-			abortController.current?.abort();
+			abortControllerMember.current?.abort();
 		};
 	}, [member]);
 
@@ -154,22 +201,23 @@ const useIndex = () => {
 
 	//TODO pas utile ?
 	const backgroundRefresh = useCallback(async () => {
-		if (abortController.current) {
-			abortController.current.abort();
+		if (abortControllerHabits.current) {
+			console.log("Abort previous fetch");
+			abortControllerHabits.current.abort();
 		}
-		abortController.current = new AbortController();
-		fetchMemberData(abortController.current.signal);
-	}, [fetchMemberData]);
+		abortControllerHabits.current = new AbortController();
+		fetchMemberHabitsData(abortControllerHabits.current.signal);
+	}, [fetchMemberHabitsData]);
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		if (abortController.current) {
-			abortController.current.abort();
+		if (abortControllerHabits.current) {
+			abortControllerHabits.current.abort();
 		}
-		abortController.current = new AbortController();
-		await fetchMemberData(abortController.current.signal);
+		abortControllerHabits.current = new AbortController();
+		await fetchMemberHabitsData(abortControllerHabits.current.signal);
 		setRefreshing(false);
-	}, [fetchMemberData]);
+	}, [fetchMemberHabitsData]);
 
 	const handleHabitStatusChange = useCallback(
 		(habit: UserHabit, done: boolean) => {
@@ -304,6 +352,7 @@ const useIndex = () => {
 		resetShowValidate,
 		resetShowNext,
 		resetShowMissed,
+		getHabitDetails,
 	};
 };
 

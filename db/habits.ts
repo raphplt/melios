@@ -70,10 +70,16 @@ export const getHabitsByCategory = async () => {
 
 export const getHabitById = async (id: string) => {
 	try {
+		const startTimeInMs = new Date().getTime();
+
 		const habits = await getAllHabits();
 		const habit = habits.find((habit: Habit) => habit.id === id);
 		if (habit) {
 			const category = await getCategoryById(habit.category);
+			const endTimeInMs = new Date().getTime();
+			console.log(
+				`[PERF] - getHabitById took ${endTimeInMs - startTimeInMs}ms to execute`
+			);
 			return { ...habit, category };
 		}
 		return null;

@@ -50,6 +50,7 @@ const useHabitTimer = () => {
 	const stopTimer = () => {
 		if (timerRef.current) {
 			clearInterval(timerRef.current);
+			timerRef.current = null;
 		}
 		setIsTimerActive(false);
 		setIsTimerVisible(false);
@@ -58,11 +59,9 @@ const useHabitTimer = () => {
 
 	const pauseTimer = () => {
 		if (isTimerActive) {
-			console.log("PAUSE pauseTimer -> timerRef.current", timerRef.current);
 			clearInterval(timerRef.current!);
 			setIsTimerActive(false);
 		} else {
-			console.log("PLAY pauseTimer -> timerRef.current", timerRef.current);
 			timerRef.current = setInterval(() => {
 				setTimerSeconds((prevSeconds) => {
 					if (prevSeconds <= 1) {

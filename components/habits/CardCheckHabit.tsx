@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
@@ -27,8 +27,9 @@ import CardPlaceHolder from "./CardPlaceHolder";
 import { HabitsContext } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { Habit } from "@type/habit";
+import useIndex from "@hooks/useIndex";
 
-export default function CardCheckHabit({
+function CardCheckHabit({
 	habit,
 	onHabitStatusChange,
 	completed,
@@ -44,6 +45,7 @@ export default function CardCheckHabit({
 	const { setCurrentHabit } = useContext(HabitsContext);
 	const { addOdysseePoints } = usePoints();
 	const { date } = useData();
+	const { getHabitDetails, userHabits } = useIndex();
 
 	// États
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -70,12 +72,14 @@ export default function CardCheckHabit({
 
 	useEffect(() => {
 		async function getHabitInfos() {
-			const result = await getHabitById(habit.id);
+			const result = getHabitDetails(habit.id);
+			// console.log("result", result);
+			// const result = await getHabitById(habit.id);
 			setHabitInfos(result);
 			setLoading(false);
 		}
 		getHabitInfos();
-	}, []);
+	}, [userHabits]);
 
 	useEffect(() => {
 		opacity.value = withTiming(1, { duration: 200 });
@@ -199,3 +203,5 @@ export default function CardCheckHabit({
 		</Animated.View>
 	);
 }
+
+export default memo(CardCheckHabit);

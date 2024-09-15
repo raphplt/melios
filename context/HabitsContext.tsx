@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getHabitsWithCategories } from "../db/fetch";
-import { Habit } from "../type/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserHabit } from "../type/userHabit";
+import { Category } from "@type/category";
+import { getHabitsWithCategories } from "@db/fetch";
+import { Habit } from "@type/habit";
+import { UserHabit } from "@type/userHabit";
 
 interface HabitsContextProps {
 	habitsData: Habit[];
@@ -37,6 +38,8 @@ export const HabitsContext = createContext<HabitsContextProps>({
 
 export const HabitsProvider = ({ children }: any) => {
 	const [habitsData, setHabitsData] = useState<Habit[]>([]);
+	const [categories, setCategories] = useState<Category[]>([]);
+
 	const [loading, setLoading] = useState(true);
 	const [habitQueue, setHabitQueue] = useState<Habit[]>([]);
 	const [currentHabit, setCurrentHabit] = useState<CombinedHabits | null>(null);

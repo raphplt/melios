@@ -26,6 +26,7 @@ import { Trophy } from "@type/trophy";
 import { processHabits } from "@utils/habitsUtils";
 import { extractPoints } from "@utils/pointsUtils";
 import { getNotificationToken } from "@utils/notificationsUtils";
+import { Category } from "@type/category";
 
 interface DataProviderProps {
 	children: ReactNode;
