@@ -9,4 +9,5 @@ export interface Member {
 	temps: Answer;
 	aspects: Answer[];
 	habits: UserHabit[];
+	profilePicture: string;
 }

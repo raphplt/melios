@@ -6,26 +6,43 @@ import getIcon from "@utils/cosmeticsUtils";
 import { useContext } from "react";
 import { View, Text, Image } from "react-native";
 
+import { TouchableOpacity } from "react-native";
+import { getMemberInfos, updateProfilePicture } from "@db/member";
+
 export default function ProfilIcon({
 	cosmetic,
 }: {
 	cosmetic: ProfileCosmetic;
 }) {
 	const { theme } = useContext(ThemeContext);
-
-	const { points } = useData();
+	const { points, setMember, member } = useData();
 
 	const isGrayedOut = cosmetic.price > points.odyssee;
 
+	const handlePress = async () => {
+		if (!isGrayedOut) {
+			await updateProfilePicture(cosmetic.slug);
+			const updatedMember = await getMemberInfos({ forceRefresh: true });
+			setMember(updatedMember);
+		}
+	};
+
+	// console.log("member", member);
+
 	return (
-		<View
-			key={cosmetic.id}
+		<TouchableOpacity
+			onPress={handlePress}
+			disabled={isGrayedOut}
 			className="flex flex-col items-center w-[31%] mx-auto my-1 py-2 rounded-xl"
+			key={cosmetic.id}
 			style={{
 				backgroundColor: isGrayedOut
 					? theme.colors.grayPrimary
 					: theme.colors.cardBackground,
-				borderColor: theme.colors.border,
+				borderColor:
+					member?.profilePicture === cosmetic.slug
+						? theme.colors.primary
+						: theme.colors.cardBackground,
 				borderWidth: 1,
 				opacity: isGrayedOut ? 0.5 : 1,
 			}}
@@ -49,11 +66,10 @@ export default function ProfilIcon({
 						color: theme.colors.text,
 					}}
 				>
-					{" "}
 					{cosmetic.price}
 				</Text>
 				<MoneyOdyssee />
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 }
