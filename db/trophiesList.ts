@@ -1,5 +1,4 @@
-import { addDoc, collection } from "firebase/firestore";
-import { db } from ".";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchCollectionData } from "./fetch";
 
 const LOCAL_STORAGE_TROPHIES_LIST_KEY = "trophiesList";
@@ -11,7 +10,9 @@ export const getAllTrophies = async (
 	} = {}
 ) => {
 	if (!options.forceRefresh) {
-		const storedData = localStorage.getItem(LOCAL_STORAGE_TROPHIES_LIST_KEY);
+		const storedData = await AsyncStorage.getItem(
+			LOCAL_STORAGE_TROPHIES_LIST_KEY
+		);
 		if (storedData) {
 			return JSON.parse(storedData);
 		}

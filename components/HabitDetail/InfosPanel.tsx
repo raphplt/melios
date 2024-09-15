@@ -48,7 +48,7 @@ export default function InfosPanel({
 					color: theme.colors.text,
 					borderBottomColor: habit.category?.color || theme.colors.border,
 				}}
-				className="text-[15px] text-pretty ml-4  font-semibold pb-2 w-11/12 mx-auto border-b"
+				className="text-[16px] text-pretty ml-4 pb-2 w-11/12 mx-auto border-b"
 			>
 				{habit.description}
 			</Text>
@@ -96,7 +96,7 @@ export default function InfosPanel({
 				</View>
 				<Text style={{ color: theme.colors.text }}>{difficulty ?? ""}</Text>
 			</View>
-			<View className={rowStyle}>
+			{/* <View className={rowStyle}>
 				<View className={rowBox}>
 					<Iconify size={24} color={theme.colors.text} icon="ph:coin" />
 					<Text style={{ color: theme.colors.text }} className="text-md">
@@ -117,7 +117,7 @@ export default function InfosPanel({
 						</Text>
 					</View>
 				</View>
-			</View>
+			</View> */}
 		</View>
 	);
 }

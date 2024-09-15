@@ -5,9 +5,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import usePoints from "./usePoints";
 import { Habit } from "../type/habit";
-import { useHabits } from "@context/HabitsContext";
+import { CombinedHabits, useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { useTimer } from "@context/TimerContext";
+import { getHabitPoints } from "@utils/pointsUtils";
 
 const useHabitTimer = () => {
 	const date = moment().format("YYYY-MM-DD");
@@ -25,9 +26,9 @@ const useHabitTimer = () => {
 	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
 		useData();
 
-	const startTimer = (duration: number, habitParsed: Habit) => {
+	const startTimer = (combinedHabit: CombinedHabits) => {
 		if (!isTimerActive) {
-			const durationSeconds = Math.round(duration * 60);
+			const durationSeconds = Math.round(combinedHabit.habit.duration * 60);
 			setTimerSeconds(durationSeconds);
 			setShowHabitDetail(false);
 			setIsTimerActive(true);
@@ -38,7 +39,7 @@ const useHabitTimer = () => {
 						clearInterval(timerRef.current!);
 						setIsTimerActive(false);
 						setIsTimerVisible(false);
-						onTimerEnd(habitParsed);
+						onTimerEnd(combinedHabit);
 						return 0;
 					}
 					return prevSeconds - 1;
@@ -77,27 +78,35 @@ const useHabitTimer = () => {
 		}
 	};
 
-	const onTimerEnd = async (habitParsed: Habit) => {
+	const onTimerEnd = async (combinedHabit: CombinedHabits) => {
 		try {
-			if (!habitParsed) {
+			if (!combinedHabit) {
 				return;
 			}
 
-			await setMemberHabitLog(habitParsed.id, date, true);
-			await setRewards("rewards", habitParsed.reward);
-			await setRewards("odyssee", habitParsed.reward + habitParsed.difficulty);
+			await setMemberHabitLog(combinedHabit.habit.id, date, true);
+
+			const habitPoints = getHabitPoints(combinedHabit.habit);
+
+			// Update rewards
+			await setRewards("rewards", habitPoints.rewards);
+			await setRewards("odyssee", habitPoints.odyssee);
 			setPoints({
 				...points,
-				rewards: points.rewards + habitParsed.reward,
+				rewards: habitPoints.rewards,
+				odyssee: habitPoints.odyssee,
 			});
-			addOdysseePoints(habitParsed.reward, habitParsed.difficulty);
+
 			setCompletedHabitsData((prevHabits: UserHabit[]) => [
 				...prevHabits,
-				habitParsed,
+				combinedHabit.userHabit,
 			]);
 			setUncompletedHabitsData((prevHabits: UserHabit[]) =>
-				prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habitParsed.id)
+				prevHabits.filter(
+					(oldHabit: UserHabit) => oldHabit.id !== combinedHabit.userHabit.id
+				)
 			);
+
 			await AsyncStorage.removeItem("timerSeconds");
 		} catch (error) {
 			console.error("Failed to parse habit:", error);

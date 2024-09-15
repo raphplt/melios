@@ -10,8 +10,10 @@ import { useNavigation } from "expo-router";
 import { useContext, useRef } from "react";
 import { Animated, Pressable, Text, View } from "react-native";
 import RewardDetail from "./RewardDetail";
+import IconView from "@components/Habits/IconView";
+import { Iconify } from "react-native-iconify";
 
-export default function ButtonStartHabit({
+export default function ButtonComplete({
 	combinedHabit,
 }: {
 	combinedHabit: CombinedHabits;
@@ -46,18 +48,9 @@ export default function ButtonStartHabit({
 	return (
 		<>
 			<View className="flex flex-row items-center justify-between w-11/12 mx-auto py-2">
-				<Text
-					className=" font-semibold text-[16px]"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					Lancer l'habitude
-				</Text>
-				<View className="flex flex-row ">
-					<RewardDetail point={habitPoints.rewards} money={<MoneyMelios />} />
+				{/* <View className="flex flex-row ">
 					<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
-				</View>
+				</View> */}
 			</View>
 			<Animated.View
 				style={{
@@ -68,14 +61,22 @@ export default function ButtonStartHabit({
 					onPress={handlePress}
 					className="py-3 px-4 rounded-lg w-11/12 mx-auto justify-evenly flex flex-row items-center"
 					style={{
-						backgroundColor: theme.colors.primary,
+						backgroundColor: theme.colors.border,
 					}}
 					onTouchStart={handleTouchStart}
 					onTouchEnd={handleTouchEnd}
 					onTouchCancel={handleTouchEnd}
 				>
 					<View className="flex flex-row items-center">
-						<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
+						<Text
+							className=" font-semibold text-[16px]"
+							style={{
+								color: theme.colors.text,
+							}}
+						>
+							Compléter l'habitude
+						</Text>
+						<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
 					</View>
 				</Pressable>
 			</Animated.View>

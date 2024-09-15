@@ -68,7 +68,6 @@ export const setRewards = async (
 			if (type === "odyssee") {
 				updateData = { odyssee: (rewardDoc.data().odyssee || 0) + points };
 			} else {
-				// 'rewards'
 				updateData = { rewards: (rewardDoc.data().rewards || 0) + points };
 			}
 

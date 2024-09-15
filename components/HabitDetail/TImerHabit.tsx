@@ -74,7 +74,7 @@ export default function TimerHabit() {
 			<View className="flex flex-col items-center justify-evenly h-full">
 				<Image
 					source={getImage(currentHabit.habit.category.slug)}
-					style={StyleSheet.absoluteFillObject} // Positionne l'image en fond
+					style={StyleSheet.absoluteFillObject}
 					blurRadius={20}
 					resizeMode="cover"
 					className="w-full h-full"

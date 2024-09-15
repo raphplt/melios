@@ -21,11 +21,11 @@ export default function HabitDetailHeader({
 				name={habit.category?.icon || "question"}
 				size={24}
 				color={habit.category?.color || theme.colors.text}
-				style={{ marginRight: 14 }}
+				style={{ marginRight: 15 }}
 			/>
 			<Text
 				style={{
-					color: habit.category?.color,
+					color: habit.category?.color || theme.colors.text,
 					fontFamily: "BaskervilleBold",
 				}}
 				className="text-lg text-center font-semibold"

@@ -29,18 +29,22 @@ export default function TimerHabit() {
 		const beforeRemoveListener = (e: any) => {
 			if (!quitHabit) {
 				e.preventDefault();
-				Alert.alert("Êtes-vous sûr de vouloir arrêter cette habitude ?", "", [
-					{
-						text: "Annuler",
-						style: "cancel",
-						onPress: () => {},
-					},
-					{
-						text: "Arrêter",
-						style: "destructive",
-						onPress: () => handleStopHabit(),
-					},
-				]);
+				Alert.alert(
+					"Êtes-vous sûr de vouloir arrêter cette habitude ?",
+					"La progression actuelle sera perdue",
+					[
+						{
+							text: "Annuler",
+							style: "cancel",
+							onPress: () => {},
+						},
+						{
+							text: "Arrêter",
+							style: "destructive",
+							onPress: () => handleStopHabit(),
+						},
+					]
+				);
 			}
 		};
 

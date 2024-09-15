@@ -30,7 +30,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 
 	return (
 		<>
-			<View className="w-11/12 mx-auto mt-6">
+			<View className="w-11/12 mx-auto ">
 				<HeaderContainer>
 					<Iconify
 						icon="ph:calendar-check-fill"
@@ -49,7 +49,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 				horizontal
 				showsHorizontalScrollIndicator={false}
 				contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
-				className="w-11/12 mx-auto mt-2"
+				className="w-11/12 mx-auto mt-2 mb-6"
 			>
 				{lastDays &&
 					lastDays.map((day: DayStatus, index) => (

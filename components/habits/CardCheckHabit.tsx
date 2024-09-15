@@ -16,7 +16,6 @@ import Animated, {
 } from "react-native-reanimated";
 
 // Customs imports
-import { getHabitById } from "@db/habits";
 import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
@@ -28,6 +27,7 @@ import { HabitsContext } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { Habit } from "@type/habit";
 import useIndex from "@hooks/useIndex";
+import { getHabitPoints } from "@utils/pointsUtils";
 
 function CardCheckHabit({
 	habit,
@@ -103,9 +103,13 @@ function CardCheckHabit({
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
 		onHabitStatusChange(habit, true);
+
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
 		await setMemberHabitLog(habit.id, date, true);
-		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
+
+		const habitPoints = getHabitPoints(habitInfos);
+		await setRewards("odyssee", habitPoints.odyssee);
+
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 	};
 
@@ -185,7 +189,7 @@ function CardCheckHabit({
 								textDecorationLine: completed ? "line-through" : "none",
 								marginLeft: 6,
 							}}
-							className="text-[15px] font-semibold pl-1"
+							className="text-[15px] font-semibold pl-1 w-[80%]"
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>

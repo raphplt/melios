@@ -29,31 +29,30 @@ export default function TopRow({
 	return (
 		<Pressable className="w-full" onPress={resetShow}>
 			<View className="flex items-center justify-start flex-row w-[90%] bg-transparent mx-auto my-2">
-				{/* <View
-					className="flex items-center justify-center rounded-full w-6 h-6 mr-2"
-					style={{
-						backgroundColor: color,
-						borderColor: borderColor || theme.colors.primary,
-						borderWidth: 2,
-					}}
-				>
-					<Text
-						className="font-bold text-[13px]"
-						style={{
-							color: textColor || theme.colors.text,
-						}}
-					>{`${number}`}</Text>
-				</View> */}
 				<IconView icon={icon} />
-
-				<Text
-					className=" ml-1 text-[16px]"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					{text}
-				</Text>
+				<View className="flex items-center flex-row">
+					<Text
+						className="ml-2 text-[16px]"
+						style={{
+							color: theme.colors.text,
+						}}
+					>
+						{text}
+					</Text>
+					{/* <View
+						className="flex items-center justify-center rounded-full w-6 h-6 mx-1"
+						style={{
+							backgroundColor: borderColor,
+						}}
+					>
+						<Text
+							className="font-bold "
+							style={{
+								color: theme.colors.textSecondary,
+							}}
+						>{`${number}`}</Text>
+					</View> */}
+				</View>
 
 				<View className="flex items-center justify-center ml-auto p-1">
 					{showMore > 0 ? (

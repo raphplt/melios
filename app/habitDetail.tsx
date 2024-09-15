@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import { View, AppState, AppStateStatus, Text, StatusBar } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "expo-router";
 
 // Customs imports
 import LoaderScreen from "@components/Shared/LoaderScreen";
@@ -15,11 +16,11 @@ import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
 import { HabitsContext } from "@context/HabitsContext";
 import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
-import { TimerProvider, useTimer } from "@context/TimerContext";
+import { useTimer } from "@context/TimerContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import ButtonBack from "@components/Shared/ButtonBack";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
+import ButtonComplete from "@components/HabitDetail/ButtonComplete";
 
 export interface DayStatus {
 	date: string;
@@ -55,7 +56,7 @@ export default function HabitDetail() {
 		) {
 			const remainingSeconds = await AsyncStorage.getItem("timerSeconds");
 			if (remainingSeconds) {
-				startTimer(parseInt(remainingSeconds) / 60, currentHabit.habit);
+				startTimer(currentHabit);
 			}
 		} else if (nextAppState === "background") {
 			if (!expoPushToken) {
@@ -88,29 +89,30 @@ export default function HabitDetail() {
 	);
 
 	return (
-			<View
-				style={{
-					flex: 1,
-					paddingTop: StatusBar.currentHeight,
-				}}
-			>
-				<ButtonBack handleQuit={() => navigation.goBack()} />
-				<View className="w-full mx-auto flex justify-center flex-col pt-1">
-					<HabitDetailHeader
-						habit={currentHabit.habit}
-						theme={theme}
-						lightenedColor={lightenedColor}
-					/>
+		<View
+			style={{
+				flex: 1,
+				paddingTop: StatusBar.currentHeight,
+			}}
+		>
+			<ButtonBack handleQuit={() => navigation.goBack()} />
+			<View className="w-full mx-auto flex justify-center flex-col pt-1">
+				<HabitDetailHeader
+					habit={currentHabit.habit}
+					theme={theme}
+					lightenedColor={lightenedColor}
+				/>
 
-					<InfosPanel
-						habit={currentHabit.habit}
-						theme={theme}
-						lightenedColor={lightenedColor}
-					/>
-					<LastDays habit={currentHabit.userHabit} />
-					<ButtonStartHabit habit={currentHabit.habit} />
-					{/* TODO: bouton compléter normalement ? */}
-				</View>
+				<InfosPanel
+					habit={currentHabit.habit}
+					theme={theme}
+					lightenedColor={lightenedColor}
+				/>
+				<LastDays habit={currentHabit.userHabit} />
+				<ButtonStartHabit combinedHabit={currentHabit} />
+				{/* <ButtonComplete combinedHabit={currentHabit} /> */}
+				{/* TODO: bouton compléter normalement ? */}
 			</View>
+		</View>
 	);
 }

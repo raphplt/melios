@@ -14,7 +14,7 @@ export const fetchCollectionData = async (
 	forceRefresh: boolean
 ) => {
 	try {
-		if (!forceRefresh && ONE_WEEK_IN_MS > 0) {
+		if (!forceRefresh) {
 			console.log(storageKey);
 			const storedData = await AsyncStorage.getItem(storageKey);
 			if (storedData) {
@@ -23,6 +23,7 @@ export const fetchCollectionData = async (
 			}
 		}
 
+		console.log("Fetching data from Firestore for collection: ", collectionName);
 		const collectionRef = collection(db, collectionName);
 		const snapshot = await getDocs(collectionRef);
 
