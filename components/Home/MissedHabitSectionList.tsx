@@ -1,8 +1,8 @@
 import TopRow from "@components/Habits/TopRow";
 import { View } from "react-native";
-import { Habit } from "../../type/habit";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import ButtonViewMore from "./ButtonViewMore";
+import { UserHabit } from "@type/userHabit";
 
 const MissedHabitsSection = ({
 	habits,
@@ -10,35 +10,47 @@ const MissedHabitsSection = ({
 	showMoreMissed,
 	updateShowMissed,
 	resetShowMissed,
-}: any) => (
+	theme,
+	missedHabitsCount,
+}: {
+	habits: UserHabit[];
+	onHabitStatusChange: (habit: UserHabit, done: boolean) => void;
+	showMoreMissed: number;
+	updateShowMissed: () => void;
+	resetShowMissed: () => void;
+	theme: any;
+	missedHabitsCount: number;
+}) => (
 	<View
 		className="flex flex-row flex-wrap justify-start py-1 mb-2"
 		style={{ backgroundColor: "transparent" }}
 	>
 		<TopRow
-			icon="close-circle"
-			color={habits.theme.colors.background}
-			borderColor={habits.theme.colors.redPrimary}
-			textColor={habits.theme.colors.redPrimary}
-			text="Manquées"
-			number={habits.missedHabitsCount}
+			icon="time"
+			color={theme.colors.background}
+			borderColor={theme.colors.redPrimary}
+			textColor={theme.colors.redPrimary}
+			text="Plus tôt dans la journée"
+			number={missedHabitsCount}
 			resetShow={resetShowMissed}
 			showMore={showMoreMissed}
 		/>
 		<View className="flex flex-col w-full">
-			{habits.data.slice(0, showMoreMissed).map((habit: Habit) => (
+			{habits.slice(0, showMoreMissed).map((habit: UserHabit) => (
 				<CardCheckHabit
 					key={habit.id}
 					habit={habit}
 					onHabitStatusChange={onHabitStatusChange}
+					completed={false}
+					disabled={false}
 				/>
 			))}
-			{habits.data.length > 3 && showMoreMissed > 0 && (
+			{habits.length > 3 && showMoreMissed > 0 && (
 				<ButtonViewMore
 					onPress={updateShowMissed}
 					text={null}
 					listLength={showMoreMissed}
-					maxLength={habits.data.length}
+					maxLength={habits.length}
 				/>
 			)}
 		</View>

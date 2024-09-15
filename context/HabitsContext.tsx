@@ -38,7 +38,6 @@ export const HabitsContext = createContext<HabitsContextProps>({
 
 export const HabitsProvider = ({ children }: any) => {
 	const [habitsData, setHabitsData] = useState<Habit[]>([]);
-	const [categories, setCategories] = useState<Category[]>([]);
 
 	const [loading, setLoading] = useState(true);
 	const [habitQueue, setHabitQueue] = useState<Habit[]>([]);

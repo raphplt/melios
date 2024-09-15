@@ -12,6 +12,7 @@ import { auth } from ".";
 import { collection, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LAST_FETCH_KEY } from "./category";
 
 export const createUser = async (form: any) => {
 	try {
@@ -115,7 +116,6 @@ export const sendEmailResetPassword = async (email: string) => {
 	}
 };
 
-
 export const disconnectUser = async () => {
 	try {
 		await AsyncStorage.removeItem("user");
@@ -140,6 +140,7 @@ export const loginUser = async (email: string, password: string) => {
 		await AsyncStorage.removeItem("user");
 		await AsyncStorage.removeItem("isAuthenticated");
 
+		await AsyncStorage.setItem(LAST_FETCH_KEY, "0");
 		await AsyncStorage.setItem("user", JSON.stringify(user));
 		await AsyncStorage.setItem("isAuthenticated", "true");
 

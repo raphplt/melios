@@ -2,6 +2,8 @@ import { Pressable, Text, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Iconify } from "react-native-iconify";
+import IconView from "./IconView";
+import { IconTopRow } from "@type/icons";
 
 export default function TopRow({
 	color,
@@ -11,13 +13,23 @@ export default function TopRow({
 	textColor,
 	resetShow,
 	showMore,
-}: any) {
+	icon,
+}: {
+	color: string;
+	text: string;
+	number: number;
+	borderColor?: string;
+	textColor?: string;
+	resetShow: () => void;
+	showMore: number;
+	icon: IconTopRow;
+}) {
 	const { theme } = useContext(ThemeContext);
 
 	return (
 		<Pressable className="w-full" onPress={resetShow}>
 			<View className="flex items-center justify-start flex-row w-[90%] bg-transparent mx-auto my-2">
-				<View
+				{/* <View
 					className="flex items-center justify-center rounded-full w-6 h-6 mr-2"
 					style={{
 						backgroundColor: color,
@@ -31,9 +43,11 @@ export default function TopRow({
 							color: textColor || theme.colors.text,
 						}}
 					>{`${number}`}</Text>
-				</View>
+				</View> */}
+				<IconView icon={icon} />
+
 				<Text
-					className="font-semibold ml-1 text-[16px]"
+					className=" ml-1 text-[16px]"
 					style={{
 						color: theme.colors.text,
 					}}

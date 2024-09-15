@@ -27,6 +27,7 @@ import { useSession } from "@context/UserContext";
 import { loginUser } from "@db/users";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 import ButtonLogin from "@components/LoginRegister/ButtonLogin";
+import { User } from "firebase/auth";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -65,9 +66,9 @@ export default function Login() {
 
 	const login = async () => {
 		try {
-			const snapshot: any = await loginUser(email, password);
+			const snapshot: User | { error: string } = await loginUser(email, password);
 
-			if (snapshot.error) {
+			if ("error" in snapshot) {
 				setError(snapshot.error);
 				return;
 			} else {

@@ -2,7 +2,7 @@ import React, { memo, useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import {
 	NavigationProp,
 	ParamListBase,
@@ -40,7 +40,6 @@ function CardCheckHabit({
 	completed: boolean;
 	disabled: boolean;
 }) {
-	// Imports et Contextes
 	const { theme } = useContext(ThemeContext);
 	const { setCurrentHabit } = useContext(HabitsContext);
 	const { addOdysseePoints } = usePoints();
@@ -52,11 +51,8 @@ function CardCheckHabit({
 	const [habitInfos, setHabitInfos] = useState<Habit>();
 	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
-
-	// Variables
 	let touchStartTimeout: NodeJS.Timeout;
 
-	// Navigation
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	// Animations
@@ -73,7 +69,6 @@ function CardCheckHabit({
 	useEffect(() => {
 		async function getHabitInfos() {
 			const result = getHabitDetails(habit.id);
-			// console.log("result", result);
 			// const result = await getHabitById(habit.id);
 			setHabitInfos(result);
 			setLoading(false);
@@ -106,10 +101,10 @@ function CardCheckHabit({
 	};
 
 	const setHabitDone = async () => {
-		setToggleCheckBox(true); // Optimistic UI
+		setToggleCheckBox(true);
 		onHabitStatusChange(habit, true);
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		await setMemberHabitLog(habit.id, date, true); // Update DB
+		await setMemberHabitLog(habit.id, date, true);
 		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 	};
@@ -117,34 +112,36 @@ function CardCheckHabit({
 	return (
 		<Animated.View
 			style={[animatedStyles]}
-			className="w-[90%] mx-auto my-[6px] flex flex-row items-center justify-evenly"
+			className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
 		>
 			<Pressable
 				onPress={setHabitDone}
-				className="flex items-center justify-center px-3 py-2"
+				className="flex items-center justify-center"
 				disabled={toggleCheckBox}
+				style={{ flexBasis: "12.5%" }}
 			>
 				<Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
-					color={theme.colors.border}
+					color={theme.colors.grayPrimary}
 					disabled={disabled || toggleCheckBox}
 				/>
 			</Pressable>
 			<Pressable
-				className="px-3"
 				onPress={() => {
 					goHabitDetail();
 				}}
+				style={{ flex: 1 }}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-xl w-full"
+					className="flex items-center flex-row justify-between px-3 py-[12px] rounded-xl"
 					style={{
-						borderColor: theme.colors.border,
-						borderWidth: 1,
-						backgroundColor: isTouched
-							? theme.colors.cardBackground
-							: theme.colors.background,
+						// borderColor: theme.colors.border,
+						// borderWidth: 1,
+						backgroundColor:
+							isTouched || completed
+								? theme.colors.backgroundSecondary
+								: theme.colors.backgroundTertiary,
 					}}
 					onTouchStart={() => {
 						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
@@ -158,23 +155,29 @@ function CardCheckHabit({
 						setIsTouched(false);
 					}}
 				>
-					<View
-						className="absolute py-2 left-[8px] w-[4px] h-full rounded-xl"
-						style={{
-							backgroundColor: habitInfos.category?.color || theme.colors.primary,
-						}}
-					></View>
-					<View className="flex flex-row">
-						<Text
+					{/* <View
+                        className="absolute py-2 left-[8px] w-[4px] h-full rounded-xl"
+                        style={{
+                            backgroundColor: habitInfos.category?.color || theme.colors.primary,
+                        }}
+                    ></View> */}
+
+					<View className="flex flex-row items-center">
+						{/* <Text
 							className="font-semibold"
 							numberOfLines={1}
 							style={{
-								marginLeft: 14,
+								marginLeft: 5,
 								color: theme.colors.text,
 							}}
 						>
 							{habit.moment}h
-						</Text>
+						</Text> */}
+						<FontAwesome6
+							name={habitInfos.category.icon || "question"}
+							size={18}
+							color={habitInfos.category.color || theme.colors.text}
+						/>
 
 						<Text
 							style={{
@@ -182,22 +185,24 @@ function CardCheckHabit({
 								textDecorationLine: completed ? "line-through" : "none",
 								marginLeft: 6,
 							}}
-							className="text-[14px] w-3/4"
+							className="text-[15px] font-semibold pl-1"
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>
 							{habit.name}
 						</Text>
 					</View>
-					<Ionicons
-						name="flame"
-						size={24}
-						color={
-							habitInfos.difficulty
-								? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
-								: theme.colors.primary
-						}
-					/>
+					<View className="bg-white rounded-full p-1">
+						<Ionicons
+							name="flame"
+							size={24}
+							color={
+								habitInfos.difficulty
+									? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
+									: theme.colors.primary
+							}
+						/>
+					</View>
 				</View>
 			</Pressable>
 		</Animated.View>

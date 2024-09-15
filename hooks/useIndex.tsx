@@ -55,9 +55,9 @@ const useIndex = () => {
 	const [hours, setHours] = useState(new Date().getHours());
 	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
-	const [showMoreValidate, setShowMoreValidate] = useState(5);
-	const [showMoreNext, setShowMoreNext] = useState(5);
-	const [showMoreMissed, setShowMoreMissed] = useState(5);
+	const [showMoreValidate, setShowMoreValidate] = useState(3);
+	const [showMoreNext, setShowMoreNext] = useState(3);
+	const [showMoreMissed, setShowMoreMissed] = useState(3);
 
 	// Memoized values
 	const missedHabitsCount = useMemo(() => {
@@ -81,7 +81,7 @@ const useIndex = () => {
 
 	const fetchMemberHabitsData = useCallback(
 		async (signal: AbortSignal) => {
-			if (userHabits.length > 0) return; // Évite de refaire l'appel si les habitudes sont déjà chargées.
+			if (userHabits.length > 0) return;
 
 			try {
 				console.log("Fetching member habits data");
@@ -100,7 +100,7 @@ const useIndex = () => {
 
 	const fetchMemberInfosData = useCallback(
 		async (signal: AbortSignal) => {
-			if (member) return; // Évite de refaire l'appel si les infos sont déjà chargées.
+			if (member) return;
 
 			try {
 				console.log("Fetching member infos data");
@@ -118,8 +118,7 @@ const useIndex = () => {
 	);
 
 	const getHabitDetails = (habitId: string) => {
-		const habit = habitsData.find((habit: Habit) => habit.id === habitId);
-		return habit;
+		return habitsData.find((habit: Habit) => habit.id === habitId);
 	};
 
 	// Effects
@@ -131,7 +130,7 @@ const useIndex = () => {
 			abortControllerHabits.current = new AbortController();
 			fetchMemberHabitsData(abortControllerHabits.current.signal);
 		}
-	}, [isFocused]); // Ne pas inclure `fetchMemberHabitsData` ici.
+	}, [isFocused]);
 
 	useEffect(() => {
 		if (!isFocused) return;
@@ -141,7 +140,7 @@ const useIndex = () => {
 			abortControllerMember.current = new AbortController();
 			fetchMemberInfosData(abortControllerMember.current.signal);
 		}
-	}, [isFocused]); // Ne pas inclure `fetchMemberInfosData` ici.
+	}, [isFocused]);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -279,7 +278,7 @@ const useIndex = () => {
 
 	const toggleShowMore = useCallback(
 		(currentValue: number, setValue: (value: number) => void) => {
-			setValue(currentValue > 0 ? 0 : 5);
+			setValue(currentValue > 0 ? 0 : 3);
 		},
 		[]
 	);

@@ -12,7 +12,7 @@ export default function ListHabitsHome() {
 	const {
 		theme,
 		userHabits,
-		showMissingHabits,
+
 		showMoreValidate,
 		showMoreNext,
 		showMoreMissed,
@@ -20,7 +20,7 @@ export default function ListHabitsHome() {
 		uncompletedHabitsData,
 		completedHabitsData,
 		hours,
-		setShowMissingHabits,
+
 		updateShowValidate,
 		updateShowNext,
 		updateShowMissed,
@@ -47,7 +47,7 @@ export default function ListHabitsHome() {
 			{nextHabits.length > 0 ? (
 				<HabitSectionList
 					title="Prochaines habitudes"
-					icon="close-circle"
+					icon="ia"
 					borderColor={theme.colors.primary}
 					textColor={theme.colors.primary}
 					habits={nextHabits}
@@ -64,9 +64,21 @@ export default function ListHabitsHome() {
 				/>
 			)}
 
+			{missedHabits.length > 0 && (
+				<MissedHabitsSection
+					habits={missedHabits}
+					missedHabitsCount={missedHabitsCount}
+					theme={theme}
+					onHabitStatusChange={handleHabitStatusChange}
+					showMoreMissed={showMoreMissed}
+					updateShowMissed={updateShowMissed}
+					resetShowMissed={resetShowMissed}
+				/>
+			)}
+
 			<HabitSectionList
 				title="Validées"
-				icon="checkmark-circle"
+				icon="check"
 				borderColor={theme.colors.greenPrimary}
 				textColor={theme.colors.greenPrimary}
 				habits={completedHabitsData}
@@ -77,18 +89,6 @@ export default function ListHabitsHome() {
 				disabled={true}
 				resetShow={resetShowValidate}
 			/>
-
-			{missedHabits.length > 0 && (
-				<MissedHabitsSection
-					habits={{ data: missedHabits, theme, missedHabitsCount }}
-					showMissingHabits={showMissingHabits}
-					toggleShowMissingHabits={() => setShowMissingHabits(!showMissingHabits)}
-					onHabitStatusChange={handleHabitStatusChange}
-					showMoreMissed={showMoreMissed}
-					updateShowMissed={updateShowMissed}
-					resetShowMissed={resetShowMissed}
-				/>
-			)}
 		</View>
 	);
 }

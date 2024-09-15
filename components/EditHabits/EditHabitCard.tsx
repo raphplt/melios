@@ -1,15 +1,14 @@
 import { View, Text, Pressable } from "react-native";
-import { Habit } from "../../type/habit";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
 import { getHabitById } from "@db/habits";
 import CardPlaceHolder from "@components/Habits/CardPlaceHolder";
-import { UserHabit } from "../../type/userHabit";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useData } from "@context/DataContext";
 import { LOCAL_STORAGE_MEMBER_HABITS_KEY, setMemberHabit } from "@db/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Habit } from "@type/habit";
 
 export default function EditHabitCard({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);

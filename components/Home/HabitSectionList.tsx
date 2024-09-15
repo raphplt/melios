@@ -4,6 +4,7 @@ import { Habit } from "../../type/habit";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import ButtonViewMore from "./ButtonViewMore";
 import { UserHabit } from "@type/userHabit";
+import { IconTopRow } from "@type/icons";
 
 const HabitSectionList = ({
 	title,
@@ -19,7 +20,7 @@ const HabitSectionList = ({
 	resetShow,
 }: {
 	title: string;
-	icon: string;
+	icon: IconTopRow;
 	borderColor: string;
 	textColor: string;
 	habits: UserHabit[];
