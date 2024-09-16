@@ -12,7 +12,7 @@ import permissions from "../hooks/usePermissions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import usePopup from "@hooks/usePopup";
-import { getAllTrophies } from "@db/trophiesList";
+// import { getAllTrophies } from "@db/trophiesList";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { calculateStreak } from "@utils/progressionUtils";
 import { DataContextType } from "@type/dataContext";
@@ -109,11 +109,11 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 					setHabits(snapshotHabits);
 
 					// Trophies
-					const snapshotTrophies = await getAllTrophies({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
-					setTrophies(snapshotTrophies);
+					// const snapshotTrophies = await getAllTrophies({
+					// 	signal: abortController.signal,
+					// 	forceRefresh: true,
+					// });
+					// setTrophies(snapshotTrophies);
 
 					// Calculate today's score
 					const { uncompleted, completed } = processHabits(snapshotHabits, date);

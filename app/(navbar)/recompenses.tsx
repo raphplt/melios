@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { StatusBar, Text, View } from "react-native";
 import { useContext } from "react";
 
 import ViewPoints from "@components/Recompenses/ViewPoints";
@@ -18,6 +18,7 @@ export default function Recompenses() {
 				backgroundColor: theme.colors.background,
 				flex: 1,
 				paddingBottom: paddingBottom + 10,
+				paddingTop: StatusBar.currentHeight,
 			}}
 		>
 			<View

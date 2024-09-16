@@ -31,17 +31,17 @@ export default function MarketCosmetics() {
 					color: theme.colors.text,
 					fontFamily: "BaskervilleBold",
 				}}
-				className="w-11/12 mx-auto my-3 text-xl pb-1"
+				className="w-11/12 mx-auto my-3 text-lg pb-1"
 			>
 				Marché des cosmétiques
 			</Text>
 			<FlatList
 				data={cosmetics.sort((a, b) => a.price - b.price)}
-				className="w-11/12 mx-auto"
+				className="w-[95%] mx-auto"
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item }) => <ProfilIcon cosmetic={item} />}
 				numColumns={3}
-				nestedScrollEnabled={true}
+				// nestedScrollEnabled={true}
 				showsVerticalScrollIndicator={false}
 			/>
 		</View>
