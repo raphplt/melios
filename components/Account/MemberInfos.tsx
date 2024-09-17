@@ -56,12 +56,7 @@ export default function MemberInfos({
 							navigation.navigate("editProfil");
 						}}
 					>
-						<Text
-							className="text-[16px]"
-							style={{ color: theme.colors.textSecondary }}
-						>
-							Éditer le profil
-						</Text>
+						<Text className="text-[16px] text-white">Éditer le profil</Text>
 					</Pressable>
 				</View>
 			</View>

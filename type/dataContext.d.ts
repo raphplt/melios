@@ -9,8 +9,8 @@ interface DataContextType {
 	isLoading: boolean;
 	points: Points;
 	setPoints: React.Dispatch<React.SetStateAction<Points>>;
-	habits: Habit[];
-	setHabits: React.Dispatch<React.SetStateAction<Habit[]>>;
+	habits: UserHabit[];
+	setHabits: React.Dispatch<React.SetStateAction<UserHabit[]>>;
 	uncompletedHabitsData: UserHabit[];
 	setUncompletedHabitsData: React.Dispatch<React.SetStateAction<UserHabit[]>>;
 	completedHabitsData: UserHabit[];

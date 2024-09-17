@@ -17,7 +17,7 @@ export default function HabitsCount({
 			<Text
 				className="text-[12px]"
 				style={{
-					color: theme.colors.textSecondary,
+					color: "white",
 				}}
 			>
 				{count}

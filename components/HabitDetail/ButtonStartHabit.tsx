@@ -45,7 +45,7 @@ export default function ButtonStartHabit({
 
 	return (
 		<>
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto py-2">
+			<View className="flex flex-row items-center justify-between w-11/12 mx-auto py-3">
 				<Text
 					className=" font-semibold text-[16px]"
 					style={{

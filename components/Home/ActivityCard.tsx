@@ -1,16 +1,25 @@
 import { useContext, useEffect, useState, useRef, memo } from "react";
-import { View, Text, Pressable, Animated } from "react-native";
+import {
+	View,
+	Text,
+	Pressable,
+	Animated,
+	Image,
+	StyleSheet,
+} from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import { UserHabit } from "../../type/userHabit";
-import { ThemeContext } from "@context/ThemeContext";
-import { getHabitById } from "@db/habits";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+
+// Custom imports
+import { ThemeContext } from "@context/ThemeContext";
 import { lightenColor } from "@utils/colors";
 import { HabitsContext } from "@context/HabitsContext";
 import { Habit } from "@type/habit";
 import useIndex from "@hooks/useIndex";
+import getImage from "@utils/getImage";
+import { UserHabit } from "@type/userHabit";
+import { BlurView } from "expo-blur";
 
 function Activity({ userHabit }: { userHabit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
@@ -60,10 +69,12 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 
 	return (
 		<Animated.View
-			className="h-64 w-40 mx-2 rounded-xl"
+			className="h-64 w-40 mx-1 rounded-xl"
 			style={{
 				backgroundColor: theme.colors.background,
 				transform: [{ scale: scaleAnim }],
+				borderColor: theme.colors.border,
+				borderWidth: 1,
 			}}
 			onTouchStart={handleTouchStart}
 			onTouchEnd={handleTouchEnd}
@@ -73,6 +84,7 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 				onPress={() => {
 					goHabitDetail();
 				}}
+				className="flex flex-col justify-between h-full"
 			>
 				<View
 					style={{
@@ -82,7 +94,7 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 				>
 					<View>
 						<Text
-							className="text-[16px]  font-semibold right-2 top-2 absolute rounded-2xl px-2 py-[2px]"
+							className="text-[14px] font-semibold right-2 top-2 absolute rounded-2xl px-2 py-[2px]"
 							style={{
 								color: theme.colors.text,
 								backgroundColor: theme.colors.textSecondary,
@@ -100,28 +112,46 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 						{habitInfos.category?.category}
 					</Text>
 				</View>
-				<LinearGradient
-					colors={[theme.colors.background, lighterColor]}
-					className="flex flex-col justify-around items-center mt-2 h-[192px] rounded-b-xl"
+				<View
+					className="flex flex-col justify-evenly items-center rounded-b-xl bg-slate-20 flex-1
+				"
 				>
-					<Text
-						className="text-md w-10/12 mx-auto font-semibold text-gray-900 text-center"
-						style={{
-							color: theme.colors.text,
-						}}
-					>
-						{habitInfos.name}
-					</Text>
-					<FontAwesome6
-						name={habitInfos.category?.icon || "question"}
-						size={32}
-						color={habitInfos.category?.color || theme.colors.text}
-						style={{ marginRight: 10 }}
+					<Image
+						source={getImage(habitInfos.category.slug)}
+						style={StyleSheet.absoluteFillObject}
+						blurRadius={20}
+						resizeMode="cover"
+						className="w-full h-full rounded-b-xl"
 					/>
-				</LinearGradient>
+					<View className=" flex items-center justify-center w-10/12 px-1 py-1 rounded-lg overflow-hidden">
+						<BlurView intensity={60} tint={"light"} style={styles.blurView} />
+						<Text
+							className="text-md w-11/12 mx-auto font-semibold text-center py-1 text-[15px]"
+							style={{
+								color: theme.colors.text,
+							}}
+							numberOfLines={1}
+							ellipsizeMode="tail"
+						>
+							{habitInfos.name}
+						</Text>
+						<FontAwesome6
+							name={habitInfos.category?.icon || "question"}
+							size={32}
+							color={habitInfos.category?.color || theme.colors.text}
+						/>
+					</View>
+				</View>
 			</Pressable>
 		</Animated.View>
 	);
 }
 
 export default memo(Activity);
+
+const styles = StyleSheet.create({
+	blurView: {
+		...StyleSheet.absoluteFillObject,
+		borderRadius: 10,
+	},
+});

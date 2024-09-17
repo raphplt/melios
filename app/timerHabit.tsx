@@ -22,7 +22,6 @@ export default function TimerHabit() {
 			navigation.removeListener("beforeRemove", beforeRemoveListenerRef.current);
 		}
 		navigation.goBack();
-		console.log("Habit stopped");
 	};
 
 	useEffect(() => {

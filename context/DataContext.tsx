@@ -16,7 +16,6 @@ import usePopup from "@hooks/usePopup";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { calculateStreak } from "@utils/progressionUtils";
 import { DataContextType } from "@type/dataContext";
-import { Habit } from "@type/habit";
 import { Member } from "@type/member";
 import { Points } from "@type/points";
 import { UserHabit } from "@type/userHabit";
@@ -26,7 +25,6 @@ import { Trophy } from "@type/trophy";
 import { processHabits } from "@utils/habitsUtils";
 import { extractPoints } from "@utils/pointsUtils";
 import { getNotificationToken } from "@utils/notificationsUtils";
-import { Category } from "@type/category";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -37,7 +35,7 @@ export const DataContext = createContext<DataContextType | undefined>(
 
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const { isLoading: isSessionLoading, user } = useSession();
-	const [habits, setHabits] = useState<Habit[]>([]);
+	const [habits, setHabits] = useState<UserHabit[]>([]);
 	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
 		UserHabit[]
 	>([]);

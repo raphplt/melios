@@ -9,6 +9,7 @@ import { useData } from "@context/DataContext";
 import { LOCAL_STORAGE_MEMBER_HABITS_KEY, setMemberHabit } from "@db/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Habit } from "@type/habit";
+import { UserHabit } from "@type/userHabit";
 
 export default function EditHabitCard({ habit }: { habit: Habit }) {
 	const { theme } = useContext(ThemeContext);
@@ -16,7 +17,6 @@ export default function EditHabitCard({ habit }: { habit: Habit }) {
 	const { setHabits } = useData();
 
 	const [loading, setLoading] = useState(true);
-	// console.log(habit);
 
 	useEffect(() => {
 		async function getHabitInfos() {
@@ -32,7 +32,9 @@ export default function EditHabitCard({ habit }: { habit: Habit }) {
 	const deleteHabit = async (habit: Habit) => {
 		await setMemberHabit(habitInfos);
 
-		setHabits((prev: Habit[]) => prev.filter((h: Habit) => h.id !== habit.id));
+		setHabits((prev: UserHabit[]) =>
+			prev.filter((h: UserHabit) => h.id !== habit.id)
+		);
 
 		const storedHabits = await AsyncStorage.getItem(
 			LOCAL_STORAGE_MEMBER_HABITS_KEY

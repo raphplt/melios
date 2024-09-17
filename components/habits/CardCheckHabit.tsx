@@ -124,11 +124,16 @@ function CardCheckHabit({
 				disabled={toggleCheckBox}
 				style={{ flexBasis: "12.5%" }}
 			>
-				<Checkbox
+				{/* <Checkbox
 					value={toggleCheckBox}
 					onValueChange={setHabitDone}
 					color={theme.colors.grayPrimary}
 					disabled={disabled || toggleCheckBox}
+				/> */}
+				<Ionicons
+					name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
+					size={30}
+					color={theme.colors.primary}
 				/>
 			</Pressable>
 			<Pressable
@@ -145,6 +150,8 @@ function CardCheckHabit({
 						backgroundColor:
 							isTouched || completed
 								? theme.colors.backgroundSecondary
+								: theme.dark
+								? theme.colors.cardBackground
 								: theme.colors.backgroundTertiary,
 					}}
 					onTouchStart={() => {
@@ -196,7 +203,12 @@ function CardCheckHabit({
 							{habit.name}
 						</Text>
 					</View>
-					<View className="bg-white rounded-full p-1">
+					<View
+						className=" rounded-full p-1"
+						style={{
+							backgroundColor: theme.colors.background,
+						}}
+					>
 						<Ionicons
 							name="flame"
 							size={24}

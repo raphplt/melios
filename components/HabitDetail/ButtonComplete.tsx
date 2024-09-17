@@ -1,8 +1,6 @@
-import MoneyMelios from "@components/Svg/MoneyMelios";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { CombinedHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { getHabitPoints } from "@utils/pointsUtils";
@@ -10,7 +8,6 @@ import { useNavigation } from "expo-router";
 import { useContext, useRef } from "react";
 import { Animated, Pressable, Text, View } from "react-native";
 import RewardDetail from "./RewardDetail";
-import IconView from "@components/Habits/IconView";
 import { Iconify } from "react-native-iconify";
 
 export default function ButtonComplete({
@@ -47,10 +44,18 @@ export default function ButtonComplete({
 
 	return (
 		<>
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto py-2">
-				{/* <View className="flex flex-row ">
+			<View className="flex flex-row items-center justify-between w-11/12 mx-auto py-3 ">
+				<Text
+					className=" font-semibold text-[16px]"
+					style={{
+						color: theme.colors.text,
+					}}
+				>
+					Compléter l'habitude
+				</Text>
+				<View className="flex flex-row ">
 					<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
-				</View> */}
+				</View>
 			</View>
 			<Animated.View
 				style={{
@@ -61,23 +66,13 @@ export default function ButtonComplete({
 					onPress={handlePress}
 					className="py-3 px-4 rounded-lg w-11/12 mx-auto justify-evenly flex flex-row items-center"
 					style={{
-						backgroundColor: theme.colors.border,
+						backgroundColor: theme.colors.backgroundSecondary,
 					}}
 					onTouchStart={handleTouchStart}
 					onTouchEnd={handleTouchEnd}
 					onTouchCancel={handleTouchEnd}
 				>
-					<View className="flex flex-row items-center">
-						<Text
-							className=" font-semibold text-[16px]"
-							style={{
-								color: theme.colors.text,
-							}}
-						>
-							Compléter l'habitude
-						</Text>
-						<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
-					</View>
+					<Iconify icon="gg:check-o" size={24} color={theme.colors.text} />
 				</Pressable>
 			</Animated.View>
 		</>

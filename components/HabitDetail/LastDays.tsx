@@ -57,17 +57,20 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 							key={index}
 							style={{
 								backgroundColor: day.done
-									? theme.colors.greenSecondary
-									: theme.colors.cardBackground,
+									? theme.colors.greenPrimary
+									: theme.colors.backgroundSecondary,
 							}}
 							className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
 						>
 							{day.done ? (
-								<Iconify size={24} color={"black"} icon="mdi:check" />
+								<Iconify size={24} color={"white"} icon="mdi:check" />
 							) : (
 								<Iconify size={24} color={"black"} icon="mdi:close" />
 							)}
-							<Text style={{ color: "black" }}>
+							<Text
+								style={{ color: day.done ? "white" : "black" }}
+								className="font-semibold mt-1"
+							>
 								{moment(day.date, "YYYY-MM-DD").format("DD/MM")}
 							</Text>
 						</View>

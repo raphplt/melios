@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import Activity from "./ActivityCard";
-import { ScrollView, View, Text } from "react-native";
+import { FlatList, View, Text } from "react-native";
 import { ThemeContext } from "@context/ThemeContext";
 import { UserHabit } from "../../type/userHabit";
 import useIndex from "@hooks/useIndex";
@@ -29,15 +29,14 @@ export default function ActivitiesContainer() {
 			>
 				Mes activités
 			</Text>
-			<ScrollView
+			<FlatList
 				horizontal={true}
-				className="ml-2"
+				data={userHabits}
+				renderItem={({ item }) => <Activity userHabit={item} />}
+				keyExtractor={(item, index) => index.toString()}
+				contentContainerStyle={{ paddingLeft: 8 }}
 				showsHorizontalScrollIndicator={false}
-			>
-				{userHabits.map((userHabit: UserHabit, index: number) => {
-					return <Activity key={index} userHabit={userHabit} />;
-				})}
-			</ScrollView>
+			/>
 		</View>
 	);
 }

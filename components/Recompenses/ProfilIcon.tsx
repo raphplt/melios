@@ -27,8 +27,6 @@ export default function ProfilIcon({
 		}
 	};
 
-	// console.log("member", member);
-
 	return (
 		<TouchableOpacity
 			onPress={handlePress}
@@ -38,6 +36,8 @@ export default function ProfilIcon({
 			style={{
 				backgroundColor: isGrayedOut
 					? theme.colors.grayPrimary
+					: member?.profilePicture === cosmetic.slug
+					? theme.colors.backgroundTertiary
 					: theme.colors.cardBackground,
 				borderColor:
 					member?.profilePicture === cosmetic.slug

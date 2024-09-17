@@ -49,7 +49,7 @@ const useIndex = () => {
 	const abortControllerMember = useRef<AbortController | null>(null);
 
 	// States
-	const [userHabits, setUserHabits] = useState<Habit[]>([]);
+	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
@@ -114,7 +114,7 @@ const useIndex = () => {
 				}
 			}
 		},
-		[member] // Ajoute la dépendance correcte ici.
+		[member]
 	);
 
 	const getHabitDetails = (habitId: string) => {
@@ -153,48 +153,34 @@ const useIndex = () => {
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
-
-		// console.log(
-		// 	"habits",
-		// 	habits.length,
-		// 	"isLoading",
-		// 	isLoading,
-		// 	"completedHabitsData",
-		// 	completedHabitsData.length,
-		// 	"uncompletedHabitsData",
-		// 	uncompletedHabitsData.length
-		// );
 	}, [habits, isLoading]); //TODO vérifier si on doit ajouter completedHabitsData et uncompletedHabitsData
+
+	const getWelcomeMessage = (username: string, hours: number) => {
+		const greeting =
+			hours < 12 ? "Bonjour" : hours < 18 ? "Bon après-midi" : "Bonsoir";
+		return `${greeting}${username ? ", " + username : ""} !`;
+	};
 
 	useEffect(() => {
 		if (abortControllerMember.current) {
 			abortControllerMember.current.abort();
 		}
 
-		abortControllerMember.current = new AbortController();
-		const signal = abortControllerMember.current.signal;
+		const controller = new AbortController();
+		abortControllerMember.current = controller;
+		const signal = controller.signal;
 
-		(async () => {
-			const username = member?.nom || "";
-			let message = "";
+		const username = member?.nom || "";
+		const message = getWelcomeMessage(username, hours);
 
-			if (hours < 12) {
-				message = `Bonjour${username ? ", " + username : ""} !`;
-			} else if (hours >= 12 && hours < 18) {
-				message = `Bon après-midi${username ? ", " + username : ""} !`;
-			} else {
-				message = `Bonsoir${username ? ", " + username : ""} !`;
-			}
-
-			if (!signal.aborted) {
-				setWelcomeMessage(message);
-			}
-		})();
+		if (!signal.aborted) {
+			setWelcomeMessage(message);
+		}
 
 		return () => {
-			abortControllerMember.current?.abort();
+			controller.abort();
 		};
-	}, [member]);
+	}, [member, hours, setWelcomeMessage]);
 
 	// Functions
 
@@ -315,6 +301,7 @@ const useIndex = () => {
 			useNativeDriver: true,
 		}).start();
 	}, [rotation]);
+
 
 	return {
 		theme,

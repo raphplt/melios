@@ -110,7 +110,7 @@ export default function HabitDetail() {
 				/>
 				<LastDays habit={currentHabit.userHabit} />
 				<ButtonStartHabit combinedHabit={currentHabit} />
-				{/* <ButtonComplete combinedHabit={currentHabit} /> */}
+				<ButtonComplete combinedHabit={currentHabit} />
 				{/* TODO: bouton compléter normalement ? */}
 			</View>
 		</View>

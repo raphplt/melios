@@ -41,7 +41,6 @@ export default function MarketCosmetics() {
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item }) => <ProfilIcon cosmetic={item} />}
 				numColumns={3}
-				// nestedScrollEnabled={true}
 				showsVerticalScrollIndicator={false}
 			/>
 		</View>

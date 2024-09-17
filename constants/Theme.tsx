@@ -32,7 +32,7 @@ const DefaultTheme: Theme = {
 const DarkTheme: Theme = {
 	dark: true,
 	colors: {
-		primary: "rgb(10, 132, 255)",
+		primary: "rgb(0, 64, 255)",
 		primaryLight: "rgb(10, 132, 255, 0.5)",
 		background: "#222222",
 		card: "#222222",
@@ -42,7 +42,7 @@ const DarkTheme: Theme = {
 		border: "rgb(213, 213, 221)",
 		notification: "rgb(255, 69, 58)",
 		backgroundSecondary: "#5A5A5A",
-		backgroundTertiary: "rgb(200, 200, 255)",
+		backgroundTertiary: "rgb(30, 30, 60)",
 		cardBackground: "#5A5A5A",
 		greenPrimary: "#41976C",
 		greenSecondary: "#E6F5E8",

@@ -6,22 +6,22 @@ import {
 	type PropsWithChildren,
 	type ReactElement,
 } from "react";
-import { StatusBar, Text, View, useColorScheme } from "react-native";
+import { Text, View } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedRef,
 	useAnimatedStyle,
 	useScrollViewOffset,
 } from "react-native-reanimated";
-import { UserHabit } from "../../type/userHabit";
 import BlurBox from "./ParallaxBlurBox";
 import { useTabBarPadding } from "@hooks/useTabBar";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
 import { ThemeContext } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
-import { DarkTheme } from "@constants/Theme";
 import { Iconify } from "react-native-iconify";
+import WelcomeRow from "./WelcomeRow";
+import AddHabits from "./AddHabits";
 
 const HEADER_HEIGHT = 250;
 
@@ -106,7 +106,7 @@ export default function ParallaxScrollView({
 							style={{
 								color: color,
 							}}
-							className="text-xl mt-1 font-semibold text-center"
+							className="text-lg mt-1 font-semibold text-center"
 						>
 							{todayScore}%
 						</Text>
@@ -116,7 +116,7 @@ export default function ParallaxScrollView({
 						<View className="flex flex-row items-center gap-2">
 							<Iconify icon="mdi:calendar" color={color} size={22} />
 							<Text
-								className="font-semibold  text-[15px]"
+								className="font-semibold text-[16px]"
 								style={{
 									color: color,
 								}}
@@ -125,10 +125,12 @@ export default function ParallaxScrollView({
 							</Text>
 						</View>
 					</BlurBox>
-
-					{/* <BlurBox position={{ bottom: 20, right: 20 }}>
-                    <TrophiesMinView />
-					</BlurBox> */}
+					<BlurBox position={{ bottom: 20, left: 20 }}>
+						<WelcomeRow />
+					</BlurBox>
+					<View className="absolute z-30 bottom-5 right-5">
+						<AddHabits />
+					</View>
 
 					{headerImage}
 				</Animated.View>
