@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TextInput, Button, Alert, Pressable } from "react-native";
+import { View, Text, TextInput, Alert, Pressable } from "react-native";
 import {
 	getAuth,
 	reauthenticateWithCredential,
@@ -8,6 +8,7 @@ import {
 import { deleteUserAccount } from "@db/users";
 import { ThemeContext } from "@context/ThemeContext";
 import { Iconify } from "react-native-iconify";
+import AccountBlock from "./AccountBlock";
 
 export default function DeleteAccount() {
 	const { theme } = useContext(ThemeContext);
@@ -28,7 +29,7 @@ export default function DeleteAccount() {
 				Alert.alert("Success", "Account deleted successfully.");
 			} catch (error) {
 				setError(
-					"Echec de la suppression du compte. Veuillez vérifier votre mot de passe."
+					"Échec de la suppression du compte. Veuillez vérifier votre mot de passe."
 				);
 			}
 		} else {
@@ -37,62 +38,55 @@ export default function DeleteAccount() {
 	};
 
 	return (
-		<View
-			className="mx-auto flex flex-col pt-6 justify-center w-11/12 items-center mb-12 mt-6 rounded-lg
-            px-4 py-6
-            "
-			style={{ backgroundColor: theme.colors.cardBackground }}
-		>
-			<Text className="text-lg mb-6 ">Zone de danger</Text>
-
-			{showPasswordInput ? (
-				<>
-					<TextInput
-						className="h-10 border border-gray-300 mb-4 px-2 w-full"
-						placeholder="Enter your password"
-						secureTextEntry
-						value={password}
-						onChangeText={setPassword}
-					/>
-					{error ? (
-						<Text className="text-red-500 mb-4 text-center">{error}</Text>
-					) : null}
-					<Pressable
-						onPress={handleDeleteAccount}
-						style={{
-							backgroundColor: theme.colors.redSecondary,
-						}}
-						className="px-4 py-2 rounded-lg flex flex-row items-center"
-					>
-						<Iconify
-							icon="material-symbols:warning"
-							size={24}
-							color={theme.colors.redPrimary}
+		<View>
+			<AccountBlock title="Zone de danger">
+				{showPasswordInput ? (
+					<>
+						<TextInput
+							className="h-10 border border-gray-300 mb-4 px-2 w-full"
+							placeholder="Enter your password"
+							secureTextEntry
+							value={password}
+							onChangeText={setPassword}
 						/>
-						<Text
-							className="text-lg text-center ml-1"
-							style={{ color: theme.colors.redPrimary }}
+						{error ? (
+							<Text className="text-red-500 mb-4 text-center">{error}</Text>
+						) : null}
+						<Pressable
+							onPress={handleDeleteAccount}
+							style={{ backgroundColor: theme.colors.redSecondary }}
+							className="px-4 py-2 rounded-lg flex flex-row items-center"
 						>
-							Confirmer la suppression
-						</Text>
-					</Pressable>
-				</>
-			) : (
-				<Pressable
-					onPress={() => setShowPasswordInput(true)}
-					style={{
-						backgroundColor: theme.colors.redSecondary,
-					}}
-					className="px-4 py-2 rounded-lg"
-				>
-					<Text
-						className="text-lg text-center"
-						style={{ color: theme.colors.redPrimary }}
-					>
-						Supprimer mon compte
-					</Text>
-				</Pressable>
-			)}
+							<Iconify
+								icon="material-symbols:warning"
+								size={24}
+								color={theme.colors.redPrimary}
+							/>
+							<Text
+								className="text-lg text-center ml-1"
+								style={{ color: theme.colors.redPrimary }}
+							>
+								Confirmer la suppression
+							</Text>
+						</Pressable>
+					</>
+				) : (
+					<View className=" flex items-center justify-center py-5">
+						<Pressable
+							onPress={() => setShowPasswordInput(true)}
+							style={{ backgroundColor: theme.colors.redPrimary }}
+							className="px-4 py-2 rounded-lg w-11/12"
+						>
+							<Text
+								className="text-[16px] text-center font-semibold"
+								style={{ color: theme.colors.textSecondary }}
+							>
+								Supprimer mon compte
+							</Text>
+						</Pressable>
+					</View>
+				)}
+			</AccountBlock>
 		</View>
 	);
 }

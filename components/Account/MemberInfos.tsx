@@ -10,7 +10,7 @@ export default function MemberInfos({
 	member,
 	auth,
 }: {
-	member: Member;
+	member: Member | undefined;
 	auth: any;
 }) {
 	const { theme } = useContext(ThemeContext);

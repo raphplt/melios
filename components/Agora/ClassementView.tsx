@@ -28,6 +28,8 @@ export default function ClassementView({
 
 	const isUserVisible = userPosition >= 0 && userPosition < displayedItemCount;
 
+	console.log("reward", sortedRewards);
+
 	return (
 		<View className="w-full pb-10">
 			<View className="mb-4 flex items-center justify-center flex-row gap-2">

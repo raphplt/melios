@@ -293,10 +293,7 @@ export const getMemberInfos = async (
 	}
 };
 
-export const updateMemberInfo = async (
-	name: string,
-	profilePicture: File | null
-) => {
+export const updateMemberInfo = async (name: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
