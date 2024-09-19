@@ -124,12 +124,6 @@ function CardCheckHabit({
 				disabled={toggleCheckBox}
 				style={{ flexBasis: "12.5%" }}
 			>
-				{/* <Checkbox
-					value={toggleCheckBox}
-					onValueChange={setHabitDone}
-					color={theme.colors.grayPrimary}
-					disabled={disabled || toggleCheckBox}
-				/> */}
 				<Ionicons
 					name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
 					size={30}
@@ -145,8 +139,6 @@ function CardCheckHabit({
 				<View
 					className="flex items-center flex-row justify-between px-3 py-[12px] rounded-xl"
 					style={{
-						// borderColor: theme.colors.border,
-						// borderWidth: 1,
 						backgroundColor:
 							isTouched || completed
 								? theme.colors.backgroundSecondary
@@ -166,24 +158,7 @@ function CardCheckHabit({
 						setIsTouched(false);
 					}}
 				>
-					{/* <View
-                        className="absolute py-2 left-[8px] w-[4px] h-full rounded-xl"
-                        style={{
-                            backgroundColor: habitInfos.category?.color || theme.colors.primary,
-                        }}
-                    ></View> */}
-
 					<View className="flex flex-row items-center">
-						{/* <Text
-							className="font-semibold"
-							numberOfLines={1}
-							style={{
-								marginLeft: 5,
-								color: theme.colors.text,
-							}}
-						>
-							{habit.moment}h
-						</Text> */}
 						<FontAwesome6
 							name={habitInfos.category.icon || "question"}
 							size={18}

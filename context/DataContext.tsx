@@ -138,6 +138,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 		}
 	}, [isSessionLoading, user]);
 
+
 	return (
 		<DataContext.Provider
 			value={{

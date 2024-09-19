@@ -164,6 +164,14 @@ function MainNavigator() {
 						}}
 					/>
 					<Stack.Screen
+						name="editGoals"
+						options={{
+							title: "Éditer mes objectifs",
+							headerShadowVisible: false,
+						}}
+					/>
+
+					<Stack.Screen
 						name="timerHabit"
 						options={{
 							headerShown: false,

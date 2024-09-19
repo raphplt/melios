@@ -37,6 +37,7 @@ export default function General() {
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}
+				onPress={() => navigation.navigate("editGoals")}
 			/>
 		</AccountBlock>
 	);
