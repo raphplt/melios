@@ -1,64 +1,135 @@
 import { ThemeContext } from "@context/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
-import useTimer from "@hooks/useTimer";
-import { formatTime } from "@utils/timeUtils";
-import { useContext, useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
-import DoneToday from "./DoneToday";
-import { Habit } from "@type/habit";
-import { Log, UserHabit } from "@type/userHabit";
+import { formatTime, formatRemainingTime } from "@utils/timeUtils";
+import { useContext, useEffect } from "react";
+import {
+	Image,
+	Pressable,
+	Text,
+	View,
+	StyleSheet,
+	Alert,
+	StatusBar,
+} from "react-native";
 import { Iconify } from "react-native-iconify";
+import { useHabits } from "@context/HabitsContext";
+import { useTimer } from "@context/TimerContext";
+import useHabitTimer from "@hooks/useHabitTimer";
+import * as Progress from "react-native-progress";
+import getImage from "@utils/getImage";
+import {
+	DarkTheme,
+	NavigationProp,
+	ParamListBase,
+} from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
-export default function TimerHabit({
-	habit,
-	userHabit,
-}: {
-	habit: Habit;
-	userHabit: UserHabit;
-}) {
-	const [doneToday, setDoneToday] = useState(false);
+export default function TimerHabit() {
 	const { theme } = useContext(ThemeContext);
-	const {
-		timerSeconds,
-		isTimerActive,
-		isTimerVisible,
-		startTimer,
-		stopTimer,
-		date,
-		pauseTimer,
-	} = useTimer();
+	const { showHabitDetail, setShowHabitDetail, currentHabit } = useHabits();
+
+	const { pauseTimer, stopTimer } = useHabitTimer();
+	const { timerSeconds, isTimerActive } = useTimer();
+
+	if (showHabitDetail || !currentHabit?.habit) return null;
+
+	const handleQuit = () => {
+		setShowHabitDetail(true);
+		stopTimer();
+	};
+
+	const totalSeconds = currentHabit.habit.duration * 60;
+	const remainingTime = formatRemainingTime(timerSeconds, totalSeconds);
+
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+	useEffect(() => {
+		const beforeRemoveListener = navigation.addListener(
+			"beforeRemove",
+			(e: any) => {
+				if (isTimerActive) {
+					e.preventDefault();
+					Alert.alert(
+						"Quitter l'habitude",
+						"Voulez-vous arrêter l'habitude en cours ?",
+						[
+							{ text: "Non", style: "cancel" },
+							{ text: "Oui", onPress: handleQuit },
+						]
+					);
+				}
+			}
+		);
+
+		return () => {
+			beforeRemoveListener();
+		};
+	}, [navigation, isTimerActive]);
 
 	return (
-		<View className="py-10">
-			{isTimerVisible && (
-				<Text
-					className="text-7xl font-bold text-center mt-8"
-					style={{ color: theme.colors.text }}
-				>
-					{formatTime(timerSeconds)}
-				</Text>
-			)}
-			{!isTimerActive && !isTimerVisible ? (
-				<Pressable
-					onPress={() => startTimer(habit.duration, habit)}
-					className="py-2 px-6 rounded-lg w-11/12 mx-auto justify-center mt-4 flex flex-row items-center"
-					style={{
-						backgroundColor: theme.colors.primary,
-					}}
-				>
-					<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
-					<Text
-						className="text-lg text-center font-semibold ml-2"
-						style={{ color: theme.colors.textSecondary }}
-					>
-						Commencer l'habitude
-					</Text>
+		<>
+			<StatusBar
+				barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
+				backgroundColor={"transparent"}
+			/>
+			<View className="flex flex-col items-center justify-evenly h-full">
+				<Image
+					source={getImage(currentHabit.habit.category.slug)}
+					style={StyleSheet.absoluteFillObject}
+					blurRadius={20}
+					resizeMode="cover"
+					className="w-full h-full"
+				/>
+
+				<Pressable onPress={handleQuit} className="absolute top-0 right-0 p-4 z-10">
+					<Iconify
+						icon="material-symbols:close"
+						size={24}
+						color={theme.colors.text}
+					/>
 				</Pressable>
-			) : (
-				<View className="flex flex-row items-center justify-center w-full mt-8 mx-auto">
+
+				<View className="flex flex-col items-center justify-center z-20">
+					<View className="w-64 h-64 bg-slate-500 rounded-xl my-10">
+						<Image
+							source={getImage(currentHabit.habit.category.slug)}
+							className="rounded-xl w-64 h-64"
+						/>
+					</View>
+
+					<Text
+						style={{
+							fontFamily: "BaskervilleBold",
+						}}
+						className="text-xl text-center"
+					>
+						{currentHabit.habit.name}
+					</Text>
+				</View>
+
+				<View className="flex flex-col items-center w-full mt-8 mx-auto z-20">
+					<View className="my-3 w-10/12">
+						<Progress.Bar
+							progress={1 - timerSeconds / totalSeconds}
+							className="w-full"
+							height={8}
+							borderColor="transparent"
+							unfilledColor={theme.colors.border}
+							color={theme.colors.primary}
+							width={null}
+							useNativeDriver={true}
+							borderWidth={0}
+						/>
+						<View className="flex items-center flex-row justify-between">
+							<Text className="text-center my-2">{remainingTime}</Text>
+							<Text className="text-center my-2">
+								{formatTime(currentHabit.habit.duration * 60)}
+							</Text>
+						</View>
+					</View>
+
 					<Pressable
 						onPress={pauseTimer}
-						className="py-2 rounded-xl w-1/3 mx-auto flex flex-row items-center justify-center"
+						className="py-2 rounded-full mx-auto flex flex-row items-center justify-center w-16 h-16"
 						style={{
 							backgroundColor: theme.colors.primary,
 						}}
@@ -66,44 +137,19 @@ export default function TimerHabit({
 						{isTimerActive ? (
 							<Iconify
 								icon="material-symbols:pause"
-								size={24}
+								size={28}
 								color={theme.colors.textSecondary}
 							/>
 						) : (
 							<Iconify
 								icon="material-symbols:play-arrow"
-								size={24}
+								size={28}
 								color={theme.colors.textSecondary}
 							/>
 						)}
-						<Text
-							className="text-lg text-center font-semibold ml-2"
-							style={{ color: theme.colors.textSecondary }}
-						>
-							{isTimerActive ? "Pause" : "Reprendre"}
-						</Text>
-					</Pressable>
-					<Pressable
-						onPress={stopTimer}
-						className="py-2 rounded-xl w-1/3 mx-auto flex flex-row items-center justify-center"
-						style={{
-							backgroundColor: theme.colors.primary,
-						}}
-					>
-						<Iconify
-							icon="material-symbols:stop"
-							size={24}
-							color={theme.colors.textSecondary}
-						/>
-						<Text
-							className="text-lg text-center font-semibold ml-2 "
-							style={{ color: theme.colors.textSecondary }}
-						>
-							Stop
-						</Text>
 					</Pressable>
 				</View>
-			)}
-		</View>
+			</View>
+		</>
 	);
 }

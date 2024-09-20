@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { ScrollView, RefreshControl } from "react-native";
-import { getAllRewards } from "../../db/rewards";
-import { useData } from "../../context/DataContext";
+
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import ClassementView from "@components/Agora/ClassementView";
-import { Reward } from "../../type/reward";
+import { useData } from "@context/DataContext";
+import { getAllRewards } from "@db/rewards";
+import { Reward } from "@type/reward";
 
 export default function Agora() {
 	const [usersRewards, setUsersRewards] = useState<Reward[]>([]);

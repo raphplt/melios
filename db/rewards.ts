@@ -2,7 +2,10 @@ import {
 	addDoc,
 	collection,
 	getDocs,
+	limit,
+	orderBy,
 	query,
+	startAfter,
 	updateDoc,
 	where,
 } from "firebase/firestore";
@@ -68,7 +71,6 @@ export const setRewards = async (
 			if (type === "odyssee") {
 				updateData = { odyssee: (rewardDoc.data().odyssee || 0) + points };
 			} else {
-				// 'rewards'
 				updateData = { rewards: (rewardDoc.data().rewards || 0) + points };
 			}
 
@@ -131,6 +133,48 @@ export const getAllRewards = async () => {
 	} catch (error) {
 		console.log(
 			"Erreur lors de la récupération de toutes les récompenses : ",
+			error
+		);
+		throw error;
+	}
+};
+export const getRewardsPaginated = async (lastDoc = null) => {
+	try {
+		const rewardsCollectionRef = collection(db, "rewards");
+
+		// Créer la requête avec pagination
+		let rewardsQuery = query(
+			rewardsCollectionRef,
+			orderBy("odyssee", "desc"),
+			limit(10)
+		);
+
+		// Si on a un dernier document, on commence à partir de celui-ci pour paginer
+		if (lastDoc) {
+			rewardsQuery = query(rewardsQuery, startAfter(lastDoc));
+		}
+
+		const rewardsSnapshot = await getDocs(rewardsQuery);
+		const lastVisible = rewardsSnapshot.docs[rewardsSnapshot.docs.length - 1];
+
+		const allRewards = await Promise.all(
+			rewardsSnapshot.docs.map(async (rewardDoc) => {
+				const rewardData = rewardDoc.data();
+				const uid = rewardData.uid;
+
+				// Logique pour récupérer l'utilisateur, similaire à ton code
+				return {
+					id: rewardDoc.id,
+					...rewardData,
+					// Ajoute d'autres champs si nécessaire
+				};
+			})
+		);
+
+		return { rewards: allRewards, lastVisible };
+	} catch (error) {
+		console.error(
+			"Erreur lors de la récupération des récompenses paginées : ",
 			error
 		);
 		throw error;

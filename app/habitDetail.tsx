@@ -1,21 +1,26 @@
 import { useContext, useEffect, useRef } from "react";
-import { View, Animated, AppState, AppStateStatus, Text } from "react-native";
+import { View, AppState, AppStateStatus, Text, StatusBar } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "expo-router";
 
 // Customs imports
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
 import { ThemeContext } from "@context/ThemeContext";
-import useTimer from "@hooks/useTimer";
 import { formatTime } from "@utils/timeUtils";
 import { lightenColor } from "@utils/colors";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import useNotifications from "@hooks/useNotifications";
-import { DataContext } from "@context/DataContext";
+import { useData } from "@context/DataContext";
 import { HabitsContext } from "@context/HabitsContext";
-import TimerHabit from "@components/HabitDetail/TimerHabit";
+import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
+import { useTimer } from "@context/TimerContext";
+import useHabitTimer from "@hooks/useHabitTimer";
+import ButtonBack from "@components/Shared/ButtonBack";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import ButtonComplete from "@components/HabitDetail/ButtonComplete";
 
 export interface DayStatus {
 	date: string;
@@ -29,19 +34,12 @@ export default function HabitDetail() {
 
 	// Contexts
 	const { theme } = useContext(ThemeContext);
-	const { timerSeconds, isTimerActive, startTimer } = useTimer();
+	const { timerSeconds, isTimerActive } = useTimer();
+	const { startTimer } = useHabitTimer();
 	const { sendPushNotification } = useNotifications();
-
-	const translateY = useRef(new Animated.Value(1000)).current;
+	const { expoPushToken } = useData();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const appState = useRef(AppState.currentState);
-	const { expoPushToken } = useContext(DataContext);
-
-	useEffect(() => {
-		Animated.spring(translateY, {
-			toValue: 0,
-			useNativeDriver: true,
-		}).start();
-	}, []);
 
 	useEffect(() => {
 		const subscription = AppState.addEventListener(
@@ -58,9 +56,12 @@ export default function HabitDetail() {
 		) {
 			const remainingSeconds = await AsyncStorage.getItem("timerSeconds");
 			if (remainingSeconds) {
-				startTimer(parseInt(remainingSeconds) / 60, currentHabit.habit);
+				startTimer(currentHabit);
 			}
 		} else if (nextAppState === "background") {
+			if (!expoPushToken) {
+				throw new Error("No expoPushToken");
+			}
 			sendPushNotification(expoPushToken, {
 				title: `${currentHabit.habit.name || "Habitude"} en pause`,
 				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
@@ -87,31 +88,31 @@ export default function HabitDetail() {
 		0.1
 	);
 
-	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
-
 	return (
-		<Animated.View
+		<View
 			style={{
-				backgroundColor: theme.colors.background,
+				flex: 1,
+				paddingTop: StatusBar.currentHeight,
 			}}
-			className="h-screen w-full overflow-y-auto top-0 absolute pt-4"
 		>
-			<View className="mt-4 w-full mx-auto flex justify-center flex-col">
+			<ButtonBack handleQuit={() => navigation.goBack()} />
+			<View className="w-full mx-auto flex justify-center flex-col pt-1">
 				<HabitDetailHeader
-					habitParsed={currentHabit.habit}
+					habit={currentHabit.habit}
 					theme={theme}
 					lightenedColor={lightenedColor}
 				/>
 
 				<InfosPanel
-					habitInfos={currentHabit.habit}
+					habit={currentHabit.habit}
 					theme={theme}
 					lightenedColor={lightenedColor}
 				/>
-
 				<LastDays habit={currentHabit.userHabit} />
-				<TimerHabit habit={currentHabit.habit} userHabit={currentHabit.userHabit} />
+				<ButtonStartHabit combinedHabit={currentHabit} />
+				<ButtonComplete combinedHabit={currentHabit} />
+				{/* TODO: bouton compléter normalement ? */}
 			</View>
-		</Animated.View>
+		</View>
 	);
 }

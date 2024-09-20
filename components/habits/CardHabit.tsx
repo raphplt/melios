@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,9 +14,10 @@ import {
 	LOCAL_STORAGE_MEMBER_HABITS_KEY,
 	getMemberHabit,
 } from "@db/member";
-import { Habit } from "../../type/habit";
+import { Habit } from "@type/habit";
+import { UserHabit } from "@type/userHabit";
 
-export default function CardHabit({ habit }: { habit: Habit }) {
+export default function CardHabit({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
@@ -30,18 +31,20 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 
 		// Met à jour la liste des habitudes non complétées
 		if (newToggleValue) {
-			setUncompletedHabitsData((prev: Habit[]) => [...prev, habit]);
+			setUncompletedHabitsData((prev: UserHabit[]) => [...prev, habit]);
 		} else {
-			setUncompletedHabitsData((prev: Habit[]) =>
-				prev.filter((h: Habit) => h.id !== habit.id)
+			setUncompletedHabitsData((prev: UserHabit[]) =>
+				prev.filter((h: UserHabit) => h.id !== habit.id)
 			);
 		}
 
 		// Met à jour la liste globale des habitudes dans le contexte
 		if (newToggleValue) {
-			setHabits((prev: Habit[]) => [...prev, habit]);
+			setHabits((prev: UserHabit[]) => [...prev, habit]);
 		} else {
-			setHabits((prev: Habit[]) => prev.filter((h: Habit) => h.id !== habit.id));
+			setHabits((prev: UserHabit[]) =>
+				prev.filter((h: UserHabit) => h.id !== habit.id)
+			);
 		}
 
 		// Mise à jour du stockage local (AsyncStorage)

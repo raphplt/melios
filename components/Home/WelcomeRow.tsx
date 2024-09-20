@@ -1,47 +1,40 @@
+import { useData } from "@context/DataContext";
 import { Ionicons } from "@expo/vector-icons";
 import useIndex from "@hooks/useIndex";
+import { useMemo } from "react";
 import { Animated, Pressable, Text, View } from "react-native";
 
 export default function WelcomeRow() {
-	const {
-		theme,
-		welcomeMessage,
-		handlePressIn,
-		rotate,
-		navigation,
-		handlePressOut,
-	} = useIndex();
+	const { theme, welcomeMessage, hours, isDayTime } = useIndex();
+	const { member } = useData();
+
+	const message = useMemo(() => {
+		if (hours >= 5 && hours < 12) {
+			return "🌞 Bonjour";
+		} else if (hours >= 12 && hours < 18) {
+			return "☀️ Bon après-midi";
+		} else {
+			return "🌜 Bonsoir";
+		}
+	}, [hours]);
+
+	const color = isDayTime ? "black" : "white";
 
 	return (
 		<View
 			style={{ backgroundColor: "transparent" }}
-			className="flex justify-between flex-row items-center mt-4 w-11/12 mx-auto"
+			className="flex justify-between flex-row items-center  mx-auto"
 		>
 			<Text
 				style={{
-					color: theme.colors.text,
+					color: color,
 
 					fontFamily: "BaskervilleBold",
 				}}
-				className="text-lg"
+				className="text-[16px]"
 			>
-				{welcomeMessage || "Bienvenue"}
+				{message + (member?.nom ? ", " + member.nom : "")}
 			</Text>
-			<Animated.View style={{ transform: [{ rotate }] }}>
-				<Pressable
-					onPressIn={handlePressIn}
-					onPressOut={handlePressOut}
-					onPress={() => {
-						navigation.navigate("select");
-					}}
-					className="rounded-full p-2 w-10 h-10"
-					style={{
-						backgroundColor: theme.colors.primary,
-					}}
-				>
-					<Ionicons name="add" size={24} color="white" />
-				</Pressable>
-			</Animated.View>
 		</View>
 	);
 }

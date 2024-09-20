@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import Checkbox from "expo-checkbox";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import {
 	NavigationProp,
 	ParamListBase,
@@ -16,19 +16,20 @@ import Animated, {
 } from "react-native-reanimated";
 
 // Customs imports
-import { getHabitById } from "@db/habits";
 import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
 import { difficulties } from "@utils/habitsUtils";
-import { DataContext } from "@context/DataContext";
+import { useData } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
-import { Habit } from "../../type/habit";
 import { HabitsContext } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
+import { Habit } from "@type/habit";
+import useIndex from "@hooks/useIndex";
+import { getHabitPoints } from "@utils/pointsUtils";
 
-export default function CardCheckHabit({
+function CardCheckHabit({
 	habit,
 	onHabitStatusChange,
 	completed,
@@ -39,25 +40,19 @@ export default function CardCheckHabit({
 	completed: boolean;
 	disabled: boolean;
 }) {
-	// Imports et Contextes
 	const { theme } = useContext(ThemeContext);
-	const { date } = useContext(DataContext);
 	const { setCurrentHabit } = useContext(HabitsContext);
+	const { addOdysseePoints } = usePoints();
+	const { date } = useData();
+	const { getHabitDetails, userHabits } = useIndex();
 
 	// États
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [habitInfos, setHabitInfos] = useState<Habit>();
 	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
-
-	// Variables
 	let touchStartTimeout: NodeJS.Timeout;
 
-	// Hooks personnalisés
-	const { addOdysseePoints } = usePoints();
-	// const { updateTodayScore } = useProgression();
-
-	// Navigation
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	// Animations
@@ -73,12 +68,13 @@ export default function CardCheckHabit({
 
 	useEffect(() => {
 		async function getHabitInfos() {
-			const result = await getHabitById(habit.id);
+			const result = getHabitDetails(habit.id);
+			// const result = await getHabitById(habit.id);
 			setHabitInfos(result);
 			setLoading(false);
 		}
 		getHabitInfos();
-	}, []);
+	}, [userHabits]);
 
 	useEffect(() => {
 		opacity.value = withTiming(1, { duration: 200 });
@@ -105,49 +101,50 @@ export default function CardCheckHabit({
 	};
 
 	const setHabitDone = async () => {
-		setToggleCheckBox(true); // Optimistic UI
+		setToggleCheckBox(true);
 		onHabitStatusChange(habit, true);
+
 		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		await setMemberHabitLog(habit.id, date, true); // Update DB
-		await setRewards("odyssee", habitInfos.reward + habitInfos.difficulty);
+		await setMemberHabitLog(habit.id, date, true);
+
+		const habitPoints = getHabitPoints(habitInfos);
+		await setRewards("odyssee", habitPoints.odyssee);
+
 		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
 	};
 
 	return (
 		<Animated.View
 			style={[animatedStyles]}
-			className="w-[90%] mx-auto my-[6px] flex flex-row items-center justify-evenly"
+			className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
 		>
 			<Pressable
 				onPress={setHabitDone}
-				className="flex items-center justify-center px-3 py-2"
+				className="flex items-center justify-center"
 				disabled={toggleCheckBox}
+				style={{ flexBasis: "12.5%" }}
 			>
-				<Checkbox
-					value={toggleCheckBox}
-					onValueChange={setHabitDone}
-					color={theme.colors.border}
-					disabled={disabled || toggleCheckBox}
+				<Ionicons
+					name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
+					size={30}
+					color={theme.colors.primary}
 				/>
 			</Pressable>
 			<Pressable
-				className="px-3"
 				onPress={() => {
 					goHabitDetail();
-					// navigation.navigate("habitDetail", {
-					// 	habit: JSON.stringify(habit),
-					// 	habitInfos: JSON.stringify(habitInfos),
-					// });
 				}}
+				style={{ flex: 1 }}
 			>
 				<View
-					className="flex items-center flex-row justify-around py-2 rounded-xl w-full"
+					className="flex items-center flex-row justify-between px-3 py-[12px] rounded-xl"
 					style={{
-						borderColor: theme.colors.border,
-						borderWidth: 1,
-						backgroundColor: isTouched
-							? theme.colors.cardBackground
-							: theme.colors.background,
+						backgroundColor:
+							isTouched || completed
+								? theme.colors.backgroundSecondary
+								: theme.dark
+								? theme.colors.cardBackground
+								: theme.colors.backgroundTertiary,
 					}}
 					onTouchStart={() => {
 						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
@@ -161,23 +158,12 @@ export default function CardCheckHabit({
 						setIsTouched(false);
 					}}
 				>
-					<View
-						className="absolute py-2 left-[8px] w-[4px] h-full rounded-xl"
-						style={{
-							backgroundColor: habitInfos.category?.color || theme.colors.primary,
-						}}
-					></View>
-					<View className="flex flex-row">
-						<Text
-							className="font-semibold"
-							numberOfLines={1}
-							style={{
-								marginLeft: 14,
-								color: theme.colors.text,
-							}}
-						>
-							{habit.moment}h
-						</Text>
+					<View className="flex flex-row items-center">
+						<FontAwesome6
+							name={habitInfos.category.icon || "question"}
+							size={18}
+							color={habitInfos.category.color || theme.colors.text}
+						/>
 
 						<Text
 							style={{
@@ -185,24 +171,33 @@ export default function CardCheckHabit({
 								textDecorationLine: completed ? "line-through" : "none",
 								marginLeft: 6,
 							}}
-							className="text-[14px] w-3/4"
+							className="text-[15px] font-semibold pl-1 w-[80%]"
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>
 							{habit.name}
 						</Text>
 					</View>
-					<Ionicons
-						name="flame"
-						size={24}
-						color={
-							habitInfos.difficulty
-								? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
-								: theme.colors.primary
-						}
-					/>
+					<View
+						className=" rounded-full p-1"
+						style={{
+							backgroundColor: theme.colors.background,
+						}}
+					>
+						<Ionicons
+							name="flame"
+							size={24}
+							color={
+								habitInfos.difficulty
+									? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
+									: theme.colors.primary
+							}
+						/>
+					</View>
 				</View>
 			</Pressable>
 		</Animated.View>
 	);
 }
+
+export default memo(CardCheckHabit);

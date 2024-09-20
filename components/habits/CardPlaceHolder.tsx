@@ -8,7 +8,7 @@ export default function CardPlaceHolder() {
 	const screenWidth = Math.round(Dimensions.get("screen").width);
 
 	return (
-		<View className="w-11/12 flex flex-row items-center mx-auto justify-center my-[6px]">
+		<View className="w-[90%] flex flex-row items-center mx-auto justify-center my-[6px]">
 			<ShimmerPlaceholder
 				width={30}
 				height={30}

@@ -8,18 +8,18 @@ import MoneyMelios from "@components/Svg/MoneyMelios";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 
 export default function InfosPanel({
-	habitInfos,
+	habit,
 	theme,
 	lightenedColor,
 }: {
-	habitInfos: Habit;
+	habit: Habit;
 	theme: any;
 	lightenedColor: string;
 }) {
 	const [difficulty, setDifficulty] = useState<string>("");
 
 	useEffect(() => {
-		const temp = habitInfos.difficulty;
+		const temp = habit.difficulty;
 		if (temp === 1) {
 			setDifficulty("Facile");
 		}
@@ -29,7 +29,7 @@ export default function InfosPanel({
 		if (temp >= 3) {
 			setDifficulty("Difficile");
 		}
-	}, [habitInfos.difficulty]);
+	}, [habit.difficulty]);
 
 	const rowStyle =
 		"flex flex-row justify-between items-center w-full mx-auto mt-4 px-5";
@@ -46,11 +46,11 @@ export default function InfosPanel({
 			<Text
 				style={{
 					color: theme.colors.text,
-					borderBottomColor: habitInfos.category?.color || theme.colors.border,
+					borderBottomColor: habit.category?.color || theme.colors.border,
 				}}
-				className="text-[15px] text-pretty ml-4  font-semibold pb-2 w-11/12 mx-auto border-b"
+				className="text-[16px] text-pretty ml-4 pb-2 w-11/12 mx-auto border-b"
 			>
-				{habitInfos.description}
+				{habit.description}
 			</Text>
 			<View className={rowStyle}>
 				<View className={rowBox}>
@@ -59,9 +59,7 @@ export default function InfosPanel({
 						Durée
 					</Text>
 				</View>
-				<Text style={{ color: theme.colors.text }}>
-					{habitInfos.duration} minutes
-				</Text>
+				<Text style={{ color: theme.colors.text }}>{habit.duration} minutes</Text>
 			</View>
 
 			<View className={rowStyle}>
@@ -75,9 +73,7 @@ export default function InfosPanel({
 						Catégorie
 					</Text>
 				</View>
-				<Text style={{ color: theme.colors.text }}>
-					{habitInfos.category?.category}
-				</Text>
+				<Text style={{ color: theme.colors.text }}>{habit.category?.category}</Text>
 			</View>
 
 			<View className={rowStyle}>
@@ -88,9 +84,7 @@ export default function InfosPanel({
 					</Text>
 				</View>
 
-				<Text style={{ color: theme.colors.text }}>
-					à {habitInfos.moment} heure
-				</Text>
+				<Text style={{ color: theme.colors.text }}>à {habit.moment} heure</Text>
 			</View>
 
 			<View className={rowStyle}>
@@ -100,9 +94,9 @@ export default function InfosPanel({
 						Difficulté
 					</Text>
 				</View>
-				<Text style={{ color: theme.colors.text }}>{difficulty}</Text>
+				<Text style={{ color: theme.colors.text }}>{difficulty ?? ""}</Text>
 			</View>
-			<View className={rowStyle}>
+			{/* <View className={rowStyle}>
 				<View className={rowBox}>
 					<Iconify size={24} color={theme.colors.text} icon="ph:coin" />
 					<Text style={{ color: theme.colors.text }} className="text-md">
@@ -113,17 +107,17 @@ export default function InfosPanel({
 					<View className="flex flex-row items-center">
 						<MoneyOdyssee />
 						<Text style={{ color: theme.colors.text }} className="ml-1">
-							{Math.round(habitInfos.reward * (habitInfos.difficulty / 2))}
+							{Math.round(habit.reward * (habit.difficulty / 2))}
 						</Text>
 					</View>
 					<View className="flex flex-row items-center gap4">
 						<MoneyMelios />
 						<Text style={{ color: theme.colors.text }} className="ml-1">
-							{habitInfos.difficulty}
+							{habit.difficulty}
 						</Text>
 					</View>
 				</View>
-			</View>
+			</View> */}
 		</View>
 	);
 }

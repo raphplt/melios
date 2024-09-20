@@ -1,8 +1,9 @@
 import { collection, getDocs } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from ".";
-import { Category } from "../type/category";
-import { Habit } from "../type/habit";
+import { Category } from "@type/category";
+import { Habit } from "@type/habit";
+import { ONE_WEEK_IN_MS } from "./category";
 
 const LOCAL_STORAGE_HABITS_KEY = "habits";
 const LOCAL_STORAGE_CATEGORIES_KEY = "categories";
@@ -14,12 +15,15 @@ export const fetchCollectionData = async (
 ) => {
 	try {
 		if (!forceRefresh) {
+			console.log(storageKey);
 			const storedData = await AsyncStorage.getItem(storageKey);
 			if (storedData) {
+				// console.log("Stored data: ", JSON.parse(storedData).slice(0, 10));
 				return JSON.parse(storedData);
 			}
 		}
 
+		console.log("Fetching data from Firestore for collection: ", collectionName);
 		const collectionRef = collection(db, collectionName);
 		const snapshot = await getDocs(collectionRef);
 
@@ -43,7 +47,7 @@ export const getAllHabits = async (forceRefresh = false) => {
 	return fetchCollectionData("habits", LOCAL_STORAGE_HABITS_KEY, forceRefresh);
 };
 
-export const getAllCategories = async (forceRefresh = false) => {
+export const getAllCategories = async (forceRefresh = true) => {
 	return fetchCollectionData(
 		"categories",
 		LOCAL_STORAGE_CATEGORIES_KEY,
@@ -65,9 +69,9 @@ export const getHabitsWithCategories = async (forceRefresh = false) => {
 			return acc;
 		}, {});
 
-		const habitsWithCategories = habits.map((habit: any) => ({
+		const habitsWithCategories = habits.map((habit: Habit) => ({
 			...habit,
-			category: categoriesMap[habit.category],
+			category: categoriesMap[habit.category as any],
 		}));
 
 		return habitsWithCategories;

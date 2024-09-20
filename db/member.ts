@@ -15,14 +15,12 @@ import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
 import { Member } from "../type/member";
 import { UserHabit } from "../type/userHabit";
-import { Habit } from "../type/habit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
-export const setMemberHabit = async (habit: Habit) => {
+export const setMemberHabit = async (habit: UserHabit) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -274,6 +272,7 @@ export const getMemberInfos = async (
 				temps: memberDoc.data().temps,
 				aspects: memberDoc.data().aspects,
 				habits: memberDoc.data().habits,
+				profilePicture: memberDoc.data().profilePicture,
 			};
 
 			await AsyncStorage.setItem(
@@ -294,10 +293,7 @@ export const getMemberInfos = async (
 	}
 };
 
-export const updateMemberInfo = async (
-	name: string,
-	profilePicture: File | null
-) => {
+export const updateMemberInfo = async (name: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -311,14 +307,6 @@ export const updateMemberInfo = async (
 			const memberDoc = querySnapshot.docs[0];
 			const updates: any = { nom: name };
 
-			if (profilePicture) {
-				const storage = getStorage();
-				const storageRef = ref(storage, `profile_pictures/${uid}`);
-				await uploadBytes(storageRef, profilePicture);
-				const profilePictureURL = await getDownloadURL(storageRef);
-				updates.profilePicture = profilePictureURL;
-			}
-
 			await updateDoc(memberDoc.ref, updates);
 			console.log("Member info updated successfully");
 		} else {
@@ -326,6 +314,38 @@ export const updateMemberInfo = async (
 		}
 	} catch (error) {
 		console.error("Error updating member info: ", error);
+		throw error;
+	}
+};
+
+export const updateProfilePicture = async (slug: string) => {
+	try {
+		const uid: any = auth.currentUser?.uid;
+
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", uid))
+		);
+
+		if (!querySnapshot.empty) {
+			const memberDoc = querySnapshot.docs[0];
+
+			await updateDoc(memberDoc.ref, {
+				profilePicture: slug,
+			});
+
+			await AsyncStorage.setItem(
+				LOCAL_STORAGE_MEMBER_INFO_KEY,
+				JSON.stringify({ ...memberDoc.data(), profilePicture: slug })
+			);
+
+			console.log("Profile picture updated successfully");
+		} else {
+			console.log("Member not found");
+		}
+	} catch (error) {
+		console.error("Error updating profile picture: ", error);
 		throw error;
 	}
 };

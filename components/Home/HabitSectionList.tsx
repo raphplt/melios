@@ -3,6 +3,8 @@ import { View } from "react-native";
 import { Habit } from "../../type/habit";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import ButtonViewMore from "./ButtonViewMore";
+import { UserHabit } from "@type/userHabit";
+import { IconTopRow } from "@type/icons";
 
 const HabitSectionList = ({
 	title,
@@ -16,7 +18,19 @@ const HabitSectionList = ({
 	completed = false,
 	disabled = false,
 	resetShow,
-}: any) => (
+}: {
+	title: string;
+	icon: IconTopRow;
+	borderColor: string;
+	textColor: string;
+	habits: UserHabit[];
+	showMore: number;
+	onShowMore: () => void;
+	onHabitStatusChange: (habit: UserHabit, done: boolean) => void;
+	completed?: boolean;
+	disabled?: boolean;
+	resetShow: () => void;
+}) => (
 	<View
 		className="flex flex-row flex-wrap justify-start py-1 mb-2"
 		style={{ backgroundColor: "transparent" }}
@@ -32,7 +46,7 @@ const HabitSectionList = ({
 			showMore={showMore}
 		/>
 		<View className="w-full mx-auto">
-			{habits.slice(0, showMore).map((habit: Habit) => (
+			{habits.slice(0, showMore).map((habit: UserHabit) => (
 				<CardCheckHabit
 					key={habit.id}
 					habit={habit}

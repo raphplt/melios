@@ -51,7 +51,7 @@ const useNotifications = () => {
 						sound: true,
 					},
 					trigger: {
-						hour: parseInt(habit.moment),
+						hour: parseInt(String(habit.moment)),
 						minute: 0,
 						repeats: true,
 					},

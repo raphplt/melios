@@ -1,26 +1,41 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, {
+	createContext,
+	useState,
+	useContext,
+	useEffect,
+	ReactNode,
+} from "react";
 import moment from "moment";
-import { getRewards } from "../db/rewards";
-import { useSession } from "./UserContext";
+
 import permissions from "../hooks/usePermissions";
-import { processHabits } from "../utils/habitsUtils";
-import { extractPoints } from "../utils/pointsUtils";
-import { getNotificationToken } from "../utils/notificationsUtils";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Habit } from "../type/habit";
-import { Points } from "../type/points";
-import { Member } from "../type/member";
-import { UserHabit } from "../type/userHabit";
+
 import usePopup from "@hooks/usePopup";
-import { Trophy } from "../type/trophy";
-import { getAllTrophies } from "@db/trophiesList";
+// import { getAllTrophies } from "@db/trophiesList";
 import { getMemberHabits, getMemberInfos } from "@db/member";
+import { calculateStreak } from "@utils/progressionUtils";
+import { DataContextType } from "@type/dataContext";
+import { Member } from "@type/member";
+import { Points } from "@type/points";
+import { UserHabit } from "@type/userHabit";
+import { getRewards } from "@db/rewards";
+import { useSession } from "./UserContext";
+import { Trophy } from "@type/trophy";
+import { processHabits } from "@utils/habitsUtils";
+import { extractPoints } from "@utils/pointsUtils";
+import { getNotificationToken } from "@utils/notificationsUtils";
 
-export const DataContext = createContext<any>({});
+interface DataProviderProps {
+	children: ReactNode;
+}
+export const DataContext = createContext<DataContextType | undefined>(
+	undefined
+);
 
-export const DataProvider = ({ children }: any) => {
+export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const { isLoading: isSessionLoading, user } = useSession();
-	const [habits, setHabits] = useState<Habit[]>([]);
+	const [habits, setHabits] = useState<UserHabit[]>([]);
 	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
 		UserHabit[]
 	>([]);
@@ -92,16 +107,20 @@ export const DataProvider = ({ children }: any) => {
 					setHabits(snapshotHabits);
 
 					// Trophies
-					const snapshotTrophies = await getAllTrophies({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
-					setTrophies(snapshotTrophies);
+					// const snapshotTrophies = await getAllTrophies({
+					// 	signal: abortController.signal,
+					// 	forceRefresh: true,
+					// });
+					// setTrophies(snapshotTrophies);
 
 					// Calculate today's score
 					const { uncompleted, completed } = processHabits(snapshotHabits, date);
 					setUncompletedHabitsData(uncompleted);
 					setCompletedHabitsData(completed);
+
+					// Calculate streak
+					const streak = calculateStreak(snapshotHabits);
+					setStreak(streak);
 				} catch (error: any) {
 					if (error.name !== "AbortError") {
 						console.log("Erreur lors de la récupération des données : ", error);
@@ -118,6 +137,7 @@ export const DataProvider = ({ children }: any) => {
 			};
 		}
 	}, [isSessionLoading, user]);
+
 
 	return (
 		<DataContext.Provider
@@ -144,7 +164,7 @@ export const DataProvider = ({ children }: any) => {
 				todayScore,
 				setTodayScore,
 				streak,
-				setStreak
+				setStreak,
 			}}
 		>
 			{children}

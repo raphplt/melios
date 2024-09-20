@@ -13,9 +13,11 @@ import { DataProvider, useData } from "../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import NotificationBox from "@components/Shared/NotificationBox";
 import { HabitsProvider } from "@context/HabitsContext";
-import { DarkTheme, DefaultTheme } from "../constants/Theme";
 import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
+import { DarkTheme, DefaultTheme } from "@constants/Theme";
+import ButtonSettings from "@components/Shared/ButtonSettings";
+import { TimerProvider } from "@context/TimerContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -69,6 +71,8 @@ function MainNavigator() {
 		}
 	}, [isSessionLoading]);
 
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
 	if (isLoading || !loaded) return <LoaderScreen text="Chargement..." />;
 
 	return (
@@ -90,14 +94,20 @@ function MainNavigator() {
 							presentation: "transparentModal",
 							headerShown: true,
 							headerShadowVisible: false,
+							headerRight: () => (
+								<ButtonSettings
+									onPress={() => {
+										navigation.navigate("editHabits");
+									}}
+								/>
+							),
 						}}
 					/>
+
 					<Stack.Screen
 						name="habitDetail"
 						options={{
-							headerShadowVisible: false,
-							title: "Détail de l'habitude",
-							gestureEnabled: true,
+							headerShown: false,
 						}}
 					/>
 					<Stack.Screen
@@ -153,6 +163,20 @@ function MainNavigator() {
 							headerShadowVisible: false,
 						}}
 					/>
+					<Stack.Screen
+						name="editGoals"
+						options={{
+							title: "Éditer mes objectifs",
+							headerShadowVisible: false,
+						}}
+					/>
+
+					<Stack.Screen
+						name="timerHabit"
+						options={{
+							headerShown: false,
+						}}
+					/>
 				</Stack>
 				{isOpen && <NotificationBox />}
 			</ThemeProvider>
@@ -179,11 +203,13 @@ export default function RootLayout() {
 
 	return (
 		<SessionProvider>
-			<DataProvider>
-				<HabitsProvider>
-					<MainNavigator />
-				</HabitsProvider>
-			</DataProvider>
+			<TimerProvider>
+				<DataProvider>
+					<HabitsProvider>
+						<MainNavigator />
+					</HabitsProvider>
+				</DataProvider>
+			</TimerProvider>
 		</SessionProvider>
 	);
 }

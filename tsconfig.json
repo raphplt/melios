@@ -11,7 +11,8 @@
 			"@components/*": ["./components/*"],
 			"@context/*": ["./context/*"],
 			"@assets/*": ["./assets/*"],
-			"@type/*": ["./type/*"]
+			"@type/*": ["./type/*"],
+			"@constants/*": ["./constants/*"]
 		},
 		"plugins": [{ "name": "nativewind/typescript-plugin" }]
 	},

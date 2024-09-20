@@ -8,3 +8,16 @@ export function lightenColor(hex: string, alpha: number = 0.1): string {
 	}
 	return "#FFFFFF";
 }
+
+export const getFlammeColor = (todayScore: number): string => {
+	if (todayScore >= 0 && todayScore < 30) {
+		return "#FFD580";
+	}
+	if (todayScore >= 30 && todayScore < 60) {
+		return "#FFB347";
+	}
+	if (todayScore >= 60 && todayScore < 100) {
+		return "#FF6961";
+	}
+	return "#FFD580";
+};

@@ -19,7 +19,8 @@ import { useData } from "@context/DataContext";
 import { UserHabit } from "../type/userHabit";
 import { getMemberHabits, getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
-import { Habit } from "../type/habit";
+import { Habit } from "@type/habit";
+import { useHabits } from "@context/HabitsContext";
 
 const useIndex = () => {
 	// Contexts
@@ -40,26 +41,29 @@ const useIndex = () => {
 		setCompletedHabitsData,
 	} = useData();
 
+	const { habitsData } = useHabits();
+
 	// Refs
 	const rotation = useRef(new Animated.Value(0)).current;
-	const abortController = useRef<AbortController | null>(null);
+	const abortControllerHabits = useRef<AbortController | null>(null);
+	const abortControllerMember = useRef<AbortController | null>(null);
 
 	// States
 	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
-	// const [streak, setStreak] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [hours, setHours] = useState(new Date().getHours());
 	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
-	const [showMoreValidate, setShowMoreValidate] = useState(5);
-	const [showMoreNext, setShowMoreNext] = useState(5);
-	const [showMoreMissed, setShowMoreMissed] = useState(5);
+	const [showMoreValidate, setShowMoreValidate] = useState(3);
+	const [showMoreNext, setShowMoreNext] = useState(3);
+	const [showMoreMissed, setShowMoreMissed] = useState(3);
 
 	// Memoized values
 	const missedHabitsCount = useMemo(() => {
-		return uncompletedHabitsData.filter((habit: Habit) => habit.moment < hours)
-			.length;
+		return uncompletedHabitsData.filter(
+			(habit: UserHabit) => habit.moment < hours
+		).length;
 	}, [uncompletedHabitsData, hours]);
 
 	const rotate = useMemo(() => {
@@ -75,15 +79,33 @@ const useIndex = () => {
 			: require("@assets/images/illustrations/temple_night.jpg");
 	}, [isDayTime]);
 
-	const fetchMemberData = useCallback(
+	const fetchMemberHabitsData = useCallback(
 		async (signal: AbortSignal) => {
+			if (userHabits.length > 0) return;
+
 			try {
-				const [data, memberInfos] = await Promise.all([
-					getMemberHabits(),
-					getMemberInfos(),
-				]);
+				console.log("Fetching member habits data");
+				const data = await getMemberHabits();
 				if (!signal.aborted) {
 					setUserHabits(data);
+				}
+			} catch (error) {
+				if (!signal.aborted) {
+					handleError(error);
+				}
+			}
+		},
+		[userHabits] // Ajoute la dépendance correcte ici.
+	);
+
+	const fetchMemberInfosData = useCallback(
+		async (signal: AbortSignal) => {
+			if (member) return;
+
+			try {
+				console.log("Fetching member infos data");
+				const memberInfos = await getMemberInfos();
+				if (!signal.aborted) {
 					setMember(memberInfos);
 				}
 			} catch (error) {
@@ -92,20 +114,33 @@ const useIndex = () => {
 				}
 			}
 		},
-		[setMember, setUserHabits]
+		[member]
 	);
+
+	const getHabitDetails = (habitId: string) => {
+		return habitsData.find((habit: Habit) => habit.id === habitId);
+	};
 
 	// Effects
 	useEffect(() => {
 		if (!isFocused) return;
 
-		if (abortController.current) {
-			abortController.current.abort();
+		if (!userHabits.length && abortControllerHabits.current) {
+			abortControllerHabits.current.abort();
+			abortControllerHabits.current = new AbortController();
+			fetchMemberHabitsData(abortControllerHabits.current.signal);
 		}
+	}, [isFocused]);
 
-		abortController.current = new AbortController();
-		fetchMemberData(abortController.current.signal);
-	}, [isFocused, fetchMemberData]);
+	useEffect(() => {
+		if (!isFocused) return;
+
+		if (!member && abortControllerMember.current) {
+			abortControllerMember.current.abort();
+			abortControllerMember.current = new AbortController();
+			fetchMemberInfosData(abortControllerMember.current.signal);
+		}
+	}, [isFocused]);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -118,71 +153,71 @@ const useIndex = () => {
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
-	}, [habits, isLoading, completedHabitsData, uncompletedHabitsData]);
+	}, [habits, isLoading]); //TODO vérifier si on doit ajouter completedHabitsData et uncompletedHabitsData
+
+	const getWelcomeMessage = (username: string, hours: number) => {
+		const greeting =
+			hours < 12 ? "Bonjour" : hours < 18 ? "Bon après-midi" : "Bonsoir";
+		return `${greeting}${username ? ", " + username : ""} !`;
+	};
 
 	useEffect(() => {
-		if (abortController.current) {
-			abortController.current.abort();
+		if (abortControllerMember.current) {
+			abortControllerMember.current.abort();
 		}
 
-		abortController.current = new AbortController();
-		const signal = abortController.current.signal;
+		const controller = new AbortController();
+		abortControllerMember.current = controller;
+		const signal = controller.signal;
 
-		(async () => {
-			const username = member?.nom || "";
-			const time = new Date().getHours();
-			let message = "";
+		const username = member?.nom || "";
+		const message = getWelcomeMessage(username, hours);
 
-			if (time < 12) {
-				message = `Bonjour${username ? ", " + username : ""} !`;
-			} else if (time >= 12 && time < 18) {
-				message = `Bon après-midi${username ? ", " + username : ""} !`;
-			} else {
-				message = `Bonsoir${username ? ", " + username : ""} !`;
-			}
-
-			if (!signal.aborted) {
-				setWelcomeMessage(message);
-			}
-		})();
+		if (!signal.aborted) {
+			setWelcomeMessage(message);
+		}
 
 		return () => {
-			abortController.current?.abort();
+			controller.abort();
 		};
-	}, [member]);
+	}, [member, hours, setWelcomeMessage]);
 
 	// Functions
 
 	//TODO pas utile ?
 	const backgroundRefresh = useCallback(async () => {
-		if (abortController.current) {
-			abortController.current.abort();
+		if (abortControllerHabits.current) {
+			console.log("Abort previous fetch");
+			abortControllerHabits.current.abort();
 		}
-		abortController.current = new AbortController();
-		fetchMemberData(abortController.current.signal);
-	}, [fetchMemberData]);
+		abortControllerHabits.current = new AbortController();
+		fetchMemberHabitsData(abortControllerHabits.current.signal);
+	}, [fetchMemberHabitsData]);
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
-		if (abortController.current) {
-			abortController.current.abort();
+		if (abortControllerHabits.current) {
+			abortControllerHabits.current.abort();
 		}
-		abortController.current = new AbortController();
-		await fetchMemberData(abortController.current.signal);
+		abortControllerHabits.current = new AbortController();
+		await fetchMemberHabitsData(abortControllerHabits.current.signal);
 		setRefreshing(false);
-	}, [fetchMemberData]);
+	}, [fetchMemberHabitsData]);
 
 	const handleHabitStatusChange = useCallback(
-		(habit: Habit, done: boolean) => {
+		(habit: UserHabit, done: boolean) => {
 			if (done) {
-				setCompletedHabitsData((prevHabits: Habit[]) => [...prevHabits, habit]);
-				setUncompletedHabitsData((prevHabits: Habit[]) =>
-					prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
+				setCompletedHabitsData((prevHabits: UserHabit[]) => [...prevHabits, habit]);
+				setUncompletedHabitsData((prevHabits: UserHabit[]) =>
+					prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
 				);
 			} else {
-				setUncompletedHabitsData((prevHabits: Habit[]) => [...prevHabits, habit]);
-				setCompletedHabitsData((prevHabits: Habit[]) =>
-					prevHabits.filter((oldHabit: Habit) => oldHabit.id !== habit.id)
+				setUncompletedHabitsData((prevHabits: UserHabit[]) => [
+					...prevHabits,
+					habit,
+				]);
+				setCompletedHabitsData((prevHabits: UserHabit[]) =>
+					prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
 				);
 			}
 		},
@@ -214,7 +249,7 @@ const useIndex = () => {
 
 	const updateShowNext = useCallback(() => {
 		const filteredUncompletedHabits = uncompletedHabitsData.filter(
-			(habit: Habit) => habit.moment >= hours
+			(habit: UserHabit) => habit.moment >= hours
 		);
 		updateShowMore(
 			showMoreNext,
@@ -229,7 +264,7 @@ const useIndex = () => {
 
 	const toggleShowMore = useCallback(
 		(currentValue: number, setValue: (value: number) => void) => {
-			setValue(currentValue > 0 ? 0 : 5);
+			setValue(currentValue > 0 ? 0 : 3);
 		},
 		[]
 	);
@@ -267,6 +302,7 @@ const useIndex = () => {
 		}).start();
 	}, [rotation]);
 
+
 	return {
 		theme,
 		navigation,
@@ -302,6 +338,7 @@ const useIndex = () => {
 		resetShowValidate,
 		resetShowNext,
 		resetShowMissed,
+		getHabitDetails,
 	};
 };
 

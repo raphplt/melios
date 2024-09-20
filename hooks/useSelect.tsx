@@ -3,7 +3,7 @@ import { getHabitsWithCategories } from "../db/fetch";
 import { Habit } from "../type/habit";
 
 const useHabitsData = () => {
-	const [habitsData, setHabitsData] = useState([]);
+	const [habitsData, setHabitsData] = useState<Habit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState("");
 	const [displayedHabitsCount, setDisplayedHabitsCount] = useState({});
@@ -16,7 +16,7 @@ const useHabitsData = () => {
 				setHabitsData(data);
 				setLoading(false);
 				//TODO type this
-				const initialDisplayedCounts = data.reduce((acc, habit) => {
+				const initialDisplayedCounts = data.reduce((acc, habit: Habit) => {
 					acc[habit.id] = habit.initialCount || 0;
 					return acc;
 				}, {});

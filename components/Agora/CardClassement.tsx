@@ -1,8 +1,9 @@
-import { Text, View } from "react-native";
-import { Iconify } from "react-native-iconify";
-import MoneyOdyssee from "../Svg/MoneyOdyssee";
-import MoneyMelios from "../Svg/MoneyMelios";
-import { lightenColor } from "../../utils/colors";
+import { Text, View, Image } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import MoneyMelios from "@components/Svg/MoneyMelios";
+import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
+import { lightenColor } from "@utils/colors";
+import getIcon from "@utils/cosmeticsUtils";
 
 export default function CardClassement({
 	rank,
@@ -35,11 +36,11 @@ export default function CardClassement({
 				<Text style={{ color: theme.colors.text, fontWeight: "bold" }}>
 					#{rank}
 				</Text>
-				<Iconify
-					size={24}
-					color={theme.colors.text}
-					icon="solar:user-circle-outline"
-				/>
+				{member?.profilePicture ? (
+					<Image source={getIcon(member.profilePicture)} className="w-8 h-8 mr-5" />
+				) : (
+					<Image source={getIcon("man")} className="w-8 h-8 mr-5" />
+				)}
 				<Text style={{ color: theme.colors.text }}>{reward.name}</Text>
 			</View>
 			<View

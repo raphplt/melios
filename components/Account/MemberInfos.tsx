@@ -3,12 +3,14 @@ import { useContext } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
+import { Member } from "@type/member";
+import getIcon from "@utils/cosmeticsUtils";
 
 export default function MemberInfos({
 	member,
 	auth,
 }: {
-	member: any;
+	member: Member | undefined;
 	auth: any;
 }) {
 	const { theme } = useContext(ThemeContext);
@@ -20,11 +22,12 @@ export default function MemberInfos({
 				className="mx-auto flex flex-col pt-6 justify-center w-11/12 items-center"
 				style={{ backgroundColor: theme.colors.background }}
 			>
-				<Image
-					source={require("../../assets/images/pfp.jpg")}
-					className="rounded-full mx-auto mt-4"
-					style={{ width: 120, height: 120 }}
-				/>
+				{member?.profilePicture ? (
+					<Image source={getIcon(member.profilePicture)} className="w-36 h-36" />
+				) : (
+					<Image source={getIcon("man")} className="w-36 h-36" />
+				)}
+
 				<View
 					className="mx-auto flex flex-col items-center justify-center"
 					style={{
@@ -53,12 +56,7 @@ export default function MemberInfos({
 							navigation.navigate("editProfil");
 						}}
 					>
-						<Text
-							className="text-[16px]"
-							style={{ color: theme.colors.textSecondary }}
-						>
-							Éditer le profil
-						</Text>
+						<Text className="text-[16px] text-white">Éditer le profil</Text>
 					</Pressable>
 				</View>
 			</View>

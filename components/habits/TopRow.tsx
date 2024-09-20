@@ -2,6 +2,8 @@ import { Pressable, Text, View } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Iconify } from "react-native-iconify";
+import IconView from "./IconView";
+import { IconTopRow } from "@type/icons";
 
 export default function TopRow({
 	color,
@@ -11,35 +13,46 @@ export default function TopRow({
 	textColor,
 	resetShow,
 	showMore,
-}: any) {
+	icon,
+}: {
+	color: string;
+	text: string;
+	number: number;
+	borderColor?: string;
+	textColor?: string;
+	resetShow: () => void;
+	showMore: number;
+	icon: IconTopRow;
+}) {
 	const { theme } = useContext(ThemeContext);
 
 	return (
 		<Pressable className="w-full" onPress={resetShow}>
 			<View className="flex items-center justify-start flex-row w-[90%] bg-transparent mx-auto my-2">
-				<View
-					className="flex items-center justify-center rounded-full w-6 h-6 mr-2"
-					style={{
-						backgroundColor: color,
-						borderColor: borderColor || theme.colors.primary,
-						borderWidth: 2,
-					}}
-				>
+				<IconView icon={icon} />
+				<View className="flex items-center flex-row">
 					<Text
-						className="font-bold text-[13px]"
+						className="ml-2 text-[16px]"
 						style={{
-							color: textColor || theme.colors.text,
+							color: theme.colors.text,
 						}}
-					>{`${number}`}</Text>
+					>
+						{text}
+					</Text>
+					{/* <View
+						className="flex items-center justify-center rounded-full w-6 h-6 mx-1"
+						style={{
+							backgroundColor: borderColor,
+						}}
+					>
+						<Text
+							className="font-bold "
+							style={{
+								color: theme.colors.textSecondary,
+							}}
+						>{`${number}`}</Text>
+					</View> */}
 				</View>
-				<Text
-					className="font-semibold ml-1 text-[16px]"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					{text}
-				</Text>
 
 				<View className="flex items-center justify-center ml-auto p-1">
 					{showMore > 0 ? (

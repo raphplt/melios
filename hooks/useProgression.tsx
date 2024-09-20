@@ -4,6 +4,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { UserHabit } from "../type/userHabit";
 import useIndex from "./useIndex";
 import { useData } from "@context/DataContext";
+import { calculateStreak } from "@utils/progressionUtils";
 
 export const useProgression = () => {
 	const isFocused = useIsFocused();
@@ -16,40 +17,6 @@ export const useProgression = () => {
 	const [habitCompletion, setHabitCompletion] = useState<Record<string, number>>(
 		{}
 	);
-
-	// Fonction pour calculer la streak
-	const calculateStreak = (habits: UserHabit[]): number => {
-		if (habits.length === 0) return 0;
-
-		let streakCount = 0;
-		let daysBack = 0;
-		let streakActive = true;
-
-		while (streakActive) {
-			const date = moment().subtract(daysBack, "days").format("YYYY-MM-DD");
-			let dayCompleted = false;
-
-			for (const habit of habits) {
-				if (habit.logs) {
-					const logForDay = habit.logs.find((log) => log.date === date && log.done);
-					if (logForDay) {
-						dayCompleted = true;
-						break;
-					}
-				}
-			}
-
-			if (dayCompleted) {
-				streakCount += 1;
-			} else {
-				streakActive = false;
-			}
-
-			daysBack += 1;
-		}
-
-		return streakCount;
-	};
 
 	const useTodayScore = (habits: UserHabit[], date: string): number => {
 		return useMemo(() => {
@@ -132,7 +99,7 @@ export const useProgression = () => {
 	const todayScoreValue = useTodayScore(userHabits, date);
 	const habitCompletionValue = useHabitCompletion(userHabits, activeButton);
 	const comparedToYesterdayValue = useComparedToYesterday(userHabits, date);
-	const streakValue = calculateStreak(userHabits); // Calculer la streak
+	const streakValue = calculateStreak(userHabits);
 
 	const onRefresh = () => {
 		setRefreshing(true);
@@ -151,7 +118,7 @@ export const useProgression = () => {
 		setTodayScore(todayScoreValue);
 		setHabitCompletion(habitCompletionValue);
 		setComparedToYesterday(comparedToYesterdayValue);
-		setStreak(streakValue); // Mettre à jour la streak
+		setStreak(streakValue);
 
 		return () => {
 			abortController.current?.abort();
@@ -181,5 +148,6 @@ export const useProgression = () => {
 		habitCompletionValue,
 		todayScoreValue,
 		updateTodayScore,
+		calculateStreak,
 	};
 };

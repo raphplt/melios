@@ -1,27 +1,28 @@
 import { View, Text, Pressable } from "react-native";
-import { Habit } from "../../type/habit";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
 import { getHabitById } from "@db/habits";
 import CardPlaceHolder from "@components/Habits/CardPlaceHolder";
-import { UserHabit } from "../../type/userHabit";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useData } from "@context/DataContext";
 import { LOCAL_STORAGE_MEMBER_HABITS_KEY, setMemberHabit } from "@db/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Habit } from "@type/habit";
+import { UserHabit } from "@type/userHabit";
+import useIndex from "@hooks/useIndex";
 
 export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [habitInfos, setHabitInfos] = useState<Habit>();
 	const { setHabits } = useData();
+	const { getHabitDetails } = useIndex();
 
 	const [loading, setLoading] = useState(true);
-	// console.log(habit);
 
 	useEffect(() => {
-		async function getHabitInfos() {
-			const result = await getHabitById(habit.id);
+		function getHabitInfos() {
+			const result = getHabitDetails(habit.id);
 			setHabitInfos(result);
 			setLoading(false);
 		}
@@ -31,7 +32,7 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	if (loading || !habitInfos) return <CardPlaceHolder />;
 
 	const deleteHabit = async (habit: UserHabit) => {
-		await setMemberHabit(habitInfos);
+		await setMemberHabit(habit);
 
 		setHabits((prev: UserHabit[]) =>
 			prev.filter((h: UserHabit) => h.id !== habit.id)
@@ -43,6 +44,8 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 		let localHabits = storedHabits ? JSON.parse(storedHabits) : [];
 		localHabits = localHabits.filter((h: Habit) => h.id !== habit.id);
 	};
+
+	// console.log(habitInfos);
 
 	return (
 		<View
