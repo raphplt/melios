@@ -32,7 +32,7 @@ export default function EditAccount() {
 	}, [member]);
 
 	const handleReauthenticate = async () => {
-		if (!auth.currentUser) return;
+		if (!auth.currentUser?.email) return;
 		const credential = EmailAuthProvider.credential(
 			auth.currentUser.email,
 			password

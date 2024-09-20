@@ -34,7 +34,10 @@ export default function EditGoals() {
 					backgroundColor: theme.colors.backgroundSecondary,
 				}}
 			>
-				<Text className={title} style={{ fontFamily: "Baskerville" }}>
+				<Text
+					className={title}
+					style={{ fontFamily: "Baskerville", color: theme.colors.text }}
+				>
 					Aspects
 				</Text>
 				{Questions.find((q) => q.slug === "aspects")?.answers.map(
@@ -53,7 +56,12 @@ export default function EditGoals() {
 									color={theme.colors.grayPrimary}
 								/>
 							)}
-							<Text className="text-[16px] ml-1">{aspect.answer}</Text>
+							<Text
+								className="text-[16px] ml-1"
+								style={{ color: theme.colors.textTertiary }}
+							>
+								{aspect.answer}
+							</Text>
 						</View>
 					)
 				)}
@@ -66,7 +74,10 @@ export default function EditGoals() {
 					backgroundColor: theme.colors.backgroundSecondary,
 				}}
 			>
-				<Text className={title} style={{ fontFamily: "Baskerville" }}>
+				<Text
+					className={title}
+					style={{ fontFamily: "Baskerville", color: theme.colors.text }}
+				>
 					Objectifs
 				</Text>
 				{Questions.find((q) => q.slug === "objectifs")?.answers.map(
@@ -85,7 +96,12 @@ export default function EditGoals() {
 									color={theme.colors.grayPrimary}
 								/>
 							)}
-							<Text className="text-[16px] ml-1">{objectif.answer}</Text>
+							<Text
+								className="text-[16px] ml-1"
+								style={{ color: theme.colors.textTertiary }}
+							>
+								{objectif.answer}
+							</Text>
 						</View>
 					)
 				)}
@@ -98,7 +114,10 @@ export default function EditGoals() {
 					backgroundColor: theme.colors.backgroundSecondary,
 				}}
 			>
-				<Text className={title} style={{ fontFamily: "Baskerville" }}>
+				<Text
+					className={title}
+					style={{ fontFamily: "Baskerville", color: theme.colors.text }}
+				>
 					Motivation
 				</Text>
 				{Questions.find((q) => q.slug === "motivation")?.answers.map(
@@ -117,7 +136,12 @@ export default function EditGoals() {
 									color={theme.colors.grayPrimary}
 								/>
 							)}
-							<Text className="text-[16px] ml-1">{motivation.answer}</Text>
+							<Text
+								className="text-[16px] ml-1"
+								style={{ color: theme.colors.textTertiary }}
+							>
+								{motivation.answer}
+							</Text>
 						</View>
 					)
 				)}
@@ -130,7 +154,10 @@ export default function EditGoals() {
 					backgroundColor: theme.colors.backgroundSecondary,
 				}}
 			>
-				<Text className={title} style={{ fontFamily: "Baskerville" }}>
+				<Text
+					className={title}
+					style={{ fontFamily: "Baskerville", color: theme.colors.text }}
+				>
 					Temps
 				</Text>
 				{Questions.find((q) => q.slug === "temps")?.answers.map((temps, index) => (
@@ -148,7 +175,12 @@ export default function EditGoals() {
 								color={theme.colors.grayPrimary}
 							/>
 						)}
-						<Text className="text-[16px] ml-1">{temps.answer}</Text>
+						<Text
+							className="text-[16px] ml-1"
+							style={{ color: theme.colors.textTertiary }}
+						>
+							{temps.answer}
+						</Text>
 					</View>
 				))}
 			</View>

@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Modal, Button } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
@@ -19,6 +19,7 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	const { getHabitDetails } = useIndex();
 
 	const [loading, setLoading] = useState(true);
+	const [modalVisible, setModalVisible] = useState(false);
 
 	useEffect(() => {
 		function getHabitInfos() {
@@ -45,41 +46,93 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 		localHabits = localHabits.filter((h: Habit) => h.id !== habit.id);
 	};
 
-	// console.log(habitInfos);
+	const confirmDeleteHabit = () => {
+		setModalVisible(true);
+	};
+
+	const handleDeleteConfirm = () => {
+		deleteHabit(habit);
+		setModalVisible(false);
+	};
+
+	const handleDeleteCancel = () => {
+		setModalVisible(false);
+	};
 
 	return (
-		<View
-			className=" flex flex-row items-center justify-between mx-auto w-11/12 py-3 px-2 my-[6px] rounded-xl"
-			style={{
-				backgroundColor: theme.colors.cardBackground,
-			}}
-		>
-			<View className="flex flex-row items-center">
-				<View className="w-6">
-					<FontAwesome6
-						name={habitInfos.category.icon || "question"}
-						size={20}
-						color={habitInfos.category.color || theme.colors.text}
-						cla
-					/>
+		<View>
+			<View
+				className="flex flex-row items-center justify-between mx-auto w-11/12 py-3 px-2 my-[6px] rounded-xl"
+				style={{
+					backgroundColor: theme.colors.cardBackground,
+				}}
+			>
+				<View className="flex flex-row items-center">
+					<View className="w-6">
+						<FontAwesome6
+							name={habitInfos.category.icon || "question"}
+							size={20}
+							color={habitInfos.category.color || theme.colors.text}
+						/>
+					</View>
+					<Text
+						className="ml-3 w-10/12 overflow-clip"
+						style={{
+							color: theme.colors.text,
+						}}
+						numberOfLines={1}
+					>
+						{habit.name}
+					</Text>
 				</View>
-				<Text
-					className="ml-3 w-10/12 overflow-clip"
-					style={{
-						color: theme.colors.text,
-					}}
-					numberOfLines={1}
-				>
-					{habit.name}
-				</Text>
+				<Pressable onPress={confirmDeleteHabit}>
+					<Iconify
+						icon="mdi:trash-outline"
+						size={26}
+						color={theme.colors.redPrimary}
+					/>
+				</Pressable>
 			</View>
-			<Pressable onPress={() => deleteHabit(habit)}>
-				<Iconify
-					icon="mdi:trash-outline"
-					size={26}
-					color={theme.colors.redPrimary}
-				/>
-			</Pressable>
+
+			<Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={handleDeleteCancel}
+			>
+				<View className="flex-1 justify-center items-center">
+					<View
+						className="w-11/12 p-5 rounded-xl"
+						style={{
+							backgroundColor: theme.colors.background,
+							borderColor: theme.colors.border,
+							borderWidth: 2,
+						}}
+					>
+						<Text
+							className="text-lg font-semibold mb-4"
+							style={{ color: theme.colors.text }}
+						>
+							Confirmer la suppression
+						</Text>
+						<Text className="mb-4" style={{ color: theme.colors.text }}>
+							Êtes-vous sûr de vouloir supprimer cette habitude ?
+						</Text>
+						<View className="flex flex-row justify-end">
+							<Button
+								title="Annuler"
+								onPress={handleDeleteCancel}
+								color={theme.colors.grayPrimary}
+							/>
+							<Button
+								title="Supprimer"
+								onPress={handleDeleteConfirm}
+								color={theme.colors.redPrimary}
+							/>
+						</View>
+					</View>
+				</View>
+			</Modal>
 		</View>
 	);
 }
