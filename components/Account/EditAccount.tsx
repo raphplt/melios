@@ -16,8 +16,8 @@ export default function EditAccount() {
 	const { theme } = useContext(ThemeContext);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
-	const [initialEmail, setInitialEmail] = useState(""); // État pour l'email initial
-	const [password, setPassword] = useState(""); // État pour le mot de passe
+	const [initialEmail, setInitialEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const { member, setMember } = useData();
 
@@ -27,7 +27,7 @@ export default function EditAccount() {
 		}
 		if (auth.currentUser?.email) {
 			setEmail(auth.currentUser.email);
-			setInitialEmail(auth.currentUser.email); // Initialiser l'email initial
+			setInitialEmail(auth.currentUser.email);
 		}
 	}, [member]);
 
