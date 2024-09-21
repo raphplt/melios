@@ -166,6 +166,13 @@ export default function ModalGoal({
 						/>
 					</View>
 
+					<Text
+						style={{ color: theme.colors.textTertiary }}
+						className="text-center py-3"
+					>
+						{JSON.stringify(selectedHabit)}
+					</Text>
+
 					<Pressable onPress={handleValidate} disabled={!canValidate}>
 						<View
 							style={{

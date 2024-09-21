@@ -3,5 +3,8 @@ export type Goal = {
 	memberId: string;
 	habitId: string;
 	duration: number;
-	createdAt: number;
+	createdAt: {
+		seconds: number;
+		nanoseconds: number;
+	};
 };
