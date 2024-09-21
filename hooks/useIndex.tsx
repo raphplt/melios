@@ -155,32 +155,6 @@ const useIndex = () => {
 		setUserHabits(habits);
 	}, [habits, isLoading]); //TODO vérifier si on doit ajouter completedHabitsData et uncompletedHabitsData
 
-	const getWelcomeMessage = (username: string, hours: number) => {
-		const greeting =
-			hours < 12 ? "Bonjour" : hours < 18 ? "Bon après-midi" : "Bonsoir";
-		return `${greeting}${username ? ", " + username : ""} !`;
-	};
-
-	useEffect(() => {
-		if (abortControllerMember.current) {
-			abortControllerMember.current.abort();
-		}
-
-		const controller = new AbortController();
-		abortControllerMember.current = controller;
-		const signal = controller.signal;
-
-		const username = member?.nom || "";
-		const message = getWelcomeMessage(username, hours);
-
-		if (!signal.aborted) {
-			setWelcomeMessage(message);
-		}
-
-		return () => {
-			controller.abort();
-		};
-	}, [member, hours, setWelcomeMessage]);
 
 	// Functions
 

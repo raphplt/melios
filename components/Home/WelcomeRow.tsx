@@ -8,9 +8,9 @@ export default function WelcomeRow() {
 	const { member } = useData();
 
 	const message = useMemo(() => {
-		if (hours >= 5 && hours < 12) {
+		if (hours >= 5 && hours < 13) {
 			return "🌞 Bonjour";
-		} else if (hours >= 12 && hours < 18) {
+		} else if (hours >= 13 && hours < 18) {
 			return "☀️ Bon après-midi";
 		} else {
 			return "🌜 Bonsoir";

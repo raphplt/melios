@@ -28,6 +28,8 @@ export default function ProfilIcon({
 		}
 	};
 
+	const selected = member?.profilePicture === cosmetic.slug;
+
 	return (
 		<TouchableOpacity
 			onPress={handlePress}
@@ -37,13 +39,10 @@ export default function ProfilIcon({
 			style={{
 				backgroundColor: isGrayedOut
 					? theme.colors.grayPrimary
-					: member?.profilePicture === cosmetic.slug
+					: selected
 					? theme.colors.backgroundTertiary
 					: theme.colors.cardBackground,
-				borderColor:
-					member?.profilePicture === cosmetic.slug
-						? theme.colors.primary
-						: theme.colors.cardBackground,
+				borderColor: selected ? theme.colors.primary : theme.colors.cardBackground,
 				borderWidth: 1,
 				opacity: isGrayedOut ? 0.5 : 1,
 			}}
@@ -65,8 +64,11 @@ export default function ProfilIcon({
 				<Text
 					className="mx-1 font-semibold "
 					style={{
-						textDecorationLine: !isGrayedOut ? "line-through" : "none",
-						color: theme.colors.text,
+						color: isGrayedOut
+							? theme.colors.text
+							: selected
+							? theme.colors.primary
+							: theme.colors.yellowPrimary,
 					}}
 				>
 					{cosmetic.price}
@@ -77,7 +79,7 @@ export default function ProfilIcon({
 					<Iconify
 						icon="material-symbols:trophy"
 						size={20}
-						color={theme.colors.yellowPrimary}
+						color={selected ? theme.colors.primary : theme.colors.yellowPrimary}
 					/>
 				)}
 			</View>
