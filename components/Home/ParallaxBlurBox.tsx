@@ -20,7 +20,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({ position, children }) => {
 			className="absolute z-30 px-3 py-2 rounded-lg overflow-hidden"
 		>
 			<BlurView
-				intensity={70}
+				intensity={75}
 				style={styles.blurView}
 				tint={isDayTime ? "light" : "dark"}
 			/>

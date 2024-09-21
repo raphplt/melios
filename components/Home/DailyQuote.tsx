@@ -28,7 +28,7 @@ export default function DailyQuote() {
 				backgroundColor: theme.colors.blueSecondary,
 			}}
 		>
-			<View className="my-4 mx-5">
+			<View className="my-4 mx-4">
 				<Text
 					className="text-[16px] leading-6"
 					style={{

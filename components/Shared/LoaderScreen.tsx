@@ -2,7 +2,7 @@ import { ThemeContext } from "@context/ThemeContext";
 import { useContext } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 
-export default function LoaderScreen({ text }: { text: string }) {
+export default function LoaderScreen({ text }: { text?: string }) {
 	const { theme } = useContext(ThemeContext);
 
 	return (

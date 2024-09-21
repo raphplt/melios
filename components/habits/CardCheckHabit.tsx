@@ -69,7 +69,6 @@ function CardCheckHabit({
 	useEffect(() => {
 		async function getHabitInfos() {
 			const result = getHabitDetails(habit.id);
-			// const result = await getHabitById(habit.id);
 			setHabitInfos(result);
 			setLoading(false);
 		}
@@ -91,7 +90,6 @@ function CardCheckHabit({
 
 	if (loading || !habitInfos) return <CardPlaceHolder />;
 
-	// Go to habit detail
 	const goHabitDetail = () => {
 		setCurrentHabit({
 			habit: habitInfos,

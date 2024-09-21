@@ -65,6 +65,7 @@ export default function ProfilIcon({
 				<Text
 					className="mx-1 font-semibold "
 					style={{
+						textDecorationLine: !isGrayedOut ? "line-through" : "none",
 						color: theme.colors.text,
 					}}
 				>

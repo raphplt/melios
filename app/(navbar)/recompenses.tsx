@@ -6,6 +6,7 @@ import { ThemeContext } from "@context/ThemeContext";
 import MarketCosmetics from "@components/Recompenses/MarketCosmetics";
 import AlertBanner from "@components/Recompenses/AlertBanner";
 import { useTabBarPadding } from "@hooks/useTabBar";
+import PointsBox from "@components/Recompenses/PointsBox";
 
 export default function Recompenses() {
 	const { theme } = useContext(ThemeContext);
@@ -21,22 +22,7 @@ export default function Recompenses() {
 				paddingTop: StatusBar.currentHeight,
 			}}
 		>
-			<View
-				className="flex flex-row justify-between items-center my-3 mx-auto rounded-lg py-4 px-3 w-11/12"
-				style={{
-					backgroundColor: theme.colors.primary,
-				}}
-			>
-				<Text
-					className="text-center text-lg"
-					style={{
-						color: theme.colors.textSecondary,
-					}}
-				>
-					Mes points
-				</Text>
-				<ViewPoints />
-			</View>
+			<PointsBox />
 			<MarketCosmetics />
 		</View>
 	);

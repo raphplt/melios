@@ -1,23 +1,30 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { getAllCosmeticsIcons } from "@db/cosmetics";
 import { ProfileCosmetic } from "@type/cosmetics";
-import getIcon from "@utils/cosmeticsUtils";
 import { useContext, useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import ProfilIcon from "./ProfilIcon";
+import LoaderScreen from "@components/Shared/LoaderScreen";
+import CosmeticPlaceHolder from "./CosmeticPlaceHolder";
+import { Iconify } from "react-native-iconify";
 
 export default function MarketCosmetics() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);
 	const { theme } = useContext(ThemeContext);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		// Fetch cosmetics
 		async function fetchCosmetics() {
 			const snapshot = await getAllCosmeticsIcons();
 			setCosmetics(snapshot);
+			setLoading(false);
 		}
 		fetchCosmetics();
 	}, []);
+
+	const placeholders = Array.from({ length: 12 }, (_, index) => ({
+		id: index.toString(),
+	}));
 
 	return (
 		<View
@@ -26,20 +33,31 @@ export default function MarketCosmetics() {
 				flex: 1,
 			}}
 		>
-			<Text
-				style={{
-					color: theme.colors.text,
-					fontFamily: "BaskervilleBold",
-				}}
-				className="w-11/12 mx-auto my-3 text-lg pb-1"
-			>
-				Marché des cosmétiques
-			</Text>
+			<View className=" w-11/12 mx-auto py-3">
+				<View className="flex flex-row items-center">
+					<Iconify icon="mdi:palette" size={24} color={theme.colors.text} />
+					<Text
+						style={{
+							color: theme.colors.text,
+							fontFamily: "BaskervilleBold",
+						}}
+						className="text-lg mx-2"
+					>
+						Cosmétiques
+					</Text>
+				</View>
+			</View>
 			<FlatList
-				data={cosmetics.sort((a, b) => a.price - b.price)}
+				data={
+					loading
+						? (placeholders as any)
+						: cosmetics.sort((a, b) => a.price - b.price)
+				}
 				className="w-[95%] mx-auto"
 				keyExtractor={(item) => item.id.toString()}
-				renderItem={({ item }) => <ProfilIcon cosmetic={item} />}
+				renderItem={({ item }) =>
+					loading ? <CosmeticPlaceHolder /> : <ProfilIcon cosmetic={item} />
+				}
 				numColumns={3}
 				showsVerticalScrollIndicator={false}
 			/>

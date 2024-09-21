@@ -13,7 +13,7 @@ export default function ViewPoints() {
 		<View className="flex flex-row items-center justify-between">
 			<Text
 				style={{
-					color: theme.colors.textSecondary,
+					color: theme.colors.primary,
 				}}
 				className="font-semibold mr-1 text-[16px]"
 			>
@@ -24,7 +24,7 @@ export default function ViewPoints() {
 			<Text
 				className="font-semibold mr-1 text-[16px] ml-3"
 				style={{
-					color: theme.colors.textSecondary,
+					color: theme.colors.primary,
 				}}
 			>
 				{points.rewards}
