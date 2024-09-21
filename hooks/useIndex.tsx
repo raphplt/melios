@@ -95,7 +95,7 @@ const useIndex = () => {
 				}
 			}
 		},
-		[userHabits] // Ajoute la dépendance correcte ici.
+		[userHabits]
 	);
 
 	const fetchMemberInfosData = useCallback(

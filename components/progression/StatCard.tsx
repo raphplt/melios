@@ -26,11 +26,11 @@ export default function StatCard({
 				style={{
 					color: theme.colors.text,
 				}}
-				className="w-2/3 font-semibold"
+				className="w-[60%] font-semibold"
 			>
 				{title}
 			</Text>
-			<View className="flex flex-row">
+			<View className="flex flex-row items-center">
 				<View className="mr-2">{icon}</View>
 				<Text
 					className="text-xl font-bold"

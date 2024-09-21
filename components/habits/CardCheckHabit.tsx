@@ -141,10 +141,10 @@ function CardCheckHabit({
 					style={{
 						backgroundColor:
 							isTouched || completed
-								? theme.colors.backgroundSecondary
+								? theme.colors.backgroundTertiary
 								: theme.dark
 								? theme.colors.cardBackground
-								: theme.colors.backgroundTertiary,
+								: theme.colors.backgroundSecondary,
 					}}
 					onTouchStart={() => {
 						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
@@ -171,7 +171,7 @@ function CardCheckHabit({
 								textDecorationLine: completed ? "line-through" : "none",
 								marginLeft: 6,
 							}}
-							className="text-[15px] font-semibold pl-1 w-[80%]"
+							className="text-[16px] font-semibold pl-1 w-[80%]"
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>

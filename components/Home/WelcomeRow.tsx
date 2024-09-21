@@ -1,11 +1,10 @@
 import { useData } from "@context/DataContext";
-import { Ionicons } from "@expo/vector-icons";
 import useIndex from "@hooks/useIndex";
 import { useMemo } from "react";
-import { Animated, Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function WelcomeRow() {
-	const { theme, welcomeMessage, hours, isDayTime } = useIndex();
+	const { hours, isDayTime } = useIndex();
 	const { member } = useData();
 
 	const message = useMemo(() => {

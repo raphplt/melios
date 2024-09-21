@@ -14,12 +14,14 @@ const CalendarHabits = () => {
 					calendarBackground: theme.colors.background,
 					dayTextColor: "#f1f1f1",
 					monthTextColor: "#ffffff",
+					arrowColor: theme.colors.primary,
 			  }
 			: {
 					agendaKnobColor: "#f2f2f2",
 					calendarBackground: "#ffffff",
 					dayTextColor: "#000000",
 					monthTextColor: "#000000",
+					arrowColor: theme.colors.primary,
 			  };
 	}, [theme.dark]);
 
