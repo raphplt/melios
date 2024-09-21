@@ -62,9 +62,15 @@ const TabLayout: React.FC = () => {
 				/>
 				<Tabs.Screen
 					name="progression"
-					options={createTabOptions("Progression", undefined, () => (
-						<LayoutTopRight />
-					))}
+					options={createTabOptions(
+						"Progression",
+						undefined,
+						() => (
+							<LayoutTopRight />
+						),
+						undefined,
+						theme.colors.backgroundTertiary // Change the header background color here
+					)}
 				/>
 				<Tabs.Screen
 					name="recompenses"

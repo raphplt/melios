@@ -34,6 +34,7 @@ const Progression: React.FC = () => {
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
 			>
+
 				{/* <ProgressionHeader
 				activeButton={activeButton}
 				handlePress={setActiveButton}

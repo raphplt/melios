@@ -8,6 +8,7 @@ import { View, Text, Image } from "react-native";
 
 import { TouchableOpacity } from "react-native";
 import { getMemberInfos, updateProfilePicture } from "@db/member";
+import { Iconify } from "react-native-iconify";
 
 export default function ProfilIcon({
 	cosmetic,
@@ -59,6 +60,7 @@ export default function ProfilIcon({
 				{cosmetic.name}
 			</Text>
 			<Image source={getIcon(cosmetic.slug)} className="w-24 h-24" />
+
 			<View className="flex flex-row items-center justify-center py-2">
 				<Text
 					className="mx-1 font-semibold "
@@ -68,7 +70,15 @@ export default function ProfilIcon({
 				>
 					{cosmetic.price}
 				</Text>
-				<MoneyOdyssee />
+				{isGrayedOut ? (
+					<MoneyOdyssee />
+				) : (
+					<Iconify
+						icon="material-symbols:trophy"
+						size={20}
+						color={theme.colors.yellowPrimary}
+					/>
+				)}
 			</View>
 		</TouchableOpacity>
 	);

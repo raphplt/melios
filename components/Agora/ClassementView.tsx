@@ -28,7 +28,7 @@ export default function ClassementView({
 
 	const isUserVisible = userPosition >= 0 && userPosition < displayedItemCount;
 
-	console.log("reward", sortedRewards);
+	// console.log("reward", sortedRewards);
 
 	return (
 		<View className="w-full pb-10">
