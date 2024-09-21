@@ -11,8 +11,11 @@ import { useData } from "@context/DataContext";
 import { disconnectUser } from "@db/users";
 import CustomModal from "@components/Shared/Modal";
 import CustomPressable from "@components/Shared/CustomPressable";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 export default function Preferences() {
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { theme, toggleTheme } = useContext(ThemeContext);
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 	const {
@@ -63,6 +66,10 @@ export default function Preferences() {
 		setModalVisible(true);
 	};
 
+	const goToHelp = () => {
+		navigation.navigate("help");
+	};
+
 	return (
 		<AccountBlock title="Préférences">
 			<RowBlock
@@ -102,6 +109,7 @@ export default function Preferences() {
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}
+				onPress={goToHelp}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 			<RowBlock

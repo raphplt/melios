@@ -125,7 +125,7 @@ export default function EditAccount() {
 					onPress={handleUpdateProfile}
 					disabled={loading}
 					style={{ backgroundColor: theme.colors.primary }}
-					className="h-10 w-full rounded-xl flex items-center justify-center"
+					className="h-10 w-full rounded-3xl flex items-center justify-center"
 				>
 					<Text style={{ color: "white" }}>
 						{loading ? "Mise à jour..." : "Mettre à jour"}

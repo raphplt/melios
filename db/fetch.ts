@@ -15,7 +15,6 @@ export const fetchCollectionData = async (
 ) => {
 	try {
 		if (!forceRefresh) {
-			console.log(storageKey);
 			const storedData = await AsyncStorage.getItem(storageKey);
 			if (storedData) {
 				// console.log("Stored data: ", JSON.parse(storedData).slice(0, 10));

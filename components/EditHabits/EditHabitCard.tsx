@@ -115,20 +115,32 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 						>
 							Confirmer la suppression
 						</Text>
-						<Text className="mb-4" style={{ color: theme.colors.text }}>
-							Êtes-vous sûr de vouloir supprimer cette habitude ?
+						<Text
+							className="mb-4 py-2 text-[16px]"
+							style={{ color: theme.colors.text }}
+						>
+							Êtes-vous sûr de vouloir supprimer l'habitude {habit.name} ?
 						</Text>
 						<View className="flex flex-row justify-end">
-							<Button
-								title="Annuler"
+							<Pressable
 								onPress={handleDeleteCancel}
-								color={theme.colors.grayPrimary}
-							/>
-							<Button
-								title="Supprimer"
+								className="rounded-3xl px-5 py-3 mr-2"
+								style={{ backgroundColor: theme.colors.grayPrimary }}
+							>
+								<Text className="font-semibold" style={{ color: "white" }}>
+									Annuler
+								</Text>
+							</Pressable>
+
+							<Pressable
 								onPress={handleDeleteConfirm}
-								color={theme.colors.redPrimary}
-							/>
+								className="rounded-3xl px-5 py-3 mr-2"
+								style={{ backgroundColor: theme.colors.redPrimary }}
+							>
+								<Text className="font-semibold" style={{ color: "white" }}>
+									Supprimer
+								</Text>
+							</Pressable>
 						</View>
 					</View>
 				</View>

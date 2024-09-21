@@ -177,8 +177,15 @@ function MainNavigator() {
 							headerShown: false,
 						}}
 					/>
+					<Stack.Screen
+						name="help"
+						options={{
+							title: "Aide",
+							headerShadowVisible: false,
+						}}
+					/>
 				</Stack>
-				{isOpen && <NotificationBox />}
+				{/* {isOpen && <NotificationBox />} */}
 			</ThemeProvider>
 		</ThemeContext.Provider>
 	);

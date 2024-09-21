@@ -2,9 +2,10 @@ import { Calendar } from "react-native-calendars";
 import useCompletedHabitPeriods from "@hooks/useCompletedHabitPeriods";
 import { useContext, useMemo } from "react";
 import { ThemeContext } from "@context/ThemeContext";
+import { ActivityIndicator, View } from "react-native";
 
 const CalendarHabits = () => {
-	const completedHabitPeriods = useCompletedHabitPeriods();
+	const { completedHabitPeriods, loading } = useCompletedHabitPeriods();
 	const { theme } = useContext(ThemeContext);
 
 	const colors = useMemo(() => {
@@ -29,6 +30,14 @@ const CalendarHabits = () => {
 		() => (theme.dark ? "dark" : "light"),
 		[theme.dark]
 	);
+
+	if (loading) {
+		return (
+			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+				<ActivityIndicator size="large" color={theme.colors.primary} />
+			</View>
+		);
+	}
 
 	return (
 		<Calendar

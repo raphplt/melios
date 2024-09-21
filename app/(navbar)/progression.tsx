@@ -10,6 +10,7 @@ import { useProgression } from "@hooks/useProgression";
 import { DarkTheme } from "../../constants/Theme";
 import Stats from "@components/Progression/Stats";
 import CalendarHabits from "@components/Progression/Calendar";
+import Goal from "@components/Progression/Goal";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
@@ -34,7 +35,6 @@ const Progression: React.FC = () => {
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
 			>
-
 				{/* <ProgressionHeader
 				activeButton={activeButton}
 				handlePress={setActiveButton}
@@ -42,6 +42,8 @@ const Progression: React.FC = () => {
 				/> */}
 				<Streak />
 				<Stats />
+				<Goal />
+
 				<CalendarHabits />
 
 				{/* <ProgressionGraph

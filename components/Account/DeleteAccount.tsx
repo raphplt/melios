@@ -55,7 +55,7 @@ export default function DeleteAccount() {
 						<Pressable
 							onPress={handleDeleteAccount}
 							style={{ backgroundColor: theme.colors.redSecondary }}
-							className="px-4 py-2 rounded-lg flex flex-row items-center"
+							className="px-4 py-2 rounded-xl flex flex-row items-center"
 						>
 							<Iconify
 								icon="material-symbols:warning"
@@ -75,7 +75,7 @@ export default function DeleteAccount() {
 						<Pressable
 							onPress={() => setShowPasswordInput(true)}
 							style={{ backgroundColor: theme.colors.redPrimary }}
-							className="px-4 py-2 rounded-lg w-11/12"
+							className="px-4 py-2 rounded-3xl w-11/12"
 						>
 							<Text
 								className="text-[16px] text-center font-semibold"
