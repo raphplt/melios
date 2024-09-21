@@ -1,8 +1,7 @@
-import { View, Text, Pressable, Modal, Button } from "react-native";
+import { View, Text, Pressable, Modal } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
-import { getHabitById } from "@db/habits";
 import CardPlaceHolder from "@components/Habits/CardPlaceHolder";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useData } from "@context/DataContext";

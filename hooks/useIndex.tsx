@@ -121,6 +121,10 @@ const useIndex = () => {
 		return habitsData.find((habit: Habit) => habit.id === habitId);
 	};
 
+	const getUserHabitDetails = (habitId: string) => {
+		return userHabits.find((habit: UserHabit) => habit.id === habitId);
+	};
+
 	// Effects
 	useEffect(() => {
 		if (!isFocused) return;
@@ -154,7 +158,6 @@ const useIndex = () => {
 		setLoading(isLoading);
 		setUserHabits(habits);
 	}, [habits, isLoading]); //TODO vérifier si on doit ajouter completedHabitsData et uncompletedHabitsData
-
 
 	// Functions
 
@@ -276,7 +279,6 @@ const useIndex = () => {
 		}).start();
 	}, [rotation]);
 
-
 	return {
 		theme,
 		navigation,
@@ -313,6 +315,7 @@ const useIndex = () => {
 		resetShowNext,
 		resetShowMissed,
 		getHabitDetails,
+		getUserHabitDetails,
 	};
 };
 
