@@ -6,8 +6,13 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useData } from "@context/DataContext";
 import Slider from "@react-native-community/slider";
 import { setMemberGoal } from "@db/goal";
+import { Habit } from "@type/habit";
+import useIndex from "@hooks/useIndex";
+import MoneyMelios from "@components/Svg/MoneyMelios";
+import { calcReward } from "@utils/goal";
+import { useGoal } from "@context/GoalsContext";
 
-export default function ModalGoal({
+export default function ModalAddGoal({
 	visible,
 	setVisible,
 	onValidate,
@@ -18,6 +23,8 @@ export default function ModalGoal({
 }) {
 	const { theme } = useContext(ThemeContext);
 	const { habits, member } = useData();
+	const { getHabitDetails } = useIndex();
+	const { goals, setGoals } = useGoal();
 
 	const habitOptions = habits.map((habit) => ({
 		label: habit.name,
@@ -25,20 +32,23 @@ export default function ModalGoal({
 	}));
 
 	const [selectedHabit, setSelectedHabit] = useState<any>();
-	const [duration, setDuration] = useState<number>(1);
+	const [duration, setDuration] = useState<number>(3);
 	const [canValidate, setCanValidate] = useState<boolean>(false);
+	const [selectedHabitDetail, setSelectedHabitDetail] = useState<Habit>();
 
 	const handleValidate = async () => {
-		if (selectedHabit && duration && member && member.uid) {
+		if (selectedHabitDetail && duration && member && member.uid) {
 			const goal = {
 				memberId: member.uid,
-				habitId: selectedHabit.value,
+				habitId: selectedHabitDetail.id,
 				duration,
 				createdAt: new Date(),
 			};
 			try {
-				await setMemberGoal(goal);
+				const snapshot = await setMemberGoal(goal);
+
 				onValidate && onValidate();
+				setGoals([...goals, snapshot]);
 				setVisible(false);
 			} catch (error) {
 				console.error("Erreur lors de l'ajout de l'objectif: ", error);
@@ -55,6 +65,15 @@ export default function ModalGoal({
 	}, [selectedHabit, duration]);
 
 	const block = "w-11/12 mx-auto py-2";
+
+	useEffect(() => {
+		if (selectedHabit) {
+			const habitDetail = getHabitDetails(selectedHabit.value);
+			if (habitDetail) {
+				setSelectedHabitDetail(habitDetail);
+			}
+		}
+	}, [selectedHabit]);
 
 	return (
 		<Modal
@@ -154,7 +173,7 @@ export default function ModalGoal({
 
 						<Slider
 							className="w-11/12 mx-auto"
-							minimumValue={1}
+							minimumValue={3}
 							maximumValue={30}
 							minimumTrackTintColor={theme.colors.primary}
 							maximumTrackTintColor={theme.colors.textTertiary}
@@ -166,12 +185,38 @@ export default function ModalGoal({
 						/>
 					</View>
 
-					<Text
-						style={{ color: theme.colors.textTertiary }}
-						className="text-center py-3"
-					>
-						{JSON.stringify(selectedHabit)}
-					</Text>
+					{selectedHabitDetail && (
+						<View className={block}>
+							<View className="flex flex-row justify-between items-center">
+								<View className="flex flex-row items-center">
+									<Iconify
+										icon="mdi-currency-usd"
+										size={24}
+										color={theme.colors.primary}
+									/>
+									<Text
+										style={{
+											color: theme.colors.text,
+										}}
+										className="text-[16px] font-semibold py-3 "
+									>
+										Récompense:{" "}
+									</Text>
+								</View>
+								<View className="flex flex-row items-center">
+									<Text
+										style={{
+											color: theme.colors.text,
+										}}
+										className="mx-1 font-semibold text-[16px]"
+									>
+										{calcReward({ duration: duration, habit: selectedHabitDetail }) || 0}
+									</Text>
+									<MoneyMelios />
+								</View>
+							</View>
+						</View>
+					)}
 
 					<Pressable onPress={handleValidate} disabled={!canValidate}>
 						<View

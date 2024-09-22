@@ -2,24 +2,13 @@ import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable, Dimensions } from "react-native";
 import { Iconify } from "react-native-iconify";
-import ModalGoal from "./ModalGoal";
-import { getMemberGoal } from "@db/goal";
-import { useData } from "@context/DataContext";
+import ModalGoal from "./ModalAddGoal";
 
 export default function AddGoal() {
 	const { theme } = useContext(ThemeContext);
 	const [visible, setVisible] = useState(false);
-	const { member } = useData();
 
 	const { width } = Dimensions.get("window");
-
-	useEffect(() => {
-		const getGoal = async () => {
-			if (!member?.uid) return;
-			await getMemberGoal(member?.uid);
-		};
-		getGoal();
-	}, []);
 
 	return (
 		<View

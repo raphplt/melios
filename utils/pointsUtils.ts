@@ -7,7 +7,8 @@ export const extractPoints = (snapshotRewards: any) => {
 	};
 };
 
-export const getHabitPoints = (habit: Habit) => {
+export const getHabitPoints = (habit?: Habit) => {
+	if (!habit) return { odyssee: 0, rewards: 0 };
 	return {
 		odyssee: Math.round(habit.reward * habit.difficulty),
 		rewards: habit.difficulty,

@@ -12,6 +12,7 @@ import Stats from "@components/Progression/Stats";
 import CalendarHabits from "@components/Progression/Calendar";
 import Goal from "@components/Progression/CurrentGoal";
 import GoalSection from "@components/Progression/GoalSection";
+import { GoalProvider } from "@context/GoalsContext";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
@@ -26,27 +27,28 @@ const Progression: React.FC = () => {
 	} = useProgression();
 
 	return (
-		<ScrollView
-			style={{
-				backgroundColor: theme.colors.background,
-			}}
-			showsVerticalScrollIndicator={false}
-			refreshControl={
-				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-			}
-		>
-			{/* <ProgressionHeader
+		<GoalProvider>
+			<ScrollView
+				style={{
+					backgroundColor: theme.colors.background,
+				}}
+				showsVerticalScrollIndicator={false}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+			>
+				{/* <ProgressionHeader
 				activeButton={activeButton}
 				handlePress={setActiveButton}
 				theme={theme}
 				/> */}
-			<Streak />
-			<Stats />
-			<GoalSection />
+				<Streak />
+				<Stats />
+				<GoalSection />
 
-			<CalendarHabits />
+				<CalendarHabits />
 
-			{/* <ProgressionGraph
+				{/* <ProgressionGraph
 				habitLastDaysCompleted={habitCompletionValue}
 				activeButton={activeButton}
 				theme={theme}
@@ -65,7 +67,8 @@ const Progression: React.FC = () => {
 					theme={theme}
 					/>
 					</ScrollView> */}
-		</ScrollView>
+			</ScrollView>
+		</GoalProvider>
 	);
 };
 
