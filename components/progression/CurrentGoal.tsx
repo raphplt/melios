@@ -44,23 +44,18 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 			const today = new Date();
 			today.setHours(0, 0, 0, 0);
 
-			console.log("today", goal.duration);
-
 			for (let i = 0; i < goal.duration; i++) {
 				const currentDate = new Date(startDate);
-				console.log("currentDate", currentDate, "today", today);
 				currentDate.setDate(startDate.getDate() + i);
 				currentDate.setHours(0, 0, 0, 0); // Réinitialiser les heures, minutes, secondes et millisecondes
 
 				if (currentDate > today) {
-					console.log("break");
 					break;
 				}
 
 				const log = userHabit.logs.find(
 					(log) => new Date(log.date).toDateString() === currentDate.toDateString()
 				);
-				console.log("log", log);
 
 				if (log && log.done) {
 					streak++;

@@ -1,11 +1,8 @@
 import { FlatList, View, Dimensions } from "react-native";
 import AddGoal from "./AddGoal";
-import { useEffect, useState } from "react";
-import { Goal } from "@type/goal";
 import CurrentGoal from "./CurrentGoal";
-import { getMemberGoals } from "@db/goal";
-import { useData } from "@context/DataContext";
 import { useGoal } from "@context/GoalsContext";
+import GoalPlaceHolder from "./GoalPlaceHolder";
 
 export default function GoalSection() {
 	const { goals, loadingGoals } = useGoal();
@@ -14,7 +11,7 @@ export default function GoalSection() {
 
 	const goalWithAddButton = [...goals, { id: "add_goal_button" } as any];
 
-	if (loadingGoals) return <View>Loading...</View>;
+	if (loadingGoals) return <GoalPlaceHolder />;
 
 	return (
 		<View className="my-1">

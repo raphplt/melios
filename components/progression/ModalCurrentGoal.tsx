@@ -8,6 +8,9 @@ import { Habit } from "@type/habit";
 import { calcReward } from "@utils/goal";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useGoal } from "@context/GoalsContext";
+import { setRewards } from "@db/rewards";
+import * as Progress from "react-native-progress";
+import usePoints from "@hooks/usePoints";
 
 export default function ModalCurrentGoal({
 	visible,
@@ -27,6 +30,7 @@ export default function ModalCurrentGoal({
 	const { theme } = useContext(ThemeContext);
 	const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 	const { goals, setGoals } = useGoal();
+	const { addRewardPoints } = usePoints();
 
 	const block = "w-11/12 mx-auto py-2";
 
@@ -45,6 +49,21 @@ export default function ModalCurrentGoal({
 		} catch (error) {
 			console.error("Erreur lors de la suppression de l'objectif: ", error);
 		}
+	};
+
+	const completed = completedDays.length >= goal.duration;
+
+	const handleEndGoal = async () => {
+		const reward = calcReward({ duration: goal.duration, habit: habit });
+		if (!reward) return;
+
+		await setRewards("rewards", reward);
+		addRewardPoints(reward);
+
+		await deleteMemberGoal(goal.memberId, goal.id);
+		setGoals(goals.filter((g) => g.id !== goal.id));
+		if (onValidate) onValidate();
+		setVisible(false);
 	};
 
 	return (
@@ -133,32 +152,46 @@ export default function ModalCurrentGoal({
 							}}
 							className="text-[16px] font-semibold py-3 "
 						>
-							Jours complétés:
+							Avancement
 						</Text>
-						{completedDays.map((day, index) => (
-							<Text
-								key={index}
-								style={{
-									color: theme.colors.text,
-								}}
-								className="text-[14px] py-1"
-							>
-								{day.toDateString()}
-							</Text>
-						))}
+						<Progress.Bar
+							progress={completedDays.length / goal.duration}
+							className="w-full"
+							height={8}
+							borderColor="transparent"
+							unfilledColor={theme.colors.border}
+							color={theme.colors.primary}
+							width={null}
+							useNativeDriver={true}
+							borderWidth={0}
+						/>
 					</View>
 
-					<Pressable
-						onPress={showConfirmPopup}
-						style={{
-							backgroundColor: theme.colors.redPrimary,
-						}}
-						className="px-5 py-2 rounded-xl mx-auto my-3 w-11/12 "
-					>
-						<Text className="font-semibold text-white text-center">
-							Supprimer l'objectif
-						</Text>
-					</Pressable>
+					{completed ? (
+						<Pressable
+							onPress={handleEndGoal}
+							style={{
+								backgroundColor: theme.colors.greenPrimary,
+							}}
+							className="px-5 py-2 rounded-xl mx-auto my-3 w-11/12 "
+						>
+							<Text className="font-semibold text-white text-center">
+								Terminer l'objectif
+							</Text>
+						</Pressable>
+					) : (
+						<Pressable
+							onPress={showConfirmPopup}
+							style={{
+								backgroundColor: theme.colors.redPrimary,
+							}}
+							className="px-5 py-2 rounded-xl mx-auto my-3 w-11/12 "
+						>
+							<Text className="font-semibold text-white text-center">
+								Supprimer l'objectif
+							</Text>
+						</Pressable>
+					)}
 				</View>
 			</View>
 

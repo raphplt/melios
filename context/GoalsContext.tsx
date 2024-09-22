@@ -19,14 +19,14 @@ export type GoalContextProps = {
 export const GoalContext = createContext<GoalContextProps>({
 	goals: [],
 	setGoals: () => {},
-	loadingGoals: false,
+	loadingGoals: true,
 	setLoadingGoals: () => {},
 });
 
 export const GoalProvider = ({ children }: { children: ReactNode }) => {
 	const [goals, setGoals] = useState<Goal[]>([]);
 	const { member } = useData();
-	const [loadingGoals, setLoadingGoals] = useState<boolean>(false);
+	const [loadingGoals, setLoadingGoals] = useState<boolean>(true);
 
 	// Get goals
 	useEffect(() => {

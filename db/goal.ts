@@ -19,10 +19,10 @@ export const getMemberGoals = async (memberId: string) => {
 	try {
 		const storedGoal = await AsyncStorage.getItem(LOCAL_STORAGE_GOAL_KEY);
 
-		// if (storedGoal) {
-		// 	console.log("Fetching goals from local storage");
-		// 	return JSON.parse(storedGoal);
-		// }
+		if (storedGoal) {
+			console.log("Fetching goals from local storage");
+			return JSON.parse(storedGoal);
+		}
 
 		console.log("Fetching goals from firestore");
 		const goalCollectionRef = collection(db, "goals");

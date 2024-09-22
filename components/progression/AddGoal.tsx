@@ -2,7 +2,7 @@ import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
 import { View, Text, Pressable, Dimensions } from "react-native";
 import { Iconify } from "react-native-iconify";
-import ModalGoal from "./ModalAddGoal";
+import ModalAddGoal from "./ModalAddGoal";
 
 export default function AddGoal() {
 	const { theme } = useContext(ThemeContext);
@@ -45,7 +45,7 @@ export default function AddGoal() {
 				/>
 			</Pressable>
 
-			<ModalGoal visible={visible} setVisible={setVisible} />
+			<ModalAddGoal visible={visible} setVisible={setVisible} />
 		</View>
 	);
 }
