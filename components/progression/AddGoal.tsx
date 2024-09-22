@@ -12,17 +12,17 @@ export default function AddGoal() {
 
 	return (
 		<View
-			className="rounded-xl flex-1 my-1"
+			className="flex-1 my-2"
 			style={{
 				width: width,
 			}}
 		>
 			<Pressable
-				className="mx-auto flex items-center justify-start flex-row px-2 py-3 rounded-xl"
+				className="mx-auto flex items-center justify-start flex-row px-2 py-1"
 				style={{
-					flex: 1,
+					flexGrow: 1,
 					borderStyle: "dashed",
-					borderRadius: 10,
+					borderRadius: 16,
 					borderWidth: 2,
 					borderColor: theme.colors.primary,
 					width: width * 0.95,
@@ -33,13 +33,13 @@ export default function AddGoal() {
 					style={{
 						color: theme.colors.primary,
 					}}
-					className="text-[16px] font-semibold"
+					className="text-[16px] font-semibold mx-2"
 				>
 					Définir un objectif
 				</Text>
 				<Iconify
 					icon="bi:arrow-right"
-					size={20}
+					size={24}
 					color={theme.colors.primary}
 					style={{ marginLeft: "auto" }}
 				/>

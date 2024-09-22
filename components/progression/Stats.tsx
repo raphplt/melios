@@ -33,20 +33,13 @@ export default function Stats() {
 
 	return (
 		<View
-			className="flex flex-row justify-center w-full py-8 rounded-b-3xl"
+			className="flex flex-row justify-center w-full py-5 rounded-b-3xl"
 			style={{
 				backgroundColor: theme.colors.backgroundTertiary,
 			}}
 		>
-			<StatCard
-				title="Complétées aujourd'hui"
-				value={String(completedHabitsData.length)}
-			/>
-			<StatCard
-				title="Gain du jour"
-				value={String(todayScore)}
-				icon={<MoneyOdyssee />}
-			/>
+			<StatCard title="Complétées" value={String(completedHabitsData.length)} />
+			<StatCard title="Gains" value={String(todayScore)} icon={<MoneyOdyssee />} />
 		</View>
 	);
 }

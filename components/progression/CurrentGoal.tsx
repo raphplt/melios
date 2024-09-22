@@ -9,6 +9,9 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { lightenColor } from "@utils/colors";
 import { Iconify } from "react-native-iconify";
 import ModalCurrentGoal from "./ModalCurrentGoal";
+import * as Progress from "react-native-progress";
+import { calcReward } from "@utils/goal";
+import MoneyMelios from "@components/Svg/MoneyMelios";
 
 export default function CurrentGoal({ goal }: { goal: Goal }) {
 	const { theme } = useContext(ThemeContext);
@@ -47,15 +50,18 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 			for (let i = 0; i < goal.duration; i++) {
 				const currentDate = new Date(startDate);
 				currentDate.setDate(startDate.getDate() + i);
-				currentDate.setHours(0, 0, 0, 0); // Réinitialiser les heures, minutes, secondes et millisecondes
+				currentDate.setHours(0, 0, 0, 0);
 
 				if (currentDate > today) {
 					break;
 				}
 
-				const log = userHabit.logs.find(
-					(log) => new Date(log.date).toDateString() === currentDate.toDateString()
-				);
+				const log =
+					userHabit &&
+					userHabit.logs &&
+					userHabit.logs.find(
+						(log) => new Date(log.date).toDateString() === currentDate.toDateString()
+					);
 
 				if (log && log.done) {
 					streak++;
@@ -96,20 +102,19 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 
 	return (
 		<View
-			className="rounded-xl flex-1 my-1"
+			className="flex-1 my-2"
 			style={{
 				width: width,
 			}}
 		>
 			<Pressable
 				style={{
-					flex: 1,
 					width: width * 0.95,
 					backgroundColor: lightColor || theme.colors.cardBackground,
-					// borderColor: habit.category.color || theme.colors.primary,
-					// borderWidth: 1,
+					borderColor: habit.category.color || theme.colors.primary,
+					// borderWidth: 2,
 				}}
-				className="mx-auto rounded-xl flex px-3 py-2"
+				className="mx-auto rounded-2xl flex px-5 py-2"
 				onPress={() => setVisible(true)}
 			>
 				<View className="flex justify-between flex-row">
@@ -121,7 +126,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 						/>
 						<Text
 							style={{
-								color: habit.category.color || theme.colors.text,
+								color: theme.colors.text,
 							}}
 							className="text-[15px] font-semibold ml-2 "
 						>
@@ -145,46 +150,54 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 							</Text>
 						</View>
 					) : (
-						<View className="flex flex-row items-center " style={{}}>
-							<Text
-								className="font-bold text-[14px]"
-								style={{
-									color: theme.colors.text,
-								}}
-							>
-								{goalStreak}/{goal.duration}
-							</Text>
-							<Ionicons name="flame" size={18} color={streakColor} />
-						</View>
+						<Progress.Circle
+							size={24}
+							progress={completionPercentage / 100}
+							color={habit.category.color || theme.colors.primary}
+							unfilledColor={theme.colors.border}
+							borderWidth={0}
+							animated={true}
+							indeterminate={false}
+							strokeCap="round"
+							accessibilityLabel="Progression de l'objectif"
+						/>
 					)}
 				</View>
-
-				{!isGoalMissed && (
-					<View className="flex items-center justify-start flex-row py-1">
-						{isCompletedToday ? (
-							<Iconify
-								icon="bi:check-circle"
+				<View className="flex flex-row items-center justify-between">
+					{!isGoalMissed && (
+						<View className="flex items-center justify-start flex-row py-2">
+							<Ionicons
+								name={isCompletedToday ? "checkmark-circle" : "ellipse-outline"}
 								size={20}
-								color={theme.colors.greenPrimary}
+								color={
+									isCompletedToday
+										? theme.colors.greenPrimary
+										: theme.colors.textTertiary
+								}
 							/>
-						) : (
-							<Iconify
-								icon="mdi:clock-outline"
-								size={20}
-								color={theme.colors.redPrimary}
-							/>
-						)}
+							<Text
+								style={{
+									color: theme.colors.textTertiary,
+								}}
+								className=" font-semibold ml-1"
+							>
+								Aujourd'hui
+							</Text>
+						</View>
+					)}
 
+					<View className="flex flex-row items-center">
 						<Text
 							style={{
-								color: theme.colors.textTertiary,
+								color: theme.colors.text,
 							}}
-							className="text-[14px] italic ml-1"
+							className="mx-1 font-semibold text-[16px]"
 						>
-							{isCompletedToday ? "Complété" : "A compléter"}
+							{calcReward({ duration: goal.duration, habit: habit }) || 0}
 						</Text>
+						<MoneyMelios width={22} height={22} />
 					</View>
-				)}
+				</View>
 			</Pressable>
 			<ModalCurrentGoal
 				visible={visible}

@@ -1,6 +1,6 @@
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
-import { CombinedHabits } from "@context/HabitsContext";
+import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import useHabitTimer from "@hooks/useHabitTimer";
@@ -11,14 +11,14 @@ import { useContext, useRef } from "react";
 import { Animated, Pressable, Text, View } from "react-native";
 import RewardDetail from "./RewardDetail";
 
-export default function ButtonStartHabit({
-	combinedHabit,
-}: {
-	combinedHabit: CombinedHabits;
-}) {
+export default function ButtonStartHabit() {
 	const { theme } = useContext(ThemeContext);
 	const { startTimer } = useHabitTimer();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+	const { currentHabit } = useHabits();
+
+	if (!currentHabit) return null;
 
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -37,28 +37,18 @@ export default function ButtonStartHabit({
 	};
 
 	const handlePress = () => {
-		startTimer(combinedHabit);
+		startTimer(currentHabit);
 		navigation.navigate("timerHabit");
 	};
 
-	const habitPoints = getHabitPoints(combinedHabit.habit);
+	const habitPoints = getHabitPoints(currentHabit.habit);
 
 	return (
 		<>
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto py-3">
-				<Text
-					className=" font-semibold text-[16px]"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					Lancer l'habitude
-				</Text>
-				<View className="flex flex-row ">
-					<RewardDetail point={habitPoints.rewards} money={<MoneyMelios />} />
-					<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
-				</View>
-			</View>
+			{/* <View className="flex flex-row items-center justify-end w-11/12 mx-auto py-1">
+				<RewardDetail point={habitPoints.rewards} money={<MoneyMelios />} />
+				<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
+			</View> */}
 			<Animated.View
 				style={{
 					transform: [{ scale: scaleAnim }],
@@ -75,7 +65,12 @@ export default function ButtonStartHabit({
 					onTouchCancel={handleTouchEnd}
 				>
 					<View className="flex flex-row items-center">
-						<Ionicons name="play" size={24} color={theme.colors.textSecondary} />
+						<Text className=" font-semibold text-[16px] text-white mx-1">Lancer</Text>
+						<RewardDetail
+							point={habitPoints.rewards}
+							money={<MoneyMelios />}
+							color={theme.colors.textSecondary}
+						/>
 					</View>
 				</Pressable>
 			</Animated.View>

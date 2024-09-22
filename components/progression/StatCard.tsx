@@ -17,7 +17,7 @@ export default function StatCard({
 
 	return (
 		<View
-			className="flex flex-row justify-between items-center w-2/5 mx-2 py-2 px-3 rounded-lg"
+			className="flex flex-row justify-between items-center w-2/5 mx-2 py-2 px-4 rounded-3xl"
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 			}}
@@ -31,15 +31,15 @@ export default function StatCard({
 				{title}
 			</Text>
 			<View className="flex flex-row items-center">
-				<View className="mr-2">{icon}</View>
 				<Text
-					className="text-xl font-bold"
+					className="text-lg font-bold"
 					style={{
 						color: theme.colors.text,
 					}}
 				>
 					{value}
 				</Text>
+				<View className="ml-1">{icon}</View>
 			</View>
 		</View>
 	);

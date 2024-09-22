@@ -31,6 +31,7 @@ const Progression: React.FC = () => {
 			<ScrollView
 				style={{
 					backgroundColor: theme.colors.background,
+					flexGrow: 1,
 				}}
 				showsVerticalScrollIndicator={false}
 				refreshControl={

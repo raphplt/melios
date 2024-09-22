@@ -1,5 +1,9 @@
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
-import { CombinedHabits } from "@context/HabitsContext";
+import {
+	CombinedHabits,
+	HabitsContext,
+	useHabits,
+} from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -10,14 +14,14 @@ import { Animated, Pressable, Text, View } from "react-native";
 import RewardDetail from "./RewardDetail";
 import { Iconify } from "react-native-iconify";
 
-export default function ButtonComplete({
-	combinedHabit,
-}: {
-	combinedHabit: CombinedHabits;
-}) {
+export default function ButtonComplete() {
 	const { theme } = useContext(ThemeContext);
-	const { startTimer } = useHabitTimer();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const { currentHabit } = useHabits();
+
+	if (!currentHabit) return null;
+
+	const { startTimer } = useHabitTimer();
 
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -36,27 +40,14 @@ export default function ButtonComplete({
 	};
 
 	const handlePress = () => {
-		startTimer(combinedHabit);
+		startTimer(currentHabit);
 		navigation.navigate("timerHabit");
 	};
 
-	const habitPoints = getHabitPoints(combinedHabit.habit);
+	const habitPoints = getHabitPoints(currentHabit.habit);
 
 	return (
 		<>
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto py-3 ">
-				<Text
-					className=" font-semibold text-[16px]"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					Compléter l'habitude
-				</Text>
-				<View className="flex flex-row ">
-					<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
-				</View>
-			</View>
 			<Animated.View
 				style={{
 					transform: [{ scale: scaleAnim }],
@@ -72,7 +63,17 @@ export default function ButtonComplete({
 					onTouchEnd={handleTouchEnd}
 					onTouchCancel={handleTouchEnd}
 				>
-					<Iconify icon="gg:check-o" size={24} color={theme.colors.text} />
+					<View className="flex flex-row items-center">
+						<Text
+							className="font-semibold text-[16px] mx-1"
+							style={{
+								color: theme.colors.text,
+							}}
+						>
+							Compléter
+						</Text>
+						<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
+					</View>
 				</Pressable>
 			</Animated.View>
 		</>

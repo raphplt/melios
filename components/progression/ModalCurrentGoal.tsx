@@ -11,6 +11,7 @@ import { useGoal } from "@context/GoalsContext";
 import { setRewards } from "@db/rewards";
 import * as Progress from "react-native-progress";
 import usePoints from "@hooks/usePoints";
+import DeleteGoal from "@components/Modals/DeleteGoal";
 
 export default function ModalCurrentGoal({
 	visible,
@@ -108,13 +109,18 @@ export default function ModalCurrentGoal({
 							onPress={() => {
 								setVisible(false);
 							}}
-							className=""
 						>
 							<Iconify icon="mdi-close" size={28} color={theme.colors.textTertiary} />
 						</Pressable>
 					</View>
 
-					<View className={block}>
+					<View
+						className={block}
+						style={{
+							borderBottomColor: theme.colors.border,
+							borderBottomWidth: 1,
+						}}
+					>
 						<View className="flex flex-row justify-between items-center">
 							<View className="flex flex-row items-center">
 								<Iconify
@@ -145,15 +151,45 @@ export default function ModalCurrentGoal({
 						</View>
 					</View>
 
-					<View className={block}>
+					<View
+						className={block}
+						style={{
+							borderBottomColor: theme.colors.border,
+							borderBottomWidth: 1,
+						}}
+					>
+						<View className="flex flex-row items-center justify-start">
+							<Iconify icon="mdi:text" size={24} color={theme.colors.primary} />
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="text-[16px] font-semibold py-3 mx-1"
+							>
+								Description
+							</Text>
+						</View>
 						<Text
 							style={{
-								color: theme.colors.text,
+								color: theme.colors.textTertiary,
 							}}
-							className="text-[16px] font-semibold py-3 "
 						>
-							Avancement
+							{habit.description}
 						</Text>
+					</View>
+
+					<View className={block}>
+						<View className="flex flex-row items-center justify-start">
+							<Iconify icon="tabler:progress" size={24} color={theme.colors.primary} />
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="text-[16px] font-semibold py-3 mx-1"
+							>
+								Avancement
+							</Text>
+						</View>
 						<Progress.Bar
 							progress={completedDays.length / goal.duration}
 							className="w-full"
@@ -165,6 +201,12 @@ export default function ModalCurrentGoal({
 							useNativeDriver={true}
 							borderWidth={0}
 						/>
+						<Text
+							style={{ color: theme.colors.textTertiary }}
+							className="text-[14px] font-semibold text-center py-2"
+						>
+							{completedDays.length}/{goal.duration} jours
+						</Text>
 					</View>
 
 					{completed ? (
@@ -196,67 +238,11 @@ export default function ModalCurrentGoal({
 			</View>
 
 			{isConfirmVisible && (
-				<Modal
+				<DeleteGoal
 					visible={isConfirmVisible}
-					transparent={true}
-					hardwareAccelerated={true}
-					onRequestClose={() => {
-						setIsConfirmVisible(false);
-					}}
-				>
-					<View
-						style={{
-							flex: 1,
-							justifyContent: "center",
-							alignItems: "center",
-							backgroundColor: "rgba(0,0,0,0.4)",
-						}}
-					>
-						<View
-							style={{
-								backgroundColor: theme.colors.cardBackground,
-								borderColor: theme.colors.border,
-								borderWidth: 1,
-								padding: 20,
-								borderRadius: 10,
-							}}
-						>
-							<Text
-								style={{
-									color: theme.colors.text,
-									fontFamily: "BaskervilleBold",
-									fontSize: 18,
-									marginBottom: 20,
-								}}
-							>
-								Êtes-vous sûr de vouloir supprimer cet objectif ?
-							</Text>
-							<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-								<Pressable
-									onPress={() => setIsConfirmVisible(false)}
-									style={{
-										backgroundColor: theme.colors.grayPrimary,
-										padding: 10,
-										borderRadius: 5,
-										marginRight: 10,
-									}}
-								>
-									<Text style={{ color: theme.colors.text }}>Annuler</Text>
-								</Pressable>
-								<Pressable
-									onPress={handleConfirmDelete}
-									style={{
-										backgroundColor: theme.colors.redPrimary,
-										padding: 10,
-										borderRadius: 5,
-									}}
-								>
-									<Text style={{ color: "white" }}>Supprimer</Text>
-								</Pressable>
-							</View>
-						</View>
-					</View>
-				</Modal>
+					setVisible={setIsConfirmVisible}
+					onConfirm={handleConfirmDelete}
+				/>
 			)}
 		</Modal>
 	);

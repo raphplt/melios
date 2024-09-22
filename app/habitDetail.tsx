@@ -14,13 +14,14 @@ import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
-import { HabitsContext } from "@context/HabitsContext";
+import { HabitsContext, useHabits } from "@context/HabitsContext";
 import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
 import { useTimer } from "@context/TimerContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import ButtonBack from "@components/Shared/ButtonBack";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonComplete from "@components/HabitDetail/ButtonComplete";
+import ButtonsBox from "@components/HabitDetail/ButtonsBox";
 
 export interface DayStatus {
 	date: string;
@@ -28,7 +29,7 @@ export interface DayStatus {
 }
 
 export default function HabitDetail() {
-	const { currentHabit } = useContext(HabitsContext);
+	const { currentHabit } = useHabits();
 
 	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
 
@@ -109,9 +110,7 @@ export default function HabitDetail() {
 					lightenedColor={lightenedColor}
 				/>
 				<LastDays habit={currentHabit.userHabit} />
-				<ButtonStartHabit combinedHabit={currentHabit} />
-				<ButtonComplete combinedHabit={currentHabit} />
-				{/* TODO: bouton compléter normalement ? */}
+				<ButtonsBox />
 			</View>
 		</View>
 	);

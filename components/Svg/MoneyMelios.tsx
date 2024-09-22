@@ -6,9 +6,15 @@ import Svg, {
 	Stop,
 } from "react-native-svg";
 
-export default function MoneyMelios() {
+export default function MoneyMelios({
+	width = 26,
+	height = 26,
+}: {
+	width?: number;
+	height?: number;
+}) {
 	return (
-		<Svg width="26" height="26" viewBox="0 0 250 250" fill="none">
+		<Svg width={width} height={height} viewBox="0 0 250 250" fill="none">
 			<Circle
 				cx="125"
 				cy="125"

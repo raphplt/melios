@@ -26,7 +26,15 @@ export default function ModalAddGoal({
 	const { getHabitDetails } = useIndex();
 	const { goals, setGoals } = useGoal();
 
-	const habitOptions = habits.map((habit) => ({
+	// Extract habit IDs from existing goals
+	const existingHabitIds = goals.map((goal) => goal.habitId);
+
+	// Filter habits to exclude those already used in goals
+	const filteredHabits = habits.filter(
+		(habit) => !existingHabitIds.includes(habit.id)
+	);
+
+	const habitOptions = filteredHabits.map((habit) => ({
 		label: habit.name,
 		value: habit.id,
 	}));
