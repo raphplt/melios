@@ -1,6 +1,7 @@
 import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { useTimer } from "@context/TimerContext";
+import { message } from "@utils/timerUtils";
 import { formatRemainingTime, formatTime } from "@utils/timeUtils";
 import { useContext } from "react";
 import { View, Text } from "react-native";
@@ -18,6 +19,10 @@ export default function ProgressBar() {
 
 	return (
 		<View className="my-3 w-10/12">
+			<Text>
+				{message({ currentTime: timerSeconds, totalTime: totalSeconds })}
+			</Text>
+
 			<Progress.Bar
 				progress={1 - timerSeconds / totalSeconds}
 				className="w-full"
@@ -30,8 +35,8 @@ export default function ProgressBar() {
 				borderWidth={0}
 			/>
 			<View className="flex items-center flex-row justify-between">
-				<Text className="text-center my-2">{remainingTime}</Text>
-				<Text className="text-center my-2">
+				<Text className="text-center my-2 font-semibold">{remainingTime}</Text>
+				<Text className="text-center my-2 font-semibold">
 					{formatTime(currentHabit.habit.duration * 60)}
 				</Text>
 			</View>

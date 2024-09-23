@@ -1,5 +1,6 @@
 import { useHabits } from "@context/HabitsContext";
 import getImage from "@utils/getImage";
+import { message } from "@utils/timerUtils";
 import { View, Image, Text } from "react-native";
 
 export default function ImageBox() {
