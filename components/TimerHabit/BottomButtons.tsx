@@ -1,53 +1,35 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { useTimer } from "@context/TimerContext";
 import useHabitTimer from "@hooks/useHabitTimer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { Audio } from "expo-av";
-import { Sound } from "expo-av/build/Audio";
+import SoundsModal from "@components/Modals/SoundsModal";
+import { useSound } from "@context/SoundContext";
 
 export default function BottomButtons() {
 	const { theme } = useContext(ThemeContext);
-	const [sound, setSound] = useState<Sound>();
+
+	const [visible, setVisible] = useState(false);
 
 	const { pauseTimer } = useHabitTimer();
 	const { isTimerActive } = useTimer();
+	const { currentSound } = useSound();
 
-	async function playSound() {
-		console.log("Loading Sound");
-		const { sound } = await Audio.Sound.createAsync(
-			require("@assets/sounds/rain.wav")
-		);
-		setSound(sound);
-
-		console.log("Playing Sound");
-		await sound.playAsync();
-	}
-
-	useEffect(() => {
-		return sound
-			? () => {
-					console.log("Unloading Sound");
-					sound.unloadAsync();
-			  }
-			: undefined;
-	}, [sound]);
+	const openSoundsModal = () => {
+		setVisible(true);
+	};
 
 	return (
-		<View className="flex flex-row items-center justify-evenly">
+		<View className="flex flex-row items-center justify-evenly w-full">
 			<Pressable
-				onPress={playSound}
+				onPress={pauseTimer}
 				className="py-2 rounded-full mx-auto flex flex-row items-center justify-center w-16 h-16"
 				style={{
-					backgroundColor: theme.colors.primary,
+					backgroundColor: theme.colors.border,
 				}}
 			>
-				<Iconify
-					icon="material-symbols:volume-up"
-					size={28}
-					color={theme.colors.textSecondary}
-				/>
+				<Iconify icon="mdi:restart" size={28} color={theme.colors.primary} />
 			</Pressable>
 
 			<Pressable
@@ -71,6 +53,29 @@ export default function BottomButtons() {
 					/>
 				)}
 			</Pressable>
+
+			<Pressable
+				onPress={openSoundsModal}
+				className="py-2 rounded-full mx-auto flex flex-row items-center justify-center w-16 h-16"
+				style={{
+					backgroundColor: theme.colors.border,
+				}}
+			>
+				{currentSound ? (
+					<Iconify
+						icon="material-symbols:volume-off"
+						size={28}
+						color={theme.colors.primary}
+					/>
+				) : (
+					<Iconify
+						icon="material-symbols:volume-up"
+						size={28}
+						color={theme.colors.primary}
+					/>
+				)}
+			</Pressable>
+			<SoundsModal visible={visible} setVisible={setVisible} onChange={() => {}} />
 		</View>
 	);
 }

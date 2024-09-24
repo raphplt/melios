@@ -16,7 +16,7 @@ export default function Congratulations({
 		<View
 			style={{
 				borderColor: theme.colors.primary,
-				borderWidth: 1,
+				borderWidth: 2,
 				backgroundColor: theme.dark
 					? theme.colors.background
 					: theme.colors.cardBackground,
@@ -25,9 +25,9 @@ export default function Congratulations({
 					width: 0,
 					height: 2,
 				},
-				shadowOpacity: 0.25,
+				shadowOpacity: 0.2,
 				shadowRadius: 3.84,
-				elevation: 5,
+				elevation: 4,
 			}}
 			className="rounded-lg flex-col flex items-center justify-center mx-auto w-11/12 py-2 px-4 my-2 "
 		>

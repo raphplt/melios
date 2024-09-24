@@ -1,7 +1,6 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext } from "react";
 import { Modal, View, Pressable, Text } from "react-native";
-import { Iconify } from "react-native-iconify";
 
 export default function DeleteGoal({
 	visible,

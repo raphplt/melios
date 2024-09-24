@@ -133,19 +133,9 @@ function CardCheckHabit({
 					goHabitDetail();
 				}}
 				style={{
-					flex: 1,
-					shadowColor: theme.colors.text,
-					shadowOffset: {
-						width: 2,
-						height: 2,
-					},
-					shadowOpacity: 0.25,
-					shadowRadius: 3.84,
-					elevation: 2,
-					backgroundColor: theme.colors.background,
-					borderRadius: 10,
-					overflow: "hidden", // Important pour les coins arrondis
+					backgroundColor: theme.colors.cardBackground,
 				}}
+				className="flex-1 rounded-xl"
 				onTouchStart={() => {
 					touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
 				}}
@@ -158,39 +148,15 @@ function CardCheckHabit({
 					setIsTouched(false);
 				}}
 			>
-				{/* Vue extérieure pour créer l'ombre interne */}
-				<View
-					style={{
-						position: "absolute",
-						top: 0,
-						left: 0,
-						right: 0,
-						bottom: 0,
-						borderRadius: 10,
-						backgroundColor: theme.colors.background,
-						shadowColor: theme.colors.text, // Couleur de l'ombre
-						shadowOffset: {
-							width: -5,
-							height: -5, // Inverser l'ombre
-						},
-						shadowOpacity: 0.2,
-						shadowRadius: 10,
-					}}
-				/>
-
-				{/* Contenu du Pressable */}
 				<View
 					className="flex items-center flex-row justify-between px-3 py-[12px] rounded-xl"
 					style={{
 						backgroundColor:
 							isTouched || completed
 								? theme.colors.backgroundTertiary
-								: theme.dark
-								? theme.colors.cardBackground
-								: theme.colors.background,
+								: theme.colors.cardBackground,
 					}}
 				>
-					{/* Contenu du pressable */}
 					<View className="flex flex-row items-center">
 						<FontAwesome6
 							name={habitInfos.category.icon || "question"}
