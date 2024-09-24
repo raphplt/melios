@@ -79,7 +79,10 @@ export default function EditAccount() {
 				<TextInput
 					value={name}
 					onChangeText={setName}
-					style={{ backgroundColor: theme.colors.background }}
+					style={{
+						backgroundColor: theme.colors.background,
+						color: theme.colors.text,
+					}}
 					className="h-10  mb-4 px-2 w-full rounded-xl"
 				/>
 
@@ -89,7 +92,10 @@ export default function EditAccount() {
 				<TextInput
 					value={email}
 					onChangeText={setEmail}
-					style={{ backgroundColor: theme.colors.background }}
+					style={{
+						backgroundColor: theme.colors.background,
+						color: theme.colors.text,
+					}}
 					className="h-10  mb-4 px-2 w-full rounded-xl"
 				/>
 
@@ -102,7 +108,10 @@ export default function EditAccount() {
 							value={password}
 							onChangeText={setPassword}
 							secureTextEntry
-							style={{ backgroundColor: theme.colors.background }}
+							style={{
+								backgroundColor: theme.colors.background,
+								color: theme.colors.text,
+							}}
 							className="h-10  mb-4 px-2 w-full rounded-xl"
 						/>
 						<View

@@ -16,7 +16,7 @@ export default function Congratulations({
 		<View
 			style={{
 				borderColor: theme.colors.primary,
-				borderWidth: 2,
+				borderWidth: 1,
 				backgroundColor: theme.dark
 					? theme.colors.background
 					: theme.colors.cardBackground,

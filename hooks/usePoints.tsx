@@ -10,7 +10,14 @@ const usePoints = () => {
 		});
 	};
 
-	return { addOdysseePoints };
+	const addRewardPoints = (pointsToAdd: number) => {
+		setPoints({
+			...points,
+			rewards: Math.round(points.rewards + pointsToAdd),
+		});
+	};
+
+	return { addOdysseePoints, addRewardPoints };
 };
 
 export default usePoints;

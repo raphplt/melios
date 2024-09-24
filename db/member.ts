@@ -36,7 +36,7 @@ export const setMemberHabit = async (habit: UserHabit) => {
 			// Vérifier si l'habitude existe déjà
 			const existingHabit = memberDoc
 				.data()
-				.habits.find((h: any) => h.id === habit.id);
+				.habits.find((h: UserHabit) => h.id === habit.id);
 
 			if (!existingHabit) {
 				const userHabit = {

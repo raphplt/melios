@@ -10,7 +10,9 @@ import { useProgression } from "@hooks/useProgression";
 import { DarkTheme } from "../../constants/Theme";
 import Stats from "@components/Progression/Stats";
 import CalendarHabits from "@components/Progression/Calendar";
-import Goal from "@components/Progression/Goal";
+import Goal from "@components/Progression/CurrentGoal";
+import GoalSection from "@components/Progression/GoalSection";
+import { GoalProvider } from "@context/GoalsContext";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
@@ -25,10 +27,11 @@ const Progression: React.FC = () => {
 	} = useProgression();
 
 	return (
-		<>
+		<GoalProvider>
 			<ScrollView
 				style={{
 					backgroundColor: theme.colors.background,
+					flexGrow: 1,
 				}}
 				showsVerticalScrollIndicator={false}
 				refreshControl={
@@ -42,7 +45,7 @@ const Progression: React.FC = () => {
 				/> */}
 				<Streak />
 				<Stats />
-				<Goal />
+				<GoalSection />
 
 				<CalendarHabits />
 
@@ -66,7 +69,7 @@ const Progression: React.FC = () => {
 					/>
 					</ScrollView> */}
 			</ScrollView>
-		</>
+		</GoalProvider>
 	);
 };
 

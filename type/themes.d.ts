@@ -20,6 +20,8 @@ export type Theme = {
 		yellowSecondary: string;
 		redPrimary: string;
 		redSecondary: string;
+		orangePrimary: string;
+		orangeSecondary: string;
 		bluePrimary: string;
 		blueSecondary: string;
 		purplePrimary: string;

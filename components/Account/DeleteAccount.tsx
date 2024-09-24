@@ -77,10 +77,7 @@ export default function DeleteAccount() {
 							style={{ backgroundColor: theme.colors.redPrimary }}
 							className="px-4 py-2 rounded-3xl w-11/12"
 						>
-							<Text
-								className="text-[16px] text-center font-semibold"
-								style={{ color: theme.colors.textSecondary }}
-							>
+							<Text className="text-[16px] text-center font-semibold text-white">
 								Supprimer mon compte
 							</Text>
 						</Pressable>

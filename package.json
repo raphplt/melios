@@ -13,9 +13,10 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.0",
+    "@expo/vector-icons": "^14.0.3",
     "@iconify-icon/react": "^2.1.0",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/slider": "^4.5.2",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/stack": "^6.3.20",
     "eas": "^0.1.0",
@@ -24,11 +25,10 @@
     "expo-checkbox": "~3.0.0",
     "expo-constants": "~16.0.2",
     "expo-device": "~6.0.2",
-    "expo-font": "~12.0.7",
-    "expo-image-picker": "^15.0.7",
+    "expo-font": "~12.0.10",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
-    "expo-notifications": "~0.28.9",
+    "expo-notifications": "~0.28.17",
     "expo-router": "~3.5.18",
     "expo-screen-orientation": "^7.0.5",
     "expo-secure-store": "~13.0.2",
@@ -45,6 +45,7 @@
     "react-native-background-timer": "^2.4.1",
     "react-native-calendars": "^1.1306.0",
     "react-native-chart-kit": "^6.12.0",
+    "react-native-element-dropdown": "^2.12.1",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-iconify": "^1.0.2",
     "react-native-image-picker": "^7.1.2",
@@ -55,7 +56,8 @@
     "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-svg": "15.2.0",
     "react-native-web": "~0.19.10",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "expo-av": "~14.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

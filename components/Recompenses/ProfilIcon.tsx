@@ -75,6 +75,8 @@ export default function ProfilIcon({
 				</Text>
 				{isGrayedOut ? (
 					<MoneyOdyssee />
+				) : selected ? (
+					<Iconify icon="mdi:check" size={24} color={theme.colors.primary} />
 				) : (
 					<Iconify
 						icon="material-symbols:trophy"
