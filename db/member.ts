@@ -16,11 +16,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Member } from "../type/member";
 import { UserHabit } from "../type/userHabit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Habit } from "@type/habit";
 
 export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
-export const setMemberHabit = async (habit: UserHabit) => {
+export const setMemberHabit = async (habit: Habit) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
 
