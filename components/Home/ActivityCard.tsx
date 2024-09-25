@@ -73,8 +73,6 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 			style={{
 				backgroundColor: theme.colors.background,
 				transform: [{ scale: scaleAnim }],
-				borderColor: theme.colors.border,
-				borderWidth: 1,
 			}}
 			onTouchStart={handleTouchStart}
 			onTouchEnd={handleTouchEnd}
@@ -128,7 +126,7 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 						<Text
 							className="text-md w-11/12 mx-auto font-semibold text-center py-1 text-[15px]"
 							style={{
-								color: theme.colors.text,
+								color: "#121212",
 							}}
 							numberOfLines={1}
 							ellipsizeMode="tail"

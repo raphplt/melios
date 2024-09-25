@@ -63,13 +63,13 @@ export default function BottomButtons() {
 			>
 				{currentSound ? (
 					<Iconify
-						icon="material-symbols:volume-off"
+						icon="material-symbols:volume-up"
 						size={28}
 						color={theme.colors.primary}
 					/>
 				) : (
 					<Iconify
-						icon="material-symbols:volume-up"
+						icon="material-symbols:volume-off"
 						size={28}
 						color={theme.colors.primary}
 					/>

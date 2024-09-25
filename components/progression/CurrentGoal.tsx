@@ -65,7 +65,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 
 				if (log && log.done) {
 					streak++;
-					completedDays.push(currentDate); // Ajoute la date complétée au tableau
+					completedDays.push(currentDate);
 					if (currentDate.toDateString() === today.toDateString()) {
 						completedToday = true;
 					}

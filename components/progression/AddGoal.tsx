@@ -18,7 +18,7 @@ export default function AddGoal() {
 			}}
 		>
 			<Pressable
-				className="mx-auto flex items-center justify-start flex-row px-2 py-1"
+				className="mx-auto flex items-center justify-start flex-row px-2 py-1  h-14"
 				style={{
 					flexGrow: 1,
 					borderStyle: "dashed",

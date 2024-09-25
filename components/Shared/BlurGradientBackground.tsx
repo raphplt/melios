@@ -3,6 +3,7 @@ import { View, StyleSheet, ViewStyle } from "react-native";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import useIndex from "@hooks/useIndex";
+import { useTheme } from "@context/ThemeContext";
 
 interface BlurGradientBackgroundProps {
 	intensity?: number;
@@ -17,20 +18,18 @@ const BlurGradientBackground: React.FC<BlurGradientBackgroundProps> = ({
 	gradientColors,
 	style,
 }) => {
-	const { isDayTime } = useIndex();
-	const colorTop = isDayTime ? "rgba(255,255,255,0)" : "rgba(0, 0, 0, 0)";
-	const colors = gradientColors || ["rgba(8, 32, 159, 0.7)", colorTop];
+	const { theme } = useTheme();
+	const colorTop = theme.dark ? "transparent" : "rgba(0, 0, 0, 0)";
+	const colors = gradientColors || ["rgba(8, 32, 159, 0.8)", colorTop];
 
 	return (
 		<View style={[styles.container, style]}>
-			<BlurView intensity={intensity} tint={tint} style={styles.blurView}>
-				<LinearGradient
-					colors={colors}
-					start={{ x: 0.5, y: 1 }}
-					end={{ x: 0.5, y: 0 }}
-					style={StyleSheet.absoluteFill}
-				/>
-			</BlurView>
+			<LinearGradient
+				colors={colors}
+				start={{ x: 0.5, y: 1 }}
+				end={{ x: 0.5, y: 0 }}
+				style={StyleSheet.absoluteFill}
+			/>
 		</View>
 	);
 };

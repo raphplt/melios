@@ -149,7 +149,7 @@ function CardCheckHabit({
 				}}
 			>
 				<View
-					className="flex items-center flex-row justify-between px-3 py-[12px] rounded-xl"
+					className="flex items-center flex-row justify-between px-3 py-[13px] rounded-xl"
 					style={{
 						backgroundColor:
 							isTouched || completed
@@ -177,22 +177,16 @@ function CardCheckHabit({
 							{habit.name}
 						</Text>
 					</View>
-					<View
-						className="rounded-full p-1"
-						style={{
-							backgroundColor: theme.colors.background,
-						}}
-					>
-						<Ionicons
-							name="flame"
-							size={24}
-							color={
-								habitInfos.difficulty
-									? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
-									: theme.colors.primary
-							}
-						/>
-					</View>
+
+					<Ionicons
+						name="flame"
+						size={24}
+						color={
+							habitInfos.difficulty
+								? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
+								: theme.colors.primary
+						}
+					/>
 				</View>
 			</Pressable>
 		</Animated.View>

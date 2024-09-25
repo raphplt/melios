@@ -17,7 +17,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 export default function Graph({ habits, period }: any) {
 	const { theme } = useContext(ThemeContext);
 	const [modalVisible, setModalVisible] = useState(false);
-	const [key, setKey] = useState(0); // Ajout d'une clé pour forcer la mise à jour
+	const [key, setKey] = useState(0);
 
 	const getMaxDays = () => {
 		switch (period) {
@@ -42,7 +42,7 @@ export default function Graph({ habits, period }: any) {
 
 	const renderChart = (width: number, height: number) => (
 		<LineChart
-			key={key} // Utilisation de la clé pour forcer la mise à jour
+			key={key}
 			data={{
 				labels: Object.keys(habits).map((name) =>
 					name.length > 10 ? `${name.substring(0, 6)}..` : name

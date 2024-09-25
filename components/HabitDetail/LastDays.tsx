@@ -2,9 +2,8 @@ import moment from "moment";
 import { Text, View, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { useContext, useEffect, useState } from "react";
-import { Log, UserHabit } from "../../type/userHabit";
 import { ThemeContext } from "@context/ThemeContext";
-import HeaderContainer from "@components/Progression/HeaderContainer";
+import { UserHabit, Log } from "@type/userHabit";
 import { DayStatus } from "../../app/habitDetail";
 
 export default function LastDays({ habit }: { habit: UserHabit }) {
@@ -31,7 +30,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 	return (
 		<>
 			<View className="w-11/12 mx-auto ">
-				<HeaderContainer>
+				<View className="flex flex-row items-center justify-start w-11/12 gap-1 pt-4 pb-2">
 					<Iconify
 						icon="ph:calendar-check-fill"
 						size={20}
@@ -43,7 +42,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 					>
 						Complétion des derniers jours
 					</Text>
-				</HeaderContainer>
+				</View>
 			</View>
 			<ScrollView
 				horizontal
@@ -63,12 +62,12 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 							className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
 						>
 							{day.done ? (
-								<Iconify size={24} color={"white"} icon="mdi:check" />
+								<Iconify size={24} color={"#f1F1F1"} icon="mdi:check" />
 							) : (
-								<Iconify size={24} color={"black"} icon="mdi:close" />
+								<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
 							)}
 							<Text
-								style={{ color: day.done ? "white" : "black" }}
+								style={{ color: day.done ? "#f1F1F1" : theme.colors.text }}
 								className="font-semibold mt-1"
 							>
 								{moment(day.date, "YYYY-MM-DD").format("DD/MM")}

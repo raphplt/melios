@@ -53,6 +53,7 @@ export default function ButtonStartHabit() {
 				style={{
 					transform: [{ scale: scaleAnim }],
 				}}
+				className=""
 			>
 				<Pressable
 					onPress={handlePress}

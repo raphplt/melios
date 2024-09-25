@@ -15,7 +15,7 @@ export default function RewardDetail({
 
 	return (
 		<View
-			className="flex flex-row items-center  mx-1"
+			className="flex flex-row items-center mx-1"
 			style={
 				{
 					// backgroundColor: theme.colors.cardBackground,
@@ -26,7 +26,7 @@ export default function RewardDetail({
 		>
 			<Text
 				style={{
-					color: color || theme.colors.text,
+					color: theme.colors.text,
 				}}
 				className="text-[16px] font-semibold ml-2 px-1"
 			>

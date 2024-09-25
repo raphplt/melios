@@ -131,7 +131,11 @@ export default function ModalAddGoal({
 
 					<View className={block}>
 						<View className="flex flex-row items-center">
-							<Iconify icon="mdi-bullseye" size={24} color={theme.colors.primary} />
+							<Iconify
+								icon="mdi-bullseye"
+								size={24}
+								color={theme.dark ? "#f1f1f1" : theme.colors.primary}
+							/>
 							<Text
 								style={{
 									color: theme.colors.text,
@@ -148,10 +152,13 @@ export default function ModalAddGoal({
 							onChange={(item) => setSelectedHabit(item)}
 							data={habitOptions}
 							placeholder="Choisir une habitude"
-							style={{
-								backgroundColor: theme.colors.backgroundSecondary,
-								padding: 10,
+							containerStyle={{
+								borderWidth: 1,
+								borderColor: theme.colors.border,
 								borderRadius: 10,
+							}}
+							placeholderStyle={{
+								color: theme.colors.text,
 							}}
 						/>
 					</View>
@@ -159,7 +166,11 @@ export default function ModalAddGoal({
 					<View className={block}>
 						<View className="flex flex-row justify-between items-center">
 							<View className="flex flex-row items-center">
-								<Iconify icon="mdi-calendar" size={24} color={theme.colors.primary} />
+								<Iconify
+									icon="mdi-calendar"
+									size={24}
+									color={theme.dark ? "#f1f1f1" : theme.colors.primary}
+								/>
 								<Text
 									style={{
 										color: theme.colors.text,
@@ -200,7 +211,7 @@ export default function ModalAddGoal({
 									<Iconify
 										icon="mdi-currency-usd"
 										size={24}
-										color={theme.colors.primary}
+										color={theme.dark ? "#f1f1f1" : theme.colors.primary}
 									/>
 									<Text
 										style={{
@@ -235,7 +246,7 @@ export default function ModalAddGoal({
 							}}
 							className="w-11/12 mx-auto rounded-xl py-2 my-3 flex flex-row items-center justify-center"
 						>
-							<Iconify icon="mdi-check" size={24} color={theme.colors.background} />
+							<Iconify icon="mdi-check" size={24} color="#f1f1f1" />
 						</View>
 					</Pressable>
 				</View>

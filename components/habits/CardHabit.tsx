@@ -17,7 +17,8 @@ import {
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
 
-export default function CardHabit({ habit }: { habit: UserHabit }) {
+export default function CardHabit({ habit }: { habit: Habit }) {
+	console.log("CardHabit", habit);
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 

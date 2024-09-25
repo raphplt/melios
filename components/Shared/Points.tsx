@@ -50,7 +50,7 @@ export default function Points() {
 				>
 					<Text
 						style={{
-							color: "#DBBB16",
+							color: theme.dark ? "#1B1A1A" : "#DBBB16",
 							fontSize: 16,
 						}}
 						className="font-bold mr-1"
