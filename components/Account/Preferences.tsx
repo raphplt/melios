@@ -1,7 +1,7 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useState } from "react";
 import AccountBlock from "./AccountBlock";
-import { View, Text, Modal, Pressable } from "react-native";
+import { View, Text, Modal, Pressable, Alert } from "react-native";
 import RowBlock from "./RowBlock";
 import { Iconify } from "react-native-iconify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -70,6 +70,10 @@ export default function Preferences() {
 		navigation.navigate("help");
 	};
 
+	const goAbout = () => {
+		Alert.alert("À propos", "Melios v1.1.5");
+	};
+
 	return (
 		<AccountBlock title="Préférences">
 			<RowBlock
@@ -120,6 +124,7 @@ export default function Preferences() {
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}
+				onPress={goAbout}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 			<RowBlock
