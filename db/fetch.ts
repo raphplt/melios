@@ -17,12 +17,10 @@ export const fetchCollectionData = async (
 		if (!forceRefresh) {
 			const storedData = await AsyncStorage.getItem(storageKey);
 			if (storedData) {
-				// console.log("Stored data: ", JSON.parse(storedData).slice(0, 10));
 				return JSON.parse(storedData);
 			}
 		}
 
-		console.log("Fetching data from Firestore for collection: ", collectionName);
 		const collectionRef = collection(db, collectionName);
 		const snapshot = await getDocs(collectionRef);
 

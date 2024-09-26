@@ -48,7 +48,7 @@ export const HabitsProvider = ({ children }: any) => {
 
 	const fetchHabitsData = async (signal: AbortSignal) => {
 		try {
-			const data = await getHabitsWithCategories(true);
+			const data = await getHabitsWithCategories();
 			if (!signal.aborted) {
 				setHabitsData(data);
 				setLoading(false);

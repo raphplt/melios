@@ -16,13 +16,15 @@ import {
 } from "@db/member";
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
+import useIndex from "@hooks/useIndex";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CardHabit({ habit }: { habit: Habit }) {
-	console.log("CardHabit", habit);
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
 	const { setUncompletedHabitsData, setHabits } = useData();
+	const { getHabitDetails } = useIndex();
 
 	const setHabit = async () => {
 		const newToggleValue = !toggleCheckBox;
@@ -78,13 +80,20 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 	return (
 		<Pressable onPress={setHabit}>
 			<View className="w-full mx-auto my-1 flex flex-row items-center justify-evenly">
-				<View>
-					<Checkbox
-						value={toggleCheckBox}
-						onValueChange={setHabit}
+				{/* <Checkbox
+					value={toggleCheckBox}
+					onValueChange={setHabit}
+					color={habit.category.color || theme.colors.primary}
+				/> */}
+
+				<Pressable onPress={setHabit} className="flex items-center justify-center">
+					<Ionicons
+						name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
+						size={30}
 						color={habit.category.color || theme.colors.primary}
 					/>
-				</View>
+				</Pressable>
+
 				<View
 					className="flex items-center justify-between flex-row py-2 rounded-lg basis-5/6"
 					style={{
