@@ -6,15 +6,14 @@ import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useState } from "react";
 import { Reward } from "../../type/reward";
 import { useTabBarPadding } from "@hooks/useTabBar";
+import { useData } from "@context/DataContext";
 
 export default function ClassementView({
 	sortedRewards,
-	member,
 	filter,
 	setFilter,
 }: {
-	sortedRewards: any;
-	member: any;
+	sortedRewards: Reward[];
 	filter: any;
 	setFilter: any;
 }) {
@@ -22,31 +21,19 @@ export default function ClassementView({
 	const paddingBottom = useTabBarPadding();
 	const [displayedItemCount, setDisplayedItemCount] = useState(10);
 
-	const userPosition = sortedRewards.findIndex(
-		(reward: Reward) => reward.uid === member.uid
-	);
+	const { member } = useData();
 
+	// Vérification de la validité de member et de la propriété uid
+	const userPosition =
+		member && member.uid
+			? sortedRewards.findIndex((reward: Reward) => reward.uid === member.uid)
+			: -1;
+
+	// Si member est indéfini ou uid est manquant, on ne cherche pas à afficher l'utilisateur
 	const isUserVisible = userPosition >= 0 && userPosition < displayedItemCount;
-
-	// console.log("reward", sortedRewards);
 
 	return (
 		<View className="w-full pb-10">
-			<View className="mb-4 flex items-center justify-center flex-row gap-2">
-				<Iconify icon="mdi:trophy" size={20} color={theme.colors.text} />
-				<Text
-					className="text-xl text-center font-semibold"
-					style={{
-						color: theme.colors.text,
-						fontFamily: "Baskerville",
-					}}
-				>
-					Classement général
-				</Text>
-			</View>
-
-			<Filters filter={filter} setFilter={setFilter} theme={theme} />
-
 			<View
 				className="flex items-center justify-center flex-col"
 				style={{
@@ -66,6 +53,7 @@ export default function ClassementView({
 						/>
 					))}
 
+				{/* Si l'utilisateur n'est pas visible dans la liste affichée mais a une position */}
 				{!isUserVisible && userPosition >= 0 && (
 					<>
 						<View className="mt-4 mb-2">

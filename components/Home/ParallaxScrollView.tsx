@@ -68,6 +68,9 @@ export default function ParallaxScrollView({
 	}, [scrollOffset]);
 
 	const todayScore = useMemo(() => {
+		if (completedHabitsData.length === 0 && uncompletedHabitsData.length === 0) {
+			return 0;
+		}
 		return Math.round(
 			(completedHabitsData.length /
 				(completedHabitsData.length + uncompletedHabitsData.length)) *
@@ -114,9 +117,9 @@ export default function ParallaxScrollView({
 
 					<BlurBox position={{ top: 20, right: 20 }}>
 						<View className="flex flex-row items-center gap-2">
-							<Iconify icon="mdi:calendar" color={color} size={22} />
+							<Iconify icon="mdi:calendar" color={color} size={20} />
 							<Text
-								className="font-semibold text-[16px]"
+								className="font-semibold text-[15px]"
 								style={{
 									color: color,
 								}}

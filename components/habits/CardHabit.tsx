@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Iconify } from "react-native-iconify";
 
@@ -17,14 +16,14 @@ import {
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
 import useIndex from "@hooks/useIndex";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CardHabit({ habit }: { habit: Habit }) {
-	console.log("CardHabit", habit);
 	const { theme } = useContext(ThemeContext);
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
 	const { setUncompletedHabitsData, setHabits } = useData();
-	const { getUserHabitDetails } = useIndex();
+	const { getHabitDetails } = useIndex();
 
 	const setHabit = async () => {
 		const newToggleValue = !toggleCheckBox;
@@ -34,9 +33,7 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 
 		// Met à jour la liste des habitudes non complétées
 		if (newToggleValue) {
-			const userHabit = getUserHabitDetails(habit.id);
-			if (!userHabit) return;
-			setUncompletedHabitsData((prev: UserHabit[]) => [...prev, userHabit]);
+			setUncompletedHabitsData((prev: UserHabit[]) => [...prev, habit]);
 		} else {
 			setUncompletedHabitsData((prev: UserHabit[]) =>
 				prev.filter((h: UserHabit) => h.id !== habit.id)
@@ -45,10 +42,7 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 
 		// Met à jour la liste globale des habitudes dans le contexte
 		if (newToggleValue) {
-			const userHabit = getUserHabitDetails(habit.id);
-			if (!userHabit) return;
-
-			setHabits((prev: UserHabit[]) => [...prev, userHabit]);
+			setHabits((prev: UserHabit[]) => [...prev, habit]);
 		} else {
 			setHabits((prev: UserHabit[]) =>
 				prev.filter((h: UserHabit) => h.id !== habit.id)
@@ -85,13 +79,20 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 	return (
 		<Pressable onPress={setHabit}>
 			<View className="w-full mx-auto my-1 flex flex-row items-center justify-evenly">
-				<View>
-					<Checkbox
-						value={toggleCheckBox}
-						onValueChange={setHabit}
+				{/* <Checkbox
+					value={toggleCheckBox}
+					onValueChange={setHabit}
+					color={habit.category.color || theme.colors.primary}
+				/> */}
+
+				<Pressable onPress={setHabit} className="flex items-center justify-center">
+					<Ionicons
+						name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
+						size={30}
 						color={habit.category.color || theme.colors.primary}
 					/>
-				</View>
+				</Pressable>
+
 				<View
 					className="flex items-center justify-between flex-row py-2 rounded-lg basis-5/6"
 					style={{

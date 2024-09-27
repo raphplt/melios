@@ -97,14 +97,18 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 						signal: abortController.signal,
 						forceRefresh: true,
 					});
-					setPoints(extractPoints(snapshotRewards));
+					if (snapshotRewards) {
+						setPoints(extractPoints(snapshotRewards));
+					}
 
 					// Habits
 					const snapshotHabits = await getMemberHabits({
 						signal: abortController.signal,
 						forceRefresh: true,
 					});
-					setHabits(snapshotHabits);
+					if (snapshotHabits) {
+						setHabits(snapshotHabits);
+					}
 
 					// Trophies
 					// const snapshotTrophies = await getAllTrophies({
@@ -114,13 +118,15 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 					// setTrophies(snapshotTrophies);
 
 					// Calculate today's score
-					const { uncompleted, completed } = processHabits(snapshotHabits, date);
-					setUncompletedHabitsData(uncompleted);
-					setCompletedHabitsData(completed);
+					if (snapshotHabits) {
+						const { uncompleted, completed } = processHabits(snapshotHabits, date);
+						setUncompletedHabitsData(uncompleted);
+						setCompletedHabitsData(completed);
 
-					// Calculate streak
-					const streak = calculateStreak(snapshotHabits);
-					setStreak(streak);
+						// Calculate streak
+						const streak = calculateStreak(snapshotHabits);
+						setStreak(streak);
+					}
 				} catch (error: any) {
 					if (error.name !== "AbortError") {
 						console.log("Erreur lors de la récupération des données : ", error);
@@ -137,7 +143,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 			};
 		}
 	}, [isSessionLoading, user]);
-
 
 	return (
 		<DataContext.Provider

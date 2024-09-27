@@ -26,7 +26,7 @@ export default function RewardDetail({
 		>
 			<Text
 				style={{
-					color: theme.colors.text,
+					color: color || theme.colors.text,
 				}}
 				className="text-[16px] font-semibold ml-2 px-1"
 			>

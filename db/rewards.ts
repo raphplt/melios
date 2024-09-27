@@ -93,90 +93,62 @@ export const setRewards = async (
 	}
 };
 
-export const getAllRewards = async () => {
-	try {
-		const rewardsCollectionRef = collection(db, "rewards");
-		const rewardsSnapshot = await getDocs(query(rewardsCollectionRef));
-
-		if (!rewardsSnapshot.empty) {
-			const allRewards = await Promise.all(
-				rewardsSnapshot.docs.map(async (rewardDoc) => {
-					const rewardData = rewardDoc.data();
-					const uid = rewardData.uid;
-
-					const membersCollectionRef = collection(db, "members");
-					const userSnapshot = await getDocs(
-						query(membersCollectionRef, where("uid", "==", uid))
-					);
-
-					let userName = "Unknown User";
-					if (!userSnapshot.empty) {
-						const userDoc = userSnapshot.docs[0];
-
-						const userData = userDoc.data();
-						userName = userData.nom || "Unknown User";
-					}
-
-					return {
-						id: rewardDoc.id,
-						...rewardData,
-						name: userName,
-					};
-				})
-			);
-
-			return allRewards;
-		} else {
-			console.log("Aucune récompense trouvée.");
-			return [];
-		}
-	} catch (error) {
-		console.log(
-			"Erreur lors de la récupération de toutes les récompenses : ",
-			error
-		);
-		throw error;
-	}
-};
-export const getRewardsPaginated = async (lastDoc = null) => {
+export const getAllRewardsPaginated = async (
+	lastVisibleDoc = null,
+	orderField = "rewards",
+	pageSize = 10
+) => {
 	try {
 		const rewardsCollectionRef = collection(db, "rewards");
 
-		// Créer la requête avec pagination
+		// Crée la requête de pagination
 		let rewardsQuery = query(
 			rewardsCollectionRef,
-			orderBy("odyssee", "desc"),
-			limit(10)
+			orderBy(orderField, "desc"),
+			limit(pageSize)
 		);
 
-		// Si on a un dernier document, on commence à partir de celui-ci pour paginer
-		if (lastDoc) {
-			rewardsQuery = query(rewardsQuery, startAfter(lastDoc));
+		if (lastVisibleDoc) {
+			rewardsQuery = query(rewardsQuery, startAfter(lastVisibleDoc));
 		}
 
 		const rewardsSnapshot = await getDocs(rewardsQuery);
+
 		const lastVisible = rewardsSnapshot.docs[rewardsSnapshot.docs.length - 1];
 
-		const allRewards = await Promise.all(
-			rewardsSnapshot.docs.map(async (rewardDoc) => {
-				const rewardData = rewardDoc.data();
+		const rewards = await Promise.all(
+			rewardsSnapshot.docs.map(async (doc) => {
+				const rewardData = doc.data();
 				const uid = rewardData.uid;
 
-				// Logique pour récupérer l'utilisateur, similaire à ton code
+				const membersCollectionRef = collection(db, "members");
+				const userSnapshot = await getDocs(
+					query(membersCollectionRef, where("uid", "==", uid))
+				);
+
+				let userName = "Unknown User";
+				let profilePicture = null;
+				if (!userSnapshot.empty) {
+					const userDoc = userSnapshot.docs[0];
+					const userData = userDoc.data();
+					userName = userData.nom || "Unknown User";
+					profilePicture = userData.profilePicture || null;
+				}
+
 				return {
-					id: rewardDoc.id,
+					id: doc.id,
 					...rewardData,
-					// Ajoute d'autres champs si nécessaire
+					name: userName,
+					profilePicture: profilePicture,
 				};
 			})
 		);
-
-		return { rewards: allRewards, lastVisible };
+		return {
+			rewards,
+			lastVisible,
+		};
 	} catch (error) {
-		console.error(
-			"Erreur lors de la récupération des récompenses paginées : ",
-			error
-		);
+		console.error("Erreur lors de la récupération des récompenses : ", error);
 		throw error;
 	}
 };
