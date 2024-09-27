@@ -13,15 +13,15 @@ import { AntDesign } from "@expo/vector-icons";
 import { Habit } from "../type/habit";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonViewMore from "@components/Home/ButtonViewMore";
-import SearchBar from "@components/Select/SearchBar";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import { useData } from "@context/DataContext";
 import { normalizeAndLowerCase } from "@utils/habitsUtils";
 import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
 import CardHabit from "@components/Habits/CardHabit";
-import NumberSelected from "@components/Select/NumberSelected";
-import CategoryHeader from "@components/Select/CategoryHeader";
+import CategoryHeader from "@components/Select/Old/CategoryHeader";
+import SearchBar from "@components/Select/Old/SearchBar";
+import NumberSelected from "@components/Select/Old/NumberSelected";
 
 export default function Select() {
 	const { habitsData, loading } = useHabits();
@@ -134,7 +134,7 @@ export default function Select() {
 
 	return (
 		<Animated.View style={{ flex: 1, transform: [{ translateY }] }}>
-			{/* <FlatList
+			<FlatList
 				style={{ backgroundColor: theme.colors.background }}
 				data={categories}
 				renderItem={renderCategory}
@@ -169,7 +169,7 @@ export default function Select() {
 						</ScrollView>
 					</>
 				}
-			/> */}
+			/>
 			<View
 				className="w-full h-fit mx-auto fixed bottom-0 py-2 pt-4"
 				style={{ backgroundColor: theme.colors.background }}

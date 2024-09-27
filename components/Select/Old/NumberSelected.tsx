@@ -1,10 +1,9 @@
-import { useContext } from "react";
+import { useTheme } from "@context/ThemeContext";
 import { Text } from "react-native";
 import { View } from "react-native";
-import { ThemeContext } from "../../context/ThemeContext";
 
 export default function NumberSelected({ number }: { number: number }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	return (
 		<View
 			style={{ backgroundColor: theme.colors.primary }}

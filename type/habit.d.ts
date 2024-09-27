@@ -13,8 +13,4 @@ export type Habit = {
 	category: Category;
 };
 
-export enum HabitType {
-	"Positive" = "Positive",
-	"Negative" = "Negative",
-	"Neutral" = "Neutral",
-}
+export type HabitType = "Positif" | "Négatif" | "Personnalisé";

@@ -60,8 +60,6 @@ function MainNavigator() {
 	};
 
 	const { isLoading: isSessionLoading }: any = useSession();
-	const { popup } = useData();
-	const { isOpen } = popup;
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -86,23 +84,7 @@ function MainNavigator() {
 				/>
 				<Stack>
 					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
-					<Stack.Screen
-						name="select"
-						options={{
-							title: "Choix des habitudes",
-							animation: "fade",
-							presentation: "transparentModal",
-							headerShown: true,
-							headerShadowVisible: false,
-							headerRight: () => (
-								<ButtonSettings
-									onPress={() => {
-										navigation.navigate("editHabits");
-									}}
-								/>
-							),
-						}}
-					/>
+					<Stack.Screen name="(select)" options={{ headerShown: false }} />
 
 					<Stack.Screen
 						name="habitDetail"
@@ -185,7 +167,6 @@ function MainNavigator() {
 						}}
 					/>
 				</Stack>
-				{/* {isOpen && <NotificationBox />} */}
 			</ThemeProvider>
 		</ThemeContext.Provider>
 	);

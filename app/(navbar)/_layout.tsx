@@ -8,7 +8,6 @@ import { useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import Melios from "@components/Svg/Melios";
 import LayoutTopRight from "@components/Shared/LayoutTopRight";
-import { FontAwesome } from "@expo/vector-icons";
 
 const createHeaderStyle = (backgroundColor: string) => ({
 	backgroundColor,

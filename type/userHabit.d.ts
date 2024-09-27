@@ -3,15 +3,13 @@ import { HabitType } from "./habit";
 export type UserHabit = {
 	id: string;
 	habitId: string;
-	custom?: {
-		name?: string;
-		description?: string;
-		type?: HabitType;
-		duration?: number;
-		moment?: number;
-		color?: string;
-		icon?: string;
-	};
+	name: string;
+	description?: string;
+	type?: HabitType;
+	duration?: number;
+	moment?: number;
+	color?: string;
+	icon?: string;
 	frequency?: {
 		monday?: boolean;
 		tuesday?: boolean;

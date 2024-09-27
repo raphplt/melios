@@ -5,12 +5,12 @@ import { useContext, useState } from "react";
 import { FlatList, TextInput, View } from "react-native";
 import { UserHabit } from "../type/userHabit";
 import { Iconify } from "react-native-iconify";
-import NumberSelected from "@components/Select/NumberSelected";
 import { Habit } from "@type/habit";
+import NumberSelected from "@components/Select/Old/NumberSelected";
 
 export default function EditHabits() {
 	const { theme } = useContext(ThemeContext);
-	const { habits, setHabits } = useData();
+	const { habits } = useData();
 	const [searchText, setSearchText] = useState("");
 
 	const filteredHabits = habits.filter((habit: UserHabit) =>

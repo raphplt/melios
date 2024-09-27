@@ -1,7 +1,6 @@
 import React, { memo, useContext, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import Checkbox from "expo-checkbox";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import {
 	NavigationProp,
@@ -20,7 +19,6 @@ import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
-import { difficulties } from "@utils/habitsUtils";
 import { useData } from "@context/DataContext";
 import CardPlaceHolder from "./CardPlaceHolder";
 import { HabitsContext } from "@context/HabitsContext";
@@ -108,7 +106,7 @@ function CardCheckHabit({
 		const habitPoints = getHabitPoints(habitInfos);
 		await setRewards("odyssee", habitPoints.odyssee);
 
-		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
+		addOdysseePoints(habitInfos.difficulty, habitInfos.difficulty);
 	};
 
 	return (

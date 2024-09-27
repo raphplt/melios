@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Category } from "@type/category";
 import { getHabitsWithCategories } from "@db/fetch";
+import { getAllCategories } from "@db/category";
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
 
@@ -15,6 +16,8 @@ interface HabitsContextProps {
 	setCurrentHabit: React.Dispatch<React.SetStateAction<CombinedHabits | null>>;
 	showHabitDetail?: boolean;
 	setShowHabitDetail: React.Dispatch<React.SetStateAction<boolean>>;
+	categories: Category[];
+	refreshCategories: () => void;
 }
 
 export type CombinedHabits = {
@@ -34,16 +37,16 @@ export const HabitsContext = createContext<HabitsContextProps>({
 	): void {},
 	showHabitDetail: false,
 	setShowHabitDetail: function (value: React.SetStateAction<boolean>): void {},
+	categories: [],
+	refreshCategories: function (): void {},
 });
 
 export const HabitsProvider = ({ children }: any) => {
 	const [habitsData, setHabitsData] = useState<Habit[]>([]);
-
 	const [loading, setLoading] = useState(true);
 	const [habitQueue, setHabitQueue] = useState<Habit[]>([]);
 	const [currentHabit, setCurrentHabit] = useState<CombinedHabits | null>(null);
-
-	// Timer state
+	const [categories, setCategories] = useState<Category[]>([]);
 	const [showHabitDetail, setShowHabitDetail] = useState(true);
 
 	const fetchHabitsData = async (signal: AbortSignal) => {
@@ -60,11 +63,25 @@ export const HabitsProvider = ({ children }: any) => {
 		}
 	};
 
+	const fetchCategoriesData = async (signal: AbortSignal) => {
+		try {
+			const data = await getAllCategories();
+			if (!signal.aborted) {
+				setCategories(data);
+			}
+		} catch (error) {
+			if (!signal.aborted) {
+				console.log("Erreur lors de la récupération des catégories : ", error);
+			}
+		}
+	};
+
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
 		fetchHabitsData(signal);
+		fetchCategoriesData(signal); // Appeler la fonction pour récupérer les catégories
 
 		AsyncStorage.getItem("habitQueue").then((data) => {
 			if (data) {
@@ -89,6 +106,8 @@ export const HabitsProvider = ({ children }: any) => {
 				setCurrentHabit,
 				showHabitDetail,
 				setShowHabitDetail,
+				categories, // Fournir les catégories
+				refreshCategories: () => fetchCategoriesData(new AbortController().signal), // Fournir la fonction de rafraîchissement
 			}}
 		>
 			{children}
