@@ -1,11 +1,25 @@
+import { HabitType } from "./habit";
+
 export type UserHabit = {
 	id: string;
-	logs: Array<Log>;
-	moment: number;
-	name: string;
-};
-
-export type Log = {
-	date: string;
-	done: boolean;
+	habitId: string;
+	custom?: {
+		name?: string;
+		description?: string;
+		type?: HabitType;
+		duration?: number;
+		moment?: number;
+		color?: string;
+		icon?: string;
+	};
+	frequency?: {
+		monday?: boolean;
+		tuesday?: boolean;
+		wednesday?: boolean;
+		thursday?: boolean;
+		friday?: boolean;
+		saturday?: boolean;
+		sunday?: boolean;
+	};
+	reminderTime?: string;
 };

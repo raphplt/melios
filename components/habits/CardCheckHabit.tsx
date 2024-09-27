@@ -157,28 +157,27 @@ function CardCheckHabit({
 								: theme.colors.cardBackground,
 					}}
 				>
-					<View className="flex flex-row items-center">
-						<FontAwesome6
-							name={habitInfos.category.icon || "question"}
-							size={18}
-							color={habitInfos.category.color || theme.colors.text}
-						/>
-
+					<View className="flex flex-row items-center justify-between w-full">
 						<Text
 							style={{
 								color: theme.colors.text,
 								textDecorationLine: completed ? "line-through" : "none",
 								marginLeft: 6,
 							}}
-							className="text-[16px] font-semibold pl-1 w-[80%]"
+							className="text-[16px] font-semibold w-[80%]"
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>
 							{habit.name}
 						</Text>
+						<FontAwesome6
+							name={habitInfos.category.icon || "question"}
+							size={18}
+							color={habitInfos.category.color || theme.colors.text}
+						/>
 					</View>
 
-					<Ionicons
+					{/* <Ionicons
 						name="flame"
 						size={24}
 						color={
@@ -186,7 +185,7 @@ function CardCheckHabit({
 								? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
 								: theme.colors.primary
 						}
-					/>
+					/> */}
 				</View>
 			</Pressable>
 		</Animated.View>

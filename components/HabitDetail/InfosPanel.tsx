@@ -87,7 +87,7 @@ export default function InfosPanel({
 				<Text style={{ color: theme.colors.text }}>à {habit.moment} heure</Text>
 			</View>
 
-			<View className={rowStyle}>
+			{/* <View className={rowStyle}>
 				<View className={rowBox}>
 					<Iconify size={24} color={theme.colors.text} icon="mdi:fire" />
 					<Text style={{ color: theme.colors.text }} className="text-md">
@@ -95,7 +95,7 @@ export default function InfosPanel({
 					</Text>
 				</View>
 				<Text style={{ color: theme.colors.text }}>{difficulty ?? ""}</Text>
-			</View>
+			</View> */}
 			{/* <View className={rowStyle}>
 				<View className={rowBox}>
 					<Iconify size={24} color={theme.colors.text} icon="ph:coin" />
