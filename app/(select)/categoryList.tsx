@@ -1,3 +1,4 @@
+import CategoryHabit from "@components/Select/Items/CategoryHabit";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useHabits } from "@context/HabitsContext";
 import { useSelect } from "@context/SelectContext";
@@ -37,7 +38,7 @@ export default function CategoryList() {
 				className="rounded-b-3xl"
 			>
 				<ButtonClose />
-				<View className="w-11/12 flex flex-row items-center justify-start mx-auto pt-4  pb-4">
+				<View className="w-11/12 flex flex-row items-center justify-start mx-auto py-4">
 					<Text
 						style={{
 							color: category.color || theme.colors.text,
@@ -57,26 +58,7 @@ export default function CategoryList() {
 			<FlatList
 				data={habits}
 				keyExtractor={(item) => item.id.toString()}
-				renderItem={({ item }) => (
-					<View
-						key={item.id}
-						className="w-full flex flex-row items-center justify-between mx-auto py-4 px-4"
-					>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="font-bold text-lg"
-						>
-							{item.name}
-						</Text>
-						<Iconify
-							icon="fluent:arrow-right-12-regular"
-							size={20}
-							color={theme.colors.textTertiary}
-						/>
-					</View>
-				)}
+				renderItem={({ item }) => <CategoryHabit item={item} />}
 				showsVerticalScrollIndicator={false}
 			/>
 		</View>

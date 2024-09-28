@@ -30,7 +30,7 @@ export default function ListHabitsHome() {
 		resetShowMissed,
 	} = useIndex();
 
-	if (userHabits.length === 0 || !userHabits) return <NoHabits theme={theme} />;
+	if (userHabits.length === 0 || !userHabits) return <NoHabits />;
 
 	const nextHabits = uncompletedHabitsData.filter(
 		(habit: UserHabit) => habit.moment >= hours

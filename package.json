@@ -21,6 +21,7 @@
     "@react-navigation/stack": "^6.3.20",
     "eas": "^0.1.0",
     "expo": "~51.0.31",
+    "expo-av": "~14.0.7",
     "expo-blur": "^13.0.2",
     "expo-checkbox": "~3.0.0",
     "expo-constants": "~16.0.2",
@@ -41,6 +42,7 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.53.0",
     "react-native": "0.74.5",
     "react-native-background-timer": "^2.4.1",
     "react-native-calendars": "^1.1306.0",
@@ -56,7 +58,7 @@
     "react-native-svg": "15.2.0",
     "react-native-web": "~0.19.10",
     "react-navigation": "^5.0.0",
-    "expo-av": "~14.0.7"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

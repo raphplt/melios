@@ -9,15 +9,13 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DataProvider, useData } from "../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import NotificationBox from "@components/Shared/NotificationBox";
 import { HabitsProvider } from "@context/HabitsContext";
 import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
-import ButtonSettings from "@components/Shared/ButtonSettings";
 import { TimerProvider } from "@context/TimerContext";
+import { DataProvider } from "@context/DataContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -68,8 +66,6 @@ function MainNavigator() {
 			setIsLoading(false);
 		}
 	}, [isSessionLoading]);
-
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	if (isLoading || !loaded) return <LoaderScreen text="Chargement..." />;
 
@@ -191,6 +187,7 @@ export default function RootLayout() {
 
 	return (
 		<SessionProvider>
+			{/* TODO Move timer? */}
 			<TimerProvider>
 				<DataProvider>
 					<HabitsProvider>

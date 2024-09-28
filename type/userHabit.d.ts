@@ -5,7 +5,7 @@ export type UserHabit = {
 	habitId: string;
 	name: string;
 	description?: string;
-	type?: HabitType;
+	type: HabitType;
 	duration?: number;
 	moment?: number;
 	color?: string;

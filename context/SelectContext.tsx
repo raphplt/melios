@@ -1,5 +1,5 @@
 import { Category } from "@type/category";
-import { HabitType } from "@type/habit";
+import { Habit, HabitType } from "@type/habit";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 export type SelectContextProps = {
@@ -7,6 +7,8 @@ export type SelectContextProps = {
 	setType: (type: HabitType) => void;
 	category: Category | null;
 	setCategory: (category: Category) => void;
+	habit: Habit | null;
+	setHabit: (habit: Habit) => void;
 };
 
 export const SelectContext = createContext<SelectContextProps>({
@@ -14,14 +16,26 @@ export const SelectContext = createContext<SelectContextProps>({
 	setType: () => {},
 	category: null,
 	setCategory: () => {},
+	habit: null,
+	setHabit: () => {},
 });
 
 export const SelectProvider = ({ children }: { children: ReactNode }) => {
 	const [type, setType] = useState<HabitType>("Positif");
 	const [category, setCategory] = useState<Category | null>(null);
+	const [habit, setHabit] = useState<Habit | null>(null);
 
 	return (
-		<SelectContext.Provider value={{ type, setType, category, setCategory }}>
+		<SelectContext.Provider
+			value={{
+				type,
+				setType,
+				category,
+				setCategory,
+				habit,
+				setHabit,
+			}}
+		>
 			{children}
 		</SelectContext.Provider>
 	);

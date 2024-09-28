@@ -8,16 +8,11 @@ export default function CategoriesList() {
 	const { categories } = useHabits();
 
 	return (
-		<View>
-			{/* Categories */}
-			<View>
-				<FlatList
-					data={categories}
-					renderItem={({ item }) => <CategoryItem category={item} />}
-					keyExtractor={(item) => item.id}
-					numColumns={2}
-				/>
-			</View>
-		</View>
+		<FlatList
+			data={categories}
+			renderItem={({ item }) => <CategoryItem category={item} />}
+			keyExtractor={(item) => item.id}
+			numColumns={2}
+		/>
 	);
 }
