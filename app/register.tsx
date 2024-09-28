@@ -18,7 +18,7 @@ export default function Register() {
 	return (
 		<View style={{ flex: 1 }}>
 			<ImageBackground
-				source={require("../assets/images/illustrations/register-bg.jpg")}
+				source={require("@assets/images/illustrations/register-bg.jpg")}
 				resizeMode="cover"
 				style={{
 					flex: 1,
@@ -42,7 +42,7 @@ export default function Register() {
 				>
 					<View className="flex flex-col items-center">
 						<Image
-							source={require("../assets/images/icon.png")}
+							source={require("@assets/images/icon.png")}
 							style={{ width: 100, height: 100 }}
 							className="mb-5"
 						/>

@@ -22,17 +22,20 @@ export default function HabitTypeBox({
 	const { type } = useSelect();
 	return (
 		<Pressable
-			className="w-[30%] h rounded-xl flex flex-col items-center justify-center p-4 pt-5"
+			className="w-[45%] rounded-xl flex flex-col items-center justify-center p-4 pt-5 mx-2"
 			style={{
-				backgroundColor: type === typeHabit ? bgColorSelected : bgColor,
+				backgroundColor:
+					type === typeHabit ? bgColorSelected : theme.colors.cardBackground,
+				borderColor: type === typeHabit ? bgColorSelected : theme.colors.border,
+				borderWidth: 2,
 			}}
 			onPress={onPress}
 		>
 			{icon}
 			<Text
-				className="text-lg text-center pt-3 font-semibold"
+				className="text-[16px] text-center pt-3 font-semibold"
 				style={{
-					color: theme.colors.text,
+					color: type === typeHabit ? "#fff" : theme.colors.text,
 				}}
 			>
 				{name}

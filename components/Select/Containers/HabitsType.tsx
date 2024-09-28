@@ -20,7 +20,7 @@ export default function HabitsType() {
 			>
 				Créer une habitude
 			</Text>
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto pt-4">
+			<View className="flex flex-row items-center justify-evenly w-11/12 mx-auto pt-4">
 				<HabitTypeItem
 					icon={<Iconify size={24} icon="ph:sun" color={theme.colors.text} />}
 					name="Positif"
@@ -43,7 +43,33 @@ export default function HabitsType() {
 					onPress={() => setType("Négatif")}
 					typeHabit="Négatif"
 				/>
-				<HabitTypeItem
+
+				{/* <View className="flex flex-col items-center justify-center">
+					<View
+						className=" rounded-full w-16 h-16 flex items-center justify-center mx-2"
+						style={{
+							backgroundColor: theme.colors.backgroundTertiary,
+							borderColor: theme.colors.cardBackground,
+							borderWidth: 2,
+						}}
+					>
+						<Iconify
+							size={24}
+							icon="fluent:chevron-right-12-filled"
+							color={theme.colors.primary}
+						/>
+					</View>
+					<Text
+						style={{
+							color: theme.colors.primary,
+						}}
+						className="text-xs mt-2 text-[16px] font-semibold"
+					>
+						Créer
+					</Text>
+				</View> */}
+
+				{/* <HabitTypeItem
 					icon={
 						<Iconify
 							size={24}
@@ -56,7 +82,7 @@ export default function HabitsType() {
 					bgColorSelected={theme.colors.bluePrimary}
 					onPress={() => setType("Personnalisé")}
 					typeHabit="Personnalisé"
-				/>
+				/> */}
 			</View>
 			<View
 				className="w-11/12 mx-auto mt-4 px-4 py-2 rounded-xl flex flex-col"
@@ -76,7 +102,7 @@ export default function HabitsType() {
 					style={{
 						color: theme.colors.textTertiary,
 					}}
-					className="text-[16px] mt-1"
+					className="text-[14px]"
 				>
 					{customMessage(type)}
 				</Text>

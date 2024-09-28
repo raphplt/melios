@@ -6,10 +6,11 @@ export type UserHabit = {
 	name: string;
 	description?: string;
 	type: HabitType;
+	color: string;
 	duration?: number;
 	moment?: number;
-	color?: string;
 	icon?: string;
+	reminderTime?: string;
 	frequency?: {
 		monday?: boolean;
 		tuesday?: boolean;
@@ -19,5 +20,4 @@ export type UserHabit = {
 		saturday?: boolean;
 		sunday?: boolean;
 	};
-	reminderTime?: string;
 };

@@ -26,7 +26,9 @@ export default function HabitInfos({ habit }: { habit: Habit | null }) {
 			/>
 			<View className="flex items-center justify-evenly flex-1">
 				<FontAwesome6 name={habit?.category.icon} size={24} />
-				<Text className="py-2">{habit?.category.category || "Personnalisé"}</Text>
+				<Text className="py-2  w-10/12  text-center">
+					{habit?.category.category || "Personnalisé"}
+				</Text>
 			</View>
 			<View
 				className="flex items-center justify-center h-full "
