@@ -21,7 +21,9 @@ import { Habit } from "@type/habit";
 export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
+//TODO OLD
 export const setMemberHabit = async (habit: Habit) => {
+
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -41,10 +43,9 @@ export const setMemberHabit = async (habit: Habit) => {
 
 			if (!existingHabit) {
 				const userHabit = {
+					// logs: [],
+					...habit,
 					id: habit.id,
-					name: habit.name,
-					logs: [],
-					moment: habit.moment,
 				};
 
 				await updateDoc(memberDoc.ref, {

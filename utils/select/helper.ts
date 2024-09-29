@@ -8,3 +8,5 @@ export const getTypeIcon = (type: string) => {
 			return "question-circle";
 	}
 };
+
+export const getPeriodFromMoment = (moment: number) => {};

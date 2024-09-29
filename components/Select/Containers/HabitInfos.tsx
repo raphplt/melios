@@ -45,6 +45,8 @@ export default function HabitInfos({
 			<View
 				style={{
 					backgroundColor: theme.colors.background,
+					borderColor: theme.colors.border,
+					borderWidth: 1,
 				}}
 				className="rounded-xl py-3 mt-4 flex flex-row items-center justify-between"
 			>
