@@ -9,6 +9,7 @@ import LoaderScreen from "@components/Shared/LoaderScreen";
 import ListHabitsHome from "@components/Home/ListHabitsHome";
 import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
+import CardCheckHabit from "@components/Habits/CardCheckHabit";
 
 export default function Index() {
 	const { loading, refreshing, imageSource, isLoading, userHabits, onRefresh } =
@@ -32,9 +33,14 @@ export default function Index() {
 		>
 			<Background />
 
-			<ListHabitsHome />
+			{userHabits &&
+				userHabits.map((habit, index) => (
+					<CardCheckHabit key={index} habit={habit} />
+				))}
 
-			<ActivitiesContainer />
+			{/* <ListHabitsHome />
+
+			<ActivitiesContainer /> */}
 
 			<DailyQuote />
 		</ParallaxScrollView>

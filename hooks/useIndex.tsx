@@ -21,6 +21,7 @@ import { getMemberHabits, getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
 import { Habit } from "@type/habit";
 import { useHabits } from "@context/HabitsContext";
+import { getUserHabitsByMemberId } from "@db/userHabit";
 
 const useIndex = () => {
 	// Contexts
@@ -85,7 +86,7 @@ const useIndex = () => {
 
 			try {
 				console.log("Fetching member habits data");
-				const data = await getMemberHabits();
+				const data = await getUserHabitsByMemberId(user?.uid || "");
 				if (!signal.aborted) {
 					setUserHabits(data);
 				}

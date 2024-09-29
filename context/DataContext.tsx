@@ -25,6 +25,7 @@ import { Trophy } from "@type/trophy";
 import { processHabits } from "@utils/habitsUtils";
 import { extractPoints } from "@utils/pointsUtils";
 import { getNotificationToken } from "@utils/notificationsUtils";
+import { getUserHabitsByMemberId } from "@db/userHabit";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -36,12 +37,13 @@ export const DataContext = createContext<DataContextType | undefined>(
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const { isLoading: isSessionLoading, user } = useSession();
 	const [habits, setHabits] = useState<UserHabit[]>([]);
+
 	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
 		UserHabit[]
-	>([]);
+	>([]); //TODO remove
 	const [completedHabitsData, setCompletedHabitsData] = useState<UserHabit[]>(
 		[]
-	);
+	); //TODO remove
 	const [isLoading, setIsLoading] = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
@@ -102,10 +104,12 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 					}
 
 					// Habits
-					const snapshotHabits = await getMemberHabits({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
+					//TODO Update
+					// const snapshotHabits = await getMemberHabits({
+					// 	signal: abortController.signal,
+					// 	forceRefresh: true,
+					// });
+					const snapshotHabits = await getUserHabitsByMemberId(user.uid);
 					if (snapshotHabits) {
 						setHabits(snapshotHabits);
 					}

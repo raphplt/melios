@@ -34,20 +34,17 @@ function CardCheckHabit({
 	disabled,
 }: {
 	habit: UserHabit;
-	onHabitStatusChange: (habit: UserHabit, completed: boolean) => void;
-	completed: boolean;
-	disabled: boolean;
+	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
+	completed?: boolean;
+	disabled?: boolean;
 }) {
 	const { theme } = useContext(ThemeContext);
 	const { setCurrentHabit } = useContext(HabitsContext);
 	const { addOdysseePoints } = usePoints();
 	const { date } = useData();
-	const { getHabitDetails, userHabits } = useIndex();
 
 	// États
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
-	const [habitInfos, setHabitInfos] = useState<Habit>();
-	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
 	let touchStartTimeout: NodeJS.Timeout;
 
@@ -65,15 +62,6 @@ function CardCheckHabit({
 	});
 
 	useEffect(() => {
-		async function getHabitInfos() {
-			const result = getHabitDetails(habit.id);
-			setHabitInfos(result);
-			setLoading(false);
-		}
-		getHabitInfos();
-	}, [userHabits]);
-
-	useEffect(() => {
 		opacity.value = withTiming(1, { duration: 200 });
 		return () => {
 			opacity.value = withTiming(0, { duration: 200 });
@@ -86,27 +74,27 @@ function CardCheckHabit({
 		}
 	}, [completed]);
 
-	if (loading || !habitInfos) return <CardPlaceHolder />;
+	// if (loading) return <CardPlaceHolder />;
 
 	const goHabitDetail = () => {
-		setCurrentHabit({
-			habit: habitInfos,
-			userHabit: habit,
-		});
+		// setCurrentHabit({
+		// 	habit: habitInfos,
+		// 	userHabit: habit,
+		// });
 		navigation.navigate("habitDetail");
 	};
 
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
-		onHabitStatusChange(habit, true);
+		// onHabitStatusChange(habit, true);
 
-		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		await setMemberHabitLog(habit.id, date, true);
+		// translateX.value = withSpring(toggleCheckBox ? 100 : 0);
+		// await setMemberHabitLog(habit.id, date, true);
 
-		const habitPoints = getHabitPoints(habitInfos);
-		await setRewards("odyssee", habitPoints.odyssee);
+		// const habitPoints = getHabitPoints(habitInfos);
+		// await setRewards("odyssee", habitPoints.odyssee);
 
-		addOdysseePoints(habitInfos.difficulty, habitInfos.difficulty);
+		// addOdysseePoints(habitInfos.difficulty, habitInfos.difficulty);
 	};
 
 	return (
@@ -169,9 +157,9 @@ function CardCheckHabit({
 							{habit.name}
 						</Text>
 						<FontAwesome6
-							name={habitInfos.category.icon || "question"}
+							name={habit.icon || "question"}
 							size={18}
-							color={habitInfos.category.color || theme.colors.text}
+							color={habit.color || theme.colors.text}
 						/>
 					</View>
 

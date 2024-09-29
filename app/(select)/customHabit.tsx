@@ -40,6 +40,8 @@ export default function CustomHabit() {
 			description: habit?.description || "",
 			difficulty: habit?.difficulty || 1,
 			category: habit?.category.category || "",
+			color: habit?.category.color || "#A9A9A9 ",
+			icon: habit?.category.icon || "smile-beam",
 			moment: habit?.moment || 0,
 			frequency: frequencyDefaultValues,
 			memberId: member?.uid || null,

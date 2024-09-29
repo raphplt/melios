@@ -18,7 +18,8 @@ import { UserHabit } from "../type/userHabit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Habit } from "@type/habit";
 
-export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
+// export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
+export const LOCAL_STORAGE_USER_HABITS_KEY = "user_habits";
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
 //TODO OLD
@@ -84,9 +85,7 @@ export const getMemberHabits = async (
 	try {
 		if (!options.forceRefresh) {
 			// console.log(`[${new Date().toISOString()}] LocalStorage getMemberHabits`);
-			const storedData = await AsyncStorage.getItem(
-				LOCAL_STORAGE_MEMBER_HABITS_KEY
-			);
+			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_USER_HABITS_KEY);
 			if (storedData) {
 				return JSON.parse(storedData);
 			}
@@ -273,7 +272,6 @@ export const getMemberInfos = async (
 				objectifs: memberDoc.data().objectifs,
 				temps: memberDoc.data().temps,
 				aspects: memberDoc.data().aspects,
-				habits: memberDoc.data().habits,
 				profilePicture: memberDoc.data().profilePicture,
 			};
 
