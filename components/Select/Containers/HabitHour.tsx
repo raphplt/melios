@@ -41,7 +41,7 @@ export default function HabitHour({ habit }: { habit: Habit | null }) {
 						width: 1,
 					}}
 				>
-					<Text className="py-2 text-[15px]">Libre</Text>
+					<Text className="py-2 text-[15px]">Heure libre</Text>
 					<Iconify icon="ph:calendar-dots" size={20} color={theme.colors.text} />
 				</View>
 			</View>

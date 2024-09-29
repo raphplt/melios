@@ -6,7 +6,6 @@ import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { lightenColor } from "@utils/colors";
 import { View, Text, StatusBar, FlatList } from "react-native";
-import { Iconify } from "react-native-iconify";
 
 export default function CategoryList() {
 	const { theme } = useTheme();
@@ -22,7 +21,6 @@ export default function CategoryList() {
 	const habits = habitsData.filter(
 		(habit) => habit.category?.category === category.category
 	);
-
 	return (
 		<View
 			style={{

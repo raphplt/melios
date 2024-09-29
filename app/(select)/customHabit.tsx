@@ -1,6 +1,15 @@
-import { View, Text, StatusBar, Pressable, TextInput } from "react-native";
+import {
+	View,
+	Text,
+	StatusBar,
+	Pressable,
+	TextInput,
+	Keyboard,
+} from "react-native";
 import { Iconify } from "react-native-iconify";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 
 import HabitHour from "@components/Select/Containers/HabitHour";
 import HabitInfos from "@components/Select/Containers/HabitInfos";
@@ -9,14 +18,13 @@ import RepeatHabit from "@components/Select/Items/RepeatHabit";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
-import { FormProvider, useForm } from "react-hook-form";
 import { createHabitSchema } from "@utils/schemas/createHabit.schema";
+import HabitTitle from "@components/Select/Containers/HabitTitle";
 
 export default function CustomHabit() {
 	const { theme } = useTheme();
 	const { habit } = useSelect();
 
-	// console.log(habit);
 	const methods = useForm({
 		resolver: zodResolver(createHabitSchema),
 		mode: "onSubmit",
@@ -32,12 +40,19 @@ export default function CustomHabit() {
 		handleSubmit,
 		register,
 		formState: { errors },
+		setFocus,
+		setValue,
 	} = methods;
 
-	// Function to handle the form submission
+	const [isEditingName, setIsEditingName] = useState(false);
+	const [isEditingDescription, setIsEditingDescription] = useState(false);
+
+	// Fonction de soumission du formulaire
 	const onSubmit = (data: any) => {
-		console.log("data", data);
+		console.log("data on submit", data);
 	};
+
+	console.log("errors", errors);
 
 	return (
 		<View
@@ -50,49 +65,18 @@ export default function CustomHabit() {
 			<ButtonClose />
 			<FormProvider {...methods}>
 				<View className="w-11/12 mx-auto">
-					<View className="flex flex-row items-center justify-between ">
-						<TextInput
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-2xl font-semibold w-10/12"
-							value={habit?.name}
-							placeholder={ "Nom de l'habitude"}
-							{...register("name")}
-						/>
-						<Iconify
-							icon="material-symbols:edit"
-							size={24}
-							color={theme.colors.text}
-						/>
-					</View>
-					{/* <Text
-					style={{
-						color: theme.colors.textTertiary,
-					}}
-					className="text-lg mt-1"
-				>
-					{habit?.category.category || null}
-				</Text> */}
-					<View
-						style={{
-							backgroundColor: theme.colors.background,
-						}}
-						className="rounded-xl p-3 mt-4 flex flex-row items-center justify-between"
-					>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="w-10/12"
-						>
-							{habit?.description}
-						</Text>
-						<Iconify icon="lucide:edit" size={22} color={theme.colors.text} />
-					</View>
+					{/* TITRE */}
+					<HabitTitle
+						register={register}
+						isEditingName={isEditingName}
+						setIsEditingName={setIsEditingName}
+						isEditingDescription={isEditingDescription}
+						setIsEditingDescription={setIsEditingDescription}
+						setFocus={setFocus}
+					/>
 
 					{/* INFORMATIONS */}
-					<HabitInfos habit={habit} />
+					<HabitInfos habit={habit} register={register} setValue={setValue} />
 
 					{/* HEURE */}
 					<HabitHour habit={habit} />

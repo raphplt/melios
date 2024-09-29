@@ -3,12 +3,15 @@ import { Pressable, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
+import { useSelect } from "@context/SelectContext";
 
 export default function ButtonNewHabit() {
+	const { setCustomHabit } = useSelect();
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const handlePress = () => {
+		setCustomHabit(true);
 		navigation.navigate("customHabit");
 	};
 

@@ -1,4 +1,4 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { useContext, useEffect, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
@@ -21,7 +21,7 @@ export default function ModalAddGoal({
 	setVisible: (visible: boolean) => void;
 	onValidate?: () => void;
 }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const { habits, member } = useData();
 	const { getHabitDetails } = useIndex();
 	const { goals, setGoals } = useGoal();

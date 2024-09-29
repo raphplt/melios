@@ -1,51 +1,96 @@
-import { useTheme } from "@context/ThemeContext";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { Habit } from "@type/habit";
+import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
-import { Iconify } from "react-native-iconify";
+import { useTheme } from "@context/ThemeContext";
+import { Habit } from "@type/habit";
+import SeparatorVertical from "@components/Shared/SeparatorVertical";
+import { HabitInfoSection } from "../Items/HabitInfoSection";
+import { getTypeIcon } from "@utils/select/helper";
+import { useSelect } from "@context/SelectContext";
+import ModalCategory from "../Modals/ModalCategory";
 
-export default function HabitInfos({ habit }: { habit: Habit | null }) {
+export default function HabitInfos({
+	habit,
+	register,
+	setValue,
+}: {
+	habit: Habit | null;
+	register: any;
+	setValue: any;
+}) {
 	const { theme } = useTheme();
+	const { customHabit } = useSelect();
+
+	const [showModalCategory, setShowModalCategory] = useState(false);
+	const [showModalColor, setShowModalColor] = useState(false);
+
+	const [selectedCategory, setSelectedCategory] = useState(habit?.category);
+
+	// Elements dynamiques si c'est une habitude personnalisé
+	const color = customHabit ? theme.colors.text : theme.colors.grayPrimary;
+	const modalDisabled = customHabit ? false : true;
+
+	// Fonction pour afficher modal catégorie
+	const handleShowModalCategory = () => {
+		if (!modalDisabled) {
+			setShowModalCategory(true);
+		}
+	};
+
+	useEffect(() => {
+		setSelectedCategory(habit?.category);
+	}, [habit]);
+
 	return (
-		<View
-			style={{
-				backgroundColor: theme.colors.background,
-			}}
-			className="rounded-xl py-3 mt-4 flex flex-row items-center justify-between"
-		>
-			<View className="flex items-center justify-evenly flex-1">
-				<Iconify icon="mdi:heart-outline" size={24} color={theme.colors.text} />
-				<Text className="py-2">{habit?.type || "Personnalisé"}</Text>
-			</View>
+		<>
 			<View
-				className="flex items-center justify-center h-full "
 				style={{
-					backgroundColor: theme.colors.grayPrimary,
-					width: 1,
+					backgroundColor: theme.colors.background,
 				}}
-			/>
-			<View className="flex items-center justify-evenly flex-1">
-				<FontAwesome6 name={habit?.category.icon} size={24} />
-				<Text className="py-2  w-10/12  text-center">
-					{habit?.category.category || "Personnalisé"}
-				</Text>
-			</View>
-			<View
-				className="flex items-center justify-center h-full "
-				style={{
-					backgroundColor: theme.colors.grayPrimary,
-					width: 1,
-				}}
-			/>
-			<View className="flex items-center justify-evenly flex-1">
-				<View
-					className="w-6 h-6 rounded-full"
-					style={{
-						backgroundColor: habit?.category.color || theme.colors.text,
-					}}
+				className="rounded-xl py-3 mt-4 flex flex-row items-center justify-between"
+			>
+				{/* Type */}
+				<HabitInfoSection
+					icon={getTypeIcon(habit?.type || "")}
+					text={habit?.type || "Personnalisé"}
+					color={color}
+					onPress={() => {}}
 				/>
-				<Text className="py-2">{habit?.category.color || "Personnalisé"}</Text>
+
+				<SeparatorVertical color={theme.colors.grayPrimary} />
+
+				{/* Catégorie */}
+				<HabitInfoSection
+					icon={selectedCategory?.icon || "shapes"}
+					text={selectedCategory?.category || "Catégorie"}
+					color={color}
+					onPress={handleShowModalCategory}
+				/>
+
+				<SeparatorVertical color={theme.colors.grayPrimary} />
+
+				{/* Couleur */}
+				<View className="flex items-center justify-evenly flex-1">
+					<View
+						className="w-6 h-6 rounded-full"
+						style={{
+							backgroundColor: selectedCategory?.color || theme.colors.grayPrimary,
+						}}
+					/>
+					<Text className="pt-2">{selectedCategory?.color || "Couleur"}</Text>
+				</View>
 			</View>
-		</View>
+
+			<ModalCategory
+				register={register}
+				visible={showModalCategory}
+				setVisible={setShowModalCategory}
+				setValue={(name, value) => {
+					setValue(name, value);
+					if (name === "category") {
+						setSelectedCategory(value);
+					}
+				}}
+			/>
+		</>
 	);
 }

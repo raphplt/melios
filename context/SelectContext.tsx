@@ -9,6 +9,8 @@ export type SelectContextProps = {
 	setCategory: (category: Category) => void;
 	habit: Habit | null;
 	setHabit: (habit: Habit) => void;
+	customHabit: boolean;
+	setCustomHabit: (value: boolean) => void;
 };
 
 export const SelectContext = createContext<SelectContextProps>({
@@ -18,12 +20,15 @@ export const SelectContext = createContext<SelectContextProps>({
 	setCategory: () => {},
 	habit: null,
 	setHabit: () => {},
+	customHabit: false,
+	setCustomHabit: () => {},
 });
 
 export const SelectProvider = ({ children }: { children: ReactNode }) => {
 	const [type, setType] = useState<HabitType>("Positif");
 	const [category, setCategory] = useState<Category | null>(null);
 	const [habit, setHabit] = useState<Habit | null>(null);
+	const [customHabit, setCustomHabit] = useState(false);
 
 	return (
 		<SelectContext.Provider
@@ -34,6 +39,8 @@ export const SelectProvider = ({ children }: { children: ReactNode }) => {
 				setCategory,
 				habit,
 				setHabit,
+				customHabit,
+				setCustomHabit,
 			}}
 		>
 			{children}
