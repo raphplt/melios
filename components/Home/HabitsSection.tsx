@@ -29,7 +29,7 @@ export default function HabitsSection() {
 		(habit: UserHabit) => habit.frequency[today] && habit.moment === -1
 	);
 
-	const title = "text-lg font-semibold my-1 w-11/12 mx-auto";
+	const title = "text-lg font-semibold my-1 w-11/12 mx-auto mt-3";
 
 	return (
 		<ScrollView>

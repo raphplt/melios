@@ -21,7 +21,7 @@ import getImage from "@utils/getImage";
 import { UserHabit } from "@type/userHabit";
 import { BlurView } from "expo-blur";
 
-function Activity({ userHabit }: { userHabit: UserHabit }) {
+function Activity({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [habitInfos, setHabitInfos] = useState<Habit>();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -31,7 +31,7 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 
 	useEffect(() => {
 		async function getHabitInfos() {
-			const result = getHabitDetails(userHabit.id);
+			const result = getHabitDetails(habit.id);
 			setHabitInfos(result);
 		}
 		getHabitInfos();
@@ -60,10 +60,7 @@ function Activity({ userHabit }: { userHabit: UserHabit }) {
 
 	// Go to habit detail
 	const goHabitDetail = () => {
-		setCurrentHabit({
-			habit: habitInfos,
-			userHabit: userHabit,
-		});
+		setCurrentHabit(habit);
 		navigation.navigate("habitDetail");
 	};
 
