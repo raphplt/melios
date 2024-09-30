@@ -17,7 +17,6 @@ export default function RepeatHabit({
 	getValues: any;
 }) {
 	const { theme } = useTheme();
-	const { habit } = useSelect();
 	const [selectedDays, setSelectedDays] = useState(frequencyDefaultValues);
 
 	useEffect(() => {

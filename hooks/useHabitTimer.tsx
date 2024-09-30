@@ -26,9 +26,10 @@ const useHabitTimer = () => {
 	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
 		useData();
 
-	const startTimer = (combinedHabit: CombinedHabits) => {
+	const startTimer = (habit: UserHabit) => {
 		if (!isTimerActive) {
-			const durationSeconds = Math.round(combinedHabit.habit.duration * 60);
+			if (!habit.duration) throw new Error("Habit has no duration");
+			const durationSeconds = Math.round(habit.duration * 60);
 			setTimerSeconds(durationSeconds);
 			setShowHabitDetail(false);
 			setIsTimerActive(true);
@@ -39,7 +40,7 @@ const useHabitTimer = () => {
 						clearInterval(timerRef.current!);
 						setIsTimerActive(false);
 						setIsTimerVisible(false);
-						onTimerEnd(combinedHabit);
+						onTimerEnd(habit);
 						return 0;
 					}
 					return prevSeconds - 1;
@@ -78,15 +79,15 @@ const useHabitTimer = () => {
 		}
 	};
 
-	const onTimerEnd = async (combinedHabit: CombinedHabits) => {
+	const onTimerEnd = async (habit: UserHabit) => {
 		try {
-			if (!combinedHabit) {
+			if (!habit) {
 				return;
 			}
 
-			await setMemberHabitLog(combinedHabit.habit.id, date, true);
+			await setMemberHabitLog(habit.id, date, true);
 
-			const habitPoints = getHabitPoints(combinedHabit.habit);
+			const habitPoints = getHabitPoints(habit);
 
 			// Update rewards
 			await setRewards("rewards", habitPoints.rewards);
@@ -97,14 +98,9 @@ const useHabitTimer = () => {
 				odyssee: habitPoints.odyssee,
 			});
 
-			setCompletedHabitsData((prevHabits: UserHabit[]) => [
-				...prevHabits,
-				combinedHabit.userHabit,
-			]);
+			setCompletedHabitsData((prevHabits: UserHabit[]) => [...prevHabits, habit]);
 			setUncompletedHabitsData((prevHabits: UserHabit[]) =>
-				prevHabits.filter(
-					(oldHabit: UserHabit) => oldHabit.id !== combinedHabit.userHabit.id
-				)
+				prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
 			);
 
 			await AsyncStorage.removeItem("timerSeconds");

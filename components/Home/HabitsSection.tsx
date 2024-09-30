@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import useIndex from "@hooks/useIndex";
+import { UserHabit } from "@type/userHabit";
 
 export default function HabitsSection() {
 	const { userHabits } = useIndex();
@@ -25,15 +26,17 @@ export default function HabitsSection() {
 	);
 
 	const freeHabits = userHabits?.filter(
-		(habit) => habit.frequency[today] && habit.moment === -1
+		(habit: UserHabit) => habit.frequency[today] && habit.moment === -1
 	);
 
+	const title = "text-lg font-semibold my-1 w-11/12 mx-auto";
+
 	return (
-		<ScrollView style={styles.container}>
+		<ScrollView>
 			{/* Morning routine */}
 			{morningHabits && morningHabits.length > 0 && (
-				<View style={styles.section}>
-					<Text style={styles.heading}>Morning Routine</Text>
+				<View>
+					<Text className={title}>Routine du matin</Text>
 					{morningHabits.map((habit, index) => (
 						<CardCheckHabit key={index} habit={habit} />
 					))}
@@ -42,8 +45,8 @@ export default function HabitsSection() {
 
 			{/* Afternoon routine */}
 			{afternoonHabits && afternoonHabits.length > 0 && (
-				<View style={styles.section}>
-					<Text style={styles.heading}>Afternoon Routine</Text>
+				<View>
+					<Text className={title}>Routine de l'après midi</Text>
 					{afternoonHabits.map((habit, index) => (
 						<CardCheckHabit key={index} habit={habit} />
 					))}
@@ -52,8 +55,8 @@ export default function HabitsSection() {
 
 			{/* Evening routine */}
 			{eveningHabits && eveningHabits.length > 0 && (
-				<View style={styles.section}>
-					<Text style={styles.heading}>Evening Routine</Text>
+				<View>
+					<Text className={title}>Routine du soir</Text>
 					{eveningHabits.map((habit, index) => (
 						<CardCheckHabit key={index} habit={habit} />
 					))}
@@ -62,8 +65,8 @@ export default function HabitsSection() {
 
 			{/* Free habits */}
 			{freeHabits && freeHabits.length > 0 && (
-				<View style={styles.section}>
-					<Text style={styles.heading}>Libre</Text>
+				<View>
+					<Text className={title}>Libre</Text>
 					{freeHabits.map((habit, index) => (
 						<CardCheckHabit key={index} habit={habit} />
 					))}
@@ -73,18 +76,3 @@ export default function HabitsSection() {
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 16,
-		backgroundColor: "#f8f9fa",
-	},
-	section: {
-		marginBottom: 24,
-	},
-	heading: {
-		fontSize: 24,
-		fontWeight: "bold",
-		marginBottom: 12,
-	},
-});

@@ -44,7 +44,7 @@ export default function ButtonComplete() {
 		navigation.navigate("timerHabit");
 	};
 
-	const habitPoints = getHabitPoints(currentHabit.habit);
+	const habitPoints = getHabitPoints(currentHabit);
 
 	return (
 		<>

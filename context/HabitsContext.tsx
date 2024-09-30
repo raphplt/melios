@@ -12,18 +12,13 @@ interface HabitsContextProps {
 	refreshHabits: () => void;
 	habitQueue: Habit[];
 	setHabitQueue: React.Dispatch<React.SetStateAction<Habit[]>>;
-	currentHabit: CombinedHabits | null;
-	setCurrentHabit: React.Dispatch<React.SetStateAction<CombinedHabits | null>>;
+	currentHabit: UserHabit | null;
+	setCurrentHabit: React.Dispatch<React.SetStateAction<UserHabit | null>>;
 	showHabitDetail?: boolean;
 	setShowHabitDetail: React.Dispatch<React.SetStateAction<boolean>>;
 	categories: Category[];
 	refreshCategories: () => void;
 }
-
-export type CombinedHabits = {
-	habit: Habit;
-	userHabit: UserHabit;
-};
 
 export const HabitsContext = createContext<HabitsContextProps>({
 	habitsData: [],
@@ -33,7 +28,7 @@ export const HabitsContext = createContext<HabitsContextProps>({
 	setHabitQueue: function (value: React.SetStateAction<Habit[]>): void {},
 	currentHabit: null,
 	setCurrentHabit: function (
-		value: React.SetStateAction<CombinedHabits | null>
+		value: React.SetStateAction<UserHabit | null>
 	): void {},
 	showHabitDetail: false,
 	setShowHabitDetail: function (value: React.SetStateAction<boolean>): void {},
@@ -45,7 +40,7 @@ export const HabitsProvider = ({ children }: any) => {
 	const [habitsData, setHabitsData] = useState<Habit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [habitQueue, setHabitQueue] = useState<Habit[]>([]);
-	const [currentHabit, setCurrentHabit] = useState<CombinedHabits | null>(null);
+	const [currentHabit, setCurrentHabit] = useState<UserHabit | null>(null);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [showHabitDetail, setShowHabitDetail] = useState(true);
 

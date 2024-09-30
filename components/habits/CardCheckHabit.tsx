@@ -10,22 +10,15 @@ import {
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
-	withSpring,
 	withTiming,
 } from "react-native-reanimated";
 
 // Customs imports
-import { setMemberHabitLog } from "@db/member";
-import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 import { ThemeContext } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
-import CardPlaceHolder from "./CardPlaceHolder";
 import { HabitsContext } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
-import { Habit } from "@type/habit";
-import useIndex from "@hooks/useIndex";
-import { getHabitPoints } from "@utils/pointsUtils";
 
 function CardCheckHabit({
 	habit,
@@ -77,10 +70,7 @@ function CardCheckHabit({
 	// if (loading) return <CardPlaceHolder />;
 
 	const goHabitDetail = () => {
-		// setCurrentHabit({
-		// 	habit: habitInfos,
-		// 	userHabit: habit,
-		// });
+		setCurrentHabit(habit);
 		navigation.navigate("habitDetail");
 	};
 

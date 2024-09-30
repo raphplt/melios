@@ -25,13 +25,15 @@ import { useData } from "@context/DataContext";
 import { setMemberHabit } from "@db/userHabit";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
+import { UserHabit } from "@type/userHabit";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const { theme } = useTheme();
 	const { habit } = useSelect();
-	const { member } = useData();
+	const { member, setHabits } = useData();
+
 	const methods = useForm({
 		resolver: zodResolver(createHabitSchema),
 		mode: "onSubmit",
@@ -43,6 +45,7 @@ export default function CustomHabit() {
 			color: habit?.category.color || "#A9A9A9 ",
 			icon: habit?.category.icon || "smile-beam",
 			moment: habit?.moment || 0,
+			duration: habit?.duration || 0, //TODO personnaliser
 			frequency: frequencyDefaultValues,
 			memberId: member?.uid || null,
 			habitId: habit?.id || null,
@@ -65,6 +68,7 @@ export default function CustomHabit() {
 	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 		// console.log("data on submit", data);
 		setMemberHabit(data);
+		setHabits((prev: UserHabit[]) => [...prev, data as UserHabit]);
 		navigation.navigate("(navbar)");
 	};
 

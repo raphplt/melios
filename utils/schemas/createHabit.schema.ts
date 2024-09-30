@@ -17,6 +17,7 @@ export const createHabitSchema = z.object({
 	category: z.string().min(3).max(255),
 	color: z.string().min(3).max(255),
 	icon: z.string().min(3).max(255),
+	duration: z.number().int().min(0).max(3600),
 	moment: z.number().int().min(-1).max(24),
 	frequency: frequencySchema,
 	reminderTime: z.date().optional(),

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { View, AppState, AppStateStatus, Text, StatusBar } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,21 +7,19 @@ import { useNavigation } from "expo-router";
 // Customs imports
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
-import { ThemeContext } from "@context/ThemeContext";
 import { formatTime } from "@utils/timeUtils";
 import { lightenColor } from "@utils/colors";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
-import { HabitsContext, useHabits } from "@context/HabitsContext";
-import ButtonStartHabit from "@components/HabitDetail/ButtonStartHabit";
+import { useHabits } from "@context/HabitsContext";
 import { useTimer } from "@context/TimerContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import ButtonBack from "@components/Shared/ButtonBack";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import ButtonComplete from "@components/HabitDetail/ButtonComplete";
 import ButtonsBox from "@components/HabitDetail/ButtonsBox";
+import { useTheme } from "@context/ThemeContext";
 
 export interface DayStatus {
 	date: string;
@@ -34,7 +32,8 @@ export default function HabitDetail() {
 	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
 
 	// Contexts
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+
 	const { timerSeconds, isTimerActive } = useTimer();
 	const { startTimer } = useHabitTimer();
 	const { sendPushNotification } = useNotifications();
@@ -64,7 +63,7 @@ export default function HabitDetail() {
 				throw new Error("No expoPushToken");
 			}
 			sendPushNotification(expoPushToken, {
-				title: `${currentHabit.habit.name || "Habitude"} en pause`,
+				title: `${currentHabit.name || "Habitude"} en pause`,
 				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
 			}); //TODO supprimer la notification quand on revient sur l'app
 			if (isTimerActive) {
@@ -85,7 +84,7 @@ export default function HabitDetail() {
 	};
 
 	const lightenedColor = lightenColor(
-		currentHabit.habit.category.color || theme.colors.primary,
+		currentHabit.color || theme.colors.primary,
 		0.1
 	);
 
@@ -99,17 +98,13 @@ export default function HabitDetail() {
 			<ButtonBack handleQuit={() => navigation.goBack()} />
 			<View className="w-full mx-auto flex justify-center flex-col pt-1">
 				<HabitDetailHeader
-					habit={currentHabit.habit}
+					habit={currentHabit}
 					theme={theme}
 					lightenedColor={lightenedColor}
 				/>
 
-				<InfosPanel
-					habit={currentHabit.habit}
-					theme={theme}
-					lightenedColor={lightenedColor}
-				/>
-				<LastDays habit={currentHabit.userHabit} />
+				<InfosPanel habit={currentHabit} lightenedColor={lightenedColor} />
+				<LastDays habit={currentHabit} />
 				<ButtonsBox />
 			</View>
 		</View>

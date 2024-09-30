@@ -7,8 +7,10 @@ export type UserHabit = {
 	description?: string;
 	type: HabitType;
 	color: string;
-	duration?: number;
+	duration: number;
 	moment: number;
+	category: string; //TODO Update ?
+	difficulty: number;
 	icon?: string;
 	reminderTime?: string;
 	frequency?: {
