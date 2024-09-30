@@ -8,7 +8,7 @@ export type UserHabit = {
 	type: HabitType;
 	color: string;
 	duration?: number;
-	moment?: number;
+	moment: number;
 	icon?: string;
 	reminderTime?: string;
 	frequency?: {

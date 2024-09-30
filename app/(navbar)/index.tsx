@@ -10,6 +10,7 @@ import ListHabitsHome from "@components/Home/ListHabitsHome";
 import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
+import HabitsSection from "@components/Home/HabitsSection";
 
 export default function Index() {
 	const { loading, refreshing, imageSource, isLoading, userHabits, onRefresh } =
@@ -33,10 +34,7 @@ export default function Index() {
 		>
 			<Background />
 
-			{userHabits &&
-				userHabits.map((habit, index) => (
-					<CardCheckHabit key={index} habit={habit} />
-				))}
+			<HabitsSection />
 
 			{/* <ListHabitsHome />
 

@@ -23,7 +23,6 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
 	const { setUncompletedHabitsData, setHabits } = useData();
-	const { getHabitDetails } = useIndex();
 
 	const setHabit = async () => {
 		const newToggleValue = !toggleCheckBox;
@@ -32,13 +31,13 @@ export default function CardHabit({ habit }: { habit: Habit }) {
 		await setMemberHabit(habit);
 
 		// Met à jour la liste des habitudes non complétées
-		if (newToggleValue) {
-			setUncompletedHabitsData((prev: UserHabit[]) => [...prev, habit]);
-		} else {
-			setUncompletedHabitsData((prev: UserHabit[]) =>
-				prev.filter((h: UserHabit) => h.id !== habit.id)
-			);
-		}
+		// if (newToggleValue) {
+		// 	setUncompletedHabitsData((prev: UserHabit[]) => [...prev, habit]);
+		// } else {
+		// 	setUncompletedHabitsData((prev: UserHabit[]) =>
+		// 		prev.filter((h: UserHabit) => h.id !== habit.id)
+		// 	);
+		// }
 
 		// Met à jour la liste globale des habitudes dans le contexte
 		if (newToggleValue) {

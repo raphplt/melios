@@ -76,151 +76,151 @@ export const setMemberHabit = async (habit: Habit) => {
 	}
 };
 
-export const getMemberHabits = async (
-	options: {
-		signal?: AbortSignal;
-		forceRefresh?: boolean;
-	} = {}
-) => {
-	try {
-		if (!options.forceRefresh) {
-			// console.log(`[${new Date().toISOString()}] LocalStorage getMemberHabits`);
-			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_USER_HABITS_KEY);
-			if (storedData) {
-				return JSON.parse(storedData);
-			}
-		}
+// export const getMemberHabits = async (
+// 	options: {
+// 		signal?: AbortSignal;
+// 		forceRefresh?: boolean;
+// 	} = {}
+// ) => {
+// 	try {
+// 		if (!options.forceRefresh) {
+// 			// console.log(`[${new Date().toISOString()}] LocalStorage getMemberHabits`);
+// 			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_USER_HABITS_KEY);
+// 			if (storedData) {
+// 				return JSON.parse(storedData);
+// 			}
+// 		}
 
-		const authPromise = new Promise<string>((resolve, reject) => {
-			const unsubscribe = onAuthStateChanged(auth, (user) => {
-				if (user) {
-					resolve(user.uid);
-				} else {
-					reject(new Error("User not authenticated"));
-				}
-				unsubscribe();
-			});
-		});
+// 		const authPromise = new Promise<string>((resolve, reject) => {
+// 			const unsubscribe = onAuthStateChanged(auth, (user) => {
+// 				if (user) {
+// 					resolve(user.uid);
+// 				} else {
+// 					reject(new Error("User not authenticated"));
+// 				}
+// 				unsubscribe();
+// 			});
+// 		});
 
-		const uid = await authPromise;
+// 		const uid = await authPromise;
 
-		if (options.signal?.aborted) {
-			throw new Error("Get member habits request was aborted");
-		}
+// 		if (options.signal?.aborted) {
+// 			throw new Error("Get member habits request was aborted");
+// 		}
 
-		const membersCollectionRef = collection(db, "members");
+// 		const membersCollectionRef = collection(db, "members");
 
-		const querySnapshot = await getDocs(
-			query(membersCollectionRef, where("uid", "==", uid))
-		);
+// 		const querySnapshot = await getDocs(
+// 			query(membersCollectionRef, where("uid", "==", uid))
+// 		);
 
-		if (querySnapshot.docs.length > 0) {
-			const memberDocRef = querySnapshot.docs[0].ref;
-			const memberDocSnapshot = await getDoc(memberDocRef);
+// 		if (querySnapshot.docs.length > 0) {
+// 			const memberDocRef = querySnapshot.docs[0].ref;
+// 			const memberDocSnapshot = await getDoc(memberDocRef);
 
-			if (memberDocSnapshot.exists()) {
-				const habits = memberDocSnapshot.data().habits;
-				await AsyncStorage.setItem(
-					LOCAL_STORAGE_MEMBER_HABITS_KEY,
-					JSON.stringify(habits)
-				);
-				return habits;
-			} else {
-				return [];
-			}
-		} else {
-			console.log("Membre non trouvé.");
-			return [];
-		}
-	} catch (error) {
-		console.log(
-			"Member - Erreur lors de la récupération des habitudes : ",
-			error
-		);
-		throw error;
-	}
-};
+// 			if (memberDocSnapshot.exists()) {
+// 				const habits = memberDocSnapshot.data().habits;
+// 				await AsyncStorage.setItem(
+// 					LOCAL_STORAGE_MEMBER_HABITS_KEY,
+// 					JSON.stringify(habits)
+// 				);
+// 				return habits;
+// 			} else {
+// 				return [];
+// 			}
+// 		} else {
+// 			console.log("Membre non trouvé.");
+// 			return [];
+// 		}
+// 	} catch (error) {
+// 		console.log(
+// 			"Member - Erreur lors de la récupération des habitudes : ",
+// 			error
+// 		);
+// 		throw error;
+// 	}
+// };
 
-export const getMemberHabit = async (habitId: string) => {
-	try {
-		const uid: any = auth.currentUser?.uid;
+// export const getMemberHabit = async (habitId: string) => {
+// 	try {
+// 		const uid: any = auth.currentUser?.uid;
 
-		const membersCollectionRef = collection(db, "members");
+// 		const membersCollectionRef = collection(db, "members");
 
-		const querySnapshot = await getDocs(
-			query(membersCollectionRef, where("uid", "==", uid))
-		);
+// 		const querySnapshot = await getDocs(
+// 			query(membersCollectionRef, where("uid", "==", uid))
+// 		);
 
-		if (!querySnapshot.empty) {
-			const memberDoc = querySnapshot.docs[0];
+// 		if (!querySnapshot.empty) {
+// 			const memberDoc = querySnapshot.docs[0];
 
-			const habits = memberDoc.data().habits;
+// 			const habits = memberDoc.data().habits;
 
-			const habit = habits.find((habit: UserHabit) => habit.id === habitId);
+// 			const habit = habits.find((habit: UserHabit) => habit.id === habitId);
 
-			return habit;
-		} else {
-			return [];
-		}
-	} catch (error) {
-		console.log(
-			"Erreur lors de la récupération du document dans la collection 'members': ",
-			error
-		);
-		throw error;
-	}
-};
+// 			return habit;
+// 		} else {
+// 			return [];
+// 		}
+// 	} catch (error) {
+// 		console.log(
+// 			"Erreur lors de la récupération du document dans la collection 'members': ",
+// 			error
+// 		);
+// 		throw error;
+// 	}
+// };
 
-export const setMemberHabitLog = async (
-	habitId: string,
-	date: any,
-	done: any
-) => {
-	try {
-		const uid = auth.currentUser?.uid;
+// export const setMemberHabitLog = async (
+// 	habitId: string,
+// 	date: any,
+// 	done: any
+// ) => {
+// 	try {
+// 		const uid = auth.currentUser?.uid;
 
-		const membersCollectionRef = collection(db, "members");
+// 		const membersCollectionRef = collection(db, "members");
 
-		const querySnapshot = await getDocs(
-			query(membersCollectionRef, where("uid", "==", uid))
-		);
+// 		const querySnapshot = await getDocs(
+// 			query(membersCollectionRef, where("uid", "==", uid))
+// 		);
 
-		if (!querySnapshot.empty) {
-			const memberDoc = querySnapshot.docs[0];
+// 		if (!querySnapshot.empty) {
+// 			const memberDoc = querySnapshot.docs[0];
 
-			const habits = memberDoc.data().habits;
+// 			const habits = memberDoc.data().habits;
 
-			const habitIndex = habits.findIndex((h: any) => h.id === habitId);
+// 			const habitIndex = habits.findIndex((h: any) => h.id === habitId);
 
-			if (habitIndex !== -1) {
-				const habit = habits[habitIndex];
+// 			if (habitIndex !== -1) {
+// 				const habit = habits[habitIndex];
 
-				const existingLogIndex = habit.logs.findIndex(
-					(log: any) => log.date === date
-				);
+// 				const existingLogIndex = habit.logs.findIndex(
+// 					(log: any) => log.date === date
+// 				);
 
-				if (existingLogIndex !== -1) {
-					habit.logs[existingLogIndex].done = done;
-				} else {
-					const newLog = { date, done };
-					habit.logs.push(newLog);
-				}
+// 				if (existingLogIndex !== -1) {
+// 					habit.logs[existingLogIndex].done = done;
+// 				} else {
+// 					const newLog = { date, done };
+// 					habit.logs.push(newLog);
+// 				}
 
-				await updateDoc(memberDoc.ref, {
-					habits: habits,
-				});
-			}
-		} else {
-			return [];
-		}
-	} catch (error) {
-		console.log(
-			"Erreur lors de la récupération du document dans la collection 'members': ",
-			error
-		);
-		throw error;
-	}
-};
+// 				await updateDoc(memberDoc.ref, {
+// 					habits: habits,
+// 				});
+// 			}
+// 		} else {
+// 			return [];
+// 		}
+// 	} catch (error) {
+// 		console.log(
+// 			"Erreur lors de la récupération du document dans la collection 'members': ",
+// 			error
+// 		);
+// 		throw error;
+// 	}
+// };
 
 export const getMemberInfos = async (
 	options: {

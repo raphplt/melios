@@ -86,7 +86,7 @@ const useIndex = () => {
 
 			try {
 				console.log("Fetching member habits data");
-				const data = await getUserHabitsByMemberId(user?.uid || "");
+				const wdata = await getUserHabitsByMemberId(user?.uid || "");
 				if (!signal.aborted) {
 					setUserHabits(data);
 				}
