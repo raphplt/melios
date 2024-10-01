@@ -18,8 +18,7 @@ import { UserHabit } from "../type/userHabit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Habit } from "@type/habit";
 
-// export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "member_habits";
-export const LOCAL_STORAGE_USER_HABITS_KEY = "user_habits";
+
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
 //TODO OLD

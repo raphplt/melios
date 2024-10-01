@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useMemo, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
@@ -19,17 +19,20 @@ import { ThemeContext } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
 import { HabitsContext } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
+import { getHabitLogs, setHabitLog } from "@db/logs";
+
+const formatDate = (date: Date) => {
+	return date.toISOString().split("T")[0];
+};
 
 function CardCheckHabit({
 	habit,
 	onHabitStatusChange,
 	completed,
-	disabled,
 }: {
 	habit: UserHabit;
 	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
 	completed?: boolean;
-	disabled?: boolean;
 }) {
 	const { theme } = useContext(ThemeContext);
 	const { setCurrentHabit } = useContext(HabitsContext);
@@ -37,6 +40,7 @@ function CardCheckHabit({
 	const { date } = useData();
 
 	// États
+	const [habitLogs, setHabitLogs] = useState<Array<string>>();
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [isTouched, setIsTouched] = useState(false);
 	let touchStartTimeout: NodeJS.Timeout;
@@ -67,7 +71,23 @@ function CardCheckHabit({
 		}
 	}, [completed]);
 
-	// if (loading) return <CardPlaceHolder />;
+	useEffect(() => {
+		const getLog = async () => {
+			const snapshot = await getHabitLogs(habit.id);
+			setHabitLogs(snapshot);
+		};
+		getLog();
+	}, []);
+
+	useEffect(() => {
+		const today = formatDate(new Date()); // Formate la date d'aujourd'hui
+		if (!habitLogs) return;
+		if (habitLogs.includes(today)) {
+			setToggleCheckBox(true); // L'habitude a déjà été validée aujourd'hui
+		} else {
+			setToggleCheckBox(false); // L'habitude n'a pas été validée aujourd'hui
+		}
+	}, [habitLogs]);
 
 	const goHabitDetail = () => {
 		setCurrentHabit(habit);
@@ -76,16 +96,22 @@ function CardCheckHabit({
 
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
-		// onHabitStatusChange(habit, true);
 
-		// translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		// await setMemberHabitLog(habit.id, date, true);
+		try {
+			await setHabitLog(habit.id, date);
+			console.log("Log ajouté avec succès !");
+			addOdysseePoints(habit.difficulty);
+		} catch (error) {
+			console.error("Erreur lors de l'ajout du log :", error);
+		}
 
-		// const habitPoints = getHabitPoints(habitInfos);
-		// await setRewards("odyssee", habitPoints.odyssee);
-
-		// addOdysseePoints(habitInfos.difficulty, habitInfos.difficulty);
+		// Appel d'une éventuelle fonction callback
+		if (onHabitStatusChange) {
+			onHabitStatusChange(habit, true);
+		}
 	};
+
+	// console.log("habit.log", habitLogs);
 
 	return (
 		<Animated.View
@@ -152,16 +178,6 @@ function CardCheckHabit({
 							color={habit.color || theme.colors.text}
 						/>
 					</View>
-
-					{/* <Ionicons
-						name="flame"
-						size={24}
-						color={
-							habitInfos.difficulty
-								? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
-								: theme.colors.primary
-						}
-					/> */}
 				</View>
 			</Pressable>
 		</Animated.View>

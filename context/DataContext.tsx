@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import usePopup from "@hooks/usePopup";
 // import { getAllTrophies } from "@db/trophiesList";
-import { getMemberHabits, getMemberInfos } from "@db/member";
+import { getMemberInfos } from "@db/member";
 import { calculateStreak } from "@utils/progressionUtils";
 import { DataContextType } from "@type/dataContext";
 import { Member } from "@type/member";
@@ -25,7 +25,7 @@ import { Trophy } from "@type/trophy";
 import { processHabits } from "@utils/habitsUtils";
 import { extractPoints } from "@utils/pointsUtils";
 import { getNotificationToken } from "@utils/notificationsUtils";
-import { getUserHabitsByMemberId } from "@db/userHabit";
+import { getUserHabits } from "@db/userHabit";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -109,7 +109,10 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 					// 	signal: abortController.signal,
 					// 	forceRefresh: true,
 					// });
-					const snapshotHabits = await getUserHabitsByMemberId(user.uid);
+					const snapshotHabits = await getUserHabits({
+						signal: abortController.signal,
+						forceRefresh: true,
+					});
 					if (snapshotHabits) {
 						setHabits(snapshotHabits);
 					}

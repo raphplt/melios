@@ -9,6 +9,9 @@ import {
 } from "firebase/firestore";
 import { auth, db } from ".";
 import { FieldValues } from "react-hook-form";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const LOCAL_STORAGE_MEMBER_HABITS_KEY = "memberHabits";
 
 // Fonction pour ajouter une habitude
 export const setMemberHabit = async (habit: FieldValues) => {
@@ -34,11 +37,28 @@ export const setMemberHabit = async (habit: FieldValues) => {
 };
 
 // Fonction pour récupérer les habitudes par membre
-export const getUserHabitsByMemberId = async (memberId: string) => {
+export const getUserHabits = async (options: {
+	signal?: AbortSignal;
+	forceRefresh?: boolean;
+}) => {
 	try {
+		if (!options.forceRefresh) {
+			console.log(`[${new Date().toISOString()}] LocalStorage getMemberHabits`);
+			const storedData = await AsyncStorage.getItem(
+				LOCAL_STORAGE_MEMBER_HABITS_KEY
+			);
+			if (storedData) return JSON.parse(storedData);
+		}
+
+		const uid: any = auth.currentUser?.uid;
+
+		if (options.signal?.aborted) {
+			throw new Error("Get member habits request was aborted");
+		}
+
 		const userHabitsCollectionRef = collection(db, "userHabits");
 
-		const q = query(userHabitsCollectionRef, where("memberId", "==", memberId));
+		const q = query(userHabitsCollectionRef, where("memberId", "==", uid));
 
 		const querySnapshot = await getDocs(q);
 
