@@ -1,31 +1,37 @@
 import moment from "moment";
 import { Text, View, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "@context/ThemeContext";
-import { UserHabit, Log } from "@type/userHabit";
+import { UserHabit } from "@type/userHabit";
 import { DayStatus } from "../../app/habitDetail";
+import { getHabitLogs } from "@db/logs";
 
 export default function LastDays({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 
 	useEffect(() => {
-		try {
-			const lastDaySnapshot: DayStatus[] = [];
-			for (let i = 14; i >= 1; i--) {
-				const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-				const log = habit.logs?.find((log: Log) => log.date === day);
-				lastDaySnapshot.push({
-					date: day,
-					done: log ? log.done : false,
-				});
+		const fetchHabitLogs = async () => {
+			try {
+				const logs = await getHabitLogs(habit.id);
+				const lastDaySnapshot: DayStatus[] = [];
+				for (let i = 14; i >= 1; i--) {
+					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+					const done = logs ? logs.includes(day) : false;
+					lastDaySnapshot.push({
+						date: day,
+						done,
+					});
+				}
+				setLastDays(lastDaySnapshot.reverse());
+			} catch (error) {
+				console.error("Erreur lors de la récupération des logs :", error);
 			}
-			setLastDays(lastDaySnapshot.reverse());
-		} catch (error) {
-			console.error("Failed to parse habit:", error);
-		}
-	}, [habit]);
+		};
+
+		fetchHabitLogs();
+	}, [habit.id]);
 
 	return (
 		<>
