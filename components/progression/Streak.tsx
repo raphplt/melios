@@ -1,14 +1,62 @@
+import { useEffect, useState, useContext } from "react";
+import { View, Text } from "react-native";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { calculateStreak } from "@utils/progressionUtils";
-import { useContext } from "react";
-import { View, Text } from "react-native";
+import { Log } from "@type/log";
+import { getHabitLogs } from "@db/logs";
 
 export default function Streak() {
 	const { habits } = useData();
-	const streak = calculateStreak(habits);
 	const { theme } = useContext(ThemeContext);
+	const [logsByHabit, setLogsByHabit] = useState<
+		{ habitId: string; logs: Log[] }[]
+	>([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchLogs = async () => {
+			try {
+				const habitsWithLogs = await Promise.all(
+					habits.map(async (habit) => {
+						const logs = await getHabitLogs(habit.habitId);
+						return { habitId: habit.habitId, logs: logs || [] };
+					})
+				);
+				setLogsByHabit(habitsWithLogs);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des logs :", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchLogs();
+	}, [habits]);
+
+	// Calcul du streak avec les habitudes enrichies par leurs logs
+
+	const streak = calculateStreak(logsByHabit);
+	console.log("logsbyhabit", logsByHabit);
+
+	if (loading) {
+		return (
+			<View
+				className="w-full mx-auto flex flex-row items-center justify-between px-5 pt-2"
+				style={{
+					backgroundColor: theme.colors.backgroundTertiary,
+				}}
+			>
+				<Text
+					className="text-lg font-semibold"
+					style={{ color: theme.colors.primary }}
+				>
+					Chargement...
+				</Text>
+			</View>
+		);
+	}
 
 	return (
 		<View

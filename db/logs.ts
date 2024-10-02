@@ -83,3 +83,32 @@ export const getHabitLogs = async (habitId: string) => {
 		throw error;
 	}
 };
+
+export const getAllHabitLogs = async () => {
+	try {
+		const uid = auth.currentUser?.uid;
+		if (!uid) throw new Error("Utilisateur non authentifié");
+
+		const logsCollectionRef = collection(db, "habitsLogs");
+
+		const q = query(logsCollectionRef, where("uid", "==", uid));
+
+		const querySnapshot = await getDocs(q);
+
+		if (querySnapshot.empty) {
+			console.log("Aucun log trouvé pour cet utilisateur.");
+			return [];
+		}
+
+		const allLogs = querySnapshot.docs.map((doc) => {
+			const data = doc.data();
+			return { habitId: data.habitId, logs: data.logs };
+		});
+
+		console.log("Tous les logs récupérés avec succès :", allLogs);
+		return allLogs;
+	} catch (error) {
+		console.error("Erreur lors de la récupération des logs :", error);
+		throw error;
+	}
+};

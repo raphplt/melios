@@ -1,8 +1,10 @@
-import { UserHabit } from "@type/userHabit";
+import { Log } from "@type/log";
 import moment from "moment";
 
-export const calculateStreak = (habits: UserHabit[]): number => {
-	if (habits.length === 0) return 0;
+export const calculateStreak = (
+	allLogs: { habitId: string; logs: Log[] }[]
+): number => {
+	if (allLogs.length === 0 || !allLogs) return 0;
 
 	let streakCount = 0;
 	let streakActive = true;
@@ -10,13 +12,18 @@ export const calculateStreak = (habits: UserHabit[]): number => {
 	const today = moment().format("YYYY-MM-DD");
 	let todayCompleted = false;
 
-	for (const habit of habits) {
-		if (habit.logs) {
-			const logForToday = habit.logs.find((log) => log.date === today && log.done);
-			if (logForToday) {
-				todayCompleted = true;
-				break;
-			}
+	for (const habit of allLogs) {
+		console.log("habit", habit);
+
+		const logForToday =
+			habit &&
+			habit.logs.find((log) => {
+				const logDate = moment(log.date).format("YYYY-MM-DD");
+				return logDate === today;
+			});
+		if (logForToday) {
+			todayCompleted = true;
+			break;
 		}
 	}
 
@@ -26,17 +33,23 @@ export const calculateStreak = (habits: UserHabit[]): number => {
 
 	let daysBack = 1;
 
+	// Boucle pour vérifier les jours précédents
 	while (streakActive) {
 		const date = moment().subtract(daysBack, "days").format("YYYY-MM-DD");
 		let dayCompleted = false;
 
-		for (const habit of habits) {
-			if (habit.logs) {
-				const logForDay = habit.logs.find((log) => log.date === date && log.done);
-				if (logForDay) {
-					dayCompleted = true;
-					break;
-				}
+		// Vérifier les logs pour ce jour particulier
+		for (const habit of allLogs) {
+			console.log(habit);
+			const logForDay =
+				habit &&
+				habit.logs.find((log) => {
+					const logDate = moment(log.date).format("YYYY-MM-DD");
+					return logDate === date;
+				});
+			if (logForDay) {
+				dayCompleted = true;
+				break;
 			}
 		}
 
