@@ -1,15 +1,14 @@
 import EditHabitCard from "@components/EditHabits/EditHabitCard";
 import { useData } from "@context/DataContext";
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useState } from "react";
 import { FlatList, TextInput, View } from "react-native";
-import { UserHabit } from "../type/userHabit";
 import { Iconify } from "react-native-iconify";
-import { Habit } from "@type/habit";
 import NumberSelected from "@components/Select/Old/NumberSelected";
+import { UserHabit } from "@type/userHabit";
 
 export default function EditHabits() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const { habits } = useData();
 	const [searchText, setSearchText] = useState("");
 

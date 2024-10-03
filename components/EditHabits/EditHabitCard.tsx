@@ -4,12 +4,14 @@ import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useData } from "@context/DataContext";
-import { LOCAL_STORAGE_USER_HABITS_KEY, setMemberHabit } from "@db/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
 import DeleteHabit from "@components/Modals/DeleteHabit";
-import { deleteHabitById } from "@db/userHabit";
+import {
+	deleteHabitById,
+	LOCAL_STORAGE_MEMBER_HABITS_KEY,
+} from "@db/userHabit";
 
 export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
@@ -18,16 +20,15 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const deleteHabit = async (habit: UserHabit) => {
-		const habitId = habit.id
-		if (habitId)
-		deleteHabitById(habitId);
+		const habitId = habit.id;
+		if (habitId) deleteHabitById(habitId);
 
 		setHabits((prev: UserHabit[]) =>
 			prev.filter((h: UserHabit) => h.id !== habit.id)
 		);
 
 		const storedHabits = await AsyncStorage.getItem(
-			LOCAL_STORAGE_USER_HABITS_KEY
+			LOCAL_STORAGE_MEMBER_HABITS_KEY
 		);
 		let localHabits = storedHabits ? JSON.parse(storedHabits) : [];
 		localHabits = localHabits.filter((h: Habit) => h.id !== habit.id);

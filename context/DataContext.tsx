@@ -126,7 +126,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 							snapshotHabits,
 							snapshotLogs
 						);
-						console.log("completedHabits", completedHabits.length);
 						setCompletedHabitsToday(completedHabits);
 					}
 

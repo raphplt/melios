@@ -11,7 +11,7 @@ import { auth, db } from ".";
 import { FieldValues } from "react-hook-form";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LOCAL_STORAGE_MEMBER_HABITS_KEY = "memberHabits";
+export const LOCAL_STORAGE_MEMBER_HABITS_KEY = "memberHabits";
 
 // Fonction pour ajouter une habitude
 export const setMemberHabit = async (habit: FieldValues) => {

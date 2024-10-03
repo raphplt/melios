@@ -98,7 +98,7 @@ export default function InfosPanel({
 							key={day}
 							style={{
 								backgroundColor: isActive
-									? theme.colors.primary
+									? habit.color || theme.colors.primary
 									: theme.colors.background,
 							}}
 							className="rounded-full p-2 mx-1 w-11"

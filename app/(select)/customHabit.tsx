@@ -66,14 +66,11 @@ export default function CustomHabit() {
 
 	// Fonction de soumission du formulaire
 	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-		// console.log("data on submit", data);
 		setMemberHabit(data);
 		setHabits((prev: UserHabit[]) => [...prev, data as UserHabit]);
 		navigation.navigate("(navbar)");
 	};
 
-	// console.log("errors", errors);
-	// console.log("habit", habit);
 
 	return (
 		<View

@@ -69,8 +69,8 @@ export const getHabitLogs = async (habitId: string) => {
 		const querySnapshot = await getDocs(q);
 
 		if (querySnapshot.empty) {
-			console.log("Aucun log trouvé pour cette habitude.");
-			return null; 
+			// console.log("Aucun log trouvé pour cette habitude.");
+			return null;
 		}
 
 		const logDoc = querySnapshot.docs[0];
@@ -110,7 +110,6 @@ export const getAllHabitLogs = async ({
 			return { habitId: data.habitId, logs: data.logs, id: doc.id };
 		});
 
-		console.log(" :", allLogs);
 		return allLogs;
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);

@@ -12,14 +12,15 @@ import { useTheme } from "@context/ThemeContext";
 import { SoundProvider } from "@context/SoundContext";
 
 export default function TimerHabit() {
-	const [quitHabit, setQuitHabit] = useState(false);
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const { currentHabit } = useHabits();
+	const { theme } = useTheme();
 	const { stopTimer } = useHabitTimer();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+	const [quitHabit, setQuitHabit] = useState(false);
 	const beforeRemoveListenerRef = useRef<any>(null);
 
-	const { currentHabit } = useHabits();
-	if (!currentHabit?.habit) return null;
-	const { theme } = useTheme();
+	if (!currentHabit) return null;
 
 	const handleStopHabit = () => {
 		stopTimer();
@@ -78,7 +79,7 @@ export default function TimerHabit() {
 						}}
 						className="text-2xl text-center w-2/3 break-words"
 					>
-						{currentHabit.habit.name}
+						{currentHabit.name}
 					</Text>
 					<ProgressBar />
 					<BottomContainer>

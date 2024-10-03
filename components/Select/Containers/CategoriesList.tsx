@@ -11,6 +11,7 @@ export default function CategoriesList() {
 			renderItem={({ item }) => <CategoryItem category={item} />}
 			keyExtractor={(item) => item.id}
 			numColumns={2}
+			className="w-[95%] mx-auto pb-4"
 		/>
 	);
 }

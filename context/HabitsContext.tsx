@@ -76,7 +76,7 @@ export const HabitsProvider = ({ children }: any) => {
 		const { signal } = controller;
 
 		fetchHabitsData(signal);
-		fetchCategoriesData(signal); // Appeler la fonction pour récupérer les catégories
+		fetchCategoriesData(signal);
 
 		AsyncStorage.getItem("habitQueue").then((data) => {
 			if (data) {
@@ -101,8 +101,8 @@ export const HabitsProvider = ({ children }: any) => {
 				setCurrentHabit,
 				showHabitDetail,
 				setShowHabitDetail,
-				categories, // Fournir les catégories
-				refreshCategories: () => fetchCategoriesData(new AbortController().signal), // Fournir la fonction de rafraîchissement
+				categories,
+				refreshCategories: () => fetchCategoriesData(new AbortController().signal),
 			}}
 		>
 			{children}
