@@ -34,8 +34,6 @@ export default function Index() {
 
 			<HabitsSection />
 
-			{/* <ListHabitsHome />*/}
-
 			<ActivitiesContainer />
 
 			<DailyQuote />
