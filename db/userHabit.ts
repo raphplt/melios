@@ -26,7 +26,10 @@ export const setMemberHabit = async (habit: FieldValues) => {
 			uid: uid,
 			...habit,
 		});
+
 		console.log("Document userHabit créé avec succès");
+
+		return { id: habitDocRef.id, ...habit };
 	} catch (error) {
 		console.error(
 			"Erreur lors de l'ajout du document dans la collection 'userHabits': ",

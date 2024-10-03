@@ -5,7 +5,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import getImage from "@utils/getImage";
 import { useNavigation } from "expo-router";
 import { ReactNode, useContext } from "react";
-import { View, Pressable, Image, StyleSheet, StatusBar } from "react-native";
+import { View, Pressable, Image, StyleSheet } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function ContainerTimerHabit({

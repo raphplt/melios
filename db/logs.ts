@@ -14,6 +14,7 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 	try {
 		const uid = auth.currentUser?.uid;
 		if (!uid) throw new Error("Utilisateur non authentifié");
+		if (!habitId) throw new Error("[SET] -Identifiant de l'habitude manquant");
 
 		const logsCollectionRef = collection(db, "habitsLogs");
 
@@ -55,8 +56,9 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 
 export const getHabitLogs = async (habitId: string) => {
 	try {
-		const uid = auth.currentUser?.uid; 
+		const uid = auth.currentUser?.uid;
 		if (!uid) throw new Error("Utilisateur non authentifié");
+		if (!habitId) throw new Error("[GET] - Identifiant de l'habitude manquant");
 
 		const logsCollectionRef = collection(db, "habitsLogs");
 
@@ -76,7 +78,7 @@ export const getHabitLogs = async (habitId: string) => {
 		const logDoc = querySnapshot.docs[0];
 		const habitLogs = logDoc.data().logs;
 
-		return habitLogs; 
+		return habitLogs;
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);
 		throw error;
@@ -91,6 +93,10 @@ export const getAllHabitLogs = async ({
 	forceRefresh?: boolean;
 }) => {
 	try {
+		if (signal?.aborted) {
+			throw new Error("Requête annulée");
+		}
+
 		const uid = auth.currentUser?.uid;
 		if (!uid) throw new Error("Utilisateur non authentifié");
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef, memo } from "react";
+import { useContext, useRef, memo } from "react";
 import {
 	View,
 	Text,
@@ -12,37 +12,22 @@ import { useNavigation } from "expo-router";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
 // Custom imports
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { lightenColor } from "@utils/colors";
-import { HabitsContext } from "@context/HabitsContext";
-import { Habit } from "@type/habit";
+import { HabitsContext, useHabits } from "@context/HabitsContext";
 import useIndex from "@hooks/useIndex";
 import getImage from "@utils/getImage";
 import { UserHabit } from "@type/userHabit";
 import { BlurView } from "expo-blur";
 
 function Activity({ habit }: { habit: UserHabit }) {
-	const { theme } = useContext(ThemeContext);
-	const [habitInfos, setHabitInfos] = useState<Habit>();
+	const { theme } = useTheme();
+	const { habitsData } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 	const { setCurrentHabit } = useContext(HabitsContext);
-	const { getHabitDetails } = useIndex();
 
-	useEffect(() => {
-		async function getHabitInfos() {
-			const result = getHabitDetails(habit.id);
-			setHabitInfos(result);
-		}
-		getHabitInfos();
-	}, []);
-
-	if (!habitInfos) return null;
-
-	const lighterColor = lightenColor(
-		habitInfos.category?.color || theme.colors.text,
-		0.6
-	);
+	const lighterColor = lightenColor(habit.color || theme.colors.text, 0.6);
 
 	const handleTouchStart = () => {
 		Animated.spring(scaleAnim, {
@@ -63,6 +48,12 @@ function Activity({ habit }: { habit: UserHabit }) {
 		setCurrentHabit(habit);
 		navigation.navigate("habitDetail");
 	};
+
+	const currentHabitData = habitsData.find(
+		(habitData) => habitData.id === habit.habitId
+	);
+
+	if (!currentHabitData) return null;
 
 	return (
 		<Animated.View
@@ -95,7 +86,7 @@ function Activity({ habit }: { habit: UserHabit }) {
 								backgroundColor: theme.colors.textSecondary,
 							}}
 						>
-							{habitInfos.duration}''
+							{habit.duration}''
 						</Text>
 					</View>
 					<Text
@@ -104,7 +95,7 @@ function Activity({ habit }: { habit: UserHabit }) {
 							color: theme.colors.text,
 						}}
 					>
-						{habitInfos.category?.category}
+						{habit.category}
 					</Text>
 				</View>
 				<View
@@ -112,7 +103,7 @@ function Activity({ habit }: { habit: UserHabit }) {
 				"
 				>
 					<Image
-						source={getImage(habitInfos.category.slug)}
+						source={getImage(currentHabitData.category.slug)}
 						style={StyleSheet.absoluteFillObject}
 						blurRadius={20}
 						resizeMode="cover"
@@ -128,12 +119,12 @@ function Activity({ habit }: { habit: UserHabit }) {
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>
-							{habitInfos.name}
+							{habit.name}
 						</Text>
 						<FontAwesome6
-							name={habitInfos.category?.icon || "question"}
+							name={habit.icon || "question"}
 							size={32}
-							color={habitInfos.category?.color || theme.colors.text}
+							color={habit.color || theme.colors.text}
 						/>
 					</View>
 				</View>

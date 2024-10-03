@@ -66,11 +66,14 @@ export default function CustomHabit() {
 
 	// Fonction de soumission du formulaire
 	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-		setMemberHabit(data);
-		setHabits((prev: UserHabit[]) => [...prev, data as UserHabit]);
-		navigation.navigate("(navbar)");
+		try {
+			const newHabit = await setMemberHabit(data);
+			setHabits((prev: UserHabit[]) => [...prev, newHabit as UserHabit]);
+			navigation.navigate("(navbar)");
+		} catch (error) {
+			console.error("Erreur lors de la soumission de l'habitude: ", error);
+		}
 	};
-
 
 	return (
 		<View
