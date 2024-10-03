@@ -4,7 +4,6 @@ import { ScrollView, RefreshControl, StatusBar } from "react-native";
 import Streak from "@components/Progression/Streak";
 
 import { ThemeContext } from "@context/ThemeContext";
-import { useProgression } from "@hooks/useProgression";
 
 import Stats from "@components/Progression/Stats";
 import CalendarHabits from "@components/Progression/Calendar";
@@ -13,7 +12,6 @@ import { GoalProvider } from "@context/GoalsContext";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
-	const { refreshing, onRefresh } = useProgression();
 
 	return (
 		<GoalProvider>
@@ -23,9 +21,6 @@ const Progression: React.FC = () => {
 					flexGrow: 1,
 				}}
 				showsVerticalScrollIndicator={false}
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}
 			>
 				<Streak />
 				<Stats />

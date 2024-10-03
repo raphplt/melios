@@ -22,10 +22,12 @@ import { UserHabit } from "@type/userHabit";
 import { getRewards } from "@db/rewards";
 import { useSession } from "./UserContext";
 import { Trophy } from "@type/trophy";
-import { processHabits } from "@utils/habitsUtils";
 import { extractPoints } from "@utils/pointsUtils";
 import { getNotificationToken } from "@utils/notificationsUtils";
 import { getUserHabits } from "@db/userHabit";
+import { Log } from "@type/log";
+import { getAllHabitLogs } from "@db/logs";
+import { calculateCompletedHabits } from "@utils/habitsUtils";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -37,13 +39,9 @@ export const DataContext = createContext<DataContextType | undefined>(
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const { isLoading: isSessionLoading, user } = useSession();
 	const [habits, setHabits] = useState<UserHabit[]>([]);
-
-	const [uncompletedHabitsData, setUncompletedHabitsData] = useState<
-		UserHabit[]
-	>([]); //TODO remove
-	const [completedHabitsData, setCompletedHabitsData] = useState<UserHabit[]>(
+	const [completedHabitsToday, setCompletedHabitsToday] = useState<UserHabit[]>(
 		[]
-	); //TODO remove
+	);
 	const [isLoading, setIsLoading] = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
@@ -51,6 +49,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [points, setPoints] = useState<Points>({ rewards: 0, odyssee: 0 });
 	const [member, setMember] = useState<Member>();
 	const [trophies, setTrophies] = useState<Trophy[]>([]);
+	const [logs, setLogs] = useState<Log[]>([]);
 
 	// Progression
 	const [todayScore, setTodayScore] = useState<number>(0);
@@ -104,11 +103,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 					}
 
 					// Habits
-					//TODO Update
-					// const snapshotHabits = await getMemberHabits({
-					// 	signal: abortController.signal,
-					// 	forceRefresh: true,
-					// });
 					const snapshotHabits = await getUserHabits({
 						signal: abortController.signal,
 						forceRefresh: true,
@@ -117,23 +111,31 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 						setHabits(snapshotHabits);
 					}
 
+					// Logs
+					const snapshotLogs = await getAllHabitLogs({
+						signal: abortController.signal,
+						forceRefresh: true,
+					});
+					if (snapshotLogs) {
+						setLogs(snapshotLogs);
+						setStreak(calculateStreak(snapshotLogs));
+					}
+
+					if (snapshotHabits && snapshotLogs) {
+						const completedHabits = calculateCompletedHabits(
+							snapshotHabits,
+							snapshotLogs
+						);
+						console.log("completedHabits", completedHabits.length);
+						setCompletedHabitsToday(completedHabits);
+					}
+
 					// Trophies
 					// const snapshotTrophies = await getAllTrophies({
 					// 	signal: abortController.signal,
 					// 	forceRefresh: true,
 					// });
 					// setTrophies(snapshotTrophies);
-
-					// Calculate today's score
-					if (snapshotHabits) {
-						const { uncompleted, completed } = processHabits(snapshotHabits, date);
-						setUncompletedHabitsData(uncompleted);
-						setCompletedHabitsData(completed);
-
-						// Calculate streak
-						const streak = calculateStreak(snapshotHabits);
-						setStreak(streak);
-					}
 				} catch (error: any) {
 					if (error.name !== "AbortError") {
 						console.log("Erreur lors de la récupération des données : ", error);
@@ -160,10 +162,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				setPoints,
 				habits,
 				setHabits,
-				uncompletedHabitsData,
-				setUncompletedHabitsData,
-				completedHabitsData,
-				setCompletedHabitsData,
 				expoPushToken,
 				setExpoPushToken,
 				notificationToggle,
@@ -177,6 +175,9 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				setTodayScore,
 				streak,
 				setStreak,
+				logs,
+				completedHabitsToday,
+				setCompletedHabitsToday,
 			}}
 		>
 			{children}

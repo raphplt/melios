@@ -18,14 +18,8 @@ export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { theme, toggleTheme } = useContext(ThemeContext);
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
-	const {
-		setHabits,
-		setUncompletedHabitsData,
-		setCompletedHabitsData,
-		setPoints,
-		setNotificationToggle,
-		notificationToggle,
-	} = useData();
+	const { setHabits, setPoints, setNotificationToggle, notificationToggle } =
+		useData();
 
 	const { scheduleDailyNotification, cancelAllNotifications } =
 		useNotifications();
@@ -54,8 +48,7 @@ export default function Preferences() {
 
 	const confirmLogout = async () => {
 		setHabits([]);
-		setUncompletedHabitsData([]);
-		setCompletedHabitsData([]);
+
 		setPoints({ odyssee: 0, rewards: 0 });
 
 		await disconnectUser();

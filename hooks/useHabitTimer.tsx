@@ -1,11 +1,10 @@
 import { useData } from "@context/DataContext";
-import { setMemberHabitLog } from "@db/member";
 import { setRewards } from "@db/rewards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import usePoints from "./usePoints";
 import { Habit } from "../type/habit";
-import { CombinedHabits, useHabits } from "@context/HabitsContext";
+import {  useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { useTimer } from "@context/TimerContext";
 import { getHabitPoints } from "@utils/pointsUtils";
@@ -23,7 +22,7 @@ const useHabitTimer = () => {
 		timerRef,
 	} = useTimer();
 
-	const { setUncompletedHabitsData, setCompletedHabitsData, points, setPoints } =
+	const { points, setPoints } =
 		useData();
 
 	const startTimer = (habit: UserHabit) => {
@@ -85,7 +84,7 @@ const useHabitTimer = () => {
 				return;
 			}
 
-			await setMemberHabitLog(habit.id, date, true);
+			// await setMemberHabitLog(habit.id, date, true);
 
 			const habitPoints = getHabitPoints(habit);
 
@@ -98,10 +97,10 @@ const useHabitTimer = () => {
 				odyssee: habitPoints.odyssee,
 			});
 
-			setCompletedHabitsData((prevHabits: UserHabit[]) => [...prevHabits, habit]);
-			setUncompletedHabitsData((prevHabits: UserHabit[]) =>
-				prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
-			);
+			// setCompletedHabitsData((prevHabits: UserHabit[]) => [...prevHabits, habit]);
+			// setUncompletedHabitsData((prevHabits: UserHabit[]) =>
+			// 	prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
+			// );
 
 			await AsyncStorage.removeItem("timerSeconds");
 		} catch (error) {

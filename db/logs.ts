@@ -76,7 +76,6 @@ export const getHabitLogs = async (habitId: string) => {
 		const logDoc = querySnapshot.docs[0];
 		const habitLogs = logDoc.data().logs;
 
-		console.log("Logs récupérés avec succès :", habitLogs);
 		return habitLogs; 
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);
@@ -84,7 +83,13 @@ export const getHabitLogs = async (habitId: string) => {
 	}
 };
 
-export const getAllHabitLogs = async () => {
+export const getAllHabitLogs = async ({
+	signal,
+	forceRefresh,
+}: {
+	signal?: AbortSignal;
+	forceRefresh?: boolean;
+}) => {
 	try {
 		const uid = auth.currentUser?.uid;
 		if (!uid) throw new Error("Utilisateur non authentifié");
@@ -102,10 +107,10 @@ export const getAllHabitLogs = async () => {
 
 		const allLogs = querySnapshot.docs.map((doc) => {
 			const data = doc.data();
-			return { habitId: data.habitId, logs: data.logs };
+			return { habitId: data.habitId, logs: data.logs, id: doc.id };
 		});
 
-		console.log("Tous les logs récupérés avec succès :", allLogs);
+		console.log(" :", allLogs);
 		return allLogs;
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);

@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
@@ -15,9 +15,9 @@ import Animated, {
 
 // Customs imports
 import usePoints from "@hooks/usePoints";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
-import { HabitsContext } from "@context/HabitsContext";
+import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { getHabitLogs, setHabitLog } from "@db/logs";
 
@@ -34,10 +34,10 @@ function CardCheckHabit({
 	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
 	completed?: boolean;
 }) {
-	const { theme } = useContext(ThemeContext);
-	const { setCurrentHabit } = useContext(HabitsContext);
+	const { theme } = useTheme();
+	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
-	const { date } = useData();
+	const { date, setCompletedHabitsToday } = useData();
 
 	// États
 	const [habitLogs, setHabitLogs] = useState<Array<string>>();
@@ -80,12 +80,12 @@ function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		const today = formatDate(new Date()); // Formate la date d'aujourd'hui
+		const today = formatDate(new Date());
 		if (!habitLogs) return;
 		if (habitLogs.includes(today)) {
-			setToggleCheckBox(true); // L'habitude a déjà été validée aujourd'hui
+			setToggleCheckBox(true);
 		} else {
-			setToggleCheckBox(false); // L'habitude n'a pas été validée aujourd'hui
+			setToggleCheckBox(false);
 		}
 	}, [habitLogs]);
 
@@ -98,20 +98,19 @@ function CardCheckHabit({
 		setToggleCheckBox(true);
 
 		try {
-			await setHabitLog(habit.id, date);
-			console.log("Log ajouté avec succès !");
-			addOdysseePoints(habit.difficulty);
+			await setHabitLog(habit.id, date); // Ajout du log
+
+			addOdysseePoints(habit.difficulty); // Ajout des points d'odyssée
+
+			setCompletedHabitsToday((prev) => [...prev, habit]); // Ajout de l'habitude aux habitudes complétées
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du log :", error);
 		}
 
-		// Appel d'une éventuelle fonction callback
 		if (onHabitStatusChange) {
 			onHabitStatusChange(habit, true);
 		}
 	};
-
-	// console.log("habit.log", habitLogs);
 
 	return (
 		<Animated.View
