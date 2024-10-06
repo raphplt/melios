@@ -2,6 +2,7 @@ import { useTheme } from "@context/ThemeContext";
 import { useState } from "react";
 import { Pressable, Switch, Text, View } from "react-native";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import ToggleButton from "@components/Account/Switch";
 
 export default function Notifications({
 	register,
@@ -32,11 +33,12 @@ export default function Notifications({
 		<>
 			<Text
 				style={{
-					color: theme.colors.textTertiary,
+					color: theme.colors.text,
+					fontFamily: "BaskervilleBold",
 				}}
-				className="text-lg mt-4 mb-2"
+				className="text-[16px] mt-4 mb-2"
 			>
-				Rappel
+				RAPPEL
 			</Text>
 			<View
 				style={{
@@ -53,10 +55,8 @@ export default function Notifications({
 					>
 						Me rappeler
 					</Text>
-					<Switch
-						value={isSwitchOn}
-						onValueChange={(value) => setIsSwitchOn(value)}
-					/>
+
+					<ToggleButton value={isSwitchOn} onToggle={setIsSwitchOn} />
 				</View>
 				<View className="flex flex-row items-center px-2">
 					<Text

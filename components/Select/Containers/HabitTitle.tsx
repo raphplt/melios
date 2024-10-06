@@ -2,6 +2,7 @@ import EditButton from "@components/Shared/EditButton";
 import { View, TextInput, Pressable, Keyboard } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useSelect } from "@context/SelectContext";
+import { BlurView } from "expo-blur";
 
 export default function HabitTitle({
 	register,
@@ -21,17 +22,16 @@ export default function HabitTitle({
 	const { theme } = useTheme();
 	const { habit } = useSelect();
 
-	// Fonction pour basculer le focus du champ TextInput correspondant
 	const toggleFocus = (
 		fieldName: string,
 		isEditing: boolean,
 		setEditing: (value: boolean) => void
 	) => {
 		if (isEditing) {
-			Keyboard.dismiss(); // Fermer le clavier
+			Keyboard.dismiss();
 			setEditing(false);
 		} else {
-			setFocus(fieldName); // Mettre le focus sur le TextInput
+			setFocus(fieldName);
 			setEditing(true);
 		}
 	};
@@ -58,19 +58,26 @@ export default function HabitTitle({
 			</View>
 
 			{/* Input Description avec icône d'édition */}
-			<View
+			{/* <View
 				style={{
 					backgroundColor: theme.colors.background,
 					borderColor: theme.colors.border,
 					borderWidth: 1,
 				}}
 				className="rounded-xl px-3 py-1 mt-4 flex flex-row items-center justify-between"
+			> */}
+			<BlurView
+				intensity={90}
+				className="rounded-xl px-3 py-1 mt-4 flex flex-row items-center justify-between"
+				style={{
+					overflow: "hidden",
+				}}
 			>
 				<TextInput
 					style={{
 						color: theme.colors.text,
 					}}
-					className="w-10/12"
+					className="w-10/12 font-semibold"
 					placeholder={"Description"}
 					{...register("description")}
 					defaultValue={habit?.description}
@@ -78,6 +85,7 @@ export default function HabitTitle({
 					onBlur={() => setIsEditingDescription(false)}
 					multiline={true}
 					numberOfLines={3}
+					cursorColor={theme.colors.textTertiary}
 				/>
 				<Pressable
 					onPress={() =>
@@ -86,7 +94,8 @@ export default function HabitTitle({
 				>
 					<EditButton isEditing={isEditingDescription} />
 				</Pressable>
-			</View>
+			</BlurView>
+			{/* </View> */}
 		</>
 	);
 }

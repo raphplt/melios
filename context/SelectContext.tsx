@@ -8,7 +8,7 @@ export type SelectContextProps = {
 	category: Category | null;
 	setCategory: (category: Category) => void;
 	habit: Habit | null;
-	setHabit: (habit: Habit) => void;
+	setHabit: (habit: Habit | null) => void;
 	customHabit: boolean;
 	setCustomHabit: (value: boolean) => void;
 };

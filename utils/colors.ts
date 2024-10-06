@@ -6,7 +6,7 @@ export function lightenColor(hex: string, alpha: number = 0.1): string {
 		const b = parseInt(result[3], 16);
 		return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 	}
-	return "#FFFFFF";
+	return hex;
 }
 
 export const getFlammeColor = (todayScore: number): string => {

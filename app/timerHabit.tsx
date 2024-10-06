@@ -8,12 +8,10 @@ import { useEffect, useState, useRef } from "react";
 import { StatusBar, Alert, Text } from "react-native";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { useHabits } from "@context/HabitsContext";
-import { useTheme } from "@context/ThemeContext";
 import { SoundProvider } from "@context/SoundContext";
 
 export default function TimerHabit() {
 	const { currentHabit } = useHabits();
-	const { theme } = useTheme();
 	const { stopTimer } = useHabitTimer();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 

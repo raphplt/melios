@@ -34,11 +34,12 @@ export default function RepeatHabit({
 		<>
 			<Text
 				style={{
-					color: theme.colors.textTertiary,
+					color: theme.colors.text,
+					fontFamily: "BaskervilleBold",
 				}}
-				className="text-lg mt-4 mb-2"
+				className="text-[16px] mt-4 mb-2"
 			>
-				Répéter
+				RÉPÉTER
 			</Text>
 			<View
 				style={{

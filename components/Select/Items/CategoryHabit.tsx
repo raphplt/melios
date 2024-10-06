@@ -48,7 +48,7 @@ export default function CategoryHabit({ item }: { item: Habit }) {
 					<Iconify
 						icon="material-symbols:check-circle"
 						size={24}
-						color={theme.colors.primary}
+						color={selectedHabit.color || theme.colors.text}
 					/>
 				) : (
 					<Iconify

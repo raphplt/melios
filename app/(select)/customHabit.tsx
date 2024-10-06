@@ -1,11 +1,10 @@
-import { View, Text, StatusBar, Pressable } from "react-native";
+import { View, Text, StatusBar, Pressable, StyleSheet } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	useForm,
 	FormProvider,
 	FieldValues,
-	set,
 	SubmitHandler,
 } from "react-hook-form";
 
@@ -26,12 +25,14 @@ import { setMemberHabit } from "@db/userHabit";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { UserHabit } from "@type/userHabit";
+import { LinearGradient } from "expo-linear-gradient";
+import { lightenColor } from "@utils/colors";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const { theme } = useTheme();
-	const { habit } = useSelect();
+	const { habit, setHabit } = useSelect();
 	const { member, setHabits } = useData();
 
 	const methods = useForm({
@@ -56,6 +57,7 @@ export default function CustomHabit() {
 		handleSubmit,
 		register,
 		formState: { errors },
+		watch,
 		setFocus,
 		setValue,
 		getValues,
@@ -75,14 +77,35 @@ export default function CustomHabit() {
 		}
 	};
 
+	// Selected color
+	const selectedColor = watch("color");
+
+	const gradientColors = habit
+		? [lightenColor(selectedColor, 0.85), lightenColor(selectedColor, 0.25)]
+		: [lightenColor("#08209F", 0.4), theme.colors.cardBackground];
+
+	// Remove habit on back
+	useEffect(() => {
+		return () => {
+			setHabit(null);
+		};
+	}, []);
+
 	return (
 		<View
 			style={{
 				flex: 1,
 				paddingTop: StatusBar.currentHeight,
-				backgroundColor: theme.colors.cardBackground,
 			}}
 		>
+			<LinearGradient
+				colors={gradientColors}
+				style={{
+					flex: 1,
+					...StyleSheet.absoluteFillObject,
+					overflow: "hidden",
+				}}
+			/>
 			<ButtonClose />
 			<FormProvider {...methods}>
 				<View className="w-11/12 mx-auto">

@@ -20,7 +20,15 @@ export function HabitInfoSection({
 			onPress={onPress}
 		>
 			<FontAwesome6 name={icon} size={24} color={color || theme.colors.text} />
-			<Text className="pt-2 text-center w-10/12">{text}</Text>
+			<Text
+				className="pt-2 text-center w-10/12 font-semibold"
+				style={{
+					color: theme.colors.text,
+				}}
+				numberOfLines={1}
+			>
+				{text}
+			</Text>
 		</Pressable>
 	);
 }
