@@ -1,11 +1,12 @@
 import { useTheme } from "@context/ThemeContext";
-import { useSelect } from "@context/SelectContext";
 import { Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import {
 	daysList,
 	frequencyDefaultValues,
 } from "@utils/schemas/createHabit.schema";
+import { BlurView } from "expo-blur";
+import RowTitleCustom from "./RowTitleCustom";
 
 export default function RepeatHabit({
 	register,
@@ -17,14 +18,14 @@ export default function RepeatHabit({
 	getValues: any;
 }) {
 	const { theme } = useTheme();
-	const [selectedDays, setSelectedDays] = useState(frequencyDefaultValues);
+	const [selectedDays, setSelectedDays]: any = useState(frequencyDefaultValues);
 
 	useEffect(() => {
 		setValue("frequency", selectedDays);
 	}, [selectedDays, setValue]);
 
 	const toggleDay = (daySlug: string) => {
-		setSelectedDays((prev) => ({
+		setSelectedDays((prev: any) => ({
 			...prev,
 			[daySlug]: !prev[daySlug],
 		}));
@@ -32,20 +33,14 @@ export default function RepeatHabit({
 
 	return (
 		<>
-			<Text
+			<RowTitleCustom title="RÉPÉTITION" />
+
+			<BlurView
+				intensity={90}
+				className="rounded-xl px-4 py-4 mt-1 flex flex-row items-center justify-between h-fit"
 				style={{
-					color: theme.colors.text,
-					fontFamily: "BaskervilleBold",
+					overflow: "hidden",
 				}}
-				className="text-[16px] mt-4 mb-2"
-			>
-				RÉPÉTER
-			</Text>
-			<View
-				style={{
-					backgroundColor: theme.colors.background,
-				}}
-				className="rounded-xl py-3 mt-2 flex flex-row items-center justify-between px-2"
 			>
 				{daysList.map((day) => (
 					<Pressable
@@ -70,7 +65,7 @@ export default function RepeatHabit({
 						</Text>
 					</Pressable>
 				))}
-			</View>
+			</BlurView>
 		</>
 	);
 }

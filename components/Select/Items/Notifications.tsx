@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Pressable, Switch, Text, View } from "react-native";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import ToggleButton from "@components/Account/Switch";
+import { BlurView } from "expo-blur";
+import RowTitleCustom from "./RowTitleCustom";
+import { Iconify } from "react-native-iconify";
 
 export default function Notifications({
 	register,
@@ -31,20 +34,14 @@ export default function Notifications({
 
 	return (
 		<>
-			<Text
+			<RowTitleCustom title="RAPPEL" />
+
+			<BlurView
+				intensity={90}
+				className="rounded-xl px-4 py-3 mt-1 flex flex-row items-center justify-between h-fit"
 				style={{
-					color: theme.colors.text,
-					fontFamily: "BaskervilleBold",
+					overflow: "hidden",
 				}}
-				className="text-[16px] mt-4 mb-2"
-			>
-				RAPPEL
-			</Text>
-			<View
-				style={{
-					backgroundColor: theme.colors.background,
-				}}
-				className="rounded-xl py-3 mt-2 flex flex-row items-center justify-around px-2"
 			>
 				<View className="flex flex-row items-center px-2">
 					<Text
@@ -90,7 +87,7 @@ export default function Notifications({
 				{visible && isSwitchOn && (
 					<RNDateTimePicker mode="time" value={selectedDate} onChange={onChange} />
 				)}
-			</View>
+			</BlurView>
 		</>
 	);
 }

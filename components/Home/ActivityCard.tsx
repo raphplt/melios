@@ -12,10 +12,9 @@ import { useNavigation } from "expo-router";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
 // Custom imports
-import { ThemeContext, useTheme } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { lightenColor } from "@utils/colors";
 import { HabitsContext, useHabits } from "@context/HabitsContext";
-import useIndex from "@hooks/useIndex";
 import getImage from "@utils/getImage";
 import { UserHabit } from "@type/userHabit";
 import { BlurView } from "expo-blur";
