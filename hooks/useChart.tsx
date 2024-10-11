@@ -26,22 +26,25 @@ const useChart = () => {
 
 	const [todayTime, setTodayTime] = useState(0);
 	const timePerDay = convertAnswer(member?.temps.value || 0);
-	const parsedTime = todayTime / timePerDay > 1 ? 1 : todayTime / timePerDay;
+    const parsedTime = todayTime / timePerDay > 1 ? 1 : todayTime / timePerDay;
 
-	useEffect(() => {
-		const todayTime = completedHabitsToday.reduce((acc, habit) => {
-			return acc + habit.duration;
-		}, 0);
-		setTodayTime(todayTime);
-	}, [completedHabitsToday]);
+				const regularity = weeklyStreak / 7 > 1 ? 1 : weeklyStreak / 7;
 
-	return {
-		todayTime,
-		timePerDay,
-		parsedTime,
-		todayScore,
-		weeklyStreak,
-	};
+				useEffect(() => {
+					const todayTime = completedHabitsToday.reduce((acc, habit) => {
+						return acc + habit.duration;
+					}, 0);
+					setTodayTime(todayTime);
+				}, [completedHabitsToday]);
+
+				return {
+					todayTime,
+					timePerDay,
+					parsedTime,
+					todayScore,
+					weeklyStreak,
+					regularity,
+				};
 };
 
 export default useChart;
