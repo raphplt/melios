@@ -2,7 +2,6 @@ import {
 	useContext,
 	useEffect,
 	useState,
-	useMemo,
 	type PropsWithChildren,
 	type ReactElement,
 } from "react";
@@ -32,7 +31,7 @@ type Props = PropsWithChildren<{
 	refreshControl?: ReactElement;
 }>;
 
-const getTodayScore = (
+export const getTodayScore = (
 	habits: UserHabit[],
 	completedHabitsToday: UserHabit[]
 ): number => {

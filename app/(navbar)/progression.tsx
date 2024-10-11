@@ -9,6 +9,7 @@ import Stats from "@components/Progression/Stats";
 import CalendarHabits from "@components/Progression/Calendar";
 import GoalSection from "@components/Progression/GoalSection";
 import { GoalProvider } from "@context/GoalsContext";
+import Chart from "@components/Progression/Chart";
 
 const Progression: React.FC = () => {
 	const { theme } = useContext(ThemeContext);
@@ -23,10 +24,11 @@ const Progression: React.FC = () => {
 				showsVerticalScrollIndicator={false}
 			>
 				<Streak />
-				<Stats />
+				{/* <Stats /> */}
 				<GoalSection />
 
 				<CalendarHabits />
+				<Chart />
 			</ScrollView>
 		</GoalProvider>
 	);

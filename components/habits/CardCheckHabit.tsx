@@ -98,11 +98,11 @@ function CardCheckHabit({
 		setToggleCheckBox(true);
 
 		try {
-			await setHabitLog(habit.id, date); // Ajout du log
+			await setHabitLog(habit.id, date);
 
-			addOdysseePoints(habit.difficulty); // Ajout des points d'odyssée
+			addOdysseePoints(habit.difficulty);
 
-			setCompletedHabitsToday((prev) => [...prev, habit]); // Ajout de l'habitude aux habitudes complétées
+			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du log :", error);
 		}

@@ -59,7 +59,7 @@ const CalendarHabits = () => {
 							color: theme.colors.text,
 						}}
 					>
-						Calendrier des séries
+						Jours effectués
 					</Text>
 				</View>
 

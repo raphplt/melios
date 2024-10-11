@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { View, Text } from "react-native";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
@@ -13,7 +12,7 @@ export default function Streak() {
 
 	return (
 		<View
-			className="w-full mx-auto flex flex-row items-center justify-between px-5 pt-2"
+			className="w-full mx-auto flex flex-row items-center justify-between px-5 pt-2 py-5 rounded-b-3xl"
 			style={{
 				backgroundColor: theme.colors.backgroundTertiary,
 			}}
