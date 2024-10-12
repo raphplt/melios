@@ -20,6 +20,7 @@ import { useData } from "@context/DataContext";
 import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { getHabitLogs, setHabitLog } from "@db/logs";
+import { Iconify } from "react-native-iconify";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -40,6 +41,7 @@ function CardCheckHabit({
 	const { date, setCompletedHabitsToday } = useData();
 
 	// États
+	const [showDetails, setShowDetails] = useState(false);
 	const [habitLogs, setHabitLogs] = useState<Array<string>>();
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [isTouched, setIsTouched] = useState(false);
@@ -50,11 +52,19 @@ function CardCheckHabit({
 	// Animations
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
+	const detailsHeight = useSharedValue(0);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
 			opacity: opacity.value,
 			transform: [{ translateX: translateX.value }],
+		};
+	});
+
+	const detailsAnimatedStyle = useAnimatedStyle(() => {
+		return {
+			height: detailsHeight.value, //TODO ajuster
+			opacity: detailsHeight.value > 0 ? 1 : 0,
 		};
 	});
 
@@ -89,9 +99,18 @@ function CardCheckHabit({
 		}
 	}, [habitLogs]);
 
+	useEffect(() => {
+		detailsHeight.value = withTiming(showDetails ? 100 : 0, { duration: 300 });
+	}, [showDetails]);
+
+	// Fonctions
 	const goHabitDetail = () => {
 		setCurrentHabit(habit);
 		navigation.navigate("habitDetail");
+	};
+
+	const startTimer = () => {
+		console.log("startTimer");
 	};
 
 	const setHabitDone = async () => {
@@ -131,12 +150,15 @@ function CardCheckHabit({
 			</Pressable>
 			<Pressable
 				onPress={() => {
-					goHabitDetail();
+					setShowDetails(!showDetails);
 				}}
 				style={{
-					backgroundColor: theme.colors.cardBackground,
+					backgroundColor:
+						isTouched || completed
+							? theme.colors.backgroundTertiary
+							: theme.colors.cardBackground,
 				}}
-				className="flex-1 rounded-xl"
+				className="flex-1 flex flex-col rounded-xl"
 				onTouchStart={() => {
 					touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
 				}}
@@ -149,35 +171,64 @@ function CardCheckHabit({
 					setIsTouched(false);
 				}}
 			>
-				<View
-					className="flex items-center flex-row justify-between px-3 py-[13px] rounded-xl"
-					style={{
-						backgroundColor:
-							isTouched || completed
-								? theme.colors.backgroundTertiary
-								: theme.colors.cardBackground,
-					}}
-				>
-					<View className="flex flex-row items-center justify-between w-full">
-						<Text
-							style={{
-								color: theme.colors.text,
-								textDecorationLine: completed ? "line-through" : "none",
-								marginLeft: 6,
-							}}
-							className="text-[16px] font-semibold w-[80%]"
-							numberOfLines={1}
-							ellipsizeMode="tail"
-						>
-							{habit.name}
-						</Text>
-						<FontAwesome6
-							name={habit.icon || "question"}
-							size={18}
-							color={habit.color || theme.colors.text}
-						/>
-					</View>
+				<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
+					<Text
+						style={{
+							color: theme.colors.text,
+							textDecorationLine: completed ? "line-through" : "none",
+							marginLeft: 6,
+						}}
+						className="text-[16px] font-semibold w-[80%]"
+						numberOfLines={1}
+						ellipsizeMode="tail"
+					>
+						{habit.name}
+					</Text>
+					<FontAwesome6
+						name={habit.icon || "question"}
+						size={18}
+						color={habit.color || theme.colors.text}
+					/>
 				</View>
+				<Animated.View style={[detailsAnimatedStyle]}>
+					{showDetails && (
+						<View className="flex flex-row items-center justify-around flex-1 h-fit">
+							<Pressable
+								onPress={goHabitDetail}
+								className="flex flex-row items-center justify-center py-3 px-6 rounded-xl"
+								style={{
+									backgroundColor: theme.colors.backgroundTertiary,
+								}}
+							>
+								<Iconify
+									icon="material-symbols:info-outline"
+									color={theme.colors.text}
+									size={20}
+								/>
+								<Text
+									style={{
+										color: theme.colors.text,
+									}}
+									className="text-[16px] ml-2 font-semibold"
+								>
+									Détails
+								</Text>
+							</Pressable>
+							<Pressable
+								onPress={startTimer}
+								className="flex flex-row items-center justify-center py-3 px-6 rounded-xl"
+								style={{
+									backgroundColor: theme.colors.greenPrimary,
+								}}
+							>
+								<Iconify icon="bi:play" color="white" size={20} />
+								<Text className="text-[16px] text-white font-semibold ml-2">
+									Commencer
+								</Text>
+							</Pressable>
+						</View>
+					)}
+				</Animated.View>
 			</Pressable>
 		</Animated.View>
 	);
