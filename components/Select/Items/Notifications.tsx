@@ -1,11 +1,10 @@
 import { useTheme } from "@context/ThemeContext";
 import { useState } from "react";
-import { Pressable, Switch, Text, View } from "react-native";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { Pressable, Text, View } from "react-native";
 import ToggleButton from "@components/Account/Switch";
 import { BlurView } from "expo-blur";
 import RowTitleCustom from "./RowTitleCustom";
-import { Iconify } from "react-native-iconify";
+import ModalReminder from "../Modals/ModalReminder";
 
 export default function Notifications({
 	register,
@@ -16,20 +15,16 @@ export default function Notifications({
 }) {
 	const { theme } = useTheme();
 	const [visible, setVisible] = useState(false);
-	const [selectedDate, setSelectedDate] = useState(new Date());
+	const [selectedMoment, setSelectedMoment] = useState({
+		label: "5 minutes avant",
+		value: 5,
+	});
 	const [isSwitchOn, setIsSwitchOn] = useState(false);
 
-	const onChange = (event: any, date: any) => {
-		const currentDate = date || selectedDate;
+	const onChange = (label: string, value: number) => {
 		setVisible(false);
-		setSelectedDate(currentDate);
-		setValue("reminderTime", currentDate);
-	};
-
-	const formatTime = (date: Date) => {
-		const hours = date.getHours().toString().padStart(2, "0");
-		const minutes = date.getMinutes().toString().padStart(2, "0");
-		return `${hours}:${minutes}`;
+		setSelectedMoment({ label, value });
+		setValue("reminderMoment", value);
 	};
 
 	return (
@@ -56,14 +51,6 @@ export default function Notifications({
 					<ToggleButton value={isSwitchOn} onToggle={setIsSwitchOn} />
 				</View>
 				<View className="flex flex-row items-center px-2">
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="mr-4 text-[16px]"
-					>
-						à
-					</Text>
 					<Pressable
 						style={{
 							backgroundColor: isSwitchOn
@@ -80,13 +67,15 @@ export default function Notifications({
 							}}
 							className="text-[16px]"
 						>
-							{formatTime(selectedDate)}
+							{selectedMoment.label}
 						</Text>
 					</Pressable>
 				</View>
-				{visible && isSwitchOn && (
-					<RNDateTimePicker mode="time" value={selectedDate} onChange={onChange} />
-				)}
+				<ModalReminder
+					visible={visible}
+					setVisible={setVisible}
+					onChange={onChange}
+				/>
 			</BlurView>
 		</>
 	);

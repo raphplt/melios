@@ -52,11 +52,16 @@ export default function Chart() {
 			setShow={setShowChart}
 			icon="graph"
 		>
-			<View className="pb-24 pt-4 mx-auto ">
+			<View
+				className=" py-3 mx-auto w-11/12 my-3 rounded-xl"
+				style={{
+					backgroundColor: theme.colors.cardBackground,
+				}}
+			>
 				<View style={{ flexDirection: "row", justifyContent: "center" }}>
 					<ProgressChart
 						data={data}
-						width={screenWidth * 0.6}
+						width={screenWidth * 0.5}
 						height={220}
 						strokeWidth={16}
 						radius={32}
@@ -64,10 +69,10 @@ export default function Chart() {
 							borderRadius: 16,
 						}}
 						chartConfig={{
-							backgroundColor: "#ffffff",
-							backgroundGradientFrom: "#ffffff",
-							backgroundGradientTo: "#ffffff",
-							color: (opacity = 1, index) => {
+							backgroundColor: theme.colors.cardBackground,
+							backgroundGradientFrom: theme.colors.cardBackground,
+							backgroundGradientTo: theme.colors.cardBackground,
+							color: (opacity = 1, index: any) => {
 								const colors = [
 									`rgba(68, 139, 173, ${opacity})`,
 									`rgba(71, 168, 108, ${opacity})`,
@@ -83,7 +88,7 @@ export default function Chart() {
 						}}
 						hideLegend={true}
 					/>
-					<View className="mr-4 flex flex-col justify-center items-end">
+					<View className=" flex flex-col justify-center items-end">
 						<ChartLabel
 							color={colors[0]}
 							text="Temps passé"

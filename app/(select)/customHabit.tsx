@@ -50,6 +50,7 @@ export default function CustomHabit() {
 			frequency: frequencyDefaultValues,
 			memberId: member?.uid || null,
 			habitId: habit?.id || null,
+			reminderMoment: habit?.reminderMoment || 5, // Default to 5 minutes before
 		},
 	});
 

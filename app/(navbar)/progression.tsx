@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ScrollView, RefreshControl, StatusBar } from "react-native";
+import { ScrollView, RefreshControl, StatusBar, View } from "react-native";
 
 import Streak from "@components/Progression/Streak";
 
@@ -29,6 +29,10 @@ const Progression: React.FC = () => {
 
 				<CalendarHabits />
 				<Chart />
+				<View
+					className="h-20 w-full"
+					style={{ backgroundColor: theme.colors.cardBackground }}
+				></View>
 			</ScrollView>
 		</GoalProvider>
 	);
