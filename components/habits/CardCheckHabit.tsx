@@ -22,6 +22,7 @@ import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { getHabitLogs, setHabitLog } from "@db/logs";
 import { Iconify } from "react-native-iconify";
+import useHabitTimer from "@hooks/useHabitTimer";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -40,6 +41,7 @@ function CardCheckHabit({
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
 	const { date, setCompletedHabitsToday } = useData();
+	const { startTimer } = useHabitTimer();
 
 	// États
 	const [showDetails, setShowDetails] = useState(false);
@@ -117,8 +119,9 @@ function CardCheckHabit({
 		navigation.navigate("habitDetail");
 	};
 
-	const startTimer = () => {
-		console.log("startTimer");
+	const startHabit = () => {
+		startTimer(habit);
+		navigation.navigate("timerHabit");
 	};
 
 	const setHabitDone = async () => {
@@ -223,7 +226,7 @@ function CardCheckHabit({
 								</Text>
 							</Pressable>
 							<Pressable
-								onPress={startTimer}
+								onPress={startHabit}
 								className="flex flex-row items-center justify-center py-3 px-6 rounded-xl"
 								style={{
 									backgroundColor: theme.colors.greenPrimary,

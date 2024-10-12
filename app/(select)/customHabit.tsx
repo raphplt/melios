@@ -82,7 +82,7 @@ export default function CustomHabit() {
 	const selectedColor = watch("color");
 
 	const gradientColors = habit
-		? [lightenColor(selectedColor, 0.85), lightenColor(selectedColor, 0.25)]
+		? [lightenColor(selectedColor, 0.85), lightenColor(selectedColor, 0.55)]
 		: [lightenColor("#08209F", 0.4), theme.colors.cardBackground];
 
 	// Remove habit on back
