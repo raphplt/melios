@@ -11,6 +11,7 @@ import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withTiming,
+	withDelay,
 } from "react-native-reanimated";
 
 // Customs imports
@@ -53,6 +54,7 @@ function CardCheckHabit({
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
 	const detailsHeight = useSharedValue(0);
+	const detailsOpacity = useSharedValue(0);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
@@ -63,8 +65,8 @@ function CardCheckHabit({
 
 	const detailsAnimatedStyle = useAnimatedStyle(() => {
 		return {
-			height: detailsHeight.value, //TODO ajuster
-			opacity: detailsHeight.value > 0 ? 1 : 0,
+			height: detailsHeight.value,
+			opacity: detailsOpacity.value,
 		};
 	});
 
@@ -100,7 +102,13 @@ function CardCheckHabit({
 	}, [habitLogs]);
 
 	useEffect(() => {
-		detailsHeight.value = withTiming(showDetails ? 100 : 0, { duration: 300 });
+		if (showDetails) {
+			detailsHeight.value = withTiming(70, { duration: 300 });
+			detailsOpacity.value = withDelay(100, withTiming(1, { duration: 300 }));
+		} else {
+			detailsOpacity.value = withTiming(0, { duration: 300 });
+			detailsHeight.value = withDelay(200, withTiming(0, { duration: 300 }));
+		}
 	}, [showDetails]);
 
 	// Fonctions
