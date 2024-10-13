@@ -31,11 +31,9 @@ const formatDate = (date: Date) => {
 function CardCheckHabit({
 	habit,
 	onHabitStatusChange,
-	completed,
 }: {
 	habit: UserHabit;
 	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
-	completed?: boolean;
 }) {
 	const { theme } = useTheme();
 	const { setCurrentHabit } = useHabits();
@@ -48,6 +46,7 @@ function CardCheckHabit({
 	const [habitLogs, setHabitLogs] = useState<Array<string>>();
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [isTouched, setIsTouched] = useState(false);
+	const [completed, setCompleted] = useState(false);
 	let touchStartTimeout: NodeJS.Timeout;
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -80,12 +79,6 @@ function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		if (completed) {
-			setToggleCheckBox(true);
-		}
-	}, [completed]);
-
-	useEffect(() => {
 		const getLog = async () => {
 			const snapshot = await getHabitLogs(habit.id);
 			setHabitLogs(snapshot);
@@ -97,6 +90,7 @@ function CardCheckHabit({
 		const today = formatDate(new Date());
 		if (!habitLogs) return;
 		if (habitLogs.includes(today)) {
+			setCompleted(true);
 			setToggleCheckBox(true);
 		} else {
 			setToggleCheckBox(false);
@@ -105,11 +99,11 @@ function CardCheckHabit({
 
 	useEffect(() => {
 		if (showDetails) {
-			detailsHeight.value = withTiming(70, { duration: 300 });
-			detailsOpacity.value = withDelay(100, withTiming(1, { duration: 300 }));
+			detailsHeight.value = withTiming(70, { duration: 250 });
+			detailsOpacity.value = withDelay(100, withTiming(1, { duration: 250 }));
 		} else {
-			detailsOpacity.value = withTiming(0, { duration: 300 });
-			detailsHeight.value = withDelay(200, withTiming(0, { duration: 300 }));
+			detailsOpacity.value = withTiming(0, { duration: 250 });
+			detailsHeight.value = withDelay(200, withTiming(0, { duration: 250 }));
 		}
 	}, [showDetails]);
 
@@ -162,6 +156,7 @@ function CardCheckHabit({
 			<Pressable
 				onPress={() => {
 					setShowDetails(!showDetails);
+					// goHabitDetail();
 				}}
 				style={{
 					backgroundColor:
@@ -183,53 +178,65 @@ function CardCheckHabit({
 				}}
 			>
 				<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
-					<Text
-						style={{
-							color: theme.colors.text,
-							textDecorationLine: completed ? "line-through" : "none",
-							marginLeft: 6,
-						}}
-						className="text-[16px] font-semibold w-[80%]"
-						numberOfLines={1}
-						ellipsizeMode="tail"
+					<View className="flex flex-row items-center justify-start">
+						<FontAwesome6
+							name={habit.icon || "question"}
+							size={18}
+							color={habit.color || theme.colors.text}
+						/>
+						<Text
+							style={{
+								color: theme.colors.text,
+							}}
+							className="text-[16px] font-semibold w-[80%] ml-2"
+							numberOfLines={1}
+							ellipsizeMode="tail"
+						>
+							{habit.name}
+						</Text>
+					</View>
+					<Pressable
+						onPress={() => setShowDetails(!showDetails)}
+						className="flex items-center justify-center"
 					>
-						{habit.name}
-					</Text>
-					<FontAwesome6
-						name={habit.icon || "question"}
-						size={18}
-						color={habit.color || theme.colors.text}
-					/>
+						{showDetails ? (
+							<Iconify icon="mdi:chevron-up" color={theme.colors.text} size={24} />
+						) : (
+							<Iconify icon="mdi:chevron-down" color={theme.colors.text} size={24} />
+						)}
+					</Pressable>
 				</View>
 				<Animated.View style={[detailsAnimatedStyle]}>
 					{showDetails && (
 						<View className="flex flex-row items-center justify-around flex-1 h-fit">
 							<Pressable
 								onPress={goHabitDetail}
-								className="flex flex-row items-center justify-center py-3 px-6 rounded-xl"
+								className="flex flex-row items-center justify-center py-2 px-6 rounded-xl"
 								style={{
-									backgroundColor: theme.colors.backgroundTertiary,
+									backgroundColor: theme.colors.background,
+									borderWidth: 2,
+									borderColor: theme.colors.primary,
 								}}
 							>
 								<Iconify
-									icon="material-symbols:info-outline"
-									color={theme.colors.text}
+									icon="mdi:information"
+									color={theme.colors.primary}
 									size={20}
 								/>
 								<Text
-									style={{
-										color: theme.colors.text,
-									}}
-									className="text-[16px] ml-2 font-semibold"
+									className="text-[16px]  font-semibold ml-2"
+									style={{ color: theme.colors.primary }}
 								>
 									Détails
 								</Text>
 							</Pressable>
 							<Pressable
 								onPress={startHabit}
-								className="flex flex-row items-center justify-center py-3 px-6 rounded-xl"
+								className="flex flex-row items-center justify-center py-2 px-6 rounded-xl"
 								style={{
-									backgroundColor: theme.colors.greenPrimary,
+									backgroundColor: theme.colors.primary,
+									borderWidth: 2,
+									borderColor: theme.colors.primary,
 								}}
 							>
 								<Iconify icon="bi:play" color="white" size={20} />
