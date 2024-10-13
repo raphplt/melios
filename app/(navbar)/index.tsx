@@ -9,6 +9,7 @@ import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
 import HabitsSection from "@components/Home/HabitsSection";
 import ActivitiesContainer from "@components/Home/ActivitiesContainer";
+import ViewHelp from "@components/Home/ViewHelp";
 
 export default function Index() {
 	const { loading, refreshing, imageSource, isLoading, userHabits, onRefresh } =
@@ -35,6 +36,7 @@ export default function Index() {
 			<HabitsSection />
 
 			<ActivitiesContainer />
+			<ViewHelp />
 
 			<DailyQuote />
 		</ParallaxScrollView>

@@ -232,20 +232,36 @@ function CardCheckHabit({
 										Détails
 									</Text>
 								</Pressable>
-								<Pressable
-									onPress={startHabit}
-									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
-									style={{
-										backgroundColor: theme.colors.primary,
-										borderWidth: 2,
-										borderColor: theme.colors.primary,
-									}}
-								>
-									<Iconify icon="bi:play" color="white" size={20} />
-									<Text className="text-[16px] text-white font-semibold ml-2">
-										Commencer
-									</Text>
-								</Pressable>
+								{!completed ? (
+									<Pressable
+										onPress={startHabit}
+										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+										style={{
+											backgroundColor: theme.colors.primary,
+											borderWidth: 2,
+											borderColor: theme.colors.primary,
+										}}
+									>
+										<Iconify icon="bi:play" color="white" size={20} />
+										<Text className="text-[16px] text-white font-semibold ml-2">
+											Commencer
+										</Text>
+									</Pressable>
+								) : (
+									<View
+										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+										style={{
+											backgroundColor: theme.colors.primary,
+											borderWidth: 2,
+											borderColor: theme.colors.primary,
+										}}
+									>
+										<Iconify icon="bi:check" color="white" size={20} />
+										<Text className="text-[16px] font-semibold ml-2 text-white">
+											Complété
+										</Text>
+									</View>
+								)}
 							</View>
 						)}
 					</Animated.View>
