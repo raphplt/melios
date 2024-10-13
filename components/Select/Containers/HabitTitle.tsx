@@ -11,6 +11,7 @@ export default function HabitTitle({
 	isEditingDescription,
 	setIsEditingDescription,
 	setFocus,
+	setValue, // Ajout de setValue ici
 }: {
 	register: any;
 	isEditingName: boolean;
@@ -18,6 +19,7 @@ export default function HabitTitle({
 	isEditingDescription: boolean;
 	setIsEditingDescription: (value: boolean) => void;
 	setFocus: any;
+	setValue: any;
 }) {
 	const { theme } = useTheme();
 	const { habit } = useSelect();
@@ -46,9 +48,10 @@ export default function HabitTitle({
 					className="text-2xl font-semibold w-10/12"
 					placeholder={"Nom de l'habitude"}
 					{...register("name")}
-					defaultValue={habit?.name}
 					onFocus={() => setIsEditingName(true)}
 					onBlur={() => setIsEditingName(false)}
+					onChangeText={(value) => setValue("name", value)} // Utilisation de setValue
+					defaultValue={habit?.name} // Liaison avec la valeur actuelle
 				/>
 				<Pressable
 					onPress={() => toggleFocus("name", isEditingName, setIsEditingName)}
@@ -57,15 +60,6 @@ export default function HabitTitle({
 				</Pressable>
 			</View>
 
-			{/* Input Description avec icône d'édition */}
-			{/* <View
-				style={{
-					backgroundColor: theme.colors.background,
-					borderColor: theme.colors.border,
-					borderWidth: 1,
-				}}
-				className="rounded-xl px-3 py-1 mt-4 flex flex-row items-center justify-between"
-			> */}
 			<BlurView
 				intensity={90}
 				className="rounded-xl px-3 py-1 mt-4 flex flex-row items-center justify-between"
@@ -80,9 +74,10 @@ export default function HabitTitle({
 					className="w-10/12 font-semibold"
 					placeholder={"Description"}
 					{...register("description")}
-					defaultValue={habit?.description}
 					onFocus={() => setIsEditingDescription(true)}
 					onBlur={() => setIsEditingDescription(false)}
+					onChangeText={(value) => setValue("description", value)} // Utilisation de setValue
+					value={habit?.description} // Liaison avec la valeur actuelle
 					multiline={true}
 					numberOfLines={3}
 					cursorColor={theme.colors.textTertiary}
@@ -95,7 +90,6 @@ export default function HabitTitle({
 					<EditButton isEditing={isEditingDescription} />
 				</Pressable>
 			</BlurView>
-			{/* </View> */}
 		</>
 	);
 }

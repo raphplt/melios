@@ -23,6 +23,7 @@ import { UserHabit } from "@type/userHabit";
 import { getHabitLogs, setHabitLog } from "@db/logs";
 import { Iconify } from "react-native-iconify";
 import useHabitTimer from "@hooks/useHabitTimer";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -114,6 +115,7 @@ function CardCheckHabit({
 	};
 
 	const startHabit = () => {
+		setCurrentHabit(habit);
 		startTimer(habit);
 		navigation.navigate("timerHabit");
 	};
@@ -137,118 +139,119 @@ function CardCheckHabit({
 	};
 
 	return (
-		<Animated.View
-			style={[animatedStyles]}
-			className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
-		>
-			<Pressable
-				onPress={setHabitDone}
-				className="flex items-center justify-center"
-				disabled={toggleCheckBox}
-				style={{ flexBasis: "12.5%" }}
+		<ZoomableView>
+			<Animated.View
+				style={[animatedStyles]}
+				className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
 			>
-				<Ionicons
-					name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
-					size={30}
-					color={theme.colors.primary}
-				/>
-			</Pressable>
-			<Pressable
-				onPress={() => {
-					setShowDetails(!showDetails);
-					// goHabitDetail();
-				}}
-				style={{
-					backgroundColor:
-						isTouched || completed
+				<Pressable
+					onPress={setHabitDone}
+					className="flex items-center justify-center"
+					disabled={toggleCheckBox}
+					style={{ flexBasis: "12.5%" }}
+				>
+					<Ionicons
+						name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
+						size={30}
+						color={theme.colors.primary}
+					/>
+				</Pressable>
+				<Pressable
+					onPress={() => {
+						setShowDetails(!showDetails);
+						// goHabitDetail();
+					}}
+					style={{
+						backgroundColor: completed
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
-				}}
-				className="flex-1 flex flex-col rounded-xl"
-				onTouchStart={() => {
-					touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
-				}}
-				onTouchEnd={() => {
-					clearTimeout(touchStartTimeout);
-					setIsTouched(false);
-				}}
-				onTouchCancel={() => {
-					clearTimeout(touchStartTimeout);
-					setIsTouched(false);
-				}}
-			>
-				<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
-					<View className="flex flex-row items-center justify-start">
-						<FontAwesome6
-							name={habit.icon || "question"}
-							size={18}
-							color={habit.color || theme.colors.text}
-						/>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-[16px] font-semibold w-[80%] ml-2"
-							numberOfLines={1}
-							ellipsizeMode="tail"
-						>
-							{habit.name}
-						</Text>
-					</View>
-					<Pressable
-						onPress={() => setShowDetails(!showDetails)}
-						className="flex items-center justify-center"
-					>
-						{showDetails ? (
-							<Iconify icon="mdi:chevron-up" color={theme.colors.text} size={24} />
-						) : (
-							<Iconify icon="mdi:chevron-down" color={theme.colors.text} size={24} />
-						)}
-					</Pressable>
-				</View>
-				<Animated.View style={[detailsAnimatedStyle]}>
-					{showDetails && (
-						<View className="flex flex-row items-center justify-around flex-1 h-fit">
-							<Pressable
-								onPress={goHabitDetail}
-								className="flex flex-row items-center justify-center py-2 px-6 rounded-xl"
+					}}
+					className="flex-1 flex flex-col rounded-xl"
+					onTouchStart={() => {
+						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
+					}}
+					onTouchEnd={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
+					}}
+					onTouchCancel={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
+					}}
+				>
+					<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
+						<View className="flex flex-row items-center justify-start">
+							<FontAwesome6
+								name={habit.icon || "question"}
+								size={18}
+								color={habit.color || theme.colors.text}
+							/>
+							<Text
 								style={{
-									backgroundColor: theme.colors.background,
-									borderWidth: 2,
-									borderColor: theme.colors.primary,
+									color: theme.colors.text,
 								}}
+								className="text-[16px] font-semibold w-[80%] ml-2"
+								numberOfLines={1}
+								ellipsizeMode="tail"
 							>
-								<Iconify
-									icon="mdi:information"
-									color={theme.colors.primary}
-									size={20}
-								/>
-								<Text
-									className="text-[16px]  font-semibold ml-2"
-									style={{ color: theme.colors.primary }}
-								>
-									Détails
-								</Text>
-							</Pressable>
-							<Pressable
-								onPress={startHabit}
-								className="flex flex-row items-center justify-center py-2 px-6 rounded-xl"
-								style={{
-									backgroundColor: theme.colors.primary,
-									borderWidth: 2,
-									borderColor: theme.colors.primary,
-								}}
-							>
-								<Iconify icon="bi:play" color="white" size={20} />
-								<Text className="text-[16px] text-white font-semibold ml-2">
-									Commencer
-								</Text>
-							</Pressable>
+								{habit.name}
+							</Text>
 						</View>
-					)}
-				</Animated.View>
-			</Pressable>
-		</Animated.View>
+						<Pressable
+							onPress={() => setShowDetails(!showDetails)}
+							className="flex items-center justify-center"
+						>
+							{showDetails ? (
+								<Iconify icon="mdi:chevron-up" color={theme.colors.text} size={24} />
+							) : (
+								<Iconify icon="mdi:chevron-down" color={theme.colors.text} size={24} />
+							)}
+						</Pressable>
+					</View>
+					<Animated.View style={[detailsAnimatedStyle]}>
+						{showDetails && (
+							<View className="flex flex-row items-center justify-around flex-1 h-fit">
+								<Pressable
+									onPress={goHabitDetail}
+									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+									style={{
+										backgroundColor: theme.colors.background,
+										borderWidth: 2,
+										borderColor: theme.colors.primary,
+									}}
+								>
+									<Iconify
+										icon="mdi:information"
+										color={theme.colors.primary}
+										size={20}
+									/>
+									<Text
+										className="text-[16px]  font-semibold ml-2"
+										style={{ color: theme.colors.primary }}
+									>
+										Détails
+									</Text>
+								</Pressable>
+								<Pressable
+									onPress={startHabit}
+									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+									style={{
+										backgroundColor: theme.colors.primary,
+										borderWidth: 2,
+										borderColor: theme.colors.primary,
+									}}
+								>
+									<Iconify icon="bi:play" color="white" size={20} />
+									<Text className="text-[16px] text-white font-semibold ml-2">
+										Commencer
+									</Text>
+								</Pressable>
+							</View>
+						)}
+					</Animated.View>
+				</Pressable>
+			</Animated.View>
+		</ZoomableView>
 	);
 }
 

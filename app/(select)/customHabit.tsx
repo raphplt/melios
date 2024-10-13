@@ -50,7 +50,7 @@ export default function CustomHabit() {
 			frequency: frequencyDefaultValues,
 			memberId: member?.uid || null,
 			habitId: habit?.id || null,
-			reminderMoment: habit?.reminderMoment || 5, // Default to 5 minutes before
+			reminderMoment: habit?.reminderMoment || 5,
 		},
 	});
 
@@ -118,6 +118,7 @@ export default function CustomHabit() {
 						isEditingDescription={isEditingDescription}
 						setIsEditingDescription={setIsEditingDescription}
 						setFocus={setFocus}
+						setValue={setValue}
 					/>
 
 					{/* INFORMATIONS */}
