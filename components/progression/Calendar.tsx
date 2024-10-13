@@ -46,7 +46,7 @@ const CalendarHabits = () => {
 	return (
 		<>
 			<SectionHeader
-				title="Jours effectués"
+				title="Jours complétés"
 				show={showCalendar}
 				setShow={setShowCalendar}
 				icon="calendar"
