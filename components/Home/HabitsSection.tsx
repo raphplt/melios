@@ -7,6 +7,7 @@ import { DayOfWeek } from "@type/days";
 import SectionWrapper from "./SectionWrapper";
 import { Iconify } from "react-native-iconify";
 import { useTheme } from "@context/ThemeContext";
+import NoHabits from "./NoHabits";
 
 export default function HabitsSection() {
 	const { userHabits } = useIndex();
@@ -42,7 +43,7 @@ export default function HabitsSection() {
 			habit.moment < 6
 	);
 
-	const title = "text-lg font-semibold my-1 w-11/12 mx-auto mt-3";
+	if (!userHabits) return <NoHabits />;
 
 	return (
 		<ScrollView>

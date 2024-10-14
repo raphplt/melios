@@ -125,7 +125,7 @@ const useIndex = () => {
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
-	}, [habits, isLoading]); //TODO vérifier si on doit ajouter completedHabitsData et uncompletedHabitsData
+	}, [habits, isLoading]);
 
 	// Functions
 
