@@ -4,6 +4,7 @@ import CategoryItem from "../Items/CategoryItem";
 
 export default function CategoriesList() {
 	const { categories } = useHabits();
+	console.log(categories);
 
 	return (
 		<FlatList
