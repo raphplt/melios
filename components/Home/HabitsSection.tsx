@@ -43,7 +43,7 @@ export default function HabitsSection() {
 			habit.moment < 6
 	);
 
-	if (!userHabits) return <NoHabits />;
+	if (!userHabits || userHabits.length == 0) return <NoHabits />;
 
 	return (
 		<ScrollView>

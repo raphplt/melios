@@ -1,22 +1,23 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useState } from "react";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { View, Text, Alert } from "react-native";
+
+import { useTheme } from "@context/ThemeContext";
 import AccountBlock from "./AccountBlock";
-import { View, Text, Modal, Pressable, Alert } from "react-native";
 import RowBlock from "./RowBlock";
 import { Iconify } from "react-native-iconify";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ToggleButton from "./Switch";
 import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
 import { disconnectUser } from "@db/users";
 import CustomModal from "@components/Shared/Modal";
 import CustomPressable from "@components/Shared/CustomPressable";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
 
 export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
-	const { theme, toggleTheme } = useContext(ThemeContext);
+	const { theme, toggleTheme } = useTheme();
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 	const { setHabits, setPoints, setNotificationToggle, notificationToggle } =
 		useData();
@@ -85,7 +86,6 @@ export default function Preferences() {
 				title="Notifications"
 				rightContent={
 					<ToggleButton
-						title="Notifications"
 						onToggle={handleToggleNotifications}
 						value={notificationToggle}
 					/>

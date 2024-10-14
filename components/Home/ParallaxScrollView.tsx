@@ -35,6 +35,7 @@ export const getTodayScore = (
 	habits: UserHabit[],
 	completedHabitsToday: UserHabit[]
 ): number => {
+	if (habits.length === 0) return 0;
 	const today: DayOfWeek = new Date()
 		.toLocaleString("en-US", { weekday: "long" })
 		.toLowerCase() as DayOfWeek;

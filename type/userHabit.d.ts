@@ -12,7 +12,7 @@ export type UserHabit = {
 	category: string; //TODO Update ?
 	difficulty: number;
 	icon?: string;
-	reminderTime?: string;
+	reminderMoment?: number;
 	frequency?: {
 		monday?: boolean;
 		tuesday?: boolean;

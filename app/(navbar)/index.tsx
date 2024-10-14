@@ -10,6 +10,7 @@ import DailyQuote from "@components/Home/DailyQuote";
 import HabitsSection from "@components/Home/HabitsSection";
 import ActivitiesContainer from "@components/Home/ActivitiesContainer";
 import ViewHelp from "@components/Home/ViewHelp";
+import { useData } from "@context/DataContext";
 
 export default function Index() {
 	const { loading, refreshing, imageSource, isLoading, userHabits, onRefresh } =

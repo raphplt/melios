@@ -20,7 +20,7 @@ export const createHabitSchema = z.object({
 	duration: z.number().int().min(0).max(3600),
 	moment: z.number().int().min(-1).max(24),
 	frequency: frequencySchema,
-	reminderTime: z.date().optional(),
+	reminderMoment: z.number().int().min(0).max(24),
 	memberId: z.string().optional(),
 	habitId: z.string().optional(),
 });
