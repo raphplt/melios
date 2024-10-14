@@ -6,26 +6,23 @@ import { useData } from "@context/DataContext";
 
 const useCompletedHabitPeriods = () => {
 	// const { userHabits: habits } = useIndex();
-	const { habits } = useData();
+	const { logs } = useData();
 	const { theme } = useContext(ThemeContext);
 	const [loading, setLoading] = useState(true);
 
 	const bgColor = theme.colors.primary;
 
 	const completedHabitPeriods = useMemo(() => {
-		if (habits.length === 0) {
+		if (logs.length === 0) {
 			setLoading(false);
 			return {};
 		}
 
 		const completedDates = new Set<string>();
 
-		// Collect all dates where at least one habit was completed
-		habits.forEach((habit) => {
-			habit.logs?.forEach((log) => {
-				if (log.done) {
-					completedDates.add(log.date);
-				}
+		logs.forEach((logEntry) => {
+			logEntry.logs.forEach((date) => {
+				completedDates.add(date);
 			});
 		});
 
@@ -94,7 +91,7 @@ const useCompletedHabitPeriods = () => {
 
 		setLoading(false);
 		return periods;
-	}, [habits]);
+	}, [logs]);
 
 	return { completedHabitPeriods, loading };
 };

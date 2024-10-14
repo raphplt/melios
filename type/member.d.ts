@@ -8,6 +8,6 @@ export interface Member {
 	objectifs: Answer[];
 	temps: Answer;
 	aspects: Answer[];
-	habits: UserHabit[];
+	// habits: UserHabit[];
 	profilePicture: string;
 }

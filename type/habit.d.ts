@@ -1,12 +1,17 @@
 import { Category } from "./category";
 
 export type Habit = {
-	category: Category;
 	id: string;
+	name: string;
 	description: string;
+	type: HabitType;
+	color: string;
+	icon: string;
 	difficulty: number;
 	duration: number;
 	moment: number;
-	name: string;
-	reward: number;
+	category: Category;
+	reminderMoment: number;
 };
+
+export type HabitType = "Positif" | "Négatif" | "Personnalisé";

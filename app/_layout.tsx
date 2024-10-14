@@ -9,15 +9,13 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigation } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DataProvider, useData } from "../context/DataContext";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import NotificationBox from "@components/Shared/NotificationBox";
 import { HabitsProvider } from "@context/HabitsContext";
 import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
-import ButtonSettings from "@components/Shared/ButtonSettings";
 import { TimerProvider } from "@context/TimerContext";
+import { DataProvider } from "@context/DataContext";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -60,8 +58,6 @@ function MainNavigator() {
 	};
 
 	const { isLoading: isSessionLoading }: any = useSession();
-	const { popup } = useData();
-	const { isOpen } = popup;
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -70,8 +66,6 @@ function MainNavigator() {
 			setIsLoading(false);
 		}
 	}, [isSessionLoading]);
-
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	if (isLoading || !loaded) return <LoaderScreen text="Chargement..." />;
 
@@ -86,23 +80,7 @@ function MainNavigator() {
 				/>
 				<Stack>
 					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
-					<Stack.Screen
-						name="select"
-						options={{
-							title: "Choix des habitudes",
-							animation: "fade",
-							presentation: "transparentModal",
-							headerShown: true,
-							headerShadowVisible: false,
-							headerRight: () => (
-								<ButtonSettings
-									onPress={() => {
-										navigation.navigate("editHabits");
-									}}
-								/>
-							),
-						}}
-					/>
+					<Stack.Screen name="(select)" options={{ headerShown: false }} />
 
 					<Stack.Screen
 						name="habitDetail"
@@ -185,7 +163,6 @@ function MainNavigator() {
 						}}
 					/>
 				</Stack>
-				{/* {isOpen && <NotificationBox />} */}
 			</ThemeProvider>
 		</ThemeContext.Provider>
 	);
@@ -210,6 +187,7 @@ export default function RootLayout() {
 
 	return (
 		<SessionProvider>
+			{/* TODO Move timer? */}
 			<TimerProvider>
 				<DataProvider>
 					<HabitsProvider>

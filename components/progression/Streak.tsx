@@ -1,18 +1,18 @@
+import { View, Text } from "react-native";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { calculateStreak } from "@utils/progressionUtils";
-import { useContext } from "react";
-import { View, Text } from "react-native";
 
 export default function Streak() {
-	const { habits } = useData();
-	const streak = calculateStreak(habits);
-	const { theme } = useContext(ThemeContext);
+	const { logs } = useData();
+	const { theme } = useTheme();
+
+	const streak = calculateStreak(logs);
 
 	return (
 		<View
-			className="w-full mx-auto flex flex-row items-center justify-between px-5 pt-2"
+			className="w-full mx-auto flex flex-row items-center justify-between px-5 pt-2 py-5 rounded-b-3xl"
 			style={{
 				backgroundColor: theme.colors.backgroundTertiary,
 			}}

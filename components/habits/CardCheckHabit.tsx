@@ -1,7 +1,6 @@
-import React, { memo, useContext, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import Checkbox from "expo-checkbox";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import {
 	NavigationProp,
@@ -11,46 +10,44 @@ import {
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
-	withSpring,
 	withTiming,
+	withDelay,
 } from "react-native-reanimated";
 
 // Customs imports
-import { setMemberHabitLog } from "@db/member";
-import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
-import { ThemeContext } from "@context/ThemeContext";
-import { difficulties } from "@utils/habitsUtils";
+import { useTheme } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
-import CardPlaceHolder from "./CardPlaceHolder";
-import { HabitsContext } from "@context/HabitsContext";
+import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
-import { Habit } from "@type/habit";
-import useIndex from "@hooks/useIndex";
-import { getHabitPoints } from "@utils/pointsUtils";
+import { getHabitLogs, setHabitLog } from "@db/logs";
+import { Iconify } from "react-native-iconify";
+import useHabitTimer from "@hooks/useHabitTimer";
+import ZoomableView from "@components/Shared/ZoomableView";
+
+const formatDate = (date: Date) => {
+	return date.toISOString().split("T")[0];
+};
 
 function CardCheckHabit({
 	habit,
 	onHabitStatusChange,
-	completed,
-	disabled,
 }: {
 	habit: UserHabit;
-	onHabitStatusChange: (habit: UserHabit, completed: boolean) => void;
-	completed: boolean;
-	disabled: boolean;
+	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
 }) {
-	const { theme } = useContext(ThemeContext);
-	const { setCurrentHabit } = useContext(HabitsContext);
+	const { theme } = useTheme();
+	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
-	const { date } = useData();
-	const { getHabitDetails, userHabits } = useIndex();
+	const { date, setCompletedHabitsToday } = useData();
+	const { startTimer } = useHabitTimer();
 
 	// États
+	const [showDetails, setShowDetails] = useState(false);
+	const [habitLogs, setHabitLogs] = useState<Array<string>>();
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
-	const [habitInfos, setHabitInfos] = useState<Habit>();
-	const [loading, setLoading] = useState(true);
 	const [isTouched, setIsTouched] = useState(false);
+	const [completed, setCompleted] = useState(false);
 	let touchStartTimeout: NodeJS.Timeout;
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -58,6 +55,8 @@ function CardCheckHabit({
 	// Animations
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
+	const detailsHeight = useSharedValue(0);
+	const detailsOpacity = useSharedValue(0);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
@@ -66,14 +65,12 @@ function CardCheckHabit({
 		};
 	});
 
-	useEffect(() => {
-		async function getHabitInfos() {
-			const result = getHabitDetails(habit.id);
-			setHabitInfos(result);
-			setLoading(false);
-		}
-		getHabitInfos();
-	}, [userHabits]);
+	const detailsAnimatedStyle = useAnimatedStyle(() => {
+		return {
+			height: detailsHeight.value,
+			opacity: detailsOpacity.value,
+		};
+	});
 
 	useEffect(() => {
 		opacity.value = withTiming(1, { duration: 200 });
@@ -83,113 +80,194 @@ function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		if (completed) {
+		const getLog = async () => {
+			const snapshot = await getHabitLogs(habit.id);
+			setHabitLogs(snapshot);
+		};
+		getLog();
+	}, []);
+
+	useEffect(() => {
+		const today = formatDate(new Date());
+		if (!habitLogs) return;
+		if (habitLogs.includes(today)) {
+			setCompleted(true);
 			setToggleCheckBox(true);
+		} else {
+			setToggleCheckBox(false);
 		}
-	}, [completed]);
+	}, [habitLogs]);
 
-	if (loading || !habitInfos) return <CardPlaceHolder />;
+	useEffect(() => {
+		if (showDetails) {
+			detailsHeight.value = withTiming(70, { duration: 250 });
+			detailsOpacity.value = withDelay(100, withTiming(1, { duration: 250 }));
+		} else {
+			detailsOpacity.value = withTiming(0, { duration: 250 });
+			detailsHeight.value = withDelay(200, withTiming(0, { duration: 250 }));
+		}
+	}, [showDetails]);
 
+	// Fonctions
 	const goHabitDetail = () => {
-		setCurrentHabit({
-			habit: habitInfos,
-			userHabit: habit,
-		});
+		setCurrentHabit(habit);
 		navigation.navigate("habitDetail");
+	};
+
+	const startHabit = () => {
+		setCurrentHabit(habit);
+		startTimer(habit);
+		navigation.navigate("timerHabit");
 	};
 
 	const setHabitDone = async () => {
 		setToggleCheckBox(true);
-		onHabitStatusChange(habit, true);
 
-		translateX.value = withSpring(toggleCheckBox ? 100 : 0);
-		await setMemberHabitLog(habit.id, date, true);
+		try {
+			await setHabitLog(habit.id, date);
 
-		const habitPoints = getHabitPoints(habitInfos);
-		await setRewards("odyssee", habitPoints.odyssee);
+			addOdysseePoints(habit.difficulty);
 
-		addOdysseePoints(habitInfos.reward, habitInfos.difficulty);
+			setCompletedHabitsToday((prev) => [...prev, habit]);
+		} catch (error) {
+			console.error("Erreur lors de l'ajout du log :", error);
+		}
+
+		if (onHabitStatusChange) {
+			onHabitStatusChange(habit, true);
+		}
 	};
 
 	return (
-		<Animated.View
-			style={[animatedStyles]}
-			className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
-		>
-			<Pressable
-				onPress={setHabitDone}
-				className="flex items-center justify-center"
-				disabled={toggleCheckBox}
-				style={{ flexBasis: "12.5%" }}
+		<ZoomableView>
+			<Animated.View
+				style={[animatedStyles]}
+				className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
 			>
-				<Ionicons
-					name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
-					size={30}
-					color={theme.colors.primary}
-				/>
-			</Pressable>
-			<Pressable
-				onPress={() => {
-					goHabitDetail();
-				}}
-				style={{
-					backgroundColor: theme.colors.cardBackground,
-				}}
-				className="flex-1 rounded-xl"
-				onTouchStart={() => {
-					touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
-				}}
-				onTouchEnd={() => {
-					clearTimeout(touchStartTimeout);
-					setIsTouched(false);
-				}}
-				onTouchCancel={() => {
-					clearTimeout(touchStartTimeout);
-					setIsTouched(false);
-				}}
-			>
-				<View
-					className="flex items-center flex-row justify-between px-3 py-[13px] rounded-xl"
+				<Pressable
+					onPress={setHabitDone}
+					className="flex items-center justify-center"
+					disabled={toggleCheckBox}
+					style={{ flexBasis: "12.5%" }}
+				>
+					<Ionicons
+						name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
+						size={30}
+						color={theme.colors.primary}
+					/>
+				</Pressable>
+				<Pressable
+					onPress={() => {
+						setShowDetails(!showDetails);
+						// goHabitDetail();
+					}}
 					style={{
-						backgroundColor:
-							isTouched || completed
-								? theme.colors.backgroundTertiary
-								: theme.colors.cardBackground,
+						backgroundColor: completed
+							? theme.colors.backgroundTertiary
+							: theme.colors.cardBackground,
+					}}
+					className="flex-1 flex flex-col rounded-xl"
+					onTouchStart={() => {
+						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
+					}}
+					onTouchEnd={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
+					}}
+					onTouchCancel={() => {
+						clearTimeout(touchStartTimeout);
+						setIsTouched(false);
 					}}
 				>
-					<View className="flex flex-row items-center">
-						<FontAwesome6
-							name={habitInfos.category.icon || "question"}
-							size={18}
-							color={habitInfos.category.color || theme.colors.text}
-						/>
-
-						<Text
-							style={{
-								color: theme.colors.text,
-								textDecorationLine: completed ? "line-through" : "none",
-								marginLeft: 6,
-							}}
-							className="text-[16px] font-semibold pl-1 w-[80%]"
-							numberOfLines={1}
-							ellipsizeMode="tail"
+					<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
+						<View className="flex flex-row items-center justify-start">
+							<FontAwesome6
+								name={habit.icon || "question"}
+								size={18}
+								color={habit.color || theme.colors.text}
+							/>
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="text-[16px] font-semibold w-[80%] ml-2"
+								numberOfLines={1}
+								ellipsizeMode="tail"
+							>
+								{habit.name}
+							</Text>
+						</View>
+						<Pressable
+							onPress={() => setShowDetails(!showDetails)}
+							className="flex items-center justify-center"
 						>
-							{habit.name}
-						</Text>
+							{showDetails ? (
+								<Iconify icon="mdi:chevron-up" color={theme.colors.text} size={24} />
+							) : (
+								<Iconify icon="mdi:chevron-down" color={theme.colors.text} size={24} />
+							)}
+						</Pressable>
 					</View>
-
-					<Ionicons
-						name="flame"
-						size={24}
-						color={
-							habitInfos.difficulty
-								? difficulties[habitInfos?.difficulty - 1][habitInfos?.difficulty]
-								: theme.colors.primary
-						}
-					/>
-				</View>
-			</Pressable>
-		</Animated.View>
+					<Animated.View style={[detailsAnimatedStyle]}>
+						{showDetails && (
+							<View className="flex flex-row items-center justify-around flex-1 h-fit">
+								<Pressable
+									onPress={goHabitDetail}
+									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+									style={{
+										backgroundColor: theme.colors.background,
+										borderWidth: 2,
+										borderColor: theme.colors.primary,
+									}}
+								>
+									<Iconify
+										icon="mdi:information"
+										color={theme.colors.primary}
+										size={20}
+									/>
+									<Text
+										className="text-[16px]  font-semibold ml-2"
+										style={{ color: theme.colors.primary }}
+									>
+										Détails
+									</Text>
+								</Pressable>
+								{!completed ? (
+									<Pressable
+										onPress={startHabit}
+										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+										style={{
+											backgroundColor: theme.colors.primary,
+											borderWidth: 2,
+											borderColor: theme.colors.primary,
+										}}
+									>
+										<Iconify icon="bi:play" color="white" size={20} />
+										<Text className="text-[16px] text-white font-semibold ml-2">
+											Commencer
+										</Text>
+									</Pressable>
+								) : (
+									<View
+										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+										style={{
+											backgroundColor: theme.colors.primary,
+											borderWidth: 2,
+											borderColor: theme.colors.primary,
+										}}
+									>
+										<Iconify icon="bi:check" color="white" size={20} />
+										<Text className="text-[16px] font-semibold ml-2 text-white">
+											Complété
+										</Text>
+									</View>
+								)}
+							</View>
+						)}
+					</Animated.View>
+				</Pressable>
+			</Animated.View>
+		</ZoomableView>
 	);
 }
 

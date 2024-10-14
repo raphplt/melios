@@ -28,6 +28,8 @@ import { loginUser } from "@db/users";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 import ButtonLogin from "@components/LoginRegister/ButtonLogin";
 import { User } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import HelpModal from "@components/Modals/HelpModal";
 
 export default function Login() {
 	const { theme } = useContext(ThemeContext);
@@ -82,6 +84,29 @@ export default function Login() {
 	};
 
 	const isDisabled = email === "" || password === "";
+
+	const [showModal, setShowModal] = useState(false);
+
+	useEffect(() => {
+		const checkFirstTime = async () => {
+			const firstTime = await AsyncStorage.getItem("firstTime");
+			if (!firstTime || firstTime === "true") {
+				setShowModal(true);
+			}
+		};
+
+		checkFirstTime();
+	}, []);
+
+	if (showModal) {
+		return (
+			<HelpModal
+				visible={showModal}
+				setVisible={setShowModal}
+				onClose={() => setShowModal(false)}
+			/>
+		);
+	}
 
 	return (
 		<KeyboardAvoidingView

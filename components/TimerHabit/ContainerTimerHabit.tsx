@@ -5,7 +5,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import getImage from "@utils/getImage";
 import { useNavigation } from "expo-router";
 import { ReactNode, useContext } from "react";
-import { View, Pressable, Image, StyleSheet, StatusBar } from "react-native";
+import { View, Pressable, Image, StyleSheet } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function ContainerTimerHabit({
@@ -13,22 +13,27 @@ export default function ContainerTimerHabit({
 }: {
 	children: ReactNode;
 }) {
-	const { currentHabit } = useHabits();
+	const { currentHabit, habitsData } = useHabits();
 	const { theme } = useContext(ThemeContext);
 	const { stopTimer } = useHabitTimer();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-	if (!currentHabit?.habit) return null;
+	if (!currentHabit) return null;
 
 	const handlePress = () => {
 		stopTimer;
 		navigation.navigate("habitDetail");
 	};
 
+	const currentHabitData = habitsData.find(
+		(habit) => habit.id === currentHabit.habitId
+	);
+	if (!currentHabitData) return null;
+
 	return (
 		<View className="flex flex-col items-center justify-around h-full">
 			<Image
-				source={getImage(currentHabit.habit.category.slug)}
+				source={getImage(currentHabitData.category.slug)}
 				style={StyleSheet.absoluteFillObject}
 				blurRadius={20}
 				resizeMode="cover"

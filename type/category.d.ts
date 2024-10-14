@@ -4,4 +4,5 @@ export type Category = {
 	color: string;
 	icon: string;
 	slug: string;
+	type: "positive" | "negative";
 };

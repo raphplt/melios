@@ -4,6 +4,7 @@ import { useData } from "../context/DataContext";
 
 const useNotifications = () => {
 	const { habits } = useData();
+
 	const sendPushNotification = async (
 		expoPushToken: string,
 		{ title, body }: { title: string; body: string }
@@ -44,18 +45,42 @@ const useNotifications = () => {
 
 		for (const habit of habits) {
 			if (habit.moment) {
-				await Notifications.scheduleNotificationAsync({
-					content: {
-						title: `Rappel pour ${habit.name}`,
-						body: `Réalisez l'habitude ${habit.name} sur Melios !`,
-						sound: true,
-					},
-					trigger: {
-						hour: parseInt(String(habit.moment)),
-						minute: 0,
-						repeats: true,
-					},
-				});
+				const triggerHour = parseInt(String(habit.moment));
+				const triggerMinute = 0;
+
+				if (habit.reminderMoment) {
+					const reminderMinutes = habit.reminderMoment;
+					const adjustedTriggerHour = Math.floor(
+						(triggerHour * 60 - reminderMinutes) / 60
+					);
+					const adjustedTriggerMinute = (triggerHour * 60 - reminderMinutes) % 60;
+
+					await Notifications.scheduleNotificationAsync({
+						content: {
+							title: `Rappel pour ${habit.name}`,
+							body: `Réalisez l'habitude ${habit.name} sur Melios !`,
+							sound: true,
+						},
+						trigger: {
+							hour: adjustedTriggerHour,
+							minute: adjustedTriggerMinute,
+							repeats: true,
+						},
+					});
+				} else {
+					await Notifications.scheduleNotificationAsync({
+						content: {
+							title: `Rappel pour ${habit.name}`,
+							body: `Réalisez l'habitude ${habit.name} sur Melios !`,
+							sound: true,
+						},
+						trigger: {
+							hour: triggerHour,
+							minute: triggerMinute,
+							repeats: true,
+						},
+					});
+				}
 			}
 		}
 

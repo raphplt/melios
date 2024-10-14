@@ -1,8 +1,6 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
-import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
-import useIndex from "@hooks/useIndex";
 import { useTheme } from "@context/ThemeContext";
 
 interface BlurGradientBackgroundProps {

@@ -1,53 +1,63 @@
-import { UserHabit } from "@type/userHabit";
+import { Log } from "@type/log";
 import moment from "moment";
 
-export const calculateStreak = (habits: UserHabit[]): number => {
-	if (habits.length === 0) return 0;
-
-	let streakCount = 0;
-	let streakActive = true;
-
+/**
+ * Function to calculate the streak of the user
+ * @param logs 
+ * @returns 
+ */
+export const calculateStreak = (logs: Log[]): number => {
 	const today = moment().format("YYYY-MM-DD");
-	let todayCompleted = false;
+	let maxStreak = 0;
 
-	for (const habit of habits) {
-		if (habit.logs) {
-			const logForToday = habit.logs.find((log) => log.date === today && log.done);
-			if (logForToday) {
-				todayCompleted = true;
+	logs.forEach((log) => {
+		const sortedLogs = log.logs.sort((a, b) => moment(b).diff(moment(a)));
+		let currentStreak = 0;
+		let expectedDate = moment(today);
+
+		for (const logDate of sortedLogs) {
+			if (logDate === expectedDate.format("YYYY-MM-DD")) {
+				currentStreak++;
+				expectedDate.subtract(1, "days");
+			} else {
 				break;
 			}
 		}
-	}
 
-	if (todayCompleted) {
-		streakCount += 1;
-	}
+		maxStreak = Math.max(maxStreak, currentStreak);
+	});
 
-	let daysBack = 1;
+	return maxStreak;
+};
 
-	while (streakActive) {
-		const date = moment().subtract(daysBack, "days").format("YYYY-MM-DD");
-		let dayCompleted = false;
+/**
+ * Function to calculate the weekly streak of the user
+ * @param logs 
+ * @returns 
+ */
+export const calculateWeeklyStreak = (logs: Log[]): number => {
+    const today = moment().format("YYYY-MM-DD");
+    const sevenDaysAgo = moment().subtract(7, "days").format("YYYY-MM-DD");
+    let maxStreak = 0;
 
-		for (const habit of habits) {
-			if (habit.logs) {
-				const logForDay = habit.logs.find((log) => log.date === date && log.done);
-				if (logForDay) {
-					dayCompleted = true;
+	logs.forEach((log) => {
+		const sortedLogs = log.logs.sort((a, b) => moment(b).diff(moment(a)));
+		let currentStreak = 0;
+		let expectedDate = moment(today);
+
+		for (const logDate of sortedLogs) {
+			if (logDate >= sevenDaysAgo && logDate <= today) {
+				if (logDate === expectedDate.format("YYYY-MM-DD")) {
+					currentStreak++;
+					expectedDate.subtract(1, "days");
+				} else {
 					break;
 				}
 			}
 		}
 
-		if (dayCompleted) {
-			streakCount += 1;
-		} else {
-			streakActive = false;
-		}
+		maxStreak = Math.max(maxStreak, currentStreak);
+	});
 
-		daysBack += 1;
-	}
-
-	return streakCount;
+    return maxStreak;
 };

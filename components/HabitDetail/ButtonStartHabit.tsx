@@ -1,8 +1,6 @@
 import MoneyMelios from "@components/Svg/MoneyMelios";
-import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { getHabitPoints } from "@utils/pointsUtils";
@@ -41,7 +39,7 @@ export default function ButtonStartHabit() {
 		navigation.navigate("timerHabit");
 	};
 
-	const habitPoints = getHabitPoints(currentHabit.habit);
+	const habitPoints = getHabitPoints(currentHabit);
 
 	return (
 		<>

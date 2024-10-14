@@ -2,7 +2,6 @@ import {
 	useContext,
 	useEffect,
 	useState,
-	useMemo,
 	type PropsWithChildren,
 	type ReactElement,
 } from "react";
@@ -22,6 +21,8 @@ import useIndex from "@hooks/useIndex";
 import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
 import AddHabits from "./AddHabits";
+import { UserHabit } from "@type/userHabit";
+import { DayOfWeek } from "@type/days";
 
 const HEADER_HEIGHT = 250;
 
@@ -29,6 +30,20 @@ type Props = PropsWithChildren<{
 	headerImage: ReactElement;
 	refreshControl?: ReactElement;
 }>;
+
+export const getTodayScore = (
+	habits: UserHabit[],
+	completedHabitsToday: UserHabit[]
+): number => {
+	if (habits.length === 0) return 0;
+	const today: DayOfWeek = new Date()
+		.toLocaleString("en-US", { weekday: "long" })
+		.toLowerCase() as DayOfWeek;
+	const todayHabits = habits.filter(
+		(habit) => habit.frequency && habit.frequency[today]
+	);
+	return Math.round((completedHabitsToday.length / todayHabits.length) * 100);
+};
 
 export default function ParallaxScrollView({
 	children,
@@ -40,9 +55,7 @@ export default function ParallaxScrollView({
 
 	const { theme } = useContext(ThemeContext);
 	const { isDayTime } = useIndex();
-	const { streak } = useData();
-
-	const { completedHabitsData, uncompletedHabitsData } = useIndex();
+	const { streak, completedHabitsToday, habits } = useData();
 
 	const paddingBottom = useTabBarPadding();
 
@@ -67,17 +80,7 @@ export default function ParallaxScrollView({
 		};
 	}, [scrollOffset]);
 
-	const todayScore = useMemo(() => {
-		if (completedHabitsData.length === 0 && uncompletedHabitsData.length === 0) {
-			return 0;
-		}
-		return Math.round(
-			(completedHabitsData.length /
-				(completedHabitsData.length + uncompletedHabitsData.length)) *
-				100
-		);
-	}, [completedHabitsData, uncompletedHabitsData]);
-
+	const todayScore = getTodayScore(habits, completedHabitsToday);
 	const [flammeColor, setFlammeColor] = useState("#FFD580");
 
 	useEffect(() => {

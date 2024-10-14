@@ -1,4 +1,5 @@
 import { Habit } from "@type/habit";
+import { UserHabit } from "@type/userHabit";
 
 export const extractPoints = (snapshotRewards: any) => {
 	return {
@@ -7,10 +8,10 @@ export const extractPoints = (snapshotRewards: any) => {
 	};
 };
 
-export const getHabitPoints = (habit?: Habit) => {
+export const getHabitPoints = (habit?: UserHabit) => {
 	if (!habit) return { odyssee: 0, rewards: 0 };
 	return {
-		odyssee: Math.round(habit.reward * habit.difficulty),
+		odyssee: Math.round(habit.difficulty * 2),
 		rewards: habit.difficulty,
 	};
 };

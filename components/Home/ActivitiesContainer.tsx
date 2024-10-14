@@ -2,14 +2,14 @@ import { useContext } from "react";
 import Activity from "./ActivityCard";
 import { FlatList, View, Text } from "react-native";
 import { ThemeContext } from "@context/ThemeContext";
-import { UserHabit } from "../../type/userHabit";
-import useIndex from "@hooks/useIndex";
+
+import { useData } from "@context/DataContext";
 
 export default function ActivitiesContainer() {
-	const { userHabits } = useIndex();
+	const { habits } = useData();
 	const { theme } = useContext(ThemeContext);
 
-	if (!userHabits || userHabits.length === 0) {
+	if (!habits || habits.length === 0) {
 		return null;
 	}
 
@@ -31,8 +31,8 @@ export default function ActivitiesContainer() {
 			</Text>
 			<FlatList
 				horizontal={true}
-				data={userHabits}
-				renderItem={({ item }) => <Activity userHabit={item} />}
+				data={habits}
+				renderItem={({ item }) => <Activity habit={item} />}
 				keyExtractor={(item, index) => index.toString()}
 				contentContainerStyle={{ paddingLeft: 8 }}
 				showsHorizontalScrollIndicator={false}

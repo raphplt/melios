@@ -1,9 +1,8 @@
-import { Switch, Text, TouchableOpacity } from "react-native";
-import { useContext } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
+import { Switch, TouchableOpacity } from "react-native";
+import { useTheme } from "@context/ThemeContext";
 
-function ToggleButton({ onToggle, value }: any) {
-	const { theme } = useContext(ThemeContext);
+function ToggleButton({ onToggle, value }: { onToggle: any; value: boolean }) {
+	const { theme } = useTheme();
 
 	return (
 		<TouchableOpacity

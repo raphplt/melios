@@ -46,24 +46,3 @@ export const getAllHabits = async (forceRefresh = false) => {
 		throw error;
 	}
 };
-
-// Fonction pour récupérer les habitudes par catégorie
-export const getHabitsByCategory = async () => {
-	try {
-		const habits = await getAllHabits();
-		return habits.reduce((acc: any, habit: Habit) => {
-			const category = habit.category;
-			if (!acc[category.id]) {
-				acc[category.id] = [];
-			}
-			acc[category.id].push(habit);
-			return acc;
-		}, {});
-	} catch (error) {
-		console.error(
-			"Erreur lors de la récupération des habitudes par catégorie: ",
-			error
-		);
-		throw error;
-	}
-};

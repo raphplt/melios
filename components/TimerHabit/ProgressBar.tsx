@@ -11,10 +11,10 @@ export default function ProgressBar() {
 	const { currentHabit } = useHabits();
 	const { timerSeconds, isTimerActive } = useTimer();
 	const { width } = Dimensions.get("window");
+	
+	if (!currentHabit) return null;
 
-	if (!currentHabit?.habit) return null;
-
-	const totalSeconds = currentHabit.habit.duration * 60;
+	const totalSeconds = currentHabit.duration * 60;
 	const remainingTime = formatRemainingTime(timerSeconds, totalSeconds);
 
 	const blinkAnim = useRef(new Animated.Value(1)).current;

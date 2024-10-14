@@ -17,10 +17,11 @@ import { Animated } from "react-native";
 import { UserContext } from "@context/UserContext";
 import { useData } from "@context/DataContext";
 import { UserHabit } from "../type/userHabit";
-import { getMemberHabits, getMemberInfos } from "@db/member";
+import { getMemberInfos } from "@db/member";
 import { isDayTime } from "@utils/timeUtils";
 import { Habit } from "@type/habit";
 import { useHabits } from "@context/HabitsContext";
+import { getUserHabits } from "@db/userHabit";
 
 const useIndex = () => {
 	// Contexts
@@ -30,16 +31,7 @@ const useIndex = () => {
 	// Hooks
 	const isFocused = useIsFocused();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
-	const {
-		member,
-		setMember,
-		habits,
-		isLoading,
-		uncompletedHabitsData,
-		completedHabitsData,
-		setUncompletedHabitsData,
-		setCompletedHabitsData,
-	} = useData();
+	const { member, setMember, habits, isLoading } = useData();
 
 	const { habitsData } = useHabits();
 
@@ -60,11 +52,6 @@ const useIndex = () => {
 	const [showMoreMissed, setShowMoreMissed] = useState(3);
 
 	// Memoized values
-	const missedHabitsCount = useMemo(() => {
-		return uncompletedHabitsData.filter(
-			(habit: UserHabit) => habit.moment < hours
-		).length;
-	}, [uncompletedHabitsData, hours]);
 
 	const rotate = useMemo(() => {
 		return rotation.interpolate({
@@ -78,25 +65,6 @@ const useIndex = () => {
 			? require("@assets/images/illustrations/temple_day.jpg")
 			: require("@assets/images/illustrations/temple_night.jpg");
 	}, [isDayTime]);
-
-	const fetchMemberHabitsData = useCallback(
-		async (signal: AbortSignal) => {
-			if (userHabits.length > 0) return;
-
-			try {
-				console.log("Fetching member habits data");
-				const data = await getMemberHabits();
-				if (!signal.aborted) {
-					setUserHabits(data);
-				}
-			} catch (error) {
-				if (!signal.aborted) {
-					handleError(error);
-				}
-			}
-		},
-		[userHabits]
-	);
 
 	const fetchMemberInfosData = useCallback(
 		async (signal: AbortSignal) => {
@@ -126,15 +94,15 @@ const useIndex = () => {
 	};
 
 	// Effects
-	useEffect(() => {
-		if (!isFocused) return;
+	// useEffect(() => {
+	// 	if (!isFocused) return;
 
-		if (!userHabits.length && abortControllerHabits.current) {
-			abortControllerHabits.current.abort();
-			abortControllerHabits.current = new AbortController();
-			fetchMemberHabitsData(abortControllerHabits.current.signal);
-		}
-	}, [isFocused]);
+	// 	if (!userHabits.length && abortControllerHabits.current) {
+	// 		abortControllerHabits.current.abort();
+	// 		abortControllerHabits.current = new AbortController();
+	// 		fetchMemberHabitsData(abortControllerHabits.current.signal);
+	// 	}
+	// }, [isFocused]);
 
 	useEffect(() => {
 		if (!isFocused) return;
@@ -157,7 +125,7 @@ const useIndex = () => {
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
-	}, [habits, isLoading]); //TODO vérifier si on doit ajouter completedHabitsData et uncompletedHabitsData
+	}, [habits, isLoading]);
 
 	// Functions
 
@@ -168,8 +136,11 @@ const useIndex = () => {
 			abortControllerHabits.current.abort();
 		}
 		abortControllerHabits.current = new AbortController();
-		fetchMemberHabitsData(abortControllerHabits.current.signal);
-	}, [fetchMemberHabitsData]);
+		getUserHabits({
+			signal: abortControllerHabits.current.signal,
+			forceRefresh: true,
+		});
+	}, [getUserHabits]);
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
@@ -177,29 +148,12 @@ const useIndex = () => {
 			abortControllerHabits.current.abort();
 		}
 		abortControllerHabits.current = new AbortController();
-		await fetchMemberHabitsData(abortControllerHabits.current.signal);
+		await getUserHabits({
+			signal: abortControllerHabits.current.signal,
+			forceRefresh: true,
+		});
 		setRefreshing(false);
-	}, [fetchMemberHabitsData]);
-
-	const handleHabitStatusChange = useCallback(
-		(habit: UserHabit, done: boolean) => {
-			if (done) {
-				setCompletedHabitsData((prevHabits: UserHabit[]) => [...prevHabits, habit]);
-				setUncompletedHabitsData((prevHabits: UserHabit[]) =>
-					prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
-				);
-			} else {
-				setUncompletedHabitsData((prevHabits: UserHabit[]) => [
-					...prevHabits,
-					habit,
-				]);
-				setCompletedHabitsData((prevHabits: UserHabit[]) =>
-					prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
-				);
-			}
-		},
-		[setCompletedHabitsData, setUncompletedHabitsData]
-	);
+	}, [getUserHabits]);
 
 	const updateShowMore = useCallback(
 		(
@@ -215,48 +169,6 @@ const useIndex = () => {
 		},
 		[]
 	);
-
-	const updateShowValidate = useCallback(() => {
-		updateShowMore(
-			showMoreValidate,
-			completedHabitsData.length,
-			setShowMoreValidate
-		);
-	}, [showMoreValidate, completedHabitsData.length, updateShowMore]);
-
-	const updateShowNext = useCallback(() => {
-		const filteredUncompletedHabits = uncompletedHabitsData.filter(
-			(habit: UserHabit) => habit.moment >= hours
-		);
-		updateShowMore(
-			showMoreNext,
-			filteredUncompletedHabits.length,
-			setShowMoreNext
-		);
-	}, [uncompletedHabitsData, hours, showMoreNext, updateShowMore]);
-
-	const updateShowMissed = useCallback(() => {
-		updateShowMore(showMoreMissed, missedHabitsCount, setShowMoreMissed);
-	}, [showMoreMissed, missedHabitsCount, updateShowMore]);
-
-	const toggleShowMore = useCallback(
-		(currentValue: number, setValue: (value: number) => void) => {
-			setValue(currentValue > 0 ? 0 : 3);
-		},
-		[]
-	);
-
-	const resetShowValidate = useCallback(() => {
-		toggleShowMore(showMoreValidate, setShowMoreValidate);
-	}, [showMoreValidate, toggleShowMore]);
-
-	const resetShowNext = useCallback(() => {
-		toggleShowMore(showMoreNext, setShowMoreNext);
-	}, [showMoreNext, toggleShowMore]);
-
-	const resetShowMissed = useCallback(() => {
-		toggleShowMore(showMoreMissed, setShowMoreMissed);
-	}, [showMoreMissed, toggleShowMore]);
 
 	// Handlers
 	const handleError = useCallback((error: any) => {
@@ -291,29 +203,17 @@ const useIndex = () => {
 		showMoreValidate,
 		showMoreNext,
 		showMoreMissed,
-		missedHabitsCount,
 		rotate,
 		imageSource,
-		uncompletedHabitsData,
-		completedHabitsData,
-		setUncompletedHabitsData,
-		setCompletedHabitsData,
 		hours,
 		isDayTime,
 		isLoading,
 		setWelcomeMessage,
 		setShowMissingHabits,
-		updateShowValidate,
-		updateShowNext,
-		updateShowMissed,
 		onRefresh,
 		backgroundRefresh,
 		handlePressIn,
 		handlePressOut,
-		handleHabitStatusChange,
-		resetShowValidate,
-		resetShowNext,
-		resetShowMissed,
 		getHabitDetails,
 		getUserHabitDetails,
 	};

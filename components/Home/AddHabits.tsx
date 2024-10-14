@@ -12,7 +12,7 @@ export default function AddHabits() {
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
 				onPress={() => {
-					navigation.navigate("select");
+					navigation.navigate("(select)");
 				}}
 				className="rounded-full p-2 w-10 h-10"
 				style={{

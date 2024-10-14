@@ -4,11 +4,13 @@ import { RefreshControl, Image } from "react-native";
 // Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
 import Background from "@components/Svg/Background";
-import ActivitiesContainer from "@components/Home/ActivitiesContainer";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import ListHabitsHome from "@components/Home/ListHabitsHome";
 import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
+import HabitsSection from "@components/Home/HabitsSection";
+import ActivitiesContainer from "@components/Home/ActivitiesContainer";
+import ViewHelp from "@components/Home/ViewHelp";
+import { useData } from "@context/DataContext";
 
 export default function Index() {
 	const { loading, refreshing, imageSource, isLoading, userHabits, onRefresh } =
@@ -32,9 +34,10 @@ export default function Index() {
 		>
 			<Background />
 
-			<ListHabitsHome />
+			<HabitsSection />
 
 			<ActivitiesContainer />
+			<ViewHelp />
 
 			<DailyQuote />
 		</ParallaxScrollView>

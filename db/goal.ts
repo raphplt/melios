@@ -20,7 +20,7 @@ export const getMemberGoals = async (memberId: string) => {
 		const storedGoal = await AsyncStorage.getItem(LOCAL_STORAGE_GOAL_KEY);
 
 		if (storedGoal) {
-			console.log("Fetching goals from local storage");
+			// console.log("Fetching goals from local storage");
 			return JSON.parse(storedGoal);
 		}
 
