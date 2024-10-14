@@ -1,5 +1,5 @@
 import { Tabs, useNavigation } from "expo-router";
-import { View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { useContext, useEffect } from "react";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
@@ -43,6 +43,10 @@ const TabLayout: React.FC = () => {
 
 	return (
 		<>
+			<StatusBar
+				barStyle={theme.dark ? "light-content" : "dark-content"}
+				backgroundColor={"transparent"}
+			/>
 			<Tabs tabBar={(props) => <CustomTabBar {...props} />}>
 				<Tabs.Screen
 					name="index"
