@@ -80,6 +80,8 @@ export default function CustomHabit() {
 
 	// Selected color
 	const selectedColor = watch("color");
+	console.log(watch("moment"));
+	console.log("errors", errors);	
 
 	const gradientColors = habit
 		? [lightenColor(selectedColor, 0.85), lightenColor(selectedColor, 0.55)]

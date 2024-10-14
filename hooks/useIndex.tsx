@@ -93,16 +93,6 @@ const useIndex = () => {
 		return userHabits.find((habit: UserHabit) => habit.id === habitId);
 	};
 
-	// Effects
-	// useEffect(() => {
-	// 	if (!isFocused) return;
-
-	// 	if (!userHabits.length && abortControllerHabits.current) {
-	// 		abortControllerHabits.current.abort();
-	// 		abortControllerHabits.current = new AbortController();
-	// 		fetchMemberHabitsData(abortControllerHabits.current.signal);
-	// 	}
-	// }, [isFocused]);
 
 	useEffect(() => {
 		if (!isFocused) return;

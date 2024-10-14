@@ -38,11 +38,11 @@ export default function HabitMoment({
 		setSelectedMoment(moment);
 	};
 
-	const handleCustomMoment = (date: Date) => {
-		setCustomMoment(date);
-		setSelectedMoment(-2);
-		setVisible(false);
-	};
+const handleCustomMoment = (date: Date) => {
+	setCustomMoment(date);
+	setSelectedMoment(date.getHours());
+	setVisible(false);
+};
 
 	return (
 		<>
