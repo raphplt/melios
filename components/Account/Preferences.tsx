@@ -65,7 +65,10 @@ export default function Preferences() {
 	};
 
 	const goAbout = () => {
-		Alert.alert("À propos", "Melios v1.1.5");
+		Alert.alert(
+			"À propos",
+			"Melios v1.1.7 - © 2024 Melios. Tous droits réservés."
+		);
 	};
 
 	return (
