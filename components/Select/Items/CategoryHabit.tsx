@@ -33,6 +33,7 @@ export default function CategoryHabit({ item }: { item: Habit }) {
 						? theme.colors.background
 						: theme.colors.cardBackground,
 				}}
+				disabled={!!selectedHabit}
 			>
 				<Text
 					style={{
