@@ -44,7 +44,7 @@ const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
 					style={{
 						backgroundColor: theme.colors.cardBackground,
 					}}
-					className="flex flex-row items-center justify-between px-5 w-full mx-auto rounded-3xl"
+					className="flex flex-row items-center justify-between px-5 w-full mx-auto rounded-2xl"
 				>
 					<TextInput
 						ref={ref || textInputRef}
