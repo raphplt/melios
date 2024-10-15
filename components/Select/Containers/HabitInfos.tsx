@@ -4,9 +4,8 @@ import { useTheme } from "@context/ThemeContext";
 import { Habit } from "@type/habit";
 import SeparatorVertical from "@components/Shared/SeparatorVertical";
 import { HabitInfoSection } from "../Items/HabitInfoSection";
-import { getTypeIcon } from "@utils/select/helper";
 import { useSelect } from "@context/SelectContext";
-import ModalCategory from "../Modals/ModalCategory";
+import ModalDuration from "../Modals/ModalDuration";
 import SelectColor from "@components/Modals/SelectColor";
 import { BlurView } from "expo-blur";
 
@@ -23,26 +22,14 @@ export default function HabitInfos({
 	const { customHabit } = useSelect();
 
 	// States
-	const [showModalCategory, setShowModalCategory] = useState(false);
 	const [showModalColor, setShowModalColor] = useState(false);
+	const [showModalDuration, setShowModalDuration] = useState(false);
 	const [selectedCategory, setSelectedCategory] = useState(habit?.category);
 	const [selectedColor, setSelectedColor] = useState(habit?.color);
+	const [selectedDuration, setSelectedDuration] = useState(habit?.duration || 0);
 
 	// Elements dynamiques si c'est une habitude personnalisé
 	const color = customHabit ? theme.colors.text : theme.colors.textTertiary;
-	const modalDisabled = customHabit ? false : true;
-
-	// Fonction pour afficher modal catégorie
-	const handleShowModalCategory = () => {
-		if (!modalDisabled) {
-			setShowModalCategory(true);
-		}
-	};
-
-	const setCategory = (category: any) => {
-		setValue("category", category);
-		setSelectedCategory(category);
-	};
 
 	const setColor = (color: string) => {
 		setValue("color", color);
@@ -62,12 +49,14 @@ export default function HabitInfos({
 					overflow: "hidden",
 				}}
 			>
-				{/* Type */}
+				{/* Durée */}
 				<HabitInfoSection
-					icon={getTypeIcon(habit?.type || "")}
-					text={habit?.type || "Positive"}
+					icon={"stopwatch"}
+					text={`${selectedDuration} min`}
 					color={color}
-					onPress={() => {}}
+					onPress={() => {
+						setShowModalDuration(true);
+					}}
 				/>
 
 				<SeparatorVertical color={theme.colors.grayPrimary} />
@@ -75,9 +64,9 @@ export default function HabitInfos({
 				{/* Catégorie */}
 				<HabitInfoSection
 					icon={selectedCategory?.icon || "shapes"}
-					text={selectedCategory?.category || "Catégorie"}
+					text={selectedCategory?.category || "Personnalisé"}
 					color={color}
-					onPress={handleShowModalCategory}
+					// onPress={handleShowModalCategory}
 				/>
 
 				<SeparatorVertical color={theme.colors.grayPrimary} />
@@ -107,11 +96,13 @@ export default function HabitInfos({
 				</Pressable>
 			</BlurView>
 
-			<ModalCategory
-				register={register}
-				visible={showModalCategory}
-				setVisible={setShowModalCategory}
-				setValue={setCategory}
+			<ModalDuration
+				visible={showModalDuration}
+				setVisible={setShowModalDuration}
+				onChange={(label: string, value: number) => {
+					setValue("duration", value);
+					setSelectedDuration(value);
+				}}
 			/>
 
 			<SelectColor

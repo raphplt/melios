@@ -77,7 +77,7 @@ export default function HabitTitle({
 					onFocus={() => setIsEditingDescription(true)}
 					onBlur={() => setIsEditingDescription(false)}
 					onChangeText={(value) => setValue("description", value)} // Utilisation de setValue
-					value={habit?.description} // Liaison avec la valeur actuelle
+					defaultValue={habit?.description} // Liaison avec la valeur actuelle
 					multiline={true}
 					numberOfLines={3}
 					cursorColor={theme.colors.textTertiary}

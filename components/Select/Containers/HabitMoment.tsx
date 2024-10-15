@@ -21,7 +21,7 @@ export default function HabitMoment({
 	const blockStyle =
 		"flex flex-row items-center justify-evenly flex-1 rounded-2xl mx-2";
 
-	const [selectedMoment, setSelectedMoment] = useState(habit?.moment || 0);
+	const [selectedMoment, setSelectedMoment] = useState(habit?.moment || -1);
 	const [visible, setVisible] = useState(false);
 	const [customMoment, setCustomMoment] = useState<Date | null>(null);
 

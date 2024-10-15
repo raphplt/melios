@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, Pressable, StyleSheet } from "react-native";
+import {
+	View,
+	Text,
+	StatusBar,
+	Pressable,
+	StyleSheet,
+	ScrollView,
+} from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import {
@@ -42,14 +49,14 @@ export default function CustomHabit() {
 			name: habit?.name || "",
 			description: habit?.description || "",
 			difficulty: habit?.difficulty || 1,
-			category: habit?.category.category || "",
-			color: habit?.category.color || "#A9A9A9 ",
-			icon: habit?.category.icon || "smile-beam",
+			category: habit?.category?.category || "Personnalisé",
+			color: habit?.category?.color || "#A9A9A9",
+			icon: habit?.category?.icon || "smile-beam",
 			moment: habit?.moment || 0,
-			duration: habit?.duration || 0, //TODO personnaliser
+			duration: habit?.duration || 0,
 			frequency: frequencyDefaultValues,
 			memberId: member?.uid || null,
-			habitId: habit?.id || null,
+			habitId: habit?.id || "0",
 			reminderMoment: habit?.reminderMoment || 5,
 		},
 	});
@@ -80,9 +87,6 @@ export default function CustomHabit() {
 
 	// Selected color
 	const selectedColor = watch("color");
-	console.log(watch("moment"));
-	console.log("errors", errors);	
-
 	const gradientColors = habit
 		? [lightenColor(selectedColor, 0.85), lightenColor(selectedColor, 0.55)]
 		: [lightenColor("#08209F", 0.4), theme.colors.cardBackground];
@@ -94,69 +98,97 @@ export default function CustomHabit() {
 		};
 	}, []);
 
+	console.log("errors", errors);
+	console.log(watch("category"));
+
 	return (
-		<View
-			style={{
-				flex: 1,
-				paddingTop: StatusBar.currentHeight,
-			}}
-		>
-			<LinearGradient
-				colors={gradientColors}
-				style={{
-					flex: 1,
-					...StyleSheet.absoluteFillObject,
-					overflow: "hidden",
+		<View style={{ flex: 1 }}>
+			<ScrollView
+				contentContainerStyle={{
+					flexGrow: 1,
+					paddingTop: StatusBar.currentHeight,
 				}}
-			/>
-			<ButtonClose />
-			<FormProvider {...methods}>
-				<View className="w-11/12 mx-auto">
-					{/* TITRE */}
-					<HabitTitle
-						register={register}
-						isEditingName={isEditingName}
-						setIsEditingName={setIsEditingName}
-						isEditingDescription={isEditingDescription}
-						setIsEditingDescription={setIsEditingDescription}
-						setFocus={setFocus}
-						setValue={setValue}
-					/>
+			>
+				<LinearGradient
+					colors={gradientColors}
+					style={{
+						flex: 1,
+						...StyleSheet.absoluteFillObject,
+						overflow: "hidden",
+					}}
+				/>
+				<ButtonClose />
+				<FormProvider {...methods}>
+					<View className="w-11/12 mx-auto">
+						{/* TITRE */}
+						<HabitTitle
+							register={register}
+							isEditingName={isEditingName}
+							setIsEditingName={setIsEditingName}
+							isEditingDescription={isEditingDescription}
+							setIsEditingDescription={setIsEditingDescription}
+							setFocus={setFocus}
+							setValue={setValue}
+						/>
+						{errors.name && (
+							<Text style={{ color: "red" }}>{errors.name.message}</Text>
+						)}
+						{errors.description && (
+							<Text style={{ color: "red" }}>{errors.description.message}</Text>
+						)}
 
-					{/* INFORMATIONS */}
-					<HabitInfos habit={habit} register={register} setValue={setValue} />
+						{/* INFORMATIONS */}
+						<HabitInfos habit={habit} register={register} setValue={setValue} />
 
-					{/* HEURE */}
-					<HabitMoment register={register} setValue={setValue} />
+						{/* HEURE */}
+						<HabitMoment register={register} setValue={setValue} />
+						{errors.moment && (
+							<Text style={{ color: "red" }}>{errors.moment.message}</Text>
+						)}
 
-					{/* RÉPÉTER */}
-					<RepeatHabit
-						register={register}
-						setValue={setValue}
-						getValues={getValues}
-					/>
+						{/* RÉPÉTER */}
+						<RepeatHabit
+							register={register}
+							setValue={setValue}
+							getValues={getValues}
+						/>
+						{errors.frequency && (
+							<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
+						)}
 
-					{/* NOTIFICATIONS */}
-					<Notifications register={register} setValue={setValue} />
-
-					<Pressable
-						style={{
-							backgroundColor: theme.colors.primary,
-						}}
-						onPress={handleSubmit(onSubmit)}
-						className="rounded-xl py-3 mt-4 flex flex-row items-center justify-center"
-					>
-						<Text
-							style={{
-								color: "white",
-							}}
-							className="text-lg"
-						>
-							Enregistrer
-						</Text>
-					</Pressable>
-				</View>
-			</FormProvider>
+						{/* NOTIFICATIONS */}
+						<Notifications register={register} setValue={setValue} />
+						{errors.reminderMoment && (
+							<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
+						)}
+						{errors.category && (
+							<Text style={{ color: "red" }}>{errors.category.message}</Text>
+						)}
+					</View>
+				</FormProvider>
+			</ScrollView>
+			<Pressable
+				style={{
+					backgroundColor: theme.colors.primary,
+					position: "absolute",
+					bottom: 15,
+					left: 10,
+					right: 10,
+					paddingVertical: 15,
+					alignItems: "center",
+				}}
+				onPress={handleSubmit(onSubmit)}
+				className="rounded-xl flex flex-row items-center justify-center"
+			>
+				<Text
+					style={{
+						color: "white",
+					}}
+					className="text-lg"
+				>
+					Enregistrer
+				</Text>
+			</Pressable>
 		</View>
 	);
 }

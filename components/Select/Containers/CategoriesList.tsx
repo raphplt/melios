@@ -11,11 +11,15 @@ export default function CategoriesList() {
 
 	const { width } = Dimensions.get("window");
 
+	const positiveCategories = categories.filter(
+		(category) => category.type === "positive"
+	);
+
 	return (
 		<View>
 			{type === "Positif" ? (
 				<FlatList
-					data={categories}
+					data={positiveCategories}
 					renderItem={({ item }) => <CategoryItem category={item} />}
 					keyExtractor={(item) => item.id}
 					numColumns={2}

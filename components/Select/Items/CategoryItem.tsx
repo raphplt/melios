@@ -5,7 +5,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { Category } from "@type/category";
 import { lightenColor } from "@utils/colors";
 import { useNavigation } from "expo-router";
-import { View, Text, Pressable } from "react-native";
+import { Text, Pressable } from "react-native";
 
 export default function CategoryItem({ category }: { category: Category }) {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
