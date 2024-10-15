@@ -53,7 +53,9 @@ export default function MultipleChoice({
 							<Iconify
 								icon="tabler:circle-check"
 								color={
-									selectedAnswers.includes(answer) ? theme.colors.primary : "transparent"
+									selectedAnswers.includes(answer)
+										? theme.colors.primary
+										: theme.colors.grayPrimary
 								}
 								size={24}
 							/>

@@ -49,7 +49,7 @@ export default function useFormHandler() {
 
 				const user = await createUser(updatedForm);
 				if (user) {
-					navigation.navigate("select");
+					navigation.navigate("(select)");
 				}
 			} catch (error) {
 				console.error("Erreur lors de la création de l'utilisateur : ", error);

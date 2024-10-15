@@ -89,17 +89,7 @@ export default function InputPassword({
 				textColor="white"
 			/>
 
-			{showInfoMessage && (
-				<View
-					className="flex flex-row p-1 mb-1 mt-5 items-center justify-center w-full  rounded-xl"
-					style={{ backgroundColor: theme.colors.blueSecondary }}
-				>
-					<Iconify icon="tabler:info-circle" color="black" size={24} />
-					<Text className="ml-2">
-						Le mot de passe doit comporter au moins 6 caractères.
-					</Text>
-				</View>
-			)}
+
 			<ButtonNext
 				selectedAnswer={password}
 				goToNextQuestion={goNext}

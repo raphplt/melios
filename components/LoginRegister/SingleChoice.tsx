@@ -42,7 +42,11 @@ export default function SingleChoice({
 						icon={
 							<Iconify
 								icon="tabler:circle-check"
-								color={selectedAnswer === answer ? theme.colors.primary : "transparent"}
+								color={
+									selectedAnswer === answer
+										? theme.colors.primary
+										: theme.colors.grayPrimary
+								}
 								size={24}
 							/>
 						}
