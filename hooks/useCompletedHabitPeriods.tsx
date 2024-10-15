@@ -1,14 +1,17 @@
-import { useContext, useMemo, useState, useEffect } from "react";
+import { useContext, useMemo, useState } from "react";
 import moment from "moment";
-import useIndex from "./useIndex";
 import { ThemeContext } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
 
 const useCompletedHabitPeriods = () => {
-	// const { userHabits: habits } = useIndex();
 	const { logs } = useData();
 	const { theme } = useContext(ThemeContext);
 	const [loading, setLoading] = useState(true);
+
+	if (!logs) {
+		setLoading(false);
+		return {};
+	}
 
 	const bgColor = theme.colors.primary;
 

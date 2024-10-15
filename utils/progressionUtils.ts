@@ -9,6 +9,9 @@ import moment from "moment";
 export const calculateStreak = (logs: Log[]): number => {
 	const today = moment().format("YYYY-MM-DD");
 	let maxStreak = 0;
+	if (logs.length === 0 || logs[0].logs.length === 0) {
+		return 0;
+	}
 
 	logs.forEach((log) => {
 		const sortedLogs = log.logs.sort((a, b) => moment(b).diff(moment(a)));
@@ -32,13 +35,17 @@ export const calculateStreak = (logs: Log[]): number => {
 
 /**
  * Function to calculate the weekly streak of the user
- * @param logs 
- * @returns 
+ * @param logs
+ * @returns
  */
 export const calculateWeeklyStreak = (logs: Log[]): number => {
-    const today = moment().format("YYYY-MM-DD");
-    const sevenDaysAgo = moment().subtract(7, "days").format("YYYY-MM-DD");
-    let maxStreak = 0;
+	if (logs.length === 0) {
+		return 0;
+	}
+
+	const today = moment().format("YYYY-MM-DD");
+	const sevenDaysAgo = moment().subtract(7, "days").format("YYYY-MM-DD");
+	let maxStreak = 0;
 
 	logs.forEach((log) => {
 		const sortedLogs = log.logs.sort((a, b) => moment(b).diff(moment(a)));
@@ -59,5 +66,5 @@ export const calculateWeeklyStreak = (logs: Log[]): number => {
 		maxStreak = Math.max(maxStreak, currentStreak);
 	});
 
-    return maxStreak;
+	return maxStreak;
 };

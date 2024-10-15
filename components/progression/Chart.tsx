@@ -5,7 +5,6 @@ import { ProgressChart } from "react-native-chart-kit";
 import SectionHeader from "./SectionHeader";
 import { useState } from "react";
 
-// Composant pour afficher un label avec un point de couleur et un pourcentage
 const ChartLabel = ({
 	color,
 	text,
@@ -32,7 +31,7 @@ export default function Chart() {
 	const { theme } = useTheme();
 	const [showChart, setShowChart] = useState(true);
 
-	const { parsedTime, todayScore, weeklyStreak, regularity } = useChart();
+	const { parsedTime, todayScore, regularity } = useChart();
 
 	const data = {
 		data: [parsedTime, todayScore, regularity],
@@ -44,6 +43,31 @@ export default function Chart() {
 		theme.colors.greenPrimary,
 		theme.colors.orangePrimary,
 	];
+
+	// Check if all data values are zero
+	const isDataEmpty = data.data.every((value) => value === 0);
+
+	if (isDataEmpty) {
+		return (
+			<SectionHeader
+				title="Statistiques"
+				show={showChart}
+				setShow={setShowChart}
+				icon="graph"
+			>
+				<View
+					className=" py-3 mx-auto w-11/12 my-3 rounded-xl"
+					style={{
+						backgroundColor: theme.colors.cardBackground,
+					}}
+				>
+					<Text style={{ textAlign: "center", color: "#000" }}>
+						Aucune donnée disponible
+					</Text>
+				</View>
+			</SectionHeader>
+		);
+	}
 
 	return (
 		<SectionHeader
