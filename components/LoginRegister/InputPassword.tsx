@@ -1,5 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, Pressable } from "react-native";
+import {
+	View,
+	Text,
+	ScrollView,
+	Platform,
+	KeyboardAvoidingView,
+} from "react-native";
 import { ThemeContext } from "@context/ThemeContext";
 import { Answer } from "../../constants/Slides";
 import ButtonNext from "@components/LoginRegister/ButtonNext";
@@ -20,7 +26,6 @@ export default function InputPassword({
 	const [showPassword, setShowPassword] = useState(false);
 	const [passwordsMatch, setPasswordsMatch] = useState(true);
 	const [showInfoMessage, setShowInfoMessage] = useState(true);
-	const { theme } = useContext(ThemeContext);
 
 	const resetText = () => {
 		setPassword("");
@@ -61,48 +66,49 @@ export default function InputPassword({
 	};
 
 	return (
-		<View className="w-full flex flex-col justify-between">
-			<Text
-				style={{ color: "white" }}
-				className="mb-2 ml-2 font-semibold text-[16px]"
-			>
-				{question}
-			</Text>
-			<CustomPasswordInput
-				label="Mot de passe"
-				placeholder="********"
-				value={password}
-				onChangeText={handlePasswordChange}
-				secureTextEntry={!showPassword}
-				showPassword={showPassword}
-				setShowPassword={setShowPassword}
-				textColor="white"
-			/>
-			<CustomPasswordInput
-				label="Confirmer le mot de passe"
-				placeholder="********"
-				value={confirmPassword}
-				onChangeText={handleConfirmPasswordChange}
-				secureTextEntry={!showPassword}
-				showPassword={showPassword}
-				setShowPassword={setShowPassword}
-				textColor="white"
-			/>
-
-
-			<ButtonNext
-				selectedAnswer={password}
-				goToNextQuestion={goNext}
-				isDisabled={isEmpty}
-				label="Créer mon compte"
-			/>
-			{showError && (
-				<Text style={{ color: "red", textAlign: "center" }}>
-					{!passwordsMatch
-						? "Les mots de passe ne correspondent pas."
-						: "Le mot de passe doit comporter au moins 6 caractères."}
+		<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+			<ScrollView contentContainerStyle={{}}>
+				<Text
+					style={{ color: "white" }}
+					className="mb-2 ml-2 font-semibold text-[16px]"
+				>
+					{question}
 				</Text>
-			)}
-		</View>
+				<CustomPasswordInput
+					label="Mot de passe"
+					placeholder="********"
+					value={password}
+					onChangeText={handlePasswordChange}
+					secureTextEntry={!showPassword}
+					showPassword={showPassword}
+					setShowPassword={setShowPassword}
+					textColor="white"
+				/>
+				<CustomPasswordInput
+					label="Confirmer le mot de passe"
+					placeholder="********"
+					value={confirmPassword}
+					onChangeText={handleConfirmPasswordChange}
+					secureTextEntry={!showPassword}
+					showPassword={showPassword}
+					setShowPassword={setShowPassword}
+					textColor="white"
+				/>
+
+				<ButtonNext
+					selectedAnswer={password}
+					goToNextQuestion={goNext}
+					isDisabled={isEmpty}
+					label="Créer mon compte"
+				/>
+				{showError && (
+					<Text style={{ color: "red", textAlign: "center" }}>
+						{!passwordsMatch
+							? "Les mots de passe ne correspondent pas."
+							: "Le mot de passe doit comporter au moins 6 caractères."}
+					</Text>
+				)}
+			</ScrollView>
+		</KeyboardAvoidingView>
 	);
 }

@@ -64,30 +64,32 @@ export default function InputText({
     };
 
     return (
-        <View className="w-full flex flex-col justify-between">
-            <CustomTextInput
-                label={question}
-                placeholder="Votre réponse"
-                value={text}
-                onChangeText={handleTextChange}
-                onFocus={() => setShowError(false)}
-                textColor={"white"}
-                keyboardType={slug === "email" ? "email-address" : "default"}
-            />
+					<View className="w-full flex flex-col justify-between">
+						<CustomTextInput
+							label={question}
+							placeholder="Votre réponse"
+							autoFocus={true}
+							value={text}
+							onChangeText={handleTextChange}
+							onFocus={() => setShowError(false)}
+							textColor={"white"}
+							returnKeyType="next"
+							keyboardType={slug === "email" ? "email-address" : "default"}
+						/>
 
-            <ButtonNext
-                selectedAnswer={text}
-                goToNextQuestion={goNext}
-                isDisabled={isDisabled}
-            />
-            {showError && (
-                <Text style={{ color: "red", textAlign: "center" }}>
-                    {error ||
-                        (slug === "email"
-                            ? "Veuillez entrer un email valide"
-                            : "Veuillez renseigner ce champ")}
-                </Text>
-            )}
-        </View>
-    );
+						<ButtonNext
+							selectedAnswer={text}
+							goToNextQuestion={goNext}
+							isDisabled={isDisabled}
+						/>
+						{showError && (
+							<Text style={{ color: "red", textAlign: "center" }}>
+								{error ||
+									(slug === "email"
+										? "Veuillez entrer un email valide"
+										: "Veuillez renseigner ce champ")}
+							</Text>
+						)}
+					</View>
+				);
 }

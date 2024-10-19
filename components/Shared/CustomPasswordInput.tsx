@@ -53,7 +53,7 @@ const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
 						placeholder={placeholder}
 						secureTextEntry={!showPassword}
 						autoCapitalize="none"
-						className="w-1/2 py-2"
+						className="w-1/2 py-4"
 						placeholderTextColor={theme.colors.grayPrimary}
 						cursorColor={theme.colors.text}
 						{...props}

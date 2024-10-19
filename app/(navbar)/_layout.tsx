@@ -1,5 +1,5 @@
 import { Tabs, useNavigation } from "expo-router";
-import { StatusBar, View } from "react-native";
+import { StatusBar, Text, View } from "react-native";
 import { useContext, useEffect } from "react";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
@@ -66,13 +66,24 @@ const TabLayout: React.FC = () => {
 				<Tabs.Screen
 					name="progression"
 					options={createTabOptions(
-						"Progression",
-						undefined,
+						"",
+						() => (
+							<Text
+								style={{
+									fontSize: 20,
+									color: theme.colors.text,
+									marginLeft: 15,
+									fontWeight: "bold",
+								}}
+							>
+								Progression
+							</Text>
+						),
 						() => (
 							<LayoutTopRight />
 						),
 						undefined,
-						theme.colors.backgroundTertiary // Change the header background color here
+						theme.colors.backgroundTertiary
 					)}
 				/>
 				<Tabs.Screen

@@ -8,6 +8,7 @@ interface CustomTextInputProps extends TextInputProps {
 	value: string;
 	onChangeText: (text: string) => void;
 	textColor?: string;
+	autoFocus?: boolean;
 	keyboardType?:
 		| "default"
 		| "number-pad"
@@ -25,6 +26,7 @@ export default function CustomTextInput({
 	onFocus,
 	textColor,
 	keyboardType,
+	autoFocus,
 	...props
 }: CustomTextInputProps) {
 	const { theme } = useContext(ThemeContext);
@@ -44,12 +46,13 @@ export default function CustomTextInput({
 				placeholder={placeholder}
 				autoCapitalize="none"
 				autoCorrect={false}
+				autoFocus={autoFocus}
 				onFocus={onFocus}
 				style={{
 					color: theme.colors.text,
 					backgroundColor: theme.colors.cardBackground,
 				}}
-				className="px-5 py-2 w-full mx-auto rounded-2xl"
+				className="px-5 py-4 w-full mx-auto rounded-2xl"
 				placeholderTextColor={theme.colors.grayPrimary}
 				cursorColor={theme.colors.text}
 				{...props}

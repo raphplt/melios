@@ -93,6 +93,7 @@ function MainNavigator() {
 						options={{
 							headerShadowVisible: false,
 							title: "Mon compte",
+							headerBackTitleVisible: false,
 						}}
 					/>
 
@@ -101,6 +102,7 @@ function MainNavigator() {
 						options={{
 							headerShadowVisible: false,
 							title: "Éditer le profil",
+							headerBackTitleVisible: false,
 						}}
 					/>
 

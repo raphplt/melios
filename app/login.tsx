@@ -175,34 +175,21 @@ export default function Login() {
 									}
 									returnKeyType="next"
 								/>
-								<View>
-									<CustomPasswordInput
-										ref={passwordInputRef}
-										onChangeText={setPassword}
-										label="Votre mot de passe"
-										placeholder="********"
-										value={password}
-										showPassword={showPassword}
-										setShowPassword={setShowPassword}
-										secureTextEntry={!showPassword}
-										onFocus={() => {
-											scrollViewRef.current?.scrollToEnd({ animated: true });
-										}}
-										onSubmitEditing={login}
-										returnKeyType="done"
-									/>
-									<Pressable>
-										<Text
-											style={{
-												color: theme.colors.primary,
-											}}
-											className="mt-1 ml-2"
-											onPress={() => navigation.navigate("resetPassword")}
-										>
-											Mot de passe oublié ?
-										</Text>
-									</Pressable>
-								</View>
+								<CustomPasswordInput
+									ref={passwordInputRef}
+									onChangeText={setPassword}
+									label="Votre mot de passe"
+									placeholder="********"
+									value={password}
+									showPassword={showPassword}
+									setShowPassword={setShowPassword}
+									secureTextEntry={!showPassword}
+									onFocus={() => {
+										scrollViewRef.current?.scrollToEnd({ animated: true });
+									}}
+									onSubmitEditing={login}
+									returnKeyType="done"
+								/>
 							</View>
 
 							<ButtonLogin login={login} isDisabled={isDisabled} theme={theme} />
@@ -228,6 +215,17 @@ export default function Login() {
 								</Text>
 							</View>
 						</View>
+						<Pressable>
+							<Text
+								style={{
+									color: theme.colors.primary,
+								}}
+								className="text-center mt-1"
+								onPress={() => navigation.navigate("resetPassword")}
+							>
+								Mot de passe oublié ?
+							</Text>
+						</Pressable>
 					</BlurView>
 					<ButtonNavigate
 						text="Je n'ai pas de compte"

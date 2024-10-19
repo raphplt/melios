@@ -101,8 +101,8 @@ export default function HelpModal({
 					onPress={onClose}
 					style={{
 						position: "absolute",
-						top: 10,
-						right: 10,
+						top: "6%",
+						right: 20,
 						zIndex: 10,
 					}}
 				>

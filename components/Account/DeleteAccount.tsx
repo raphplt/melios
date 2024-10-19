@@ -9,6 +9,7 @@ import { deleteUserAccount } from "@db/users";
 import { ThemeContext } from "@context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 import AccountBlock from "./AccountBlock";
+import CustomTextInput from "@components/Shared/CustomTextInput";
 
 export default function DeleteAccount() {
 	const { theme } = useContext(ThemeContext);
@@ -41,10 +42,11 @@ export default function DeleteAccount() {
 		<View>
 			<AccountBlock title="Zone de danger">
 				{showPasswordInput ? (
-					<>
-						<TextInput
+					<View className="px-2">
+						<CustomTextInput
+							label="Confirmer votre mot de passe"
 							className="h-10 border border-gray-300 mb-4 px-2 w-full"
-							placeholder="Enter your password"
+							placeholder="Entrez votre mot de passe"
 							secureTextEntry
 							value={password}
 							onChangeText={setPassword}
@@ -55,7 +57,7 @@ export default function DeleteAccount() {
 						<Pressable
 							onPress={handleDeleteAccount}
 							style={{ backgroundColor: theme.colors.redSecondary }}
-							className="px-4 py-2 rounded-xl flex flex-row items-center"
+							className="px-4 py-2 rounded-xl flex flex-row items-center justify-center"
 						>
 							<Iconify
 								icon="material-symbols:warning"
@@ -66,16 +68,32 @@ export default function DeleteAccount() {
 								className="text-lg text-center ml-1"
 								style={{ color: theme.colors.redPrimary }}
 							>
-								Confirmer la suppression
+								Supprimer mon compte
 							</Text>
 						</Pressable>
-					</>
+						<Pressable
+							onPress={() => setShowPasswordInput(false)}
+							className="px-4 py-2 rounded-xl flex flex-row items-center justify-center mt-4"
+							style={{ backgroundColor: theme.colors.backgroundTertiary }}
+						>
+							<Text
+								className="text-lg text-center"
+								style={{ color: theme.colors.text }}
+							>
+								Annuler
+							</Text>
+						</Pressable>
+					</View>
 				) : (
 					<View className=" flex items-center justify-center py-5">
+						<Text className="text-center text-[16px] text-gray-500 mb-4">
+							Vous êtes sur le point de supprimer votre compte. Cette action est
+							irréversible.
+						</Text>
 						<Pressable
 							onPress={() => setShowPasswordInput(true)}
 							style={{ backgroundColor: theme.colors.redPrimary }}
-							className="px-4 py-2 rounded-3xl w-11/12"
+							className="px-4 py-4 rounded-2xl w-11/12"
 						>
 							<Text className="text-[16px] text-center font-semibold text-white">
 								Supprimer mon compte

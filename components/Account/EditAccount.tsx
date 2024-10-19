@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@db/index";
 import { Iconify } from "react-native-iconify";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 export default function EditAccount() {
 	const { theme } = useContext(ThemeContext);
@@ -130,16 +131,18 @@ export default function EditAccount() {
 					</>
 				)}
 
-				<Pressable
-					onPress={handleUpdateProfile}
-					disabled={loading}
-					style={{ backgroundColor: theme.colors.primary }}
-					className="h-10 w-full rounded-3xl flex items-center justify-center"
-				>
-					<Text style={{ color: "white" }}>
-						{loading ? "Mise à jour..." : "Mettre à jour"}
-					</Text>
-				</Pressable>
+				<ZoomableView>
+					<Pressable
+						onPress={handleUpdateProfile}
+						disabled={loading}
+						style={{ backgroundColor: theme.colors.primary }}
+						className="py-4 w-full rounded-2xl flex items-center justify-center"
+					>
+						<Text style={{ color: "white" }} className="font-semibold text-[16px]">
+							{loading ? "Mise à jour..." : "Mettre à jour"}
+						</Text>
+					</Pressable>
+				</ZoomableView>
 			</View>
 		</AccountBlock>
 	);

@@ -30,7 +30,7 @@ export default function DailyQuote() {
 		>
 			<View className="my-4 mx-4">
 				<Text
-					className="text-[16px] leading-6"
+					className="text-lg leading-6"
 					style={{
 						color: theme.colors.text,
 						fontFamily: "Baskerville",

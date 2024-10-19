@@ -1,10 +1,10 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { useContext } from "react";
 import { View, Text } from "react-native";
 import ViewPoints from "./ViewPoints";
 
 export default function PointsBox() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 
 	return (
 		<View
