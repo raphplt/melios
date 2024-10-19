@@ -1,6 +1,6 @@
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useTheme } from "@context/ThemeContext";
-import { View, StatusBar } from "react-native";
+import { View, StatusBar, Platform } from "react-native";
 import HabitsType from "./HabitsType";
 
 import ButtonNewHabit from "../Items/ButtonNewHabit";
@@ -12,7 +12,7 @@ export default function HomeTop() {
 		<View
 			style={{
 				backgroundColor: theme.colors.background,
-				paddingTop: StatusBar.currentHeight,
+				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
 			<ButtonClose />

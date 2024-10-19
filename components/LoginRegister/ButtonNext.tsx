@@ -38,7 +38,7 @@ export default function ButtonNext({
 			}}
 		>
 			<Pressable
-				className=" text-white font-bold py-2 px-4 rounded-2xl my-3 mt-5 w-full mx-auto"
+				className="text-white font-bold py-3 px-4 rounded-2xl my-3 mt-6 w-full mx-auto"
 				style={{
 					backgroundColor:
 						isDisabled || !selectedAnswer

@@ -12,6 +12,7 @@ interface CustomPasswordInputProps extends TextInputProps {
 	showPassword: boolean;
 	setShowPassword: (value: boolean) => void;
 	textColor?: string;
+	returnKeyType?: "done" | "next" | "go" | "search" | "send";
 }
 
 const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
@@ -25,6 +26,7 @@ const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
 			showPassword,
 			setShowPassword,
 			textColor,
+			returnKeyType = "done",
 			...props
 		},
 		ref
@@ -56,6 +58,7 @@ const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
 						className="w-1/2 py-4"
 						placeholderTextColor={theme.colors.grayPrimary}
 						cursorColor={theme.colors.text}
+						returnKeyType={returnKeyType}
 						{...props}
 						style={{
 							color: theme.colors.text,
