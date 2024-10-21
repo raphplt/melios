@@ -109,7 +109,7 @@ export default function InfosPanel({
 								}}
 								className="text-center"
 							>
-								{day.charAt(0).toUpperCase() + day.slice(1, 3)}
+								{day.charAt(0).toUpperCase() + day.slice(1, 2)}
 							</Text>
 						</View>
 					))}

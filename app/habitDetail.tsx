@@ -1,5 +1,12 @@
 import { useEffect, useRef } from "react";
-import { View, AppState, AppStateStatus, Text, StatusBar } from "react-native";
+import {
+	View,
+	AppState,
+	AppStateStatus,
+	Text,
+	StatusBar,
+	Platform,
+} from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
@@ -20,6 +27,7 @@ import ButtonBack from "@components/Shared/ButtonBack";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonsBox from "@components/HabitDetail/ButtonsBox";
 import { useTheme } from "@context/ThemeContext";
+import SettingsButton from "@components/HabitDetail/SettingsButton";
 
 export interface DayStatus {
 	date: string;
@@ -92,10 +100,13 @@ export default function HabitDetail() {
 		<View
 			style={{
 				flex: 1,
-				paddingTop: StatusBar.currentHeight,
+				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
-			<ButtonBack handleQuit={() => navigation.goBack()} />
+			<View className="flex flex-row items-center justify-between w-11/12 mx-auto">
+				<ButtonBack handleQuit={() => navigation.goBack()} />
+				<SettingsButton />
+			</View>
 			<View className="w-full mx-auto flex justify-center flex-col pt-1">
 				<HabitDetailHeader
 					habit={currentHabit}

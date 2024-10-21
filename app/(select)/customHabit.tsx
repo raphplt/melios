@@ -5,6 +5,7 @@ import {
 	Pressable,
 	StyleSheet,
 	ScrollView,
+	Platform,
 } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -98,15 +99,12 @@ export default function CustomHabit() {
 		};
 	}, []);
 
-	console.log("errors", errors);
-	console.log(watch("category"));
-
 	return (
 		<View style={{ flex: 1 }}>
 			<ScrollView
 				contentContainerStyle={{
 					flexGrow: 1,
-					paddingTop: StatusBar.currentHeight,
+					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 				}}
 			>
 				<LinearGradient
