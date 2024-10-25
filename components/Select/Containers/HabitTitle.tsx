@@ -11,7 +11,8 @@ export default function HabitTitle({
 	isEditingDescription,
 	setIsEditingDescription,
 	setFocus,
-	setValue, // Ajout de setValue ici
+	setValue,
+	selectedColor,
 }: {
 	register: any;
 	isEditingName: boolean;
@@ -20,6 +21,7 @@ export default function HabitTitle({
 	setIsEditingDescription: (value: boolean) => void;
 	setFocus: any;
 	setValue: any;
+	selectedColor: string;
 }) {
 	const { theme } = useTheme();
 	const { habit } = useSelect();
@@ -47,11 +49,12 @@ export default function HabitTitle({
 					}}
 					className="text-2xl font-semibold w-10/12"
 					placeholder={"Nom de l'habitude"}
+					placeholderTextColor={theme.colors.textTertiary}
 					{...register("name")}
 					onFocus={() => setIsEditingName(true)}
 					onBlur={() => setIsEditingName(false)}
-					onChangeText={(value) => setValue("name", value)} // Utilisation de setValue
-					defaultValue={habit?.name} // Liaison avec la valeur actuelle
+					onChangeText={(value) => setValue("name", value)}
+					defaultValue={habit?.name}
 				/>
 				<Pressable
 					onPress={() => toggleFocus("name", isEditingName, setIsEditingName)}
@@ -62,7 +65,7 @@ export default function HabitTitle({
 
 			<BlurView
 				intensity={90}
-				className="rounded-xl px-3 py-1 mt-4 flex flex-row items-center justify-between"
+				className="rounded-xl px-3 py-2 mt-4 flex flex-row items-center justify-between"
 				style={{
 					overflow: "hidden",
 				}}
@@ -76,8 +79,9 @@ export default function HabitTitle({
 					{...register("description")}
 					onFocus={() => setIsEditingDescription(true)}
 					onBlur={() => setIsEditingDescription(false)}
-					onChangeText={(value) => setValue("description", value)} // Utilisation de setValue
-					defaultValue={habit?.description} // Liaison avec la valeur actuelle
+					onChangeText={(value) => setValue("description", value)}
+					placeholderTextColor={theme.colors.textTertiary}
+					defaultValue={habit?.description}
 					multiline={true}
 					numberOfLines={3}
 					cursorColor={theme.colors.textTertiary}

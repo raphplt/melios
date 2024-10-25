@@ -26,7 +26,7 @@ export default function RowTitleCustom({ title }: { title: string }) {
 	};
 
 	return (
-		<View className="w-11/12 flex flex-row items-center justify-start mt-4 mb-2">
+		<View className="w-11/12 flex flex-row items-center justify-start mt-5 mb-3">
 			{renderIcon()}
 			<Text
 				style={{

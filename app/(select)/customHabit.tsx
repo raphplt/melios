@@ -127,6 +127,7 @@ export default function CustomHabit() {
 							setIsEditingDescription={setIsEditingDescription}
 							setFocus={setFocus}
 							setValue={setValue}
+							selectedColor={selectedColor}
 						/>
 						{errors.name && (
 							<Text style={{ color: "red" }}>{errors.name.message}</Text>
@@ -169,7 +170,7 @@ export default function CustomHabit() {
 				style={{
 					backgroundColor: theme.colors.primary,
 					position: "absolute",
-					bottom: 15,
+					bottom: 35,
 					left: 10,
 					right: 10,
 					paddingVertical: 15,

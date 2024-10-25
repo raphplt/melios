@@ -1,3 +1,5 @@
+import tinycolor from "tinycolor2";
+
 export function lightenColor(hex: string, alpha: number = 0.1): string {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	if (result) {
@@ -21,3 +23,9 @@ export const getFlammeColor = (todayScore: number): string => {
 	}
 	return "#FFD580";
 };
+
+export function getContrastingColor(color: string): string {
+	const tc = tinycolor(color);
+	console.log("tc", tc, "isLight", tc.isLight(), "color is", color);
+	return tc.isLight() ? "#000000" : "#FFFFFF";
+}
