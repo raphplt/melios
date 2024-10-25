@@ -46,9 +46,7 @@ function CardCheckHabit({
 	const [showDetails, setShowDetails] = useState(false);
 	const [habitLogs, setHabitLogs] = useState<Array<string>>();
 	const [toggleCheckBox, setToggleCheckBox] = useState(false);
-	const [isTouched, setIsTouched] = useState(false);
 	const [completed, setCompleted] = useState(false);
-	let touchStartTimeout: NodeJS.Timeout;
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
@@ -124,8 +122,8 @@ function CardCheckHabit({
 		setToggleCheckBox(true);
 
 		try {
+			console.log("habit.id", habit.id, date);
 			await setHabitLog(habit.id, date);
-
 			addOdysseePoints(habit.difficulty);
 
 			setCompletedHabitsToday((prev) => [...prev, habit]);
@@ -159,25 +157,13 @@ function CardCheckHabit({
 				<Pressable
 					onPress={() => {
 						setShowDetails(!showDetails);
-						// goHabitDetail();
 					}}
 					style={{
-						backgroundColor: completed
+						backgroundColor: toggleCheckBox
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 					}}
 					className="flex-1 flex flex-col rounded-xl"
-					onTouchStart={() => {
-						touchStartTimeout = setTimeout(() => setIsTouched(true), 200);
-					}}
-					onTouchEnd={() => {
-						clearTimeout(touchStartTimeout);
-						setIsTouched(false);
-					}}
-					onTouchCancel={() => {
-						clearTimeout(touchStartTimeout);
-						setIsTouched(false);
-					}}
 				>
 					<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
 						<View className="flex flex-row items-center justify-start">

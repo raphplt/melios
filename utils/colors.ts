@@ -26,6 +26,5 @@ export const getFlammeColor = (todayScore: number): string => {
 
 export function getContrastingColor(color: string): string {
 	const tc = tinycolor(color);
-	console.log("tc", tc, "isLight", tc.isLight(), "color is", color);
 	return tc.isLight() ? "#000000" : "#FFFFFF";
 }
