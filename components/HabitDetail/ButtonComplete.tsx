@@ -1,7 +1,6 @@
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
-import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { getHabitPoints } from "@utils/pointsUtils";
 import { useNavigation } from "expo-router";
@@ -11,6 +10,7 @@ import RewardDetail from "./RewardDetail";
 import { setHabitLog } from "@db/logs";
 import { useData } from "@context/DataContext";
 import usePoints from "@hooks/usePoints";
+import { setRewards } from "@db/rewards";
 
 export default function ButtonComplete() {
 	const { theme } = useContext(ThemeContext);
@@ -38,11 +38,9 @@ export default function ButtonComplete() {
 	};
 
 	const handlePress = async () => {
-		// startTimer(currentHabit);
-		// navigation.navigate("timerHabit");
-
 		await setHabitLog(currentHabit.id, date);
 		addOdysseePoints(currentHabit.difficulty);
+		setRewards("odyssee", currentHabit.difficulty * 2);
 
 		setCompletedHabitsToday((prev) => [...prev, currentHabit]);
 
