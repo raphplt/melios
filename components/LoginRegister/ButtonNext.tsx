@@ -1,6 +1,6 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext, useRef } from "react";
-import { Animated, Pressable, Text } from "react-native";
+import { ActivityIndicator, Animated, Pressable, Text } from "react-native";
 import { Answer } from "../../constants/Slides";
 
 export default function ButtonNext({
@@ -8,11 +8,13 @@ export default function ButtonNext({
 	goToNextQuestion,
 	isDisabled,
 	label,
+	isSubmitting,
 }: {
 	selectedAnswer: any;
 	goToNextQuestion: (selectedAnswer: Answer) => void;
 	isDisabled?: boolean;
 	label?: string;
+	isSubmitting?: boolean;
 }) {
 	const { theme } = useContext(ThemeContext);
 	const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -55,12 +57,20 @@ export default function ButtonNext({
 				onTouchEnd={handleTouchEnd}
 				onTouchCancel={handleTouchEnd}
 			>
-				<Text
-					style={{ color: theme.colors.textSecondary }}
-					className="text-lg text-center"
-				>
-					{label || "Suivant"}
-				</Text>
+				{isSubmitting ? (
+					<ActivityIndicator
+						color={"white"}
+						size="small"
+						style={{ marginRight: 10 }}
+					/>
+				) : (
+					<Text
+						style={{ color: theme.colors.textSecondary }}
+						className="text-lg text-center"
+					>
+						{label || "Suivant"}
+					</Text>
+				)}
 			</Pressable>
 		</Animated.View>
 	);

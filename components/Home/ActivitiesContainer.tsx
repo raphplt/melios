@@ -12,9 +12,6 @@ export default function ActivitiesContainer() {
 	if (!habits || habits.length === 0) {
 		return null;
 	}
-
-	console.log(habits);
-
 	return (
 		<View
 			className="mt-8 py-4 mb-5 pb-10 rounded-xl ml-3 z-[1000]"

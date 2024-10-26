@@ -7,11 +7,11 @@ import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
 export default function InputPassword({
 	question,
 	goToNextQuestion,
-	isCreatingUser, // Recevoir l'état
+	isCreatingUser,
 }: {
 	question: string;
 	goToNextQuestion: (answer: Answer) => void;
-	isCreatingUser: boolean; // Définir le type
+	isCreatingUser: boolean;
 }) {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,7 +19,7 @@ export default function InputPassword({
 	const [showError, setShowError] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [passwordsMatch, setPasswordsMatch] = useState(true);
-	const [showInfoMessage, setShowInfoMessage] = useState(true);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const confirmPasswordRef = useRef<TextInput>(null);
 
@@ -29,7 +29,6 @@ export default function InputPassword({
 		setIsEmpty(true);
 		setShowError(false);
 		setPasswordsMatch(true);
-		setShowInfoMessage(true);
 	};
 
 	useEffect(() => {
@@ -39,14 +38,12 @@ export default function InputPassword({
 	const handlePasswordChange = (inputText: string) => {
 		setPassword(inputText);
 		setIsEmpty(inputText.trim().length < 6 || inputText !== confirmPassword);
-		setShowInfoMessage(inputText.trim().length < 6);
 	};
 
 	const handleConfirmPasswordChange = (inputText: string) => {
 		setConfirmPassword(inputText);
 		setPasswordsMatch(inputText === password);
 		setIsEmpty(password.trim().length < 6 || inputText !== password);
-		setShowInfoMessage(password.trim().length < 6);
 	};
 
 	const goNext = () => {
@@ -55,7 +52,9 @@ export default function InputPassword({
 				answer: password,
 				value: 1,
 			};
+			setIsSubmitting(true);
 			goToNextQuestion(answer);
+			setShowError(false);
 		} else {
 			setShowError(true);
 		}
@@ -100,6 +99,7 @@ export default function InputPassword({
 				goToNextQuestion={goNext}
 				isDisabled={isEmpty || isCreatingUser}
 				label="Créer mon compte"
+				isSubmitting={isSubmitting}
 			/>
 			{showError && (
 				<Text style={{ color: "red", textAlign: "center" }}>

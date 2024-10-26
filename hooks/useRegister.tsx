@@ -8,12 +8,15 @@ import InputPassword from "@components/LoginRegister/InputPassword";
 import InputText from "@components/LoginRegister/InputText";
 import MultipleChoice from "@components/LoginRegister/MultipleChoice";
 import SingleChoice from "@components/LoginRegister/SingleChoice";
+import { useData } from "@context/DataContext";
+import { Member } from "@type/member";
 
 export default function useFormHandler() {
 	const [form, setForm] = useState<Question[]>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [isCreatingUser, setIsCreatingUser] = useState(false);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const { setMember } = useData();
 
 	const goToNextQuestion = async (answer: Answer) => {
 		const currentQuestion = Questions[currentQuestionIndex];
@@ -42,21 +45,22 @@ export default function useFormHandler() {
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 		} else {
 			try {
-				setIsCreatingUser(true); // Désactiver le bouton
+				setIsCreatingUser(true);
 				const updatedQuestion: Question = {
 					...currentQuestion,
 					answers: [answer],
 				};
 				const updatedForm = [...form, updatedQuestion];
 
-				const user = await createUser(updatedForm);
+				const { user, member } = await createUser(updatedForm);
 				if (user) {
+					setMember(member as Member);
 					navigation.navigate("(select)");
 				}
 			} catch (error) {
 				console.error("Erreur lors de la création de l'utilisateur : ", error);
 			} finally {
-				setIsCreatingUser(false); // Réactiver le bouton
+				setIsCreatingUser(false);
 			}
 		}
 	};
@@ -118,7 +122,7 @@ export default function useFormHandler() {
 					<InputPassword
 						question={question}
 						goToNextQuestion={goToNextQuestion}
-						isCreatingUser={isCreatingUser} // Passer l'état au composant
+						isCreatingUser={isCreatingUser}
 					/>
 				);
 			default:

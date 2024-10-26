@@ -9,7 +9,7 @@ import {
 	sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from ".";
-import { collection, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LAST_FETCH_KEY } from "./category";
@@ -67,8 +67,9 @@ export const createUser = async (form: any) => {
 		const nom =
 			form.find((item: any) => item.slug === "nom")?.answers[0]?.answer || "";
 
+		let memberDocRef;
 		try {
-			await addDoc(membersCollectionRef, {
+			memberDocRef = await addDoc(membersCollectionRef, {
 				uid: user.uid,
 				habits: [],
 				objectifs: objectifs,
@@ -91,7 +92,12 @@ export const createUser = async (form: any) => {
 			);
 		}
 
-		return user;
+		const memberDoc = await getDoc(memberDocRef);
+		if (!memberDoc.exists()) {
+			throw new Error("Failed to retrieve the created member document.");
+		}
+
+		return { user, member: memberDoc.data() };
 	} catch (error) {
 		console.error("Erreur lors de la création de l'utilisateur : ", error);
 		throw error;

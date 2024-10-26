@@ -19,8 +19,13 @@ export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { theme, toggleTheme } = useTheme();
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
-	const { setHabits, setPoints, setNotificationToggle, notificationToggle } =
-		useData();
+	const {
+		setHabits,
+		setPoints,
+		setNotificationToggle,
+		notificationToggle,
+		setMember,
+	} = useData();
 
 	const { scheduleDailyNotification, cancelAllNotifications } =
 		useNotifications();
@@ -53,6 +58,7 @@ export default function Preferences() {
 		setPoints({ odyssee: 0, rewards: 0 });
 
 		await disconnectUser();
+		setMember(undefined);
 		setModalVisible(false);
 	};
 
