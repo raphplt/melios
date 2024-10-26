@@ -24,6 +24,7 @@ import { getHabitLogs, setHabitLog } from "@db/logs";
 import { Iconify } from "react-native-iconify";
 import useHabitTimer from "@hooks/useHabitTimer";
 import ZoomableView from "@components/Shared/ZoomableView";
+import { setRewards } from "@db/rewards";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -107,6 +108,7 @@ function CardCheckHabit({
 		try {
 			await setHabitLog(habit.id, date);
 			addOdysseePoints(habit.difficulty);
+			setRewards("odyssee", habit.difficulty * 2);
 			setCompleted(true);
 
 			setCompletedHabitsToday((prev) => [...prev, habit]);
