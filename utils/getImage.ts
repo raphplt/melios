@@ -14,6 +14,7 @@ export default function getImage(slug: string) {
 		ecology: require("@assets/images/categories/ecology.jpg"),
 		spirituality: require("@assets/images/categories/spirituality.jpg"),
 		productivity: require("@assets/images/categories/productivity.jpg"),
+		default: require("@assets/images/categories/sport.jpg"),
 	};
 	return images[slug] || require("@assets/images/categories/social_life.jpg");
 }

@@ -1,9 +1,5 @@
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
-import {
-	CombinedHabits,
-	HabitsContext,
-	useHabits,
-} from "@context/HabitsContext";
+import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -12,16 +8,18 @@ import { useNavigation } from "expo-router";
 import { useContext, useRef } from "react";
 import { Animated, Pressable, Text, View } from "react-native";
 import RewardDetail from "./RewardDetail";
-import { Iconify } from "react-native-iconify";
+import { setHabitLog } from "@db/logs";
+import { useData } from "@context/DataContext";
+import usePoints from "@hooks/usePoints";
 
 export default function ButtonComplete() {
 	const { theme } = useContext(ThemeContext);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { currentHabit } = useHabits();
+	const { date, setCompletedHabitsToday } = useData();
+	const { addOdysseePoints } = usePoints();
 
 	if (!currentHabit) return null;
-
-	const { startTimer } = useHabitTimer();
 
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -39,9 +37,16 @@ export default function ButtonComplete() {
 		}).start();
 	};
 
-	const handlePress = () => {
-		startTimer(currentHabit);
-		navigation.navigate("timerHabit");
+	const handlePress = async () => {
+		// startTimer(currentHabit);
+		// navigation.navigate("timerHabit");
+
+		await setHabitLog(currentHabit.id, date);
+		addOdysseePoints(currentHabit.difficulty);
+
+		setCompletedHabitsToday((prev) => [...prev, currentHabit]);
+
+		navigation.navigate("index");
 	};
 
 	const habitPoints = getHabitPoints(currentHabit);

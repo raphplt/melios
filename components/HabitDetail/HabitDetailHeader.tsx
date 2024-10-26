@@ -1,21 +1,23 @@
+import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { UserHabit } from "@type/userHabit";
 import { Text, View } from "react-native";
 
 export default function HabitDetailHeader({
 	habit,
-	theme,
 	lightenedColor,
 }: {
 	habit: UserHabit;
-	theme: any;
 	lightenedColor: string;
 }) {
+	const { theme } = useTheme();
 	return (
 		<View
 			className="py-3 px-6 rounded-lg w-11/12 mx-auto flex items-center flex-row justify-center"
 			style={{
 				backgroundColor: lightenedColor,
+				borderColor: habit.color,
+				borderWidth: 2,
 			}}
 		>
 			<FontAwesome6

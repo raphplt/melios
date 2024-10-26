@@ -26,7 +26,6 @@ export default function ModalCategory({
 				valueField={"category"}
 				placeholder="Choisissez une catégorie"
 				onChange={(item: Category) => {
-					console.log("item", item);
 					setValue("category", item);
 					setVisible(false);
 				}}

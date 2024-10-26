@@ -21,7 +21,7 @@ import { BlurView } from "expo-blur";
 
 function Activity({ habit }: { habit: UserHabit }) {
 	const { theme } = useTheme();
-	const { habitsData } = useHabits();
+	const { categories } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 	const { setCurrentHabit } = useContext(HabitsContext);
@@ -48,11 +48,7 @@ function Activity({ habit }: { habit: UserHabit }) {
 		navigation.navigate("habitDetail");
 	};
 
-	const currentHabitData = habitsData.find(
-		(habitData) => habitData.id === habit.habitId
-	);
-
-	if (!currentHabitData) return null;
+	const habitCategory = categories.find((c) => c.category === habit.category);
 
 	return (
 		<Animated.View
@@ -97,12 +93,9 @@ function Activity({ habit }: { habit: UserHabit }) {
 						{habit.category}
 					</Text>
 				</View>
-				<View
-					className="flex flex-col justify-evenly items-center rounded-b-xl bg-slate-20 flex-1
-				"
-				>
+				<View className="flex flex-col justify-evenly items-center rounded-b-xl bg-slate-20 flex-1">
 					<Image
-						source={getImage(currentHabitData.category.slug)}
+						source={getImage(habitCategory?.slug || "default")}
 						style={StyleSheet.absoluteFillObject}
 						blurRadius={20}
 						resizeMode="cover"
@@ -111,11 +104,11 @@ function Activity({ habit }: { habit: UserHabit }) {
 					<View className=" flex items-center justify-center w-10/12 px-1 py-1 rounded-lg overflow-hidden">
 						<BlurView intensity={60} tint={"light"} style={styles.blurView} />
 						<Text
-							className="text-md w-11/12 mx-auto font-semibold text-center py-1 text-[15px]"
+							className="text-md w-11/12 mx-auto font-semibold text-center py-1 mb-2 text-[15px]"
 							style={{
 								color: "#121212",
 							}}
-							numberOfLines={1}
+							numberOfLines={2}
 							ellipsizeMode="tail"
 						>
 							{habit.name}

@@ -14,26 +14,44 @@ export default function InfosPanel({
 	const { theme } = useTheme();
 
 	const rowStyle =
-		"flex flex-row justify-between items-center w-full mx-auto mt-4 px-5";
+		"flex flex-row justify-between items-center w-full mx-auto px-4";
 
 	const rowBox = "flex flex-row items-center gap-2";
+
+	const Separator = () => (
+		<View
+			style={{
+				borderBottomColor: habit.color || theme.colors.border,
+				width: "100%",
+				height: 1,
+				borderBottomWidth: 1,
+				marginTop: 10,
+				marginBottom: 10,
+			}}
+		/>
+	);
 
 	return (
 		<View
 			className="flex flex-col items-center justify-between w-11/12 mx-auto py-4 rounded-lg mt-6"
 			style={{
 				backgroundColor: lightenedColor || theme.colors.cardBackground,
+				borderColor: habit.color || theme.colors.border,
+				borderWidth: 2,
 			}}
 		>
 			<Text
 				style={{
 					color: theme.colors.text,
-					borderBottomColor: habit.color || theme.colors.border,
 				}}
-				className="text-[16px] text-pretty ml-4 pb-2 w-11/12 mx-auto border-b"
+				className="text-[16px] text-pretty ml-4 pb-2 w-11/12 mx-auto font-semibold"
 			>
-				{habit.description}
+				"{habit.description}"
 			</Text>
+
+			<Separator />
+
+			{/* Durée */}
 			<View className={rowStyle}>
 				<View className={rowBox}>
 					<Iconify
@@ -48,6 +66,10 @@ export default function InfosPanel({
 				<Text style={{ color: theme.colors.text }}>{habit.duration} minutes</Text>
 			</View>
 
+			<Separator />
+
+			{/* Catégorie */}
+
 			<View className={rowStyle}>
 				<View className={rowBox}>
 					<Iconify
@@ -61,6 +83,10 @@ export default function InfosPanel({
 				</View>
 				<Text style={{ color: theme.colors.text }}>{habit.category}</Text>
 			</View>
+
+			<Separator />
+
+			{/* Moment */}
 
 			<View className={rowStyle}>
 				<View className={rowBox}>
@@ -77,7 +103,11 @@ export default function InfosPanel({
 				<Text style={{ color: theme.colors.text }}>à {habit.moment} heure</Text>
 			</View>
 
-			<View className=" px-5 mx-auto mt-4">
+			<Separator />
+
+			{/* Fréquence */}
+
+			<View className="px-4 mx-auto">
 				<View className={rowBox}>
 					<Iconify
 						size={24}

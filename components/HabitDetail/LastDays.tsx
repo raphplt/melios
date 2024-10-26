@@ -6,10 +6,15 @@ import { ThemeContext } from "@context/ThemeContext";
 import { UserHabit } from "@type/userHabit";
 import { DayStatus } from "../../app/habitDetail";
 import { getHabitLogs } from "@db/logs";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function LastDays({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 	useEffect(() => {
 		const fetchHabitLogs = async () => {
@@ -25,6 +30,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 					});
 				}
 				setLastDays(lastDaySnapshot.reverse());
+				setLoading(false);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des logs :", error);
 			}
@@ -32,6 +38,22 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 
 		fetchHabitLogs();
 	}, [habit.id]);
+
+	const CardPlaceHolder = () => {
+		return (
+			<ShimmerPlaceholder
+				width={60}
+				height={60}
+				style={{
+					borderRadius: 10,
+					marginLeft: 10,
+					marginRight: 10,
+				}}
+			/>
+		);
+	};
+
+	const placeholders = Array(5).fill(null);
 
 	return (
 		<>
@@ -56,7 +78,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 				contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
 				className="w-11/12 mx-auto mt-2 mb-6"
 			>
-				{lastDays &&
+				{lastDays && !loading ? (
 					lastDays.map((day: DayStatus, index) => (
 						<View
 							key={index}
@@ -79,7 +101,14 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 								{moment(day.date, "YYYY-MM-DD").format("DD/MM")}
 							</Text>
 						</View>
-					))}
+					))
+				) : (
+					<View className="w-full flex flex-row items-center justify-center">
+						{placeholders.map((_, index) => (
+							<CardPlaceHolder key={index} />
+						))}
+					</View>
+				)}
 			</ScrollView>
 		</>
 	);

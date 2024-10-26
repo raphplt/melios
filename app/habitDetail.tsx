@@ -72,8 +72,8 @@ export default function HabitDetail() {
 			}
 			sendPushNotification(expoPushToken, {
 				title: `${currentHabit.name || "Habitude"} en pause`,
-				body: `Cliquez pour revenir sur votre habitude en cours.`, //TODO temps restant
-			}); //TODO supprimer la notification quand on revient sur l'app
+				body: `Cliquez pour revenir sur votre habitude en cours.`,
+			});
 			if (isTimerActive) {
 				await AsyncStorage.setItem("timerSeconds", timerSeconds.toString());
 
@@ -103,16 +103,12 @@ export default function HabitDetail() {
 				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto">
+			<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mb-2">
 				<ButtonBack handleQuit={() => navigation.goBack()} />
 				<SettingsButton />
 			</View>
 			<View className="w-full mx-auto flex justify-center flex-col pt-1">
-				<HabitDetailHeader
-					habit={currentHabit}
-					theme={theme}
-					lightenedColor={lightenedColor}
-				/>
+				<HabitDetailHeader habit={currentHabit} lightenedColor={lightenedColor} />
 
 				<InfosPanel habit={currentHabit} lightenedColor={lightenedColor} />
 				<LastDays habit={currentHabit} />

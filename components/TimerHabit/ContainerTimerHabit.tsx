@@ -13,7 +13,7 @@ export default function ContainerTimerHabit({
 }: {
 	children: ReactNode;
 }) {
-	const { currentHabit, habitsData } = useHabits();
+	const { currentHabit, categories } = useHabits();
 	const { theme } = useContext(ThemeContext);
 	const { stopTimer } = useHabitTimer();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -25,15 +25,14 @@ export default function ContainerTimerHabit({
 		navigation.navigate("habitDetail");
 	};
 
-	const currentHabitData = habitsData.find(
-		(habit) => habit.id === currentHabit.habitId
+	const habitCategory = categories.find(
+		(c) => c.category === currentHabit.category
 	);
-	if (!currentHabitData) return null;
 
 	return (
 		<View className="flex flex-col items-center justify-around h-full">
 			<Image
-				source={getImage(currentHabitData.category.slug)}
+				source={getImage(habitCategory?.slug || "default")}
 				style={StyleSheet.absoluteFillObject}
 				blurRadius={20}
 				resizeMode="cover"

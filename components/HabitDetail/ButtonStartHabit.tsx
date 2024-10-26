@@ -43,10 +43,6 @@ export default function ButtonStartHabit() {
 
 	return (
 		<>
-			{/* <View className="flex flex-row items-center justify-end w-11/12 mx-auto py-1">
-				<RewardDetail point={habitPoints.rewards} money={<MoneyMelios />} />
-				<RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} />
-			</View> */}
 			<Animated.View
 				style={{
 					transform: [{ scale: scaleAnim }],

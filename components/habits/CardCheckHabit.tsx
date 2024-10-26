@@ -39,13 +39,11 @@ function CardCheckHabit({
 	const { theme } = useTheme();
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
-	const { date, setCompletedHabitsToday } = useData();
+	const { date, completedHabitsToday, setCompletedHabitsToday } = useData();
 	const { startTimer } = useHabitTimer();
 
 	// États
 	const [showDetails, setShowDetails] = useState(false);
-	const [habitLogs, setHabitLogs] = useState<Array<string>>();
-	const [toggleCheckBox, setToggleCheckBox] = useState(false);
 	const [completed, setCompleted] = useState(false);
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -78,23 +76,10 @@ function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		const getLog = async () => {
-			const snapshot = await getHabitLogs(habit.id);
-			setHabitLogs(snapshot);
-		};
-		getLog();
-	}, []);
-
-	useEffect(() => {
 		const today = formatDate(new Date());
-		if (!habitLogs) return;
-		if (habitLogs.includes(today)) {
-			setCompleted(true);
-			setToggleCheckBox(true);
-		} else {
-			setToggleCheckBox(false);
-		}
-	}, [habitLogs]);
+		const completed = completedHabitsToday.some((h) => h.id === habit.id);
+		setCompleted(completed);
+	}, [completedHabitsToday]);
 
 	useEffect(() => {
 		if (showDetails) {
@@ -119,12 +104,10 @@ function CardCheckHabit({
 	};
 
 	const setHabitDone = async () => {
-		setToggleCheckBox(true);
-
 		try {
-			console.log("habit.id", habit.id, date);
 			await setHabitLog(habit.id, date);
 			addOdysseePoints(habit.difficulty);
+			setCompleted(true);
 
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {
@@ -145,11 +128,11 @@ function CardCheckHabit({
 				<Pressable
 					onPress={setHabitDone}
 					className="flex items-center justify-center"
-					disabled={toggleCheckBox}
+					disabled={completed}
 					style={{ flexBasis: "12.5%" }}
 				>
 					<Ionicons
-						name={toggleCheckBox ? "checkmark-circle" : "ellipse-outline"}
+						name={completed ? "checkmark-circle" : "ellipse-outline"}
 						size={30}
 						color={theme.colors.primary}
 					/>
@@ -159,7 +142,7 @@ function CardCheckHabit({
 						setShowDetails(!showDetails);
 					}}
 					style={{
-						backgroundColor: toggleCheckBox
+						backgroundColor: completed
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 					}}

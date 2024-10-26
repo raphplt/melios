@@ -103,7 +103,16 @@ export default function HabitsSection() {
 
 			{/* Free habits */}
 			{freeHabits && freeHabits.length > 0 && (
-				<SectionWrapper title="Habitudes libres">
+				<SectionWrapper
+					title="Habitudes libres"
+					icon={
+						<Iconify
+							icon="mdi:calendar-blank"
+							size={24}
+							color={theme.colors.textTertiary}
+						/>
+					}
+				>
 					{freeHabits.map((habit, index) => (
 						<CardCheckHabit key={index} habit={habit} />
 					))}
