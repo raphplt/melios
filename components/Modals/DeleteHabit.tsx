@@ -12,9 +12,11 @@ export default function DeleteHabit({
 	visible: boolean;
 	setVisible: any;
 	handleDelete: () => void;
-	habit: UserHabit;
+	habit: UserHabit | null;
 }) {
 	const { theme } = useTheme();
+
+	if (!habit) return null;
 	return (
 		<ModalWrapper visible={visible} setVisible={setVisible}>
 			<View>

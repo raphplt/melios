@@ -1,8 +1,10 @@
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 import { UserHabit } from "@type/userHabit";
 import { useTheme } from "@context/ThemeContext";
+import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from "expo-blur";
 
 export default function InfosPanel({
 	habit,
@@ -32,21 +34,20 @@ export default function InfosPanel({
 	);
 
 	return (
-		<View
-			className="flex flex-col items-center justify-between w-11/12 mx-auto py-4 rounded-lg mt-6"
+		<BlurView
+			intensity={70}
+			className="w-11/12 mx-auto p-4 rounded-xl my-4"
 			style={{
-				backgroundColor: lightenedColor || theme.colors.cardBackground,
-				borderColor: habit.color || theme.colors.border,
-				borderWidth: 2,
+				overflow: "hidden",
 			}}
 		>
 			<Text
 				style={{
 					color: theme.colors.text,
 				}}
-				className="text-[16px] text-pretty ml-4 pb-2 w-11/12 mx-auto font-semibold"
+				className="text-[16px] text-pretty ml-4 py-2 w-11/12 mx-auto font-semibold"
 			>
-				"{habit.description}"
+				{habit.description}
 			</Text>
 
 			<Separator />
@@ -123,7 +124,7 @@ export default function InfosPanel({
 					</Text>
 				</View>
 				<View className="flex flex-row items-center justify-center w-full mt-2">
-					{Object.entries(habit.frequency).map(([day, isActive]) => (
+					{Object.entries(habit.frequency as any).map(([day, isActive]) => (
 						<View
 							key={day}
 							style={{
@@ -145,38 +146,13 @@ export default function InfosPanel({
 					))}
 				</View>
 			</View>
-
-			{/* <View className={rowStyle}>
-				<View className={rowBox}>
-					<Iconify size={24} color={theme.colors.text} icon="mdi:fire" />
-					<Text style={{ color: theme.colors.text }} className="font-semibold">
-						Difficulté
-					</Text>
-				</View>
-				<Text style={{ color: theme.colors.text }}>{difficulty ?? ""}</Text>
-			</View> */}
-			{/* <View className={rowStyle}>
-				<View className={rowBox}>
-					<Iconify size={24} color={theme.colors.text} icon="ph:coin" />
-					<Text style={{ color: theme.colors.text }} className="font-semibold">
-						Points
-					</Text>
-				</View>
-				<View className="flex flex-row gap-3">
-					<View className="flex flex-row items-center">
-						<MoneyOdyssee />
-						<Text style={{ color: theme.colors.text }} className="ml-1">
-							{Math.round(habit.reward * (habit.difficulty / 2))}
-						</Text>
-					</View>
-					<View className="flex flex-row items-center gap4">
-						<MoneyMelios />
-						<Text style={{ color: theme.colors.text }} className="ml-1">
-							{habit.difficulty}
-						</Text>
-					</View>
-				</View>
-			</View> */}
-		</View>
+		</BlurView>
 	);
 }
+
+const styles = StyleSheet.create({
+	blurView: {
+		...StyleSheet.absoluteFillObject,
+		borderRadius: 10,
+	},
+});

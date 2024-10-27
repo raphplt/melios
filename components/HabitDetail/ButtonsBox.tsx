@@ -15,7 +15,7 @@ export default function ButtonsBox() {
 	);
 
 	return (
-		<View className="py-3">
+		<View className="py-6">
 			{!completed ? (
 				<>
 					<ButtonStartHabit />

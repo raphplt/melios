@@ -3,9 +3,10 @@ import {
 	View,
 	AppState,
 	AppStateStatus,
-	Text,
 	StatusBar,
 	Platform,
+	StyleSheet,
+	Image,
 } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -28,6 +29,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonsBox from "@components/HabitDetail/ButtonsBox";
 import { useTheme } from "@context/ThemeContext";
 import SettingsButton from "@components/HabitDetail/SettingsButton";
+import getImage from "@utils/getImage";
 
 export interface DayStatus {
 	date: string;
@@ -48,6 +50,7 @@ export default function HabitDetail() {
 	const { expoPushToken } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const appState = useRef(AppState.currentState);
+	const { categories } = useHabits();
 
 	useEffect(() => {
 		const subscription = AppState.addEventListener(
@@ -96,18 +99,33 @@ export default function HabitDetail() {
 		0.1
 	);
 
+	const habitCategory = categories.find(
+		(c) => c.category === currentHabit.category
+	);
+
 	return (
 		<View
 			style={{
 				flex: 1,
-				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mb-2">
+			<Image
+				source={getImage(habitCategory?.slug || "default")}
+				style={StyleSheet.absoluteFillObject}
+				blurRadius={15}
+				resizeMode="cover"
+				className="w-full h-full rounded-b-xl"
+			/>
+			<View
+				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-2 mb-2"
+				style={{
+					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+				}}
+			>
 				<ButtonBack handleQuit={() => navigation.goBack()} />
 				<SettingsButton />
 			</View>
-			<View className="w-full mx-auto flex justify-center flex-col pt-1">
+			<View className="w-full mx-auto flex justify-center flex-col">
 				<HabitDetailHeader habit={currentHabit} lightenedColor={lightenedColor} />
 
 				<InfosPanel habit={currentHabit} lightenedColor={lightenedColor} />
@@ -117,3 +135,10 @@ export default function HabitDetail() {
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	blurView: {
+		...StyleSheet.absoluteFillObject,
+		borderRadius: 10,
+	},
+});
