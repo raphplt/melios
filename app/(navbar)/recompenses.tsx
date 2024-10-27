@@ -4,6 +4,7 @@ import MarketCosmetics from "@components/Recompenses/MarketCosmetics";
 import { useTabBarPadding } from "@hooks/useTabBar";
 import PointsBox from "@components/Recompenses/PointsBox";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MarketPacks from "@components/Recompenses/MarketPacks";
 
 export default function Recompenses() {
 	const { theme } = useTheme();
@@ -22,6 +23,7 @@ export default function Recompenses() {
 		>
 			<PointsBox />
 			<MarketCosmetics />
+			<MarketPacks />
 		</SafeAreaView>
 	);
 }
