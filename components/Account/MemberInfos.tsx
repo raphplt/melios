@@ -5,6 +5,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { Member } from "@type/member";
 import getIcon from "@utils/cosmeticsUtils";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 export default function MemberInfos({
 	member,
@@ -22,11 +23,15 @@ export default function MemberInfos({
 				className="mx-auto flex flex-col pt-6 justify-center w-11/12 items-center"
 				style={{ backgroundColor: theme.colors.background }}
 			>
-				{member?.profilePicture ? (
-					<Image source={getIcon(member.profilePicture)} className="w-36 h-36" />
-				) : (
-					<Image source={getIcon("man")} className="w-36 h-36" />
-				)}
+				<ZoomableView>
+					<Pressable onPress={() => navigation.navigate("recompenses")}>
+						{member?.profilePicture ? (
+							<Image source={getIcon(member.profilePicture)} className="w-36 h-36" />
+						) : (
+							<Image source={getIcon("man")} className="w-36 h-36" />
+						)}
+					</Pressable>
+				</ZoomableView>
 
 				<View
 					className="mx-auto flex flex-col items-center justify-center"
