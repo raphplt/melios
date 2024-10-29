@@ -47,7 +47,7 @@ export default function MarketCosmetics() {
 					</Text>
 				</View>
 			</View>
-			<FlatList
+			{/* <FlatList
 				data={
 					loading
 						? (placeholders as any)
@@ -60,7 +60,7 @@ export default function MarketCosmetics() {
 				}
 				numColumns={3}
 				showsVerticalScrollIndicator={false}
-			/>
+			/> */}
 		</View>
 	);
 }
