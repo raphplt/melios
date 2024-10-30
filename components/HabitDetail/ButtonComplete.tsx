@@ -71,8 +71,8 @@ export default function ButtonComplete() {
 					className="py-3 px-4 rounded-lg w-11/12 mx-auto justify-evenly flex flex-row items-center"
 					style={{
 						backgroundColor: theme.colors.backgroundSecondary,
-						borderColor: theme.colors.primary,
-						borderWidth: 2,
+						// borderColor: theme.colors.primary,
+						// borderWidth: 2,
 					}}
 					onTouchStart={handleTouchStart}
 					onTouchEnd={handleTouchEnd}

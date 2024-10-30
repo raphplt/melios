@@ -203,7 +203,7 @@ function CardCheckHabit({
 										Détails
 									</Text>
 								</Pressable>
-								{!completed ? (
+								{!completed && habit.duration ? (
 									<Pressable
 										onPress={startHabit}
 										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
