@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Melios",
 		"slug": "melios",
-		"version": "1.1.9.1",
+		"version": "1.1.10",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
 		"scheme": "app",
@@ -14,12 +14,12 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"buildNumber": "8",
+			"buildNumber": "9",
 			"supportsTablet": true,
 			"bundleIdentifier": "com.raphplt.melios"
 		},
 		"android": {
-			"versionCode": 14,
+			"versionCode": 15,
 			"icon": "./assets/images/icon.png",
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/images/adaptive-icon.png",
