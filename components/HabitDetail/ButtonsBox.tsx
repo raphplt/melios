@@ -10,18 +10,24 @@ export default function ButtonsBox() {
 	const { currentHabit } = useHabits();
 	const { completedHabitsToday } = useData();
 
-	const completed = completedHabitsToday.some(
+	const isHabitCompleted = completedHabitsToday.some(
 		(habit) => habit.id === currentHabit?.id
 	);
 
+	const habitHasDuration = currentHabit && currentHabit.duration;
+
 	return (
 		<View className="py-6">
-			{!completed ? (
-				<>
-					<ButtonStartHabit />
-					<Separator />
+			{!isHabitCompleted ? (
+				<View>
+					{habitHasDuration ? (
+						<View>
+							<ButtonStartHabit />
+							<Separator />
+						</View>
+					) : null}
 					<ButtonComplete />
-				</>
+				</View>
 			) : (
 				<HabitDone />
 			)}

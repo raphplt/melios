@@ -64,7 +64,9 @@ export default function InfosPanel({
 						Durée
 					</Text>
 				</View>
-				<Text style={{ color: theme.colors.text }}>{habit.duration} minutes</Text>
+				<Text style={{ color: theme.colors.text }}>
+					{habit.duration ?? 0} minutes
+				</Text>
 			</View>
 
 			<Separator />
@@ -101,7 +103,9 @@ export default function InfosPanel({
 					</Text>
 				</View>
 
-				<Text style={{ color: theme.colors.text }}>à {habit.moment} heure</Text>
+				<Text style={{ color: theme.colors.text }}>
+					à {habit.moment !== -1 ? habit.moment : habit.moment} heure
+				</Text>
 			</View>
 
 			<Separator />
