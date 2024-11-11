@@ -24,7 +24,7 @@ import CustomTextInput from "@components/Shared/CustomTextInput";
 import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
 import { ThemeContext } from "@context/ThemeContext";
 import { useSession } from "@context/UserContext";
-import { loginUser } from "@db/users";
+import { loginUser, loginWithGoogle } from "@db/users";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 import ButtonLogin from "@components/LoginRegister/ButtonLogin";
 import { User } from "firebase/auth";
@@ -80,6 +80,16 @@ export default function Login() {
 		} catch (error) {
 			setError("Erreur lors de la connexion.");
 			console.log("Erreur lors de la création de l'utilisateur : ", error);
+		}
+	};
+
+	const handleGoogleLogin = async () => {
+		const user = await loginWithGoogle();
+		if ("error" in user) {
+			setError(user.error);
+		} else {
+			navigation.navigate("index");
+			console.log("Utilisateur connecté avec succès.");
 		}
 	};
 

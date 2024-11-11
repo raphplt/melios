@@ -7,12 +7,15 @@ import {
 	deleteUser,
 	sendEmailVerification,
 	sendPasswordResetEmail,
+	GoogleAuthProvider,
+	signInWithCredential,
 } from "firebase/auth";
 import { auth } from ".";
 import { collection, addDoc, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LAST_FETCH_KEY } from "./category";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export const createUser = async (form: any) => {
 	try {
@@ -153,6 +156,43 @@ export const loginUser = async (email: string, password: string) => {
 		return user;
 	} catch (error: any) {
 		console.log("Erreur lors de la connexion : ", error);
+
+		switch (error.code) {
+			case "auth/user-not-found":
+				return {
+					error:
+						"L'utilisateur n'existe pas. Veuillez vérifier votre email et réessayer.",
+				};
+			case "auth/invalid-credential":
+				return {
+					error: "Le couple email/mot de passe est invalide. Veuillez réessayer.",
+				};
+			default:
+				return {
+					error:
+						"Une erreur est survenue lors de la connexion. Veuillez réessayer plus tard.",
+				};
+		}
+	}
+};
+
+export const loginWithGoogle = async () => {
+	try {
+		const { data } = await GoogleSignin.signIn();
+		const googleCredential = GoogleAuthProvider.credential(data?.idToken);
+		const userCredential = await signInWithCredential(auth, googleCredential);
+		const user = userCredential.user;
+
+		await AsyncStorage.removeItem("user");
+		await AsyncStorage.removeItem("isAuthenticated");
+
+		await AsyncStorage.setItem(LAST_FETCH_KEY, "0");
+		await AsyncStorage.setItem("user", JSON.stringify(user));
+		await AsyncStorage.setItem("isAuthenticated", "true");
+
+		return user;
+	} catch (error: any) {
+		console.error("Erreur lors de la connexion avec Google : ", error);
 
 		switch (error.code) {
 			case "auth/user-not-found":
