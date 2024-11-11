@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	ScrollView,
 	Platform,
+	ActivityIndicator,
 } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -74,10 +75,12 @@ export default function CustomHabit() {
 
 	const [isEditingName, setIsEditingName] = useState(false);
 	const [isEditingDescription, setIsEditingDescription] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	// Fonction de soumission du formulaire
 	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 		try {
+			setIsSubmitting(true);
 			const newHabit = await setMemberHabit(data);
 			setHabits((prev: UserHabit[]) => [...prev, newHabit as UserHabit]);
 			navigation.navigate("(navbar)");
@@ -89,7 +92,7 @@ export default function CustomHabit() {
 	// Selected color
 	const selectedColor = watch("color");
 	const gradientColors = habit
-		? [lightenColor(selectedColor, 0.85), lightenColor(selectedColor, 0.55)]
+		? [lightenColor(selectedColor, 0.8), lightenColor(selectedColor, 0.6)]
 		: [lightenColor("#08209F", 0.4), theme.colors.cardBackground];
 
 	// Remove habit on back
@@ -100,94 +103,93 @@ export default function CustomHabit() {
 	}, []);
 
 	return (
-		<View style={{ flex: 1 }}>
-			<ScrollView
-				contentContainerStyle={{
-					flexGrow: 1,
-					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
-				}}
-			>
-				<LinearGradient
-					colors={gradientColors}
-					style={{
-						flex: 1,
-						...StyleSheet.absoluteFillObject,
-						overflow: "hidden",
+		<>
+			<View style={{ flex: 1 }}>
+				<ScrollView
+					contentContainerStyle={{
+						flexGrow: 1,
+						paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 					}}
-				/>
-				<ButtonClose />
-				<FormProvider {...methods}>
-					<View className="w-11/12 mx-auto">
-						{/* TITRE */}
-						<HabitTitle
-							register={register}
-							isEditingName={isEditingName}
-							setIsEditingName={setIsEditingName}
-							isEditingDescription={isEditingDescription}
-							setIsEditingDescription={setIsEditingDescription}
-							setFocus={setFocus}
-							setValue={setValue}
-							selectedColor={selectedColor}
-						/>
-						{errors.name && (
-							<Text style={{ color: "red" }}>{errors.name.message}</Text>
-						)}
-						{errors.description && (
-							<Text style={{ color: "red" }}>{errors.description.message}</Text>
-						)}
-
-						{/* INFORMATIONS */}
-						<HabitInfos habit={habit} register={register} setValue={setValue} />
-
-						{/* HEURE */}
-						<HabitMoment register={register} setValue={setValue} />
-						{errors.moment && (
-							<Text style={{ color: "red" }}>{errors.moment.message}</Text>
-						)}
-
-						{/* RÉPÉTER */}
-						<RepeatHabit
-							register={register}
-							setValue={setValue}
-							getValues={getValues}
-						/>
-						{errors.frequency && (
-							<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
-						)}
-
-						{/* NOTIFICATIONS */}
-						<Notifications register={register} setValue={setValue} />
-						{errors.reminderMoment && (
-							<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
-						)}
-						{errors.category && (
-							<Text style={{ color: "red" }}>{errors.category.message}</Text>
-						)}
-					</View>
-				</FormProvider>
-			</ScrollView>
-			<Pressable
-				style={{
-					backgroundColor: theme.colors.primary,
-					position: "absolute",
-					bottom: 35,
-					left: 10,
-					right: 10,
-					paddingVertical: 15,
-					alignItems: "center",
-				}}
-				onPress={handleSubmit(onSubmit)}
-				className="rounded-xl flex flex-row items-center justify-center"
-			>
-				<Text
-					style={{
-						color: "white",
-					}}
-					className="text-lg"
 				>
-					Enregistrer
-				</Text>
-			</Pressable>
-		</View>
+					<LinearGradient
+						colors={gradientColors}
+						style={{
+							flex: 1,
+							...StyleSheet.absoluteFillObject,
+							overflow: "hidden",
+						}}
+					/>
+					<ButtonClose />
+					<FormProvider {...methods}>
+						<View className="w-11/12 mx-auto pb-10">
+							{/* TITRE */}
+							<HabitTitle
+								register={register}
+								isEditingName={isEditingName}
+								setIsEditingName={setIsEditingName}
+								isEditingDescription={isEditingDescription}
+								setIsEditingDescription={setIsEditingDescription}
+								setFocus={setFocus}
+								setValue={setValue}
+								selectedColor={selectedColor}
+							/>
+							{errors.name && (
+								<Text style={{ color: "red" }}>{errors.name.message}</Text>
+							)}
+							{errors.description && (
+								<Text style={{ color: "red" }}>{errors.description.message}</Text>
+							)}
+
+							{/* INFORMATIONS */}
+							<HabitInfos habit={habit} register={register} setValue={setValue} />
+							{/* HEURE */}
+							<HabitMoment register={register} setValue={setValue} />
+							{errors.moment && (
+								<Text style={{ color: "red" }}>{errors.moment.message}</Text>
+							)}
+
+							{/* RÉPÉTER */}
+							<RepeatHabit
+								register={register}
+								setValue={setValue}
+								getValues={getValues}
+							/>
+							{errors.frequency && (
+								<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
+							)}
+
+							{/* NOTIFICATIONS */}
+							<Notifications register={register} setValue={setValue} />
+							{errors.reminderMoment && (
+								<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
+							)}
+							{errors.category && (
+								<Text style={{ color: "red" }}>{errors.category.message}</Text>
+							)}
+						</View>
+					</FormProvider>
+				</ScrollView>
+				<Pressable
+					style={{
+						backgroundColor: theme.colors.primary,
+					}}
+					onPress={handleSubmit(onSubmit)}
+					className="rounded-xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4"
+				>
+					{isSubmitting ? (
+						<ActivityIndicator size="small" color="white" />
+					) : (
+						<Text
+							style={{
+								color: "white",
+							}}
+							className="text-lg"
+						>
+							Enregistrer
+						</Text>
+					)}
+				</Pressable>
+			</View>
+		</>
 	);
 }

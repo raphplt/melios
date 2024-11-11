@@ -16,7 +16,7 @@ export default function ButtonClose() {
 
 	return (
 		<Pressable onPress={handleQuit} className="p-4">
-			<Iconify icon="material-symbols:close" size={24} color={theme.colors.text} />
+			<Iconify icon="material-symbols:close" size={28} color={theme.colors.text} />
 		</Pressable>
 	);
 }

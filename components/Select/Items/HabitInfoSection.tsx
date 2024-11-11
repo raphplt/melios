@@ -23,7 +23,7 @@ export function HabitInfoSection({
 			<Text
 				className="pt-2 text-center w-10/12 font-semibold"
 				style={{
-					color: theme.colors.text,
+					color: theme.colors.textTertiary,
 				}}
 				numberOfLines={1}
 			>

@@ -1,5 +1,6 @@
 import { useTheme } from "@context/ThemeContext";
-import { Modal, View } from "react-native";
+import { Modal, View, TouchableWithoutFeedback, Pressable } from "react-native";
+import { Iconify } from "react-native-iconify";
 
 export default function ModalWrapper({
 	visible = false,
@@ -20,26 +21,39 @@ export default function ModalWrapper({
 				setVisible(false);
 			}}
 		>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-					backgroundColor: "rgba(0,0,0,0.4)",
-				}}
-			>
+			<TouchableWithoutFeedback onPress={() => setVisible(false)}>
 				<View
 					style={{
-						backgroundColor: theme.colors.cardBackground,
-						borderColor: theme.colors.border,
-						borderWidth: 1,
-						padding: 20,
-						borderRadius: 10,
+						flex: 1,
+						justifyContent: "center",
+						alignItems: "center",
+						backgroundColor: "rgba(0,0,0,0.4)",
 					}}
 				>
-					{children}
+					<TouchableWithoutFeedback>
+						<View
+							style={{
+								backgroundColor: theme.colors.cardBackground,
+								padding: 20,
+								borderRadius: 10,
+							}}
+						>
+							<Pressable
+								className="absolute top-3 right-3"
+								onPress={() => setVisible(false)}
+							>
+								<Iconify
+									icon="material-symbols:close"
+									color={theme.colors.textTertiary}
+									size={24}
+								/>
+							</Pressable>
+
+							{children}
+						</View>
+					</TouchableWithoutFeedback>
 				</View>
-			</View>
+			</TouchableWithoutFeedback>
 		</Modal>
 	);
 }

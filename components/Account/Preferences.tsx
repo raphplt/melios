@@ -14,6 +14,7 @@ import { useData } from "@context/DataContext";
 import { disconnectUser } from "@db/users";
 import CustomModal from "@components/Shared/Modal";
 import CustomPressable from "@components/Shared/CustomPressable";
+import ModalWrapper from "@components/Modals/ModalWrapper";
 
 export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -138,7 +139,7 @@ export default function Preferences() {
 				}
 			/>
 
-			<CustomModal
+			{/* <CustomModal
 				visible={modalVisible}
 				onClose={setModalVisible}
 				title="Déconnexion"
@@ -155,6 +156,42 @@ export default function Preferences() {
 					textColor="#fff"
 				/>
 			</CustomModal>
+			 */}
+
+			<ModalWrapper visible={modalVisible} setVisible={setModalVisible}>
+				<View>
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-lg font-semibold mb-4"
+					>
+						Déconnexion
+					</Text>
+					<Text
+						style={{
+							color: theme.colors.textTertiary,
+						}}
+						className="text-[16px]  mb-2"
+					>
+						Êtes-vous sûr de vouloir vous déconnecter ?
+					</Text>
+					<View className="flex flex-row justify-center items-center mx-auto w-11/12 mt-3">
+						<CustomPressable
+							text="Annuler"
+							onPress={() => setModalVisible(!modalVisible)}
+							bgColor={theme.colors.grayPrimary}
+							textColor="#fff"
+						/>
+						<CustomPressable
+							text="Confirmer"
+							onPress={confirmLogout}
+							bgColor={theme.colors.redPrimary}
+							textColor="#fff"
+						/>
+					</View>
+				</View>
+			</ModalWrapper>
 		</AccountBlock>
 	);
 }

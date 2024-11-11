@@ -47,7 +47,6 @@ const handleCustomMoment = (date: Date) => {
 	return (
 		<>
 			<RowTitleCustom title="MOMENT" />
-
 			{/* Elements du haut */}
 			<View className="flex flex-row items-center justify-between pb-2">
 				<BlurView

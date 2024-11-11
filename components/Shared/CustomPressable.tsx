@@ -37,7 +37,7 @@ export default function CustomPressable({
 			}}
 		>
 			<Pressable
-				className="rounded-3xl px-8 py-3"
+				className="rounded-3xl px-6 py-3 mx-3"
 				onPress={onPress}
 				style={{
 					backgroundColor: bgColor || theme.colors.cardBackground,
