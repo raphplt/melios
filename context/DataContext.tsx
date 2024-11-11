@@ -11,7 +11,6 @@ import permissions from "../hooks/usePermissions";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import usePopup from "@hooks/usePopup";
 // import { getAllTrophies } from "@db/trophiesList";
 import { getMemberInfos } from "@db/member";
 import { calculateStreak } from "@utils/progressionUtils";
@@ -55,9 +54,8 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [todayScore, setTodayScore] = useState<number>(0);
 	const [streak, setStreak] = useState<number>(0);
 
-	const popup = usePopup();
-
 	const { AskNotification } = permissions();
+
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -167,7 +165,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				setNotificationToggle,
 				member,
 				setMember,
-				popup,
 				trophies,
 				setTrophies,
 				todayScore,

@@ -8,7 +8,7 @@ export default function PointsBox() {
 
 	return (
 		<View
-			className="flex flex-row justify-between items-center my-3 mx-auto rounded-xl py-4 px-3 w-11/12"
+			className="flex flex-row justify-between items-center  mx-auto rounded-xl py-4 px-3 w-11/12"
 			style={{
 				backgroundColor: theme.colors.backgroundTertiary,
 			}}

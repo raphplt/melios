@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-	FlatList,
-	RefreshControl,
-	ActivityIndicator,
-	View,
-	Text,
-} from "react-native";
+import { FlatList, ActivityIndicator, View, Text } from "react-native";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import ClassementView from "@components/Agora/ClassementView";
 import { getAllRewardsPaginated } from "@db/rewards"; // Utilisation de la fonction paginée
-import { Reward } from "@type/reward";
-import Filters from "@components/Agora/Filters";
 import { Iconify } from "react-native-iconify";
 import { useTheme } from "@context/ThemeContext";
 import CardClassement from "@components/Agora/CardClassement";
@@ -68,7 +59,7 @@ export default function Agora() {
 
 	return (
 		<View className="flex-1">
-			<View className="mb-4 flex items-center justify-center flex-row gap-2">
+			<View className="my-3 pt-2 flex items-center justify-center flex-row gap-2">
 				<Iconify icon="mdi:trophy" size={20} color={theme.colors.text} />
 				<Text
 					className="text-xl text-center font-semibold"

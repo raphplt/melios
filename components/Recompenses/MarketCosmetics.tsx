@@ -53,7 +53,7 @@ export default function MarketCosmetics() {
 						? (placeholders as any)
 						: cosmetics.sort((a, b) => a.price - b.price)
 				}
-				className="w-[95%] mx-auto"
+				className="w-[95%] mx-auto mb-20"
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item }) =>
 					loading ? <CosmeticPlaceHolder /> : <ProfilIcon cosmetic={item} />
