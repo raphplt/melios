@@ -12,6 +12,7 @@
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
+		// "newArchEnabled": false,
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"buildNumber": "9",
