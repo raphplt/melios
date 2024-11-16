@@ -33,7 +33,7 @@ export default function CosmeticPreviewStacked() {
 			}}
 			onPress={() => navigation.navigate("cosmeticShop")}
 		>
-			<View className=" w-11/12 mx-auto py-3">
+			<View className="w-11/12 mx-auto py-5">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
 					<Iconify icon="vaadin:shop" size={20} color={theme.colors.text} />
 					<Text
@@ -49,12 +49,12 @@ export default function CosmeticPreviewStacked() {
 			</View>
 
 			<View
-				className="flex flex-row items-center justify-center w-[95%] mx-auto rounded-lg p-4 shadow-md"
+				className="flex flex-row items-center justify-center w-[95%] h-40 mx-auto rounded-lg shadow-md"
 				style={{
 					backgroundColor: theme.colors.backgroundTertiary,
 				}}
 			>
-				<View className="relative flex items-center justify-center flex-row h-full w-[65%]">
+				<View className="flex items-center justify-center flex-row w-[65%]">
 					{cosmetics.slice(0, 3).map((cosmetic, index) => {
 						const rotation =
 							index === 0 ? "-rotate-6" : index === 2 ? "rotate-6" : "rotate-0";
@@ -75,7 +75,7 @@ export default function CosmeticPreviewStacked() {
 					})}
 				</View>
 
-				<View className="flex items-center justify-center w-[30%] h-full">
+				<View className="flex items-center justify-center w-[30%] py-2">
 					<Iconify
 						icon="mdi:arrow-right-bold-circle"
 						size={40}
@@ -86,7 +86,7 @@ export default function CosmeticPreviewStacked() {
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="text-base mt-3 text-center"
+						className=" mt-3 text-center"
 					>
 						Accéder à la boutique
 					</Text>

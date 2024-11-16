@@ -1,6 +1,6 @@
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
 import PackItem from "./PackItem";
 import { Pack } from "@type/pack";
@@ -41,6 +41,54 @@ export default function MarketPacks() {
 				},
 			],
 		},
+		{
+			name: "Productivité",
+			price: 300,
+			color: "#BAFFC9",
+			description: "Description 3",
+			items: [
+				{
+					title: "Item 5",
+					description: "Description 5",
+				},
+				{
+					title: "Item 6",
+					description: "Description 6",
+				},
+			],
+		},
+		{
+			name: "Motivation",
+			price: 400,
+			color: "#BAE1FF",
+			description: "Description 4",
+			items: [
+				{
+					title: "Item 7",
+					description: "Description 7",
+				},
+				{
+					title: "Item 8",
+					description: "Description 8",
+				},
+			],
+		},
+		{
+			name: "Santé",
+			price: 500,
+			color: "#D0BAFF",
+			description: "Description 5",
+			items: [
+				{
+					title: "Item 9",
+					description: "Description 9",
+				},
+				{
+					title: "Item 10",
+					description: "Description 10",
+				},
+			],
+		},
 	];
 
 	return (
@@ -50,7 +98,7 @@ export default function MarketPacks() {
 				flex: 1,
 			}}
 		>
-			<View className=" w-11/12 mx-auto py-3">
+			<View className="w-11/12 mx-auto py-1">
 				<View className="flex flex-row items-center">
 					<Iconify icon="lucide:box" size={24} color={theme.colors.text} />
 					<Text
@@ -64,14 +112,11 @@ export default function MarketPacks() {
 					</Text>
 				</View>
 			</View>
-			<FlatList
-				data={packs}
-				// className="w-full mx-auto"
-				keyExtractor={(item) => item.name}
-				renderItem={({ item }) => <PackItem pack={item} />}
-				showsVerticalScrollIndicator={false}
-				// numColumns={2}
-			/>
+			{/* <ScrollView showsVerticalScrollIndicator={false}>
+				{packs.map((pack) => (
+					<PackItem key={pack.name} pack={pack} />
+				))}
+			</ScrollView> */}
 		</View>
 	);
 }

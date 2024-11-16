@@ -88,9 +88,24 @@ const TabLayout: React.FC = () => {
 				/>
 				<Tabs.Screen
 					name="recompenses"
-					options={createTabOptions("Récompenses", undefined, () => (
-						<LayoutTopRight />
-					))}
+					options={createTabOptions(
+						"",
+						() => (
+							<Text
+								style={{
+									fontSize: 20,
+									color: theme.colors.text,
+									marginLeft: 15,
+									fontWeight: "bold",
+								}}
+							>
+								Recompenses
+							</Text>
+						),
+						() => (
+							<LayoutTopRight />
+						)
+					)}
 				/>
 				<Tabs.Screen
 					name="agora"
