@@ -100,7 +100,7 @@ export default function MarketPacks() {
 		>
 			<View className="w-11/12 mx-auto py-1 mt-5">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
-					<Iconify icon="vaadin:shop" size={20} color={theme.colors.text} />
+					<Iconify icon="mdi:gift-outline" size={20} color={theme.colors.text} />
 					<Text
 						style={{
 							color: theme.colors.text,
@@ -108,7 +108,7 @@ export default function MarketPacks() {
 						}}
 						className="mx-2"
 					>
-						Boutique de cosmétiques
+						Packs de récompenses
 					</Text>
 				</View>
 			</View>
