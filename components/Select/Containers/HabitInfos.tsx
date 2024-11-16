@@ -44,7 +44,7 @@ export default function HabitInfos({
 		<>
 			<BlurView
 				intensity={90}
-				className="rounded-xl px-4 py-4 mt-4 flex flex-row items-center justify-between h-fit"
+				className="rounded-xl px-1 py-4 mt-4 flex flex-row items-center justify-between h-fit"
 				style={{
 					overflow: "hidden",
 				}}
@@ -59,7 +59,7 @@ export default function HabitInfos({
 					}}
 				/>
 
-				<SeparatorVertical color={theme.colors.grayPrimary} />
+				<SeparatorVertical color={theme.colors.textTertiary} />
 
 				{/* Catégorie */}
 				<HabitInfoSection
@@ -69,7 +69,7 @@ export default function HabitInfos({
 					// onPress={handleShowModalCategory}
 				/>
 
-				<SeparatorVertical color={theme.colors.grayPrimary} />
+				<SeparatorVertical color={theme.colors.textTertiary} />
 
 				{/* Couleur */}
 				<Pressable

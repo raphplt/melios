@@ -18,7 +18,6 @@ interface DataContextType {
 	setNotificationToggle: React.Dispatch<React.SetStateAction<boolean>>;
 	member?: Member;
 	setMember: React.Dispatch<React.SetStateAction<Member | undefined>>;
-	popup: any;
 	trophies: Trophy[];
 	setTrophies: React.Dispatch<React.SetStateAction<Trophy[]>>;
 	todayScore: number;

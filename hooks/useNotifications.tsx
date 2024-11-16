@@ -1,9 +1,11 @@
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { useData } from "../context/DataContext";
+import { useEffect } from "react";
+import { AppState } from "react-native";
 
 const useNotifications = () => {
-	const { habits } = useData();
+	const { habits, streak, expoPushToken } = useData();
 
 	const sendPushNotification = async (
 		expoPushToken: string,
@@ -87,14 +89,55 @@ const useNotifications = () => {
 		console.log("Daily notification scheduled");
 	};
 
+	const scheduleInactivityNotification = async (hours: number) => {
+		await Notifications.scheduleNotificationAsync({
+			content: {
+				title: "Nous vous manquons !",
+				body: "Revenez sur Melios pour continuer vos habitudes !",
+				sound: true,
+			},
+			trigger: {
+				seconds: hours * 3600,
+			},
+		});
+	};
+
 	const cancelAllNotifications = async () => {
 		await Notifications.cancelAllScheduledNotificationsAsync();
 	};
 
+	const sendStreakReminderNotification = async (expoPushToken: string) => {
+		await sendPushNotification(expoPushToken, {
+			title: "Félicitations pour votre streak !",
+			body: "Continuez votre bonne habitude sur Melios !",
+		});
+	};
+
+	useEffect(() => {
+		const subscription = AppState.addEventListener("change", (nextAppState) => {
+			if (nextAppState === "active") {
+				cancelAllNotifications();
+				scheduleInactivityNotification(48);
+			}
+		});
+
+		return () => {
+			subscription.remove();
+		};
+	}, []);
+
+	useEffect(() => {
+		if (streak > 3 && expoPushToken) {
+			sendStreakReminderNotification(expoPushToken);
+		}
+	}, [streak, expoPushToken]);
+
 	return {
 		sendPushNotification,
 		scheduleDailyNotification,
+		scheduleInactivityNotification,
 		cancelAllNotifications,
+		sendStreakReminderNotification,
 	};
 };
 

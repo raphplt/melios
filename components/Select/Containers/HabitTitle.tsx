@@ -3,6 +3,7 @@ import { View, TextInput, Pressable, Keyboard } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useSelect } from "@context/SelectContext";
 import { BlurView } from "expo-blur";
+import { Iconify } from "react-native-iconify";
 
 export default function HabitTitle({
 	register,
@@ -65,7 +66,7 @@ export default function HabitTitle({
 
 			<BlurView
 				intensity={90}
-				className="rounded-xl px-3 py-2 mt-4 flex flex-row items-center justify-between"
+				className="rounded-xl px-3 py-2 mt-3 flex flex-row items-center justify-between"
 				style={{
 					overflow: "hidden",
 				}}
@@ -75,7 +76,7 @@ export default function HabitTitle({
 						color: theme.colors.text,
 					}}
 					className="w-10/12 font-semibold"
-					placeholder={"Description"}
+					placeholder={"Entrez une description"}
 					{...register("description")}
 					onFocus={() => setIsEditingDescription(true)}
 					onBlur={() => setIsEditingDescription(false)}
@@ -91,7 +92,7 @@ export default function HabitTitle({
 						toggleFocus("description", isEditingDescription, setIsEditingDescription)
 					}
 				>
-					<EditButton isEditing={isEditingDescription} />
+					{/* <EditButton isEditing={isEditingDescription} /> */}
 				</Pressable>
 			</BlurView>
 		</>

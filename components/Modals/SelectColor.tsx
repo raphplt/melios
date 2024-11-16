@@ -37,16 +37,6 @@ export default function SelectColor({
 	return (
 		<ModalWrapper visible={visible} setVisible={setVisible}>
 			<View>
-				<Pressable
-					onPress={() => setVisible(false)}
-					className="absolute top-0 right-1 z-20"
-				>
-					<Iconify
-						icon="material-symbols:close"
-						size={26}
-						color={theme.colors.text}
-					/>
-				</Pressable>
 				<Text
 					style={{
 						color: theme.colors.text,

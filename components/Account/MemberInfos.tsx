@@ -1,11 +1,10 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { Member } from "@type/member";
 import getIcon from "@utils/cosmeticsUtils";
 import ZoomableView from "@components/Shared/ZoomableView";
+import { useTheme } from "@context/ThemeContext";
 
 export default function MemberInfos({
 	member,
@@ -14,7 +13,7 @@ export default function MemberInfos({
 	member: Member | undefined;
 	auth: any;
 }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	return (

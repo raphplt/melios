@@ -1,9 +1,7 @@
-import React, { useContext } from "react";
-import { ScrollView, RefreshControl, StatusBar, View } from "react-native";
-
+import React from "react";
+import { ScrollView, View } from "react-native";
 import Streak from "@components/Progression/Streak";
-
-import { ThemeContext, useTheme } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 
 import CalendarHabits from "@components/Progression/Calendar";
 import GoalSection from "@components/Progression/GoalSection";

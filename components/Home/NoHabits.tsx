@@ -67,7 +67,7 @@ export default function NoHabits() {
 					>
 						Je crée ma première habitude
 					</Text>
-					<Iconify icon="fluent:add-12-regular" size={20} color="#fff" />
+					<Iconify icon="material-symbols:add" size={20} color="#fff" />
 				</Pressable>
 			</Animated.View>
 		</View>
