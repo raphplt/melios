@@ -32,6 +32,7 @@ export default function MarketCosmetics() {
 				backgroundColor: theme.colors.background,
 				flex: 1,
 			}}
+			className="w-full h-full"
 		>
 			<View className=" w-11/12 mx-auto py-3">
 				<View className="flex flex-row items-center">

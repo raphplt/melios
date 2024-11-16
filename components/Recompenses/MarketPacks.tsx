@@ -66,11 +66,11 @@ export default function MarketPacks() {
 			</View>
 			<FlatList
 				data={packs}
-				className="w-[95%] mx-auto"
+				// className="w-full mx-auto"
 				keyExtractor={(item) => item.name}
 				renderItem={({ item }) => <PackItem pack={item} />}
 				showsVerticalScrollIndicator={false}
-				numColumns={2}
+				// numColumns={2}
 			/>
 		</View>
 	);

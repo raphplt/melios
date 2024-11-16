@@ -10,7 +10,7 @@ export default function PackItem({ pack }: { pack: Pack }) {
 			style={{
 				backgroundColor: pack.color ?? theme.colors.background,
 			}}
-			className=" mx-auto block relative rounded-xl p-4 w-[46%] m-2"
+			className=" mx-auto block relative rounded-xl p-4 w-11/12 my-2"
 		>
 			<Text
 				style={{
