@@ -8,7 +8,9 @@ export default function PackItem({ pack }: { pack: Pack }) {
 	return (
 		<View
 			style={{
-				backgroundColor: pack.color ?? theme.colors.background,
+				// backgroundColor: pack.color ?? theme.colors.background,
+				borderColor: pack.color ?? theme.colors.background,
+				borderWidth: 2,
 			}}
 			className=" mx-auto rounded-xl w-11/12 p-3 my-2"
 		>

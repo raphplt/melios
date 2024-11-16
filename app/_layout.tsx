@@ -170,6 +170,9 @@ function MainNavigator() {
 							title: "Boutique cosmétique",
 							headerShadowVisible: false,
 							headerBackTitleVisible: false,
+							headerTitleStyle: {
+								fontFamily: "BaskervilleBold",
+							},
 						}}
 					/>
 				</Stack>

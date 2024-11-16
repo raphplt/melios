@@ -98,25 +98,25 @@ export default function MarketPacks() {
 				flex: 1,
 			}}
 		>
-			<View className="w-11/12 mx-auto py-1">
-				<View className="flex flex-row items-center">
-					<Iconify icon="lucide:box" size={24} color={theme.colors.text} />
+			<View className="w-11/12 mx-auto py-1 mt-5">
+				<View className="flex flex-row items-center justify-start w-full mx-auto">
+					<Iconify icon="vaadin:shop" size={20} color={theme.colors.text} />
 					<Text
 						style={{
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="text-lg mx-2"
+						className="mx-2"
 					>
-						Packs
+						Boutique de cosmétiques
 					</Text>
 				</View>
 			</View>
-			{/* <ScrollView showsVerticalScrollIndicator={false}>
+			<ScrollView showsVerticalScrollIndicator={false}>
 				{packs.map((pack) => (
 					<PackItem key={pack.name} pack={pack} />
 				))}
-			</ScrollView> */}
+			</ScrollView>
 		</View>
 	);
 }

@@ -34,7 +34,7 @@ export default function MarketCosmetics() {
 				backgroundColor: theme.colors.background,
 				flex: 1,
 			}}
-			className="w-full h-full"
+			// className="w-full h-full"
 		>
 			{/* Background Image */}
 			<Image
@@ -82,6 +82,7 @@ export default function MarketCosmetics() {
 						color={theme.colors.primary}
 						unfilledColor={theme.colors.border}
 						borderWidth={0}
+						height={8}
 					/>
 					{/* <Progress */}
 				</View>
@@ -94,7 +95,7 @@ export default function MarketCosmetics() {
 						? (placeholders as any)
 						: cosmetics.sort((a, b) => a.price - b.price)
 				}
-				className="w-[95%] mx-auto mb-20"
+				className="w-[95%] mx-auto"
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item }) =>
 					loading ? <LoaderScreen /> : <ProfilIcon cosmetic={item} />

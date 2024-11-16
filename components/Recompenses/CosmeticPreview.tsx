@@ -11,6 +11,7 @@ import {
 	useNavigation,
 } from "@react-navigation/native";
 import IconPreview from "./IconPreview";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function CosmeticPreviewStacked() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);
@@ -41,18 +42,22 @@ export default function CosmeticPreviewStacked() {
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="t mx-2"
+						className="mx-2"
 					>
 						Boutique de cosmétiques
 					</Text>
 				</View>
 			</View>
 
-			<View
-				className="flex flex-row items-center justify-center w-[95%] h-40 mx-auto rounded-lg shadow-md"
+			<LinearGradient
+				colors={[theme.colors.primary, theme.colors.backgroundTertiary]}
+				start={[0, 0]}
 				style={{
-					backgroundColor: theme.colors.backgroundTertiary,
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
 				}}
+				className="flex flex-row items-center justify-center w-[95%] h-40 mx-auto rounded-lg shadow-md"
 			>
 				<View className="flex items-center justify-center flex-row w-[65%]">
 					{cosmetics.slice(0, 3).map((cosmetic, index) => {
@@ -91,7 +96,7 @@ export default function CosmeticPreviewStacked() {
 						Accéder à la boutique
 					</Text>
 				</View>
-			</View>
+			</LinearGradient>
 		</TouchableOpacity>
 	);
 }

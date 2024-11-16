@@ -13,7 +13,7 @@ const cosmeticShop = () => {
 			style={{
 				backgroundColor: theme.colors.background,
 				flex: 1,
-				paddingTop: statusBarHeight,
+				// paddingTop: statusBarHeight,
 			}}
 		>
 			<MarketCosmetics />
