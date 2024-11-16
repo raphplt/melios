@@ -1,17 +1,19 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { getAllCosmeticsIcons } from "@db/cosmetics";
 import { ProfileCosmetic } from "@type/cosmetics";
-import { useContext, useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, FlatList, Image } from "react-native";
 import ProfilIcon from "./ProfilIcon";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import CosmeticPlaceHolder from "./CosmeticPlaceHolder";
 import { Iconify } from "react-native-iconify";
+import * as Progress from "react-native-progress";
+import { useData } from "@context/DataContext";
 
 export default function MarketCosmetics() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const [loading, setLoading] = useState(true);
+	const { points } = useData();
 
 	useEffect(() => {
 		async function fetchCosmetics() {
@@ -34,20 +36,58 @@ export default function MarketCosmetics() {
 			}}
 			className="w-full h-full"
 		>
-			<View className=" w-11/12 mx-auto py-3">
-				<View className="flex flex-row items-center">
-					<Iconify icon="mdi:palette" size={24} color={theme.colors.text} />
+			{/* Background Image */}
+			<Image
+				source={require("@assets/images/illustrations/bgCosmetic.jpg")}
+				className="absolute w-full h-full"
+				style={{ resizeMode: "cover", opacity: 0.2 }}
+			/>
+
+			{/* Header Section */}
+			<View className="w-11/12 mx-auto py-4">
+				<View className="flex flex-row items-center mb-4">
+					<Iconify icon="tabler:user-star" size={20} color={theme.colors.text} />
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-lg mx-2 font-bold"
+					>
+						Marché cosmétique
+					</Text>
+				</View>
+				<Text
+					style={{ color: theme.colors.text, fontFamily: "BaskervilleRegular" }}
+					className="text-sm"
+				>
+					Utilisez vos points pour débloquer des avatars mythologiques uniques et
+					personnaliser votre profil !
+				</Text>
+
+				{/* Progress Indicator */}
+				<View className="mt-4">
 					<Text
 						style={{
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="text-lg mx-2"
+						className="text-sm mb-2"
 					>
-						Cosmétiques
+						Vos points : {points.odyssee}
 					</Text>
+
+					<Progress.Bar
+						progress={points.odyssee / 10000}
+						width={null}
+						color={theme.colors.primary}
+						unfilledColor={theme.colors.border}
+						borderWidth={0}
+					/>
+					{/* <Progress */}
 				</View>
 			</View>
+
+			{/* Cosmetics List */}
 			<FlatList
 				data={
 					loading
@@ -57,7 +97,7 @@ export default function MarketCosmetics() {
 				className="w-[95%] mx-auto"
 				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item }) =>
-					loading ? <CosmeticPlaceHolder /> : <ProfilIcon cosmetic={item} />
+					loading ? <LoaderScreen /> : <ProfilIcon cosmetic={item} />
 				}
 				numColumns={3}
 				showsVerticalScrollIndicator={false}

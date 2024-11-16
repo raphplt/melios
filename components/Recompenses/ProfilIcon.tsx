@@ -1,12 +1,16 @@
-import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { ProfileCosmetic } from "@type/cosmetics";
 import getIcon from "@utils/cosmeticsUtils";
-import { useContext } from "react";
-import { View, Text, Image } from "react-native";
-
-import { TouchableOpacity } from "react-native";
+import { useEffect } from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import Animated, {
+	useSharedValue,
+	useAnimatedStyle,
+	withTiming,
+	withRepeat,
+	Easing,
+} from "react-native-reanimated";
 import { getMemberInfos, updateProfilePicture } from "@db/member";
 import { Iconify } from "react-native-iconify";
 
@@ -15,76 +19,136 @@ export default function ProfilIcon({
 }: {
 	cosmetic: ProfileCosmetic;
 }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const { points, setMember, member } = useData();
 
 	const isGrayedOut = cosmetic.price > points.odyssee;
+	const selected = member?.profilePicture === cosmetic.slug;
+
+	// Shared values for animations
+	const scale = useSharedValue(1);
+	const fogTranslation = useSharedValue(0);
+
+	// Glow animation style (for selected avatars)
+	const glowStyle = useAnimatedStyle(() => ({
+		shadowOpacity: withTiming(selected ? 0.8 : 0),
+		shadowRadius: withTiming(selected ? 10 : 0),
+		shadowColor: theme.colors.primary,
+		shadowOffset: { width: 0, height: 0 },
+		transform: [{ scale: withTiming(scale.value, { duration: 150 }) }],
+	}));
+
+	// Fog animation style (for locked avatars)
+	const fogStyle = useAnimatedStyle(() => ({
+		opacity: withTiming(isGrayedOut ? 0.7 : 0),
+		transform: [
+			{
+				translateY: withRepeat(
+					withTiming(fogTranslation.value, {
+						duration: 2000,
+						easing: Easing.linear,
+					}),
+					-1,
+					true
+				),
+			},
+		],
+	}));
+
+	useEffect(() => {
+		if (isGrayedOut) {
+			fogTranslation.value = 10;
+		}
+	}, [isGrayedOut]);
 
 	const handlePress = async () => {
 		if (!isGrayedOut) {
+			scale.value = 0.9;
+			setTimeout(() => (scale.value = 1), 150);
 			await updateProfilePicture(cosmetic.slug);
 			const updatedMember = await getMemberInfos({ forceRefresh: true });
 			setMember(updatedMember);
 		}
 	};
 
-	const selected = member?.profilePicture === cosmetic.slug;
-
 	return (
 		<TouchableOpacity
 			onPress={handlePress}
 			disabled={isGrayedOut}
 			className="flex flex-col items-center w-[31%] mx-auto my-1 py-2 rounded-xl"
-			key={cosmetic.id}
-			style={{
-				backgroundColor: isGrayedOut
-					? theme.colors.grayPrimary
-					: selected
-					? theme.colors.backgroundTertiary
-					: theme.colors.cardBackground,
-				borderColor: selected ? theme.colors.primary : theme.colors.cardBackground,
-				borderWidth: 1,
-				opacity: isGrayedOut ? 0.5 : 1,
-			}}
 		>
-			<Text
-				numberOfLines={1}
-				style={{
-					color: theme.colors.text,
-					fontFamily: "BaskervilleBold",
-				}}
-				ellipsizeMode="tail"
-				className="w-11/12 text-center font-semibold mb-1"
-			>
-				{cosmetic.name}
-			</Text>
-			<Image source={getIcon(cosmetic.slug)} className="w-24 h-24" />
-
-			<View className="flex flex-row items-center justify-center py-2">
-				<Text
-					className="mx-1 font-semibold "
-					style={{
-						color: isGrayedOut
-							? theme.colors.text
+			<Animated.View
+				style={[
+					{
+						backgroundColor: isGrayedOut
+							? theme.colors.grayPrimary
 							: selected
+							? theme.colors.backgroundTertiary
+							: theme.colors.cardBackground,
+						borderColor: selected
 							? theme.colors.primary
-							: theme.colors.yellowPrimary,
+							: theme.colors.cardBackground,
+						borderWidth: 3,
+						borderRadius: 12,
+						opacity: isGrayedOut ? 0.5 : 1,
+					},
+					glowStyle,
+				]}
+				className=" items-center justify-center p-3"
+			>
+				{/* Name */}
+				<Text
+					numberOfLines={1}
+					style={{
+						color: theme.colors.text,
+						fontFamily: "BaskervilleBold",
 					}}
+					ellipsizeMode="tail"
+					className="text-center font-semibold mb-1"
 				>
-					{cosmetic.price}
+					{cosmetic.name}
 				</Text>
-				{isGrayedOut ? (
-					<MoneyOdyssee />
-				) : selected ? (
-					<Iconify icon="mdi:check" size={24} color={theme.colors.primary} />
-				) : (
-					<Iconify
-						icon="material-symbols:trophy"
-						size={20}
-						color={selected ? theme.colors.primary : theme.colors.yellowPrimary}
-					/>
-				)}
-			</View>
+
+				{/* Icon */}
+				<Image
+					source={getIcon(cosmetic.slug)}
+					className="w-24 h-24"
+					style={{
+						opacity: isGrayedOut ? 0.7 : 1,
+					}}
+				/>
+
+				{/* Price & Icons */}
+				<View className="flex flex-row items-center justify-center py-2">
+					<Text
+						className="mx-1 font-semibold"
+						style={{
+							color: isGrayedOut
+								? theme.colors.text
+								: selected
+								? theme.colors.primary
+								: theme.colors.yellowPrimary,
+						}}
+					>
+						{cosmetic.price}
+					</Text>
+					{isGrayedOut ? (
+						<Iconify
+							icon="ic:baseline-lock"
+							size={20}
+							color={theme.colors.textTertiary}
+						/>
+					) : selected ? (
+						<Iconify icon="mdi:check-circle" size={20} color={theme.colors.primary} />
+					) : (
+						<Iconify
+							icon="material-symbols:trophy"
+							size={20}
+							color={theme.colors.yellowPrimary}
+						/>
+					)}
+				</View>
+			</Animated.View>
 		</TouchableOpacity>
 	);
 }

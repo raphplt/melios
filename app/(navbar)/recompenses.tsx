@@ -1,7 +1,6 @@
 import { StatusBar, Platform } from "react-native";
 import { useTheme } from "@context/ThemeContext";
-import { useTabBarPadding } from "@hooks/useTabBar";
-import PointsBox from "@components/Recompenses/PointsBox";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import MarketPacks from "@components/Recompenses/MarketPacks";
 import CosmeticPreview from "@components/Recompenses/CosmeticPreview";
@@ -20,9 +19,7 @@ export default function Recompenses() {
 				paddingTop: statusBarHeight,
 			}}
 		>
-			<PointsBox />
 			<CosmeticPreview />
-			{/* <MarketCosmetics /> */}
 			<MarketPacks />
 		</SafeAreaView>
 	);

@@ -33,7 +33,7 @@ export default function CosmeticPreviewStacked() {
 			}}
 			onPress={() => navigation.navigate("cosmeticShop")}
 		>
-			<View className="mx-auto py-3">
+			<View className=" w-11/12 mx-auto py-3">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
 					<Iconify icon="vaadin:shop" size={20} color={theme.colors.text} />
 					<Text
@@ -75,10 +75,7 @@ export default function CosmeticPreviewStacked() {
 					})}
 				</View>
 
-				<View
-					className="flex items-center justify-center w-[30%] h-full"
-					// onPress={() => navigation.navigate("cosmeticShop")}
-				>
+				<View className="flex items-center justify-center w-[30%] h-full">
 					<Iconify
 						icon="mdi:arrow-right-bold-circle"
 						size={40}
