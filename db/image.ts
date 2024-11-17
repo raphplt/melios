@@ -6,7 +6,7 @@ const storage = getStorage(app);
 export const getImageURL = async () => {
 	try {
 		const storageRef = ref(storage, "bgCosmetic.jpg");
-		console.log("Storage Reference Path:", storageRef._location.path_);
+		console.log("Storage Reference Path:", storageRef);
 		const url = await getDownloadURL(storageRef);
 		console.log("Image URL:", url);
 		return url;

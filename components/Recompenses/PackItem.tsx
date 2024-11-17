@@ -7,20 +7,20 @@ import { getImageURL } from "@db/image"; // Importez la fonction getImageURL
 
 export default function PackItem({ pack }: { pack: Pack }) {
 	const { theme } = useTheme();
-	// const [imageUrl, setImageUrl] = useState(null);
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-	// useEffect(() => {
-	// 	const fetchImage = async () => {
-	// 		try {
-	// 			const url = await getImageURL();
-	// 			setImageUrl(url);
-	// 		} catch (error) {
-	// 			console.error("Erreur lors de la récupération de l'image : ", error);
-	// 		}
-	// 	};
+	useEffect(() => {
+		const fetchImage = async () => {
+			try {
+				const url = await getImageURL();
+				setImageUrl(url);
+			} catch (error) {
+				console.error("Erreur lors de la récupération de l'image : ", error);
+			}
+		};
 
-	// 	fetchImage();
-	// }, []);
+		fetchImage();
+	}, []);
 
 	return (
 		<View
@@ -40,9 +40,9 @@ export default function PackItem({ pack }: { pack: Pack }) {
 			>
 				{pack.name}
 			</Text>
-			{/* {imageUrl && (
+			{imageUrl && (
 				<Image source={{ uri: imageUrl }} style={{ width: 100, height: 100 }} />
-			)} */}
+			)}
 			<Text
 				style={{
 					color: theme.colors.textTertiary,
