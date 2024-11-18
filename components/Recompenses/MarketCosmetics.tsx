@@ -8,6 +8,7 @@ import LoaderScreen from "@components/Shared/LoaderScreen";
 import { Iconify } from "react-native-iconify";
 import * as Progress from "react-native-progress";
 import { useData } from "@context/DataContext";
+import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 
 export default function MarketCosmetics() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);
@@ -45,7 +46,7 @@ export default function MarketCosmetics() {
 
 			{/* Header Section */}
 			<View className="w-11/12 mx-auto py-4">
-				<View className="flex flex-row items-center mb-4">
+				{/* <View className="flex flex-row items-center mb-4">
 					<Iconify icon="tabler:user-star" size={20} color={theme.colors.text} />
 					<Text
 						style={{
@@ -55,10 +56,10 @@ export default function MarketCosmetics() {
 					>
 						Marché cosmétique
 					</Text>
-				</View>
+				</View> */}
 				<Text
-					style={{ color: theme.colors.text, fontFamily: "BaskervilleRegular" }}
-					className="text-sm"
+					style={{ color: theme.colors.text }}
+					className="text-[16px] w-11/12 font-semibold"
 				>
 					Utilisez vos points pour débloquer des avatars mythologiques uniques et
 					personnaliser votre profil !
@@ -66,15 +67,18 @@ export default function MarketCosmetics() {
 
 				{/* Progress Indicator */}
 				<View className="mt-4">
-					<Text
-						style={{
-							color: theme.colors.text,
-							fontFamily: "BaskervilleBold",
-						}}
-						className="text-sm mb-2"
-					>
-						Vos points : {points.odyssee}
-					</Text>
+					<View className="flex flex-row items-center justify-start mb-2 ">
+						<Text
+							style={{
+								color: theme.colors.primary,
+								fontFamily: "BaskervilleBold",
+							}}
+							className="text-[15px] mr-2"
+						>
+							Vos points : {points.odyssee}
+						</Text>
+						<MoneyOdyssee />
+					</View>
 
 					<Progress.Bar
 						progress={points.odyssee / 10000}

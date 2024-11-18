@@ -34,25 +34,8 @@ export default function ProfilIcon({
 		shadowOpacity: withTiming(selected ? 0.8 : 0),
 		shadowRadius: withTiming(selected ? 10 : 0),
 		shadowColor: theme.colors.primary,
-		shadowOffset: { width: 0, height: 0 },
+		style: { shadowOffset: { width: 0, height: 0 } },
 		transform: [{ scale: withTiming(scale.value, { duration: 150 }) }],
-	}));
-
-	// Fog animation style (for locked avatars)
-	const fogStyle = useAnimatedStyle(() => ({
-		opacity: withTiming(isGrayedOut ? 0.7 : 0),
-		transform: [
-			{
-				translateY: withRepeat(
-					withTiming(fogTranslation.value, {
-						duration: 2000,
-						easing: Easing.linear,
-					}),
-					-1,
-					true
-				),
-			},
-		],
 	}));
 
 	useEffect(() => {
@@ -85,10 +68,8 @@ export default function ProfilIcon({
 							: selected
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
-						borderColor: selected
-							? theme.colors.primary
-							: theme.colors.cardBackground,
-						borderWidth: 3,
+						borderColor: selected ? theme.colors.primary : theme.colors.grayPrimary,
+						borderWidth: 2,
 						borderRadius: 12,
 						opacity: isGrayedOut ? 0.5 : 1,
 					},
