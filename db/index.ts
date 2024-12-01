@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { initializeAuth } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,11 +14,12 @@ const firebaseConfig = {
 	measurementId: process.env.EXPO_PUBLIC_MEASUREMENT_ID,
 };
 
-let app;
+export let app: FirebaseApp | undefined;
+
 if (!getApps().length) {
-	app = initializeApp(firebaseConfig);
+    app = initializeApp(firebaseConfig);
 } else {
-	app = getApps()[0];
+    app = getApps()[0];
 }
 
 export const db = getFirestore(app);

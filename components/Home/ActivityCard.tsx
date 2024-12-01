@@ -73,25 +73,32 @@ function Activity({ habit }: { habit: UserHabit }) {
 					}}
 					className="h-14 rounded-t-xl"
 				>
-					<View>
-						<Text
-							className="text-[14px] font-semibold right-2 top-2 absolute rounded-2xl px-2 py-[2px]"
-							style={{
-								color: theme.colors.text,
-								backgroundColor: theme.colors.textSecondary,
-							}}
-						>
-							{habit.duration}''
-						</Text>
-					</View>
 					<Text
-						className="font-semibold w-3/5 italic ml-3 mt-2"
+						className="font-semibold w-1/2 italic ml-3 mt-2 text-[12px]"
 						style={{
 							color: theme.colors.text,
 						}}
 					>
 						{habit.category}
 					</Text>
+					<View
+						className="px-2 py-1 rounded-bl-xl rounded-tr-xl"
+						style={{
+							backgroundColor: theme.colors.backgroundTertiary,
+							position: "absolute",
+							right: 0,
+							top: 0,
+						}}
+					>
+						<Text
+							className="text-[13px] font-semibold w-fit h-fit"
+							style={{
+								color: theme.colors.text,
+							}}
+						>
+							{habit.duration}''
+						</Text>
+					</View>
 				</View>
 				<View className="flex flex-col justify-evenly items-center rounded-b-xl bg-slate-20 flex-1">
 					<Image
@@ -101,10 +108,10 @@ function Activity({ habit }: { habit: UserHabit }) {
 						resizeMode="cover"
 						className="w-full h-full rounded-b-xl"
 					/>
-					<View className=" flex items-center justify-center w-10/12 px-1 py-1 rounded-lg overflow-hidden">
+					<View className=" flex items-center justify-center w-10/12 px-1 py-2 rounded-lg overflow-hidden">
 						<BlurView intensity={60} tint={"light"} style={styles.blurView} />
 						<Text
-							className="text-md w-11/12 mx-auto font-semibold text-center py-1 mb-2 text-[15px]"
+							className="text-md w-11/12 mx-auto font-semibold text-center py-2 mb-2 text-[14px]"
 							style={{
 								color: "#121212",
 							}}

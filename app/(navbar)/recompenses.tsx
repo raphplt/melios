@@ -1,18 +1,25 @@
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
 import { useTheme } from "@context/ThemeContext";
-import MarketCosmetics from "@components/Recompenses/MarketCosmetics";
+import MarketPacks from "@components/Recompenses/MarketPacks";
+import CosmeticPreview from "@components/Recompenses/CosmeticPreview";
 
 export default function Recompenses() {
 	const { theme } = useTheme();
 
+	const components = [
+		{ key: "cosmeticPreview", component: <CosmeticPreview /> },
+		{ key: "marketPacks", component: <MarketPacks /> },
+	];
+
 	return (
-		<View
+		<FlatList
+			data={components}
+			renderItem={({ item }) => item.component}
+			keyExtractor={(item) => item.key}
 			style={{
 				backgroundColor: theme.colors.background,
-				flex: 1,
+				// flex: 1,
 			}}
-		>
-			<MarketCosmetics />
-		</View>
+		/>
 	);
 }

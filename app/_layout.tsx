@@ -164,6 +164,17 @@ function MainNavigator() {
 							headerShadowVisible: false,
 						}}
 					/>
+					<Stack.Screen
+						name="cosmeticShop"
+						options={{
+							title: "Boutique cosmétique",
+							headerShadowVisible: false,
+							headerBackTitleVisible: false,
+							headerTitleStyle: {
+								fontFamily: "BaskervilleBold",
+							},
+						}}
+					/>
 				</Stack>
 			</ThemeProvider>
 		</ThemeContext.Provider>
