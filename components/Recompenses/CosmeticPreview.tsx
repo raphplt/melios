@@ -36,13 +36,13 @@ export default function CosmeticPreviewStacked() {
 		>
 			<View className="w-11/12 mx-auto py-5">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
-					<Iconify icon="vaadin:shop" size={20} color={theme.colors.text} />
+					<Iconify icon="ix:user-profile" size={24} color={theme.colors.text} />
 					<Text
 						style={{
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="mx-2"
+						className="mx-2 text-[16px] font-semibold"
 					>
 						Boutique de cosmétiques
 					</Text>
@@ -91,7 +91,7 @@ export default function CosmeticPreviewStacked() {
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className=" mt-3 text-center"
+						className="mt-3 text-center"
 					>
 						Accéder à la boutique
 					</Text>

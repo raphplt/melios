@@ -35,7 +35,6 @@ export default function MarketCosmetics() {
 				backgroundColor: theme.colors.background,
 				flex: 1,
 			}}
-			// className="w-full h-full"
 		>
 			{/* Background Image */}
 			<Image
@@ -46,17 +45,6 @@ export default function MarketCosmetics() {
 
 			{/* Header Section */}
 			<View className="w-11/12 mx-auto py-4">
-				{/* <View className="flex flex-row items-center mb-4">
-					<Iconify icon="tabler:user-star" size={20} color={theme.colors.text} />
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="text-lg mx-2 font-bold"
-					>
-						Marché cosmétique
-					</Text>
-				</View> */}
 				<Text
 					style={{ color: theme.colors.text }}
 					className="text-[16px] w-11/12 font-semibold"

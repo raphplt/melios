@@ -1,48 +1,50 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useTheme } from "@context/ThemeContext";
 import { Pack } from "@type/pack";
-import { View, Text, Pressable, Image } from "react-native";
-import { getImageURL } from "@db/image"; // Importez la fonction getImageURL
+import { View, Text, Pressable } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function PackItem({ pack }: { pack: Pack }) {
 	const { theme } = useTheme();
-	// const [imageUrl, setImageUrl] = useState<string | null>(null);
+	const [buttonText, setButtonText] = useState("Découvrir");
 
-	// useEffect(() => {
-	// 	const fetchImage = async () => {
-	// 		try {
-	// 			const url = await getImageURL();
-	// 			setImageUrl(url);
-	// 		} catch (error) {
-	// 			console.error("Erreur lors de la récupération de l'image : ", error);
-	// 		}
-	// 	};
-
-	// 	fetchImage();
-	// }, []);
+	const handlePress = () => {
+		setButtonText("Bientôt disponible");
+	};
 
 	return (
-		<View
+		<LinearGradient
 			style={{
-				borderColor: pack.color ?? theme.colors.background,
+				borderColor: pack.color ?? theme.colors.cardBackground,
 				borderWidth: 2,
-				backgroundColor: theme.colors.cardBackground,
 			}}
-			className=" mx-auto rounded-xl w-11/12 p-3 my-2"
+			start={[0, 0]}
+			colors={[theme.colors.cardBackground, pack.color ?? theme.colors.background]}
+			className="mx-auto rounded-xl w-11/12 p-3 my-2 opacity-50"
 		>
-			<Text
-				style={{
-					color: theme.colors.text,
-					fontFamily: "BaskervilleBold",
-				}}
-				className="text-[16px]"
-			>
-				{pack.name}
-			</Text>
-			{/* {imageUrl && (
-				<Image source={{ uri: imageUrl }} style={{ width: 100, height: 100 }} />
-			)} */}
+			<View className="flex flex-row items-center justify-between">
+				<Text
+					style={{
+						color: theme.colors.text,
+						fontFamily: "BaskervilleBold",
+					}}
+					className="text-[16px]"
+				>
+					{pack.name}
+				</Text>
+				<View className="flex flex-row items-center">
+					<Text
+						className="font-semibold mx-1 text-[16px]"
+						style={{
+							color: theme.colors.textTertiary,
+						}}
+					>
+						{pack.price}
+					</Text>
+					<MoneyMelios />
+				</View>
+			</View>
 			<Text
 				style={{
 					color: theme.colors.textTertiary,
@@ -52,28 +54,22 @@ export default function PackItem({ pack }: { pack: Pack }) {
 				{pack.description}
 			</Text>
 
-			<View className="flex flex-row items-center">
-				<Text className="font-semibold mx-1">{pack.price}</Text>
-				<MoneyMelios />
-			</View>
 			<Pressable
 				style={{
 					backgroundColor: theme.colors.primary,
-					padding: 10,
-					borderRadius: 5,
-					marginTop: 10,
 				}}
+				className="rounded-lg p-3 my-1"
+				onPress={handlePress}
 			>
 				<Text
 					style={{
 						color: theme.colors.textSecondary,
-						fontFamily: "BaskervilleBold",
 					}}
-					className="text-center"
+					className="text-center font-semibold text-[16px]"
 				>
-					Acheter
+					{buttonText}
 				</Text>
 			</Pressable>
-		</View>
+		</LinearGradient>
 	);
 }
