@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, Button } from "react-native";
 
 // Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";

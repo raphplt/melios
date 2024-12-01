@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from ".";
 import { Category } from "@type/category";
 import { Habit } from "@type/habit";
-import { ONE_WEEK_IN_MS } from "./category";
 
 const LOCAL_STORAGE_HABITS_KEY = "habits";
 const LOCAL_STORAGE_CATEGORIES_KEY = "categories";

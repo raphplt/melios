@@ -7,6 +7,7 @@ import CalendarHabits from "@components/Progression/Calendar";
 import GoalSection from "@components/Progression/GoalSection";
 import { GoalProvider } from "@context/GoalsContext";
 import Chart from "@components/Progression/Chart";
+import Levels from "@components/Progression/Levels";
 
 const Progression: React.FC = () => {
 	const { theme } = useTheme();
@@ -26,6 +27,7 @@ const Progression: React.FC = () => {
 				<CalendarHabits />
 
 				<Chart />
+				<Levels />
 				<View
 					className="h-20 w-full"
 					style={{ backgroundColor: theme.colors.cardBackground }}

@@ -23,7 +23,7 @@ export default function MemberInfos({
 				style={{ backgroundColor: theme.colors.background }}
 			>
 				<ZoomableView>
-					<Pressable onPress={() => navigation.navigate("recompenses")}>
+					<Pressable onPress={() => navigation.navigate("cosmeticShop")}>
 						{member?.profilePicture ? (
 							<Image source={getIcon(member.profilePicture)} className="w-36 h-36" />
 						) : (
