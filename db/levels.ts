@@ -8,6 +8,7 @@ import {
 	doc,
 	updateDoc,
 	setDoc,
+	getDoc,
 } from "firebase/firestore";
 import { db } from ".";
 import { GenericLevel } from "@type/levels";
@@ -50,18 +51,14 @@ export const getAllGenericLevels = async (
  */
 export const getUserLevelsByUserId = async (userId: string) => {
 	try {
-		const usersLevelsCollectionRef = collection(db, "usersLevels");
+		const userLevelDocRef = doc(db, "usersLevels", userId);
+		const userLevelDoc = await getDoc(userLevelDocRef);
 
-		const querySnapshot = await getDocs(
-			query(usersLevelsCollectionRef, where("userId", "==", userId))
-		);
-
-		if (!querySnapshot.empty) {
-			const userLevels = querySnapshot.docs.map((doc) => doc.data());
-			return userLevels;
+		if (userLevelDoc.exists()) {
+			return userLevelDoc.data().levels;
 		} else {
 			console.log("No levels found for this user");
-			return [];
+			return {};
 		}
 	} catch (error) {
 		console.error("Error fetching user levels: ", error);
@@ -78,23 +75,27 @@ export const getUserLevelsByUserId = async (userId: string) => {
 export const updateUserLevel = async (
 	userId: string,
 	levelId: string,
-	newLevel: number
+	xpToAdd: number
 ) => {
 	try {
-		const usersLevelsCollectionRef = collection(db, "usersLevels");
+		const userLevelDocRef = doc(db, "usersLevels", userId);
+		const userLevelDoc = await getDoc(userLevelDocRef);
 
-		const querySnapshot = await getDocs(
-			query(usersLevelsCollectionRef, where("userId", "==", userId))
-		);
+		if (userLevelDoc.exists()) {
+			const userLevels = userLevelDoc.data().levels;
 
-		if (!querySnapshot.empty) {
-			const userLevels = querySnapshot.docs.map((doc) => doc.data());
-			const userLevel = userLevels.find((level) => level.levelId === levelId);
+			// Fusionner les données existantes
+			const currentXp = userLevels[levelId]?.xp || 0;
+			const updatedXp = currentXp + xpToAdd;
 
-			if (userLevel) {
-				const userLevelRef = doc(usersLevelsCollectionRef, userLevel.id);
-				await updateDoc(userLevelRef, { level: newLevel });
-			}
+			userLevels[levelId] = {
+				...(userLevels[levelId] || {}),
+				xp: updatedXp,
+			};
+
+			await updateDoc(userLevelDocRef, { levels: userLevels });
+		} else {
+			console.error(`No levels document found for user: ${userId}`);
 		}
 	} catch (error) {
 		console.error("Error updating user level: ", error);
@@ -114,21 +115,24 @@ export const initUserLevels = async (
 	genericLevels: GenericLevel[]
 ) => {
 	try {
-		const usersLevelsCollectionRef = collection(db, "usersLevels");
+		const userLevelDocRef = doc(db, "usersLevels", userId);
+		const userLevelDoc = await getDoc(userLevelDocRef);
 
-		const userLevels = genericLevels.map((level) => ({
-			userId,
-			levelId: level.id,
-			xp: 0,
-		}));
+		// Si les niveaux existent déjà, ne pas réinitialiser
+		if (userLevelDoc.exists()) return;
 
-		await Promise.all(
-			userLevels.map(async (userLevel) => {
-				await setDoc(doc(usersLevelsCollectionRef), userLevel);
-			})
+		const userLevels = genericLevels.reduce(
+			(acc: { [key: string]: { xp: number } }, level) => {
+				acc[level.id] = { xp: 0 };
+				return acc;
+			},
+			{}
 		);
+
+		await setDoc(userLevelDocRef, { levels: userLevels });
 	} catch (error) {
 		console.error("Error initializing user levels: ", error);
 		throw error;
 	}
 };
+
