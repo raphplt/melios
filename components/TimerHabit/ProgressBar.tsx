@@ -15,7 +15,6 @@ export default function ProgressBar() {
 	if (!currentHabit) return null;
 
 	const totalSeconds = currentHabit.duration * 60;
-	const remainingTime = formatRemainingTime(timerSeconds, totalSeconds);
 
 	const blinkAnim = useRef(new Animated.Value(1)).current;
 	const animationRef = useRef<Animated.CompositeAnimation | null>(null);

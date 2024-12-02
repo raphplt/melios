@@ -31,6 +31,10 @@ export default function SectionHeader({
 				return (
 					<Iconify icon="mdi-chart-line" size={22} color={theme.colors.primary} />
 				);
+			case "levels":
+				return (
+					<Iconify icon="mdi:progress-star" size={22} color={theme.colors.primary} />
+				);
 		}
 	};
 

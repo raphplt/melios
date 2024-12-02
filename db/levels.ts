@@ -1,17 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchCollectionData } from "./fetch";
-import {
-	collection,
-	getDocs,
-	query,
-	where,
-	doc,
-	updateDoc,
-	setDoc,
-	getDoc,
-} from "firebase/firestore";
+import { doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 import { db } from ".";
-import { GenericLevel } from "@type/levels";
+import { GenericLevel, UserLevel } from "@type/levels";
 
 const LOCAL_STORAGE_GENERIC_LEVELS_ICONS_KEY = "genericLevels";
 
@@ -75,7 +66,7 @@ export const getUserLevelsByUserId = async (userId: string) => {
 export const updateUserLevel = async (
 	userId: string,
 	levelId: string,
-	xpToAdd: number
+	updatedLevelData: UserLevel
 ) => {
 	try {
 		const userLevelDocRef = doc(db, "usersLevels", userId);
@@ -84,13 +75,9 @@ export const updateUserLevel = async (
 		if (userLevelDoc.exists()) {
 			const userLevels = userLevelDoc.data().levels;
 
-			// Fusionner les données existantes
-			const currentXp = userLevels[levelId]?.xp || 0;
-			const updatedXp = currentXp + xpToAdd;
-
 			userLevels[levelId] = {
-				...(userLevels[levelId] || {}),
-				xp: updatedXp,
+				...userLevels[levelId],
+				...updatedLevelData,
 			};
 
 			await updateDoc(userLevelDocRef, { levels: userLevels });
@@ -116,14 +103,17 @@ export const initUserLevels = async (
 ) => {
 	try {
 		const userLevelDocRef = doc(db, "usersLevels", userId);
-		const userLevelDoc = await getDoc(userLevelDocRef);
-
-		// Si les niveaux existent déjà, ne pas réinitialiser
-		if (userLevelDoc.exists()) return;
 
 		const userLevels = genericLevels.reduce(
-			(acc: { [key: string]: { xp: number } }, level) => {
-				acc[level.id] = { xp: 0 };
+			(acc: { [key: string]: UserLevel }, level) => {
+				acc[level.id] = {
+					id: `${userId}-${level.id}`,
+					levelId: level.id,
+					userId,
+					currentLevel: 1,
+					currentXp: 0,
+					nextLevelXp: calculateNextLevelXp(1),
+				};
 				return acc;
 			},
 			{}
@@ -136,3 +126,6 @@ export const initUserLevels = async (
 	}
 };
 
+export const calculateNextLevelXp = (level: number): number => {
+	return Math.floor(100 * Math.pow(1.5, level - 1));
+};

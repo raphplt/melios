@@ -12,5 +12,7 @@ export type UserLevel = {
 	id: string;
 	levelId: string;
 	userId: string;
-	xp: number;
+	currentLevel: number;
+	currentXp: number;
+	nextLevelXp: number;
 };

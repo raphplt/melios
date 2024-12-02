@@ -24,10 +24,10 @@ const Progression: React.FC = () => {
 				<Streak />
 				<GoalSection />
 
+				<Levels />
 				<CalendarHabits />
 
 				<Chart />
-				<Levels />
 				<View
 					className="h-20 w-full"
 					style={{ backgroundColor: theme.colors.cardBackground }}

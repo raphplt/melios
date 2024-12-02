@@ -1,19 +1,23 @@
+import React, { useEffect, useState } from "react";
+import { Button, Dimensions, Text, View } from "react-native";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useSession } from "@context/UserContext";
 import {
+	calculateNextLevelXp,
 	getUserLevelsByUserId,
 	initUserLevels,
 	updateUserLevel,
 } from "@db/levels";
-import { UserLevel } from "@type/levels";
-import React, { useEffect } from "react";
-import { Button, Text, View } from "react-native";
+import * as Progress from "react-native-progress";
+import SectionHeader from "./SectionHeader";
 
 const Levels = () => {
 	const { theme } = useTheme();
 	const { genericLevels, usersLevels, setUsersLevels } = useData();
 	const { user } = useSession();
+	const { width } = Dimensions.get("window");
+	const [showLevels, setShowLevels] = useState(false);
 
 	useEffect(() => {
 		const initializeLevels = async () => {
@@ -40,46 +44,124 @@ const Levels = () => {
 		}
 	);
 
-	const addXp = async (levelId: string, xp: number) => {
+	const updateLevel = (
+		currentLevel: number,
+		currentXp: number,
+		xpToAdd: number
+	) => {
+		let newXp = currentXp + xpToAdd;
+		let newLevel = currentLevel;
+		let nextLevelXp = calculateNextLevelXp(newLevel);
+
+		while (newXp >= nextLevelXp) {
+			newXp -= nextLevelXp;
+			newLevel += 1;
+			nextLevelXp = calculateNextLevelXp(newLevel);
+		}
+
+		return {
+			currentLevel: newLevel,
+			currentXp: newXp,
+			nextLevelXp: nextLevelXp,
+		};
+	};
+
+	const addXp = async (levelId: any, xpToAdd: number) => {
 		try {
-			console.log("add xp", levelId, xp);
+			const currentLevelData = usersLevels[levelId];
+			const { currentLevel, currentXp } = currentLevelData;
+
+			// Calculer la progression
+			const updatedLevel = updateLevel(currentLevel, currentXp, xpToAdd);
 
 			// Met à jour Firebase
-			await updateUserLevel(user.uid, levelId, xp);
+			await updateUserLevel(user.uid, levelId, {
+				...currentLevelData,
+				...updatedLevel,
+			});
 
 			// Met à jour localement
-			setUsersLevels((prev: UserLevel[]) => {
-				if (!Array.isArray(prev)) return [];
-				return prev.map((level) =>
-					level.levelId === levelId ? { ...level, xp: (level.xp || 0) + xp } : level
-				);
-			});
+			setUsersLevels((prev) => ({
+				...prev,
+				[levelId]: {
+					...prev[levelId],
+					...updatedLevel,
+				},
+			}));
 		} catch (error) {
 			console.error("Error updating XP: ", error);
 		}
 	};
 
 	return (
-		<View>
-			<Text>
-				User Levels and Generic Levels
-				{combinedLevels.length}
-			</Text>
-			<View
-				className="w-11/12 mx-auto"
-				style={{ backgroundColor: theme.colors.backgroundSecondary }}
-			>
+		<SectionHeader
+			title="Niveaux"
+			show={showLevels}
+			setShow={setShowLevels}
+			icon="levels"
+		>
+			<View className="w-[95%] mx-auto mb-2 mt-2">
 				{combinedLevels.map((level) => (
-					<View key={level.levelId} className=" bg-green-300 py-2 my-4 rounded-xl">
-						<Text>{level.name}</Text>
-						<Text>XP: {level.xp}</Text>
-						<Text>Description: {level.description}</Text>
-						<Text>Icon: {level.icon}</Text>
-						<Button title="Add XP" onPress={() => addXp(level.levelId, 100)} />
+					<View
+						key={level.levelId}
+						style={{
+							backgroundColor: theme.colors.background,
+							borderColor: theme.colors.border,
+							borderWidth: 1,
+						}}
+						className="py-2 px-2 my-1 rounded-xl"
+					>
+						<Text
+							style={{
+								color: theme.colors.text,
+							}}
+							className="text-[16px] font-bold"
+						>
+							{level.name}
+						</Text>
+						<View className="flex flex-row items-center justify-between">
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="text-[14px] mb-1 font-semibold"
+							>
+								Niveau : {level.currentLevel}
+							</Text>
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="text-[14px] mb-1"
+							>
+								{level.currentXp} / {level.nextLevelXp}
+							</Text>
+						</View>
+						<Progress.Bar
+							progress={level.currentXp / level.nextLevelXp}
+							width={width * 0.9}
+							height={12}
+							color={level.color || theme.colors.primary}
+							borderRadius={15}
+							borderWidth={0}
+							style={{
+								backgroundColor: theme.colors.border,
+							}}
+						/>
+
+						<Text
+							style={{
+								color: theme.colors.textTertiary,
+							}}
+							className="text-[13px] mt-1"
+						>
+							{level.description}
+						</Text>
+						{/* <Button title="Add XP" onPress={() => addXp(level.levelId, 100)} /> */}
 					</View>
 				))}
 			</View>
-		</View>
+		</SectionHeader>
 	);
 };
 
