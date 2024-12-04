@@ -22,7 +22,6 @@ import { BlurView } from "expo-blur";
 //Custom imports
 import CustomTextInput from "@components/Shared/CustomTextInput";
 import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
-import { ThemeContext } from "@context/ThemeContext";
 import { useSession } from "@context/UserContext";
 import { loginUser } from "@db/users";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
@@ -30,9 +29,10 @@ import ButtonLogin from "@components/LoginRegister/ButtonLogin";
 import { User } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HelpModal from "@components/Modals/HelpModal";
+import { useTheme } from "@context/ThemeContext";
 
 export default function Login() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
@@ -192,7 +192,7 @@ export default function Login() {
 								/>
 							</View>
 
-							<ButtonLogin login={login} isDisabled={isDisabled} theme={theme} />
+							<ButtonLogin login={login} isDisabled={isDisabled} />
 							<View
 								className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
 								style={{

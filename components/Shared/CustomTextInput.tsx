@@ -35,7 +35,7 @@ export default function CustomTextInput({
 		<View className="flex flex-col justify-center w-full mt-5 mx-auto">
 			<Text
 				style={{ color: textColor || "rgb(28, 28, 30)" }}
-				className="mb-2 ml-2 font-semibold text-[15px]"
+				className="mb-2 ml-2 font-semibold text-[16px]"
 			>
 				{label}
 			</Text>
@@ -52,7 +52,7 @@ export default function CustomTextInput({
 					color: theme.colors.text,
 					backgroundColor: theme.colors.cardBackground,
 				}}
-				className="px-5 py-4 w-full mx-auto rounded-2xl"
+				className="px-5 py-3 w-full mx-auto rounded-2xl"
 				placeholderTextColor={theme.colors.grayPrimary}
 				cursorColor={theme.colors.text}
 				{...props}

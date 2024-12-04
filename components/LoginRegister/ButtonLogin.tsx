@@ -1,16 +1,17 @@
-import { Animated, Pressable, Text } from "react-native";
-import { useRef } from "react";
+import { ActivityIndicator, Animated, Pressable, Text } from "react-native";
+import { useRef, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
 
 export default function ButtonLogin({
 	login,
 	isDisabled,
-	theme,
 }: {
 	login: () => void;
 	isDisabled: boolean;
-	theme: any;
 }) {
+	const [isPressed, setIsPressed] = useState(false);
 	const scaleAnim = useRef(new Animated.Value(1)).current;
+	const { theme } = useTheme();
 
 	const handleTouchStart = () => {
 		Animated.spring(scaleAnim, {
@@ -26,6 +27,11 @@ export default function ButtonLogin({
 		}).start();
 	};
 
+	const onPressIn = () => {
+		setIsPressed(true);
+		login();
+	};
+
 	return (
 		<Animated.View
 			style={{
@@ -34,7 +40,7 @@ export default function ButtonLogin({
 			className="w-full"
 		>
 			<Pressable
-				onPress={login}
+				onPress={onPressIn}
 				disabled={isDisabled}
 				onTouchStart={handleTouchStart}
 				onTouchEnd={handleTouchEnd}
@@ -46,12 +52,16 @@ export default function ButtonLogin({
 				}}
 				className="w-full mx-auto py-3 rounded-3xl focus:bg-blue-800 mt-6 flex items-center"
 			>
-				<Text
-					style={{ color: "#F8F9FF" }}
-					className="text-[18px] text-center font-semibold"
-				>
-					Se connecter
-				</Text>
+				{isPressed ? (
+					<ActivityIndicator size="small" color={"#F8F9FF"} />
+				) : (
+					<Text
+						style={{ color: "#F8F9FF" }}
+						className="text-[18px] text-center font-semibold"
+					>
+						Se connecter
+					</Text>
+				)}
 			</Pressable>
 		</Animated.View>
 	);
