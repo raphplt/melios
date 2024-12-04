@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { View, Pressable } from "react-native";
+import { View, Pressable, Button } from "react-native";
 import { Text } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import {
@@ -13,6 +13,7 @@ import Animated, {
 	withTiming,
 	withDelay,
 } from "react-native-reanimated";
+import { Iconify } from "react-native-iconify";
 
 // Customs imports
 import usePoints from "@hooks/usePoints";
@@ -20,11 +21,11 @@ import { useTheme } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
 import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
-import { getHabitLogs, setHabitLog } from "@db/logs";
-import { Iconify } from "react-native-iconify";
+import { setHabitLog } from "@db/logs";
 import useHabitTimer from "@hooks/useHabitTimer";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
+import useAddXp from "@hooks/useAddXp";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -37,11 +38,12 @@ function CardCheckHabit({
 	habit: UserHabit;
 	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
 }) {
+	const { date, completedHabitsToday, setCompletedHabitsToday } = useData();
 	const { theme } = useTheme();
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
-	const { date, completedHabitsToday, setCompletedHabitsToday } = useData();
 	const { startTimer } = useHabitTimer();
+	const { addXp } = useAddXp();
 
 	// États
 	const [showDetails, setShowDetails] = useState(false);
@@ -107,10 +109,10 @@ function CardCheckHabit({
 	const setHabitDone = async () => {
 		try {
 			await setHabitLog(habit.id, date);
+			await addXp(habit, 30);
 			addOdysseePoints(habit.difficulty);
 			setRewards("odyssee", habit.difficulty * 2);
 			setCompleted(true);
-
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du log :", error);

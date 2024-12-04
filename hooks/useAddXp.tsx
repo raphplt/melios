@@ -2,10 +2,15 @@ import { useCallback } from "react";
 import { useData } from "@context/DataContext";
 import { useSession } from "@context/UserContext";
 import { calculateNextLevelXp, updateUserLevel } from "@db/levels";
+import { useHabits } from "@context/HabitsContext";
+import { UserHabit } from "@type/userHabit";
+import { getLevelByCategoryId } from "@utils/progressionUtils";
+import { UserLevel } from "@type/levels";
 
 const useAddXp = () => {
-	const { usersLevels, setUsersLevels } = useData();
+	const { usersLevels, setUsersLevels, genericLevels } = useData();
 	const { user } = useSession();
+	const { categories } = useHabits();
 
 	const updateLevel = useCallback(
 		(currentLevel: number, currentXp: number, xpToAdd: number) => {
@@ -29,25 +34,48 @@ const useAddXp = () => {
 	);
 
 	const addXp = useCallback(
-		async (levelId: any, xpToAdd: number) => {
+		async (habit: UserHabit, xpToAdd: number) => {
 			try {
-				const currentLevelData = usersLevels[levelId];
+				const category = categories.find(
+					(category) => category.category === habit.category
+				);
+				const idCategory = String(category?.id);
+
+				const associatedLevel = getLevelByCategoryId(idCategory, genericLevels);
+
+				if (!associatedLevel) {
+					console.log("No associated level found for idCategory:", idCategory);
+					console.log("genericLevels:", genericLevels);
+					return null;
+				}
+
+				const levelId: string = associatedLevel.id;
+
+				const currentLevelData = Object.values(usersLevels).find(
+					(level) => level.levelId === levelId
+				);
+
+				if (!currentLevelData) {
+					console.log("No current level data found for levelId:", levelId);
+					return null;
+				}
+
 				const { currentLevel, currentXp } = currentLevelData;
 
 				// Calculer la progression
 				const updatedLevel = updateLevel(currentLevel, currentXp, xpToAdd);
 
 				// Met à jour Firebase
-				await updateUserLevel(user.uid, levelId, {
+				await updateUserLevel(user.uid, String(levelId), {
 					...currentLevelData,
 					...updatedLevel,
 				});
 
 				// Met à jour localement
-				setUsersLevels((prev) => ({
+				setUsersLevels((prev: UserLevel[]) => ({
 					...prev,
 					[levelId]: {
-						...prev[levelId],
+						...prev[levelId as any], //TODO : la conversion en number ne fonctionne pas ?
 						...updatedLevel,
 					},
 				}));
@@ -57,7 +85,6 @@ const useAddXp = () => {
 		},
 		[updateLevel, usersLevels, setUsersLevels, user.uid]
 	);
-
 	return { addXp };
 };
 

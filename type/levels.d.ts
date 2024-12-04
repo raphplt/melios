@@ -16,3 +16,5 @@ export type UserLevel = {
 	currentXp: number;
 	nextLevelXp: number;
 };
+
+export type CombinedLevel = UserLevel & GenericLevel & { levelId: string };
