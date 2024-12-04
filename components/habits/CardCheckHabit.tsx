@@ -108,11 +108,11 @@ function CardCheckHabit({
 
 	const setHabitDone = async () => {
 		try {
+			setCompleted(true);
 			await setHabitLog(habit.id, date);
 			await addXp(habit, 30);
 			addOdysseePoints(habit.difficulty);
 			setRewards("odyssee", habit.difficulty * 2);
-			setCompleted(true);
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du log :", error);
