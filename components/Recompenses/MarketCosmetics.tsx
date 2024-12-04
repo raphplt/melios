@@ -37,35 +37,36 @@ export default function MarketCosmetics() {
 			}}
 		>
 			{/* Background Image */}
-			<Image
+			{/* <Image
 				source={require("@assets/images/illustrations/bgCosmetic.jpg")}
 				className="absolute w-full h-full"
 				style={{ resizeMode: "cover", opacity: 0.2 }}
-			/>
+			/> */}
 
 			{/* Header Section */}
-			<View className="w-11/12 mx-auto py-4">
-				<Text
-					style={{ color: theme.colors.text }}
-					className="text-[16px] w-11/12 font-semibold"
-				>
-					Utilisez vos points pour débloquer des avatars mythologiques uniques et
-					personnaliser votre profil !
-				</Text>
-
+			<View className="w-11/12 mx-auto py-2">
 				{/* Progress Indicator */}
-				<View className="mt-4">
-					<View className="flex flex-row items-center justify-start mb-2 ">
+				<View className="">
+					<View className="flex flex-row items-center justify-between my-2 ">
 						<Text
 							style={{
 								color: theme.colors.primary,
-								fontFamily: "BaskervilleBold",
 							}}
-							className="text-[15px] mr-2"
+							className="text-lg font-bold mr-3"
 						>
-							Vos points : {points.odyssee}
+							Mes points
 						</Text>
-						<MoneyOdyssee />
+						<View className="flex flex-row items-center justify-start">
+							<Text
+								style={{
+									color: theme.colors.primary,
+								}}
+								className="text-[16px] font-bold mr-1"
+							>
+								{points.odyssee}
+							</Text>
+							<MoneyOdyssee />
+						</View>
 					</View>
 
 					<Progress.Bar
@@ -73,11 +74,19 @@ export default function MarketCosmetics() {
 						width={null}
 						color={theme.colors.primary}
 						unfilledColor={theme.colors.border}
-						borderWidth={0}
-						height={8}
+						height={10}
+						borderRadius={25}
 					/>
 					{/* <Progress */}
 				</View>
+
+				<Text
+					style={{ color: theme.colors.textTertiary }}
+					className="text-[14px] w-11/12 font-semibold mt-3"
+				>
+					Utilisez vos points pour débloquer des avatars mythologiques uniques et
+					personnaliser votre profil !
+				</Text>
 			</View>
 
 			{/* Cosmetics List */}

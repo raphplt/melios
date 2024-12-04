@@ -47,9 +47,6 @@ const useIndex = () => {
 	const [hours, setHours] = useState(new Date().getHours());
 	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
-	const [showMoreValidate, setShowMoreValidate] = useState(3);
-	const [showMoreNext, setShowMoreNext] = useState(3);
-	const [showMoreMissed, setShowMoreMissed] = useState(3);
 
 	// Memoized values
 
@@ -92,7 +89,6 @@ const useIndex = () => {
 	const getUserHabitDetails = (habitId: string) => {
 		return userHabits.find((habit: UserHabit) => habit.id === habitId);
 	};
-
 
 	useEffect(() => {
 		if (!isFocused) return;
@@ -190,9 +186,6 @@ const useIndex = () => {
 		refreshing,
 		welcomeMessage,
 		showMissingHabits,
-		showMoreValidate,
-		showMoreNext,
-		showMoreMissed,
 		rotate,
 		imageSource,
 		hours,

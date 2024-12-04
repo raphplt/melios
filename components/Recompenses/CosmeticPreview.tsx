@@ -36,13 +36,17 @@ export default function CosmeticPreviewStacked() {
 		>
 			<View className="w-11/12 mx-auto py-5">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
-					<Iconify icon="ix:user-profile" size={24} color={theme.colors.text} />
+					<Iconify
+						icon="lucide:shopping-basket"
+						size={24}
+						color={theme.colors.text}
+					/>
 					<Text
 						style={{
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="mx-2 text-[16px] font-semibold"
+						className="mx-2 text-[16px]"
 					>
 						Boutique de cosmétiques
 					</Text>
