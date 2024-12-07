@@ -3,7 +3,6 @@ import { getAllCosmeticsIcons } from "@db/cosmetics";
 import { ProfileCosmetic } from "@type/cosmetics";
 import { useContext, useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import ProfilIcon from "./ProfilIcon";
 import { Iconify } from "react-native-iconify";
 import {
 	NavigationProp,

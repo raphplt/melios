@@ -8,11 +8,10 @@ import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withTiming,
-	withRepeat,
-	Easing,
 } from "react-native-reanimated";
 import { getMemberInfos, updateProfilePicture } from "@db/member";
 import { Iconify } from "react-native-iconify";
+import CachedImage from "@components/Shared/CachedImage";
 
 export default function ProfilIcon({
 	cosmetic,
@@ -91,8 +90,8 @@ export default function ProfilIcon({
 				</Text>
 
 				{/* Icon */}
-				<Image
-					source={getIcon(cosmetic.slug)}
+				<CachedImage
+					imagePath={getIcon(cosmetic.slug)}
 					className="w-24 h-24"
 					style={{
 						opacity: isGrayedOut ? 0.7 : 1,

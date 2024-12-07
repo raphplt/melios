@@ -1,5 +1,7 @@
+import { DayOfWeek } from "@type/days";
 import { GenericLevel } from "@type/levels";
 import { Log } from "@type/log";
+import { UserHabit } from "@type/userHabit";
 import moment from "moment";
 
 /**
@@ -96,4 +98,21 @@ export const getLevelByCategoryId = (
 	}
 
 	return level;
+};
+
+/**
+ * Function to get the score of the day
+ */
+export const getTodayScore = (
+	habits: UserHabit[],
+	completedHabitsToday: UserHabit[]
+): number => {
+	if (habits.length === 0) return 0;
+	const today: DayOfWeek = new Date()
+		.toLocaleString("en-US", { weekday: "long" })
+		.toLowerCase() as DayOfWeek;
+	const todayHabits = habits.filter(
+		(habit) => habit.frequency && habit.frequency[today]
+	);
+	return Math.round((completedHabitsToday.length / todayHabits.length) * 100);
 };

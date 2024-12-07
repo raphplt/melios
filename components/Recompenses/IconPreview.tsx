@@ -6,10 +6,6 @@ import getIcon from "@utils/cosmeticsUtils";
 import { useContext } from "react";
 import { View, Text, Image } from "react-native";
 
-import { TouchableOpacity } from "react-native";
-import { getMemberInfos, updateProfilePicture } from "@db/member";
-import { Iconify } from "react-native-iconify";
-
 export default function IconPreview({
 	cosmetic,
 }: {

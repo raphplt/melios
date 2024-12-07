@@ -30,6 +30,7 @@ import { User } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HelpModal from "@components/Modals/HelpModal";
 import { useTheme } from "@context/ThemeContext";
+import { getCachedImage } from "@db/image";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -75,7 +76,6 @@ export default function Login() {
 				return;
 			} else {
 				navigation.navigate("index");
-				console.log("Utilisateur connecté avec succès.");
 			}
 		} catch (error) {
 			setError("Erreur lors de la connexion.");
@@ -96,6 +96,26 @@ export default function Login() {
 		};
 
 		checkFirstTime();
+	}, []);
+
+	const [image, setImage] = useState<string | null>("images/fallback.png");
+
+	useEffect(() => {
+		let isMounted = true;
+		const fetchImage = async () => {
+			try {
+				const localUri = await getCachedImage(`images/illustrations/login-bg.jpg`);
+				if (isMounted) setImage(localUri);
+			} catch (error) {
+				console.error("Failed to fetch image:", error);
+			}
+		};
+
+		fetchImage();
+
+		return () => {
+			isMounted = false;
+		};
 	}, []);
 
 	if (showModal) {
@@ -127,7 +147,7 @@ export default function Login() {
 				}}
 			>
 				<ImageBackground
-					source={require("../assets/images/illustrations/login-bg.jpg")}
+					source={image ? { uri: image } : undefined}
 					resizeMode="cover"
 					style={{
 						flex: 1,
