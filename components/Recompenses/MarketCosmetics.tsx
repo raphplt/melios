@@ -36,13 +36,6 @@ export default function MarketCosmetics() {
 				flex: 1,
 			}}
 		>
-			{/* Background Image */}
-			{/* <Image
-				source={require("@assets/images/illustrations/bgCosmetic.jpg")}
-				className="absolute w-full h-full"
-				style={{ resizeMode: "cover", opacity: 0.2 }}
-			/> */}
-
 			{/* Header Section */}
 			<View className="w-11/12 mx-auto py-2">
 				{/* Progress Indicator */}

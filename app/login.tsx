@@ -30,7 +30,7 @@ import { User } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HelpModal from "@components/Modals/HelpModal";
 import { useTheme } from "@context/ThemeContext";
-import { getCachedImage } from "@db/image";
+import { getCachedImage } from "@db/files";
 
 export default function Login() {
 	const { theme } = useTheme();

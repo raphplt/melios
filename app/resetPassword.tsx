@@ -1,3 +1,4 @@
+import CachedImage from "@components/Shared/CachedImage";
 import CustomTextInput from "@components/Shared/CustomTextInput";
 import { ThemeContext } from "@context/ThemeContext";
 import { isValidEmail } from "@utils/dataValidation";
@@ -62,9 +63,9 @@ export default function ResetPassword() {
 						backgroundColor: theme.colors.background,
 					}}
 				>
-					<Image
-						source={require("../assets/images/illustrations/character1.png")}
-						className="w-1/5 h-1/5 my-8"
+					<CachedImage
+						imagePath="images/illustrations/character1.png"
+						style={{ width: "20%", height: "20%", marginVertical: 16 }}
 					/>
 					<View className=" w-full">
 						<Text

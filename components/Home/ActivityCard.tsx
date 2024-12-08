@@ -1,12 +1,5 @@
-import { useContext, useRef, memo } from "react";
-import {
-	View,
-	Text,
-	Pressable,
-	Animated,
-	Image,
-	StyleSheet,
-} from "react-native";
+import { useContext, useRef, memo, useEffect, useState } from "react";
+import { View, Text, Pressable, Animated, StyleSheet } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -18,6 +11,7 @@ import { HabitsContext, useHabits } from "@context/HabitsContext";
 import getImage from "@utils/getImage";
 import { UserHabit } from "@type/userHabit";
 import { BlurView } from "expo-blur";
+import CachedImage from "@components/Shared/CachedImage";
 
 function Activity({ habit }: { habit: UserHabit }) {
 	const { theme } = useTheme();
@@ -50,9 +44,21 @@ function Activity({ habit }: { habit: UserHabit }) {
 
 	const habitCategory = categories.find((c) => c.category === habit.category);
 
+	const [imageUri, setImageUri] = useState<string | null>(null);
+
+	useEffect(() => {
+		const loadCategoryImage = async () => {
+			if (habitCategory) {
+				const uri = getImage(habitCategory.slug);
+				setImageUri(uri);
+			}
+		};
+		loadCategoryImage();
+	}, [habitCategory]);
+
 	return (
 		<Animated.View
-			className="h-64 w-40 mx-1 rounded-xl"
+			className="h-64 w-40 mx-2 rounded-xl"
 			style={{
 				backgroundColor: theme.colors.background,
 				transform: [{ scale: scaleAnim }],
@@ -74,17 +80,17 @@ function Activity({ habit }: { habit: UserHabit }) {
 					className="h-14 rounded-t-xl"
 				>
 					<Text
-						className="font-semibold w-1/2 italic ml-3 mt-2 text-[12px]"
+						className="font-semibold w-1/2 italic ml-3 mt-2 text-[13px]"
 						style={{
 							color: theme.colors.text,
 						}}
 					>
-						{habit.category}
+						{habit.category.slice(0, 20) + (habit.category.length > 20 ? "..." : "")}
 					</Text>
 					<View
 						className="px-2 py-1 rounded-bl-xl rounded-tr-xl"
 						style={{
-							backgroundColor: theme.colors.backgroundTertiary,
+							backgroundColor: theme.colors.backgroundSecondary,
 							position: "absolute",
 							right: 0,
 							top: 0,
@@ -101,13 +107,14 @@ function Activity({ habit }: { habit: UserHabit }) {
 					</View>
 				</View>
 				<View className="flex flex-col justify-evenly items-center rounded-b-xl bg-slate-20 flex-1">
-					<Image
-						source={getImage(habitCategory?.slug || "default")}
-						style={StyleSheet.absoluteFillObject}
-						blurRadius={20}
-						resizeMode="cover"
-						className="w-full h-full rounded-b-xl"
+					<CachedImage
+						imagePath={imageUri || "images/categories/fitness.jpg"}
+						style={StyleSheet.absoluteFill}
+						borderBottomLeftRadius={10}
+						borderBottomRightRadius={10}
+						blurRadius={5}
 					/>
+
 					<View className=" flex items-center justify-center w-10/12 px-1 py-2 rounded-lg overflow-hidden">
 						<BlurView intensity={60} tint={"light"} style={styles.blurView} />
 						<Text

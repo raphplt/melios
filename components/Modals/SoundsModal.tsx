@@ -19,6 +19,7 @@ export default function SoundsModal({
 		useSound();
 	const [soundObject, setSoundObject] = useState<Audio.Sound | null>(null);
 
+	// Nettoie les ressources du son chargé lors du démontage
 	useEffect(() => {
 		return () => {
 			if (soundObject) {
@@ -26,7 +27,7 @@ export default function SoundsModal({
 			}
 		};
 	}, [soundObject]);
-
+	// Gérer la sélection et la lecture d'un son
 	const handleSoundPress = async (sound: Sound) => {
 		try {
 			// Arrêter et décharger le son précédent
@@ -38,8 +39,9 @@ export default function SoundsModal({
 
 			// Si "Aucun son" est sélectionné, ne pas charger de nouveau son
 			if (sound.file) {
+				const soundUri = soundMap[sound.file];
 				const { sound: newSound, status } = await Audio.Sound.createAsync(
-					soundMap[sound.file]
+					{ uri: soundUri } // Utilise un objet avec `uri`
 				);
 				setSoundObject(newSound);
 
@@ -99,7 +101,7 @@ export default function SoundsModal({
 						Choisissez un son
 					</Text>
 					{loadingSounds ? (
-						<Text>Loading sounds...</Text>
+						<Text>Chargement des sons...</Text>
 					) : (
 						<>
 							<Pressable

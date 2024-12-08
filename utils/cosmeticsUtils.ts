@@ -1,4 +1,4 @@
-export default async function getIcon(slug: string): Promise<string> {
+export default function getIcon(slug: string) {
 	const images: { [key: string]: string } = {
 		apollon: "images/cosmetics/apollon.png",
 		dyonisos: "images/cosmetics/dyonisos.png",

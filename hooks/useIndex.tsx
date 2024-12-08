@@ -22,7 +22,7 @@ import { isDayTime } from "@utils/timeUtils";
 import { Habit } from "@type/habit";
 import { useHabits } from "@context/HabitsContext";
 import { getUserHabits } from "@db/userHabit";
-import { getCachedImage } from "@db/image";
+import { getCachedImage } from "@db/files";
 
 const useIndex = () => {
 	// Contexts

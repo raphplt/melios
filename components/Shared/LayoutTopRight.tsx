@@ -1,10 +1,8 @@
-import { AntDesign } from "@expo/vector-icons";
-import { View, Pressable, Image } from "react-native";
+import { View, Pressable } from "react-native";
 import Points from "./Points";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useData } from "@context/DataContext";
 import getIcon from "@utils/cosmeticsUtils";
 import CachedImage from "./CachedImage";
@@ -17,9 +15,9 @@ export default function LayoutTopRight() {
 	);
 
 	useEffect(() => {
-		const loadProfilePicture = async () => {
+		const loadProfilePicture = () => {
 			if (member?.profilePicture) {
-				const uri = await getIcon(member.profilePicture);
+				const uri = getIcon(member.profilePicture);
 				setProfilePictureUri(uri);
 			}
 		};

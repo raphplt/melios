@@ -1,4 +1,4 @@
-import { getCachedImage } from "@db/image";
+import { getCachedImage } from "@db/files";
 import React, { useState, useEffect } from "react";
 import { Image, ActivityIndicator } from "react-native";
 
@@ -6,12 +6,14 @@ interface CachedImageProps {
 	imagePath: string;
 	style?: object;
 	placeholder?: React.ReactNode;
+	[key: string]: any;
 }
 
 const CachedImage: React.FC<CachedImageProps> = ({
 	imagePath,
 	style,
 	placeholder,
+	...props
 }) => {
 	const [localUri, setLocalUri] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -39,7 +41,7 @@ const CachedImage: React.FC<CachedImageProps> = ({
 		return null;
 	}
 
-	return <Image source={{ uri: localUri }} style={style} />;
+	return <Image source={{ uri: localUri }} style={style} {...props} />;
 };
 
 export default CachedImage;

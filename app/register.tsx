@@ -4,7 +4,7 @@ import { BlurView } from "expo-blur";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 import ButtonBackRegister from "@components/LoginRegister/ButtonBackRegister";
 import useFormHandler from "@hooks/useRegister";
-import { getCachedImage } from "@db/image";
+import { getCachedImage } from "@db/files";
 
 export default function Register() {
 	const {

@@ -4,6 +4,7 @@ import MoneyMelios from "@components/Svg/MoneyMelios";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 
 export default function Points() {
 	const { theme } = useTheme();
@@ -24,7 +25,16 @@ export default function Points() {
 	const globalLevel = calculateGlobalLevel();
 
 	if (Object.keys(usersLevels).length === 0) {
-		return <ActivityIndicator size="large" color={theme.colors.primary} />;
+		return (
+			<ShimmerPlaceholder
+				width={150}
+				height={35}
+				style={{
+					borderRadius: 15,
+				}}
+			/>
+		);
+		// return <ActivityIndicator size="large" color={theme.colors.primary} />;
 	}
 
 	return (

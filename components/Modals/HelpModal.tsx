@@ -15,7 +15,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CachedImage from "@components/Shared/CachedImage";
-import { getCachedImage } from "@db/image";
+import { getCachedImage } from "@db/files";
 
 export default function HelpModal({
 	visible,

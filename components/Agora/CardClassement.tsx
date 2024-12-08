@@ -1,4 +1,4 @@
-import { Text, View, Image } from "react-native";
+import { Text, View } from "react-native";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import getIcon from "@utils/cosmeticsUtils";
 import { useData } from "@context/DataContext";
@@ -35,9 +35,9 @@ export default function CardClassement({
 	);
 
 	useEffect(() => {
-		const loadProfilePicture = async () => {
+		const loadProfilePicture = () => {
 			if (member?.profilePicture) {
-				const uri = await getIcon(reward.profilePicture);
+				const uri = getIcon(reward.profilePicture);
 				setProfilePictureUri(uri);
 			}
 		};

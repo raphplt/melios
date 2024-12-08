@@ -47,9 +47,8 @@ export default function ProfilIcon({
 	}, [isGrayedOut]);
 
 	useEffect(() => {
-		const fetchImagePath = async () => {
-			console.log("Fetching image path for", cosmetic.slug);
-			const path = await getIcon(cosmetic.slug);
+		const fetchImagePath = () => {
+			const path = getIcon(cosmetic.slug);
 			setImagePath(path);
 		};
 

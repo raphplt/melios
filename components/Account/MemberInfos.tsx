@@ -22,9 +22,9 @@ export default function MemberInfos({
 	);
 
 	useEffect(() => {
-		const loadProfilePicture = async () => {
+		const loadProfilePicture = () => {
 			if (member?.profilePicture) {
-				const uri = await getIcon(member.profilePicture);
+				const uri = getIcon(member.profilePicture);
 				setProfilePictureUri(uri);
 			}
 		};

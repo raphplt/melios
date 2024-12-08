@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	View,
 	AppState,
@@ -30,6 +30,7 @@ import ButtonsBox from "@components/HabitDetail/ButtonsBox";
 import { useTheme } from "@context/ThemeContext";
 import SettingsButton from "@components/HabitDetail/SettingsButton";
 import getImage from "@utils/getImage";
+import CachedImage from "@components/Shared/CachedImage";
 
 export interface DayStatus {
 	date: string;
@@ -39,11 +40,10 @@ export interface DayStatus {
 export default function HabitDetail() {
 	const { currentHabit } = useHabits();
 
-	if (!currentHabit) return <LoaderScreen text="Chargement des détails" />;
+	if (!currentHabit) return <LoaderScreen text="Chargement des détails..." />;
 
 	// Contexts
 	const { theme } = useTheme();
-
 	const { timerSeconds, isTimerActive } = useTimer();
 	const { startTimer } = useHabitTimer();
 	const { sendPushNotification } = useNotifications();
@@ -103,19 +103,30 @@ export default function HabitDetail() {
 		(c) => c.category === currentHabit.category
 	);
 
+	const [imageUri, setImageUri] = useState<string | null>(null);
+
+	useEffect(() => {
+		const loadCategoryImage = async () => {
+			if (habitCategory) {
+				const uri = getImage(habitCategory.slug);
+				setImageUri(uri);
+			}
+		};
+		loadCategoryImage();
+	}, [habitCategory]);
+
 	return (
 		<View
 			style={{
 				flex: 1,
 			}}
 		>
-			<Image
-				source={getImage(habitCategory?.slug || "default")}
-				style={StyleSheet.absoluteFillObject}
+			<CachedImage
+				imagePath={imageUri || "images/categories/fitness.jpg"}
 				blurRadius={15}
-				resizeMode="cover"
-				className="w-full h-full rounded-b-xl"
+				style={StyleSheet.absoluteFill}
 			/>
+
 			<View
 				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-2 mb-2"
 				style={{
