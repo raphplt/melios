@@ -6,8 +6,6 @@ import { Answer, Question, Questions } from "../constants/Slides";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import InputPassword from "@components/LoginRegister/InputPassword";
 import InputText from "@components/LoginRegister/InputText";
-import MultipleChoice from "@components/LoginRegister/MultipleChoice";
-import SingleChoice from "@components/LoginRegister/SingleChoice";
 import { useData } from "@context/DataContext";
 import { Member } from "@type/member";
 
@@ -29,10 +27,6 @@ export default function useFormHandler() {
 				]);
 				return;
 			}
-		}
-
-		if (currentQuestion.slug === "welcome" && answer.value === 2) {
-			return;
 		}
 
 		if (currentQuestionIndex < Questions.length - 1) {
@@ -90,25 +84,9 @@ export default function useFormHandler() {
 
 	const renderQuestion = () => {
 		const currentQuestion = Questions[currentQuestionIndex];
-		const { questionType, question, answers, slug } = currentQuestion;
+		const { questionType, question, slug } = currentQuestion;
 
 		switch (questionType) {
-			case "MultipleChoice":
-				return (
-					<MultipleChoice
-						question={question}
-						answers={answers}
-						goToNextQuestion={goToNextQuestion}
-					/>
-				);
-			case "SingleChoice":
-				return (
-					<SingleChoice
-						question={question}
-						answers={answers}
-						goToNextQuestion={goToNextQuestion}
-					/>
-				);
 			case "Text":
 				return (
 					<InputText
@@ -139,6 +117,6 @@ export default function useFormHandler() {
 		goBack,
 		goToNextQuestion,
 		navigation,
-		isCreatingUser, // Retourner l'état
+		isCreatingUser,
 	};
 }

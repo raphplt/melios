@@ -99,7 +99,7 @@ const TabLayout: React.FC = () => {
 									fontWeight: "bold",
 								}}
 							>
-								Recompenses
+								Récompenses
 							</Text>
 						),
 						() => (

@@ -1,7 +1,6 @@
 import { useData } from "@context/DataContext";
 import { useEffect, useState } from "react";
-import { getTodayScore } from "@components/Home/ParallaxScrollView";
-import { calculateWeeklyStreak } from "@utils/progressionUtils";
+import { calculateWeeklyStreak, getTodayScore } from "@utils/progressionUtils";
 
 const convertAnswer = (answer: number) => {
 	switch (answer) {

@@ -26,27 +26,23 @@ export default function SoundsModal({
 			}
 		};
 	}, [soundObject]);
-
 	const handleSoundPress = async (sound: Sound) => {
 		try {
-			// Arrêter et décharger le son précédent
 			if (soundObject) {
 				await soundObject.stopAsync();
 				await soundObject.unloadAsync();
 				setSoundObject(null);
 			}
 
-			// Si "Aucun son" est sélectionné, ne pas charger de nouveau son
 			if (sound.file) {
-				const { sound: newSound, status } = await Audio.Sound.createAsync(
-					soundMap[sound.file]
-				);
+				const soundUri = soundMap[sound.file];
+				const { sound: newSound, status } = await Audio.Sound.createAsync({
+					uri: soundUri,
+				});
 				setSoundObject(newSound);
 
-				// Configurer le son pour qu'il se répète indéfiniment
 				await newSound.setIsLoopingAsync(true);
 
-				// Vérifier que le son est bien chargé avant de le jouer
 				if (status.isLoaded) {
 					await newSound.playAsync();
 				} else {
@@ -99,7 +95,7 @@ export default function SoundsModal({
 						Choisissez un son
 					</Text>
 					{loadingSounds ? (
-						<Text>Loading sounds...</Text>
+						<Text>Chargement des sons...</Text>
 					) : (
 						<>
 							<Pressable

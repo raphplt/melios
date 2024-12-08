@@ -8,7 +8,6 @@ import CardClassement from "@components/Agora/CardClassement";
 
 export default function Agora() {
 	const [usersRewards, setUsersRewards]: any = useState([]);
-	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [lastVisibleDoc, setLastVisibleDoc]: any = useState(null);
 	const [hasMoreRewards, setHasMoreRewards] = useState(true);
@@ -41,9 +40,7 @@ export default function Agora() {
 			setLastVisibleDoc(lastVisible);
 			setLoading(false);
 		} catch (error) {
-			console.error("Erreur lors de la récupération des récompenses : ", error);
-		} finally {
-			setRefreshing(false);
+			console.log("Erreur lors de la récupération des récompenses : ", error);
 		}
 	};
 

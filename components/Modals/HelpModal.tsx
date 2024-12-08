@@ -1,7 +1,6 @@
 import {
 	View,
 	Text,
-	Image,
 	useWindowDimensions,
 	Modal,
 	Pressable,
@@ -10,11 +9,13 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CachedImage from "@components/Shared/CachedImage";
+import { getCachedImage } from "@db/files";
 
 export default function HelpModal({
 	visible,
@@ -31,13 +32,26 @@ export default function HelpModal({
 	const scrollViewRef = useRef<ScrollView>(null);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-	const images = [
-		require("@assets/images/onboarding/1.png"),
-		require("@assets/images/onboarding/2.png"),
-		require("@assets/images/onboarding/3.png"),
-		require("@assets/images/onboarding/4.png"),
-		require("@assets/images/onboarding/5.png"),
+	const imagePaths = [
+		"images/onboarding/1.png",
+		"images/onboarding/2.png",
+		"images/onboarding/3.png",
+		"images/onboarding/4.png",
+		"images/onboarding/5.png",
 	];
+
+	const [imageUris, setImageUris] = useState<string[]>([]);
+
+	useEffect(() => {
+		const loadImages = async () => {
+			const uris = await Promise.all(
+				imagePaths.map((path) => getCachedImage(path))
+			);
+			setImageUris(uris);
+		};
+
+		loadImages();
+	}, []);
 
 	const handleScroll = Animated.event(
 		[{ nativeEvent: { contentOffset: { x: scrollX } } }],
@@ -51,21 +65,21 @@ export default function HelpModal({
 	};
 
 	const renderImages = () => {
-		return images.map((image, index) => (
+		return imageUris.map((uri, index) => (
 			<View
 				key={index}
 				style={{ width, height: height - 100 }}
 				className="mx-auto flex items-center justify-center"
 			>
-				<Image
-					source={image}
+				<CachedImage
+					imagePath={imagePaths[index]}
 					style={{
 						width: width - 30,
 						height: height - 100,
 						resizeMode: "contain",
 					}}
 				/>
-				{index === images.length - 1 && (
+				{index === imageUris.length - 1 && (
 					<TouchableOpacity
 						style={{
 							backgroundColor: theme.colors.primary,
@@ -128,7 +142,7 @@ export default function HelpModal({
 						alignSelf: "center",
 					}}
 				>
-					{images.map((_, index) => {
+					{imageUris.map((_, index) => {
 						const opacity = scrollX.interpolate({
 							inputRange: [(index - 1) * width, index * width, (index + 1) * width],
 							outputRange: [0.3, 1, 0.3],

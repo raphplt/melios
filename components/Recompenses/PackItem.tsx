@@ -21,7 +21,7 @@ export default function PackItem({ pack }: { pack: Pack }) {
 			}}
 			start={[0, 0]}
 			colors={[theme.colors.cardBackground, pack.color ?? theme.colors.background]}
-			className="mx-auto rounded-xl w-11/12 p-3 my-2 opacity-50"
+			className="mx-auto rounded-xl w-[95%] p-3 my-2 opacity-50"
 		>
 			<View className="flex flex-row items-center justify-between">
 				<Text

@@ -5,6 +5,8 @@ import { Member } from "@type/member";
 import getIcon from "@utils/cosmeticsUtils";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { useTheme } from "@context/ThemeContext";
+import CachedImage from "@components/Shared/CachedImage";
+import { useState, useEffect } from "react";
 
 export default function MemberInfos({
 	member,
@@ -15,6 +17,19 @@ export default function MemberInfos({
 }) {
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const [profilePictureUri, setProfilePictureUri] = useState<string | null>(
+		null
+	);
+
+	useEffect(() => {
+		const loadProfilePicture = () => {
+			if (member?.profilePicture) {
+				const uri = getIcon(member.profilePicture);
+				setProfilePictureUri(uri);
+			}
+		};
+		loadProfilePicture();
+	}, [member]);
 
 	return (
 		<View style={{ backgroundColor: theme.colors.background }} className="mb-5">
@@ -23,12 +38,11 @@ export default function MemberInfos({
 				style={{ backgroundColor: theme.colors.background }}
 			>
 				<ZoomableView>
-					<Pressable onPress={() => navigation.navigate("recompenses")}>
-						{member?.profilePicture ? (
-							<Image source={getIcon(member.profilePicture)} className="w-36 h-36" />
-						) : (
-							<Image source={getIcon("man")} className="w-36 h-36" />
-						)}
+					<Pressable onPress={() => navigation.navigate("cosmeticShop")}>
+						<CachedImage
+							imagePath={profilePictureUri || "images/cosmetics/man.png"}
+							style={{ width: 144, height: 144 }}
+						/>
 					</Pressable>
 				</ZoomableView>
 
@@ -53,15 +67,17 @@ export default function MemberInfos({
 					>
 						{auth.currentUser?.email}
 					</Text>
-					<Pressable
-						className="flex flex-row items-center py-3 px-8 rounded-full"
-						style={{ backgroundColor: theme.colors.primary }}
-						onPress={() => {
-							navigation.navigate("editProfil");
-						}}
-					>
-						<Text className="text-[16px] text-white">Éditer le profil</Text>
-					</Pressable>
+					<ZoomableView>
+						<Pressable
+							className="flex flex-row items-center py-3 px-8 rounded-full"
+							style={{ backgroundColor: theme.colors.primary }}
+							onPress={() => {
+								navigation.navigate("editProfil");
+							}}
+						>
+							<Text className="text-[16px] text-white">Éditer le profil</Text>
+						</Pressable>
+					</ZoomableView>
 				</View>
 			</View>
 		</View>

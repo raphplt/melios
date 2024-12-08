@@ -148,7 +148,7 @@ export const getAllRewardsPaginated = async (
 			lastVisible,
 		};
 	} catch (error) {
-		console.error("Erreur lors de la récupération des récompenses : ", error);
+		console.log("Erreur lors de la récupération des récompenses : ", error);
 		throw error;
 	}
 };

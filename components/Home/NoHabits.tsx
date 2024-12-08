@@ -1,3 +1,4 @@
+import CachedImage from "@components/Shared/CachedImage";
 import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
@@ -34,10 +35,16 @@ export default function NoHabits() {
 
 	return (
 		<View className="flex flex-col py-12 items-center justify-center">
-			<Image
-				source={require("@assets/images/illustrations/not_found.png")}
-				style={{ width: width * 0.5, height: width * 0.5, resizeMode: "contain" }}
+			<CachedImage
+				imagePath="images/illustrations/not_found.png"
+				style={{
+					width: width * 0.5,
+					height: width * 0.5,
+					marginVertical: 16,
+					resizeMode: "contain",
+				}}
 			/>
+
 			<Text
 				style={{ color: theme.colors.textTertiary }}
 				className="text-center mt-6"

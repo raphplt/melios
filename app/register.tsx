@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, ImageBackground } from "react-native";
 import { BlurView } from "expo-blur";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 import ButtonBackRegister from "@components/LoginRegister/ButtonBackRegister";
 import useFormHandler from "@hooks/useRegister";
+import { getCachedImage } from "@db/files";
 
 export default function Register() {
 	const {
@@ -15,10 +16,32 @@ export default function Register() {
 		navigation,
 	} = useFormHandler();
 
+	const [image, setImage] = useState<string | null>("images/fallback.png");
+
+	useEffect(() => {
+		let isMounted = true;
+		const fetchImage = async () => {
+			try {
+				const localUri = await getCachedImage(
+					`images/illustrations/register-bg.jpg`
+				);
+				if (isMounted) setImage(localUri);
+			} catch (error) {
+				console.error("Failed to fetch image:", error);
+			}
+		};
+
+		fetchImage();
+
+		return () => {
+			isMounted = false;
+		};
+	}, []);
+
 	return (
 		<View style={{ flex: 1 }}>
 			<ImageBackground
-				source={require("@assets/images/illustrations/register-bg.jpg")}
+				source={image ? { uri: image } : undefined}
 				resizeMode="cover"
 				style={{
 					flex: 1,

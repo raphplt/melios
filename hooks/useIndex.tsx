@@ -22,6 +22,7 @@ import { isDayTime } from "@utils/timeUtils";
 import { Habit } from "@type/habit";
 import { useHabits } from "@context/HabitsContext";
 import { getUserHabits } from "@db/userHabit";
+import { getCachedImage } from "@db/files";
 
 const useIndex = () => {
 	// Contexts
@@ -47,9 +48,6 @@ const useIndex = () => {
 	const [hours, setHours] = useState(new Date().getHours());
 	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
-	const [showMoreValidate, setShowMoreValidate] = useState(3);
-	const [showMoreNext, setShowMoreNext] = useState(3);
-	const [showMoreMissed, setShowMoreMissed] = useState(3);
 
 	// Memoized values
 
@@ -60,10 +58,25 @@ const useIndex = () => {
 		});
 	}, [rotation]);
 
-	const imageSource = useMemo(() => {
-		return isDayTime
-			? require("@assets/images/illustrations/temple_day.jpg")
-			: require("@assets/images/illustrations/temple_night.jpg");
+	const [imageTemple, setImageTemple] = useState<string | null>(null);
+
+	useEffect(() => {
+		let isMounted = true;
+		const fetchImage = async () => {
+			try {
+				const name = isDayTime ? "temple_day.jpg" : "temple_night.jpg";
+				const localUri = await getCachedImage(`images/illustrations/${name}`);
+				if (isMounted) setImageTemple(localUri);
+			} catch (error) {
+				console.error("Failed to fetch image:", error);
+			}
+		};
+
+		fetchImage();
+
+		return () => {
+			isMounted = false;
+		};
 	}, [isDayTime]);
 
 	const fetchMemberInfosData = useCallback(
@@ -92,7 +105,6 @@ const useIndex = () => {
 	const getUserHabitDetails = (habitId: string) => {
 		return userHabits.find((habit: UserHabit) => habit.id === habitId);
 	};
-
 
 	useEffect(() => {
 		if (!isFocused) return;
@@ -190,11 +202,8 @@ const useIndex = () => {
 		refreshing,
 		welcomeMessage,
 		showMissingHabits,
-		showMoreValidate,
-		showMoreNext,
-		showMoreMissed,
 		rotate,
-		imageSource,
+		imageTemple,
 		hours,
 		isDayTime,
 		isLoading,

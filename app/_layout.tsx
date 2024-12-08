@@ -172,6 +172,7 @@ function MainNavigator() {
 							headerBackTitleVisible: false,
 							headerTitleStyle: {
 								fontFamily: "BaskervilleBold",
+								fontSize: 18,
 							},
 						}}
 					/>

@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, Button } from "react-native";
 
 // Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
@@ -10,10 +10,10 @@ import DailyQuote from "@components/Home/DailyQuote";
 import HabitsSection from "@components/Home/HabitsSection";
 import ActivitiesContainer from "@components/Home/ActivitiesContainer";
 import ViewHelp from "@components/Home/ViewHelp";
+import NextLevel from "@components/Modals/NextLevel";
 
 export default function Index() {
-	const { loading, refreshing, imageSource, isLoading, userHabits, onRefresh } =
-		useIndex();
+	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
 
 	if (loading || !userHabits || isLoading) {
 		return <LoaderScreen text="Chargement de vos habitudes..." />;
@@ -24,12 +24,7 @@ export default function Index() {
 			refreshControl={
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
-			headerImage={
-				<Image
-					source={imageSource}
-					style={{ width: "100%", height: 250, resizeMode: "cover" }}
-				/>
-			}
+
 		>
 			<Background />
 
@@ -39,6 +34,7 @@ export default function Index() {
 			<ViewHelp />
 
 			<DailyQuote />
+			<NextLevel />
 		</ParallaxScrollView>
 	);
 }

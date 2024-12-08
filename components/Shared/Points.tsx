@@ -1,18 +1,41 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 
 export default function Points() {
-	const { theme } = useContext(ThemeContext);
-	const { points } = useData();
+	const { theme } = useTheme();
+	const { points, usersLevels } = useData();
 	const [helpVisible, setHelpVisible] = useState(false);
 
 	const toggleHelp = () => {
 		setHelpVisible(!helpVisible);
 	};
+
+	const calculateGlobalLevel = () => {
+		return Object.values(usersLevels).reduce(
+			(total, level) => total + level.currentLevel,
+			0
+		);
+	};
+
+	const globalLevel = calculateGlobalLevel();
+
+	if (Object.keys(usersLevels).length === 0) {
+		return (
+			<ShimmerPlaceholder
+				width={150}
+				height={35}
+				style={{
+					borderRadius: 15,
+				}}
+			/>
+		);
+		// return <ActivityIndicator size="large" color={theme.colors.primary} />;
+	}
 
 	return (
 		<View className="relative">
@@ -36,11 +59,12 @@ export default function Points() {
 							color: theme.dark ? theme.colors.text : theme.colors.primary,
 							fontSize: 16,
 						}}
-						className="font-bold mr-1"
+						className="font-bold "
 					>
-						{points.odyssee}
+						{/* {points.odyssee} */}
+						Niv: {globalLevel}
 					</Text>
-					<MoneyOdyssee />
+					{/* <MoneyOdyssee /> */}
 				</View>
 				<View
 					className="flex items-center justify-center flex-row py-1 px-4 rounded-full"

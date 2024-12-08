@@ -1,11 +1,10 @@
 import {
-	useContext,
 	useEffect,
 	useState,
 	type PropsWithChildren,
 	type ReactElement,
 } from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedRef,
@@ -16,45 +15,28 @@ import BlurBox from "./ParallaxBlurBox";
 import { useTabBarPadding } from "@hooks/useTabBar";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
 import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
 import AddHabits from "./AddHabits";
-import { UserHabit } from "@type/userHabit";
-import { DayOfWeek } from "@type/days";
+import { getTodayScore } from "@utils/progressionUtils";
 
 const HEADER_HEIGHT = 250;
 
 type Props = PropsWithChildren<{
-	headerImage: ReactElement;
 	refreshControl?: ReactElement;
 }>;
 
-export const getTodayScore = (
-	habits: UserHabit[],
-	completedHabitsToday: UserHabit[]
-): number => {
-	if (habits.length === 0) return 0;
-	const today: DayOfWeek = new Date()
-		.toLocaleString("en-US", { weekday: "long" })
-		.toLowerCase() as DayOfWeek;
-	const todayHabits = habits.filter(
-		(habit) => habit.frequency && habit.frequency[today]
-	);
-	return Math.round((completedHabitsToday.length / todayHabits.length) * 100);
-};
-
 export default function ParallaxScrollView({
 	children,
-	headerImage,
 	refreshControl,
 }: Props) {
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
 	const scrollOffset = useScrollViewOffset(scrollRef);
 
-	const { theme } = useContext(ThemeContext);
-	const { isDayTime } = useIndex();
+	const { theme } = useTheme();
+	const { isDayTime, imageTemple } = useIndex();
 	const { streak, completedHabitsToday, habits } = useData();
 
 	const paddingBottom = useTabBarPadding();
@@ -138,7 +120,22 @@ export default function ParallaxScrollView({
 						<AddHabits />
 					</View>
 
-					{headerImage}
+					{imageTemple ? (
+						<Image
+							source={{ uri: imageTemple }}
+							style={{ width: "100%", height: 250, resizeMode: "cover" }}
+						/>
+					) : (
+						<View
+							style={{
+								width: "100%",
+								height: 250,
+								backgroundColor: theme.colors.backgroundSecondary,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						/>
+					)}
 				</Animated.View>
 				<View
 					style={{
