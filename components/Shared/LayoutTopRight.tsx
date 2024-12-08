@@ -11,7 +11,6 @@ import CachedImage from "./CachedImage";
 
 export default function LayoutTopRight() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
-	const { theme } = useContext(ThemeContext);
 	const { member } = useData();
 	const [profilePictureUri, setProfilePictureUri] = useState<string | null>(
 		null
@@ -31,19 +30,10 @@ export default function LayoutTopRight() {
 		<View style={{ flexDirection: "row", alignItems: "center" }}>
 			<Points />
 			<Pressable onPress={() => navigation.navigate("account")} className="ml-3">
-				{profilePictureUri ? (
-					<CachedImage
-						imagePath={profilePictureUri}
-						style={{ width: 32, height: 32, marginRight: 20 }}
-					/>
-				) : (
-					<AntDesign
-						name="user"
-						size={24}
-						color={theme.colors.text}
-						style={{ marginRight: 20 }}
-					/>
-				)}
+				<CachedImage
+					imagePath={profilePictureUri || "images/cosmetics/man.png"}
+					style={{ width: 32, height: 32, marginRight: 20 }}
+				/>
 			</Pressable>
 		</View>
 	);

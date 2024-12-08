@@ -32,7 +32,6 @@ export const getCachedImage = async (imagePath: string): Promise<string> => {
 		const storageRef = ref(storage, imagePath);
 		const fileUrl = await getDownloadURL(storageRef);
 
-		console.log("Downloading image from Firebase:", fileUrl);
 		await FileSystem.downloadAsync(fileUrl, localUri);
 
 		// Mettez à jour le cache

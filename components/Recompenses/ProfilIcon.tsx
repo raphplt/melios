@@ -1,9 +1,9 @@
+import React, { useState, useEffect } from "react";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { ProfileCosmetic } from "@type/cosmetics";
 import getIcon from "@utils/cosmeticsUtils";
-import { useEffect } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
@@ -24,6 +24,9 @@ export default function ProfilIcon({
 	const isGrayedOut = cosmetic.price > points.odyssee;
 	const selected = member?.profilePicture === cosmetic.slug;
 
+	// State to store the resolved image path
+	const [imagePath, setImagePath] = useState<string | null>(null);
+
 	// Shared values for animations
 	const scale = useSharedValue(1);
 	const fogTranslation = useSharedValue(0);
@@ -42,6 +45,16 @@ export default function ProfilIcon({
 			fogTranslation.value = 10;
 		}
 	}, [isGrayedOut]);
+
+	useEffect(() => {
+		const fetchImagePath = async () => {
+			console.log("Fetching image path for", cosmetic.slug);
+			const path = await getIcon(cosmetic.slug);
+			setImagePath(path);
+		};
+
+		fetchImagePath();
+	}, [cosmetic.slug]);
 
 	const handlePress = async () => {
 		if (!isGrayedOut) {
@@ -90,13 +103,14 @@ export default function ProfilIcon({
 				</Text>
 
 				{/* Icon */}
-				<CachedImage
-					imagePath={getIcon(cosmetic.slug)}
-					className="w-24 h-24"
-					style={{
-						opacity: isGrayedOut ? 0.7 : 1,
-					}}
-				/>
+				{imagePath && (
+					<CachedImage
+						imagePath={imagePath}
+						style={{
+							opacity: isGrayedOut ? 0.7 : 1,
+						}}
+					/>
+				)}
 
 				{/* Price & Icons */}
 				<View className="flex flex-row items-center justify-center py-2">

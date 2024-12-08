@@ -1,15 +1,11 @@
-import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
-import { ThemeContext } from "@context/ThemeContext";
-import getIcon from "@utils/cosmeticsUtils";
-import { useContext } from "react";
-import { Dimensions, View, Text } from "react-native";
-import { Iconify } from "react-native-iconify";
+import { useTheme } from "@context/ThemeContext";
+import { Dimensions, View } from "react-native";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function CosmeticPlaceHolder() {
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const screenWidth = Math.round(Dimensions.get("screen").width);
 
 	return (

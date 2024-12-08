@@ -1,5 +1,3 @@
-import { getCachedImage } from "@db/image";
-
 export default async function getIcon(slug: string): Promise<string> {
 	const images: { [key: string]: string } = {
 		apollon: "images/cosmetics/apollon.png",
@@ -16,6 +14,5 @@ export default async function getIcon(slug: string): Promise<string> {
 		zeus: "images/cosmetics/zeus.png",
 	};
 
-	const imagePath = images[slug] || "images/cosmetics/man.png";
-	return await getCachedImage(imagePath);
+	return images[slug] || "images/cosmetics/man.png";
 }

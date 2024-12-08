@@ -20,7 +20,6 @@ import useIndex from "@hooks/useIndex";
 import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
 import AddHabits from "./AddHabits";
-
 import { getTodayScore } from "@utils/progressionUtils";
 
 const HEADER_HEIGHT = 250;
