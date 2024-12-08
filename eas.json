@@ -1,31 +1,32 @@
 {
-	"cli": {
-		"version": "remote"
-	},
-	"build": {
-		"preview": {
-			"android": {
-				"buildType": "app-bundle"
-			},
-			"ios": {
-				"simulator": false
-			}
-		},
-		"production": {
-			"autoIncrement": true,
-			"android": {
-				"buildType": "app-bundle"
-			},
-			"ios": {
-				"simulator": false
-			}
-		}
-	},
-	"submit": {
-		"production": {
-			"android": {
-				"track": "internal"
-			}
-		}
-	}
+  "cli": {
+    "version": ">= 14.0.2",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "simulator": false
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "simulator": false
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "track": "internal"
+      }
+    }
+  }
 }
