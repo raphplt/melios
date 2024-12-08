@@ -27,7 +27,12 @@
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.raphplt.melios",
-			"permissions": ["NOTIFICATIONS"]
+			"permissions": [
+				"NOTIFICATIONS",
+				"READ_EXTERNAL_STORAGE",
+				"WRITE_EXTERNAL_STORAGE",
+				"INTERNET"
+			]
 		},
 		"web": {
 			"bundler": "metro",
