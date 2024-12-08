@@ -1,6 +1,6 @@
 {
 	"cli": {
-		"version": ">= 0.34.0"
+		"version": "remote"
 	},
 	"build": {
 		"preview": {
@@ -12,6 +12,7 @@
 			}
 		},
 		"production": {
+			"autoIncrement": true,
 			"android": {
 				"buildType": "app-bundle"
 			},
