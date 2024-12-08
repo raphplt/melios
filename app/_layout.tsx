@@ -16,6 +16,7 @@ import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
 import { TimerProvider } from "@context/TimerContext";
 import { DataProvider } from "@context/DataContext";
+import "../global.css";
 
 export { ErrorBoundary } from "expo-router";
 
