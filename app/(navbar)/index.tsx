@@ -1,7 +1,7 @@
 import React from "react";
-import { RefreshControl, Image, Button } from "react-native";
+import { RefreshControl } from "react-native";
+import { useTranslation } from "react-i18next";
 
-// Customs imports
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
 import Background from "@components/Svg/Background";
 import LoaderScreen from "@components/Shared/LoaderScreen";
@@ -14,9 +14,10 @@ import NextLevel from "@components/Modals/NextLevel";
 
 export default function Index() {
 	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
+	const { t } = useTranslation();
 
 	if (loading || !userHabits || isLoading) {
-		return <LoaderScreen text="Chargement de vos habitudes..." />;
+		return <LoaderScreen text={t("loading")} />;
 	}
 
 	return (
@@ -24,7 +25,6 @@ export default function Index() {
 			refreshControl={
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
-
 		>
 			<Background />
 

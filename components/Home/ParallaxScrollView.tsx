@@ -21,6 +21,7 @@ import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
 import AddHabits from "./AddHabits";
 import { getTodayScore } from "@utils/progressionUtils";
+import { useTranslation } from "react-i18next";
 
 const HEADER_HEIGHT = 250;
 
@@ -38,6 +39,7 @@ export default function ParallaxScrollView({
 	const { theme } = useTheme();
 	const { isDayTime, imageTemple } = useIndex();
 	const { streak, completedHabitsToday, habits } = useData();
+	const { t } = useTranslation();
 
 	const paddingBottom = useTabBarPadding();
 
@@ -109,7 +111,7 @@ export default function ParallaxScrollView({
 									color: color,
 								}}
 							>
-								Série : {streak} {streak > 1 ? "jours" : "jour"}
+								{t("streak")} : {streak} {streak > 1 ? t("days") : t("day")}
 							</Text>
 						</View>
 					</BlurBox>

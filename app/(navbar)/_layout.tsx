@@ -5,9 +5,10 @@ import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useSession } from "@context/UserContext";
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import Melios from "@components/Svg/Melios";
 import LayoutTopRight from "@components/Shared/LayoutTopRight";
+import { useTranslation } from "react-i18next";
 
 const createHeaderStyle = (backgroundColor: string) => ({
 	backgroundColor,
@@ -30,7 +31,8 @@ const createTabOptions = (
 
 const TabLayout: React.FC = () => {
 	const { user, isLoading } = useSession();
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
@@ -39,7 +41,7 @@ const TabLayout: React.FC = () => {
 		}
 	}, [isLoading, user, navigation]);
 
-	if (isLoading) return <LoaderScreen text="Chargement..." />;
+	if (isLoading) return <LoaderScreen text={t("loading")} />;
 
 	return (
 		<>
@@ -76,7 +78,7 @@ const TabLayout: React.FC = () => {
 									fontWeight: "bold",
 								}}
 							>
-								Progression
+								{t("progression")}
 							</Text>
 						),
 						() => (
@@ -99,7 +101,7 @@ const TabLayout: React.FC = () => {
 									fontWeight: "bold",
 								}}
 							>
-								Récompenses
+								{t("rewards")}
 							</Text>
 						),
 						() => (

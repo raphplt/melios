@@ -3,34 +3,17 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@firebase/auth": [
-        "./node_modules/@firebase/auth/dist/index.rn.d.ts"
-      ],
-      "@db/*": [
-        "./db/*"
-      ],
-      "@hooks/*": [
-        "./hooks/*"
-      ],
-      "@utils/*": [
-        "./utils/*"
-      ],
-      "@components/*": [
-        "./components/*"
-      ],
-      "@context/*": [
-        "./context/*"
-      ],
-      "@assets/*": [
-        "./assets/*"
-      ],
-      "@type/*": [
-        "./type/*"
-      ],
-      "@constants/*": [
-        "./constants/*"
-      ]
-    },
+					"@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"],
+					"@db/*": ["./db/*"],
+					"@hooks/*": ["./hooks/*"],
+					"@utils/*": ["./utils/*"],
+					"@components/*": ["./components/*"],
+					"@context/*": ["./context/*"],
+					"@assets/*": ["./assets/*"],
+					"@type/*": ["./type/*"],
+					"@constants/*": ["./constants/*"],
+					"@locales/*": ["./locales/*"]
+				},
     "plugins": [
       {
         "name": "nativewind/typescript-plugin"

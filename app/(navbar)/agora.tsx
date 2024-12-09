@@ -77,7 +77,6 @@ export default function Agora() {
 						key={item.id}
 						rank={index + 1}
 						reward={item}
-						filter={filter}
 					/>
 				)}
 				onEndReached={loadMoreRewards}

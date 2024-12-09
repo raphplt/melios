@@ -5,9 +5,11 @@ import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
+import { useTranslation } from "react-i18next";
 
 export default function Points() {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { points, usersLevels } = useData();
 	const [helpVisible, setHelpVisible] = useState(false);
 
@@ -34,7 +36,6 @@ export default function Points() {
 				}}
 			/>
 		);
-		// return <ActivityIndicator size="large" color={theme.colors.primary} />;
 	}
 
 	return (
@@ -61,10 +62,8 @@ export default function Points() {
 						}}
 						className="font-bold "
 					>
-						{/* {points.odyssee} */}
-						Niv: {globalLevel}
+						{t("lvl")}: {globalLevel}
 					</Text>
-					{/* <MoneyOdyssee /> */}
 				</View>
 				<View
 					className="flex items-center justify-center flex-row py-1 px-4 rounded-full"
@@ -96,15 +95,11 @@ export default function Points() {
 				>
 					<View>
 						<MoneyOdyssee />
-						<Text style={{ color: theme.colors.text }}>
-							Les points Odyssee représentent vos progrès dans l'application.
-						</Text>
+						<Text style={{ color: theme.colors.text }}>{t("explain_odyssee")}</Text>
 					</View>
 					<View className="mt-2">
 						<MoneyMelios />
-						<Text style={{ color: theme.colors.text }}>
-							Les points Melios peuvent être échangés contre des récompenses.
-						</Text>
+						<Text style={{ color: theme.colors.text }}>{t("explain_melios")}</Text>
 					</View>
 				</View>
 			)}

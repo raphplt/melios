@@ -3,6 +3,7 @@ import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	Animated,
 	Dimensions,
@@ -18,6 +19,7 @@ export default function NoHabits() {
 	const { width } = Dimensions.get("window");
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const scaleAnim = useRef(new Animated.Value(1)).current;
+	const { t } = useTranslation();
 
 	const handleTouchStart = () => {
 		Animated.spring(scaleAnim, {
@@ -49,7 +51,7 @@ export default function NoHabits() {
 				style={{ color: theme.colors.textTertiary }}
 				className="text-center mt-6"
 			>
-				Aucune habitude trouvée. Ajoutez-en une !
+				{t("no_habits_add_one")}
 			</Text>
 			<Animated.View
 				style={{
@@ -72,7 +74,7 @@ export default function NoHabits() {
 						}}
 						className="text-center text-lg font-semibold mr-2"
 					>
-						Je crée ma première habitude
+						{t("i_create_my_first_habit")}
 					</Text>
 					<Iconify icon="material-symbols:add" size={20} color="#fff" />
 				</Pressable>

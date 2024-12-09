@@ -2,47 +2,59 @@ import HelpModal from "@components/Modals/HelpModal";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { useTheme } from "@context/ThemeContext";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { View, Text, Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
+import { LinearGradient } from "expo-linear-gradient"; // Correction de l'importation
 
 export default function ViewHelp() {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [showModal, setShowModal] = useState(false);
 
 	return (
 		<>
 			<ZoomableView>
-				<Pressable
-					className="w-11/12 mx-auto my-[5px] py-6 flex flex-co items-start justify-start"
+				<LinearGradient
+					colors={[theme.colors.backgroundTertiary, theme.colors.purpleSecondary]}
 					style={{
-						backgroundColor: theme.colors.cardBackground,
 						borderRadius: 10,
 						padding: 10,
 						margin: 10,
+						marginTop: 20,
+						marginBottom: 20,
 					}}
-					onPress={() => setShowModal(true)}
+					start={[0, 0]}
+					className="w-11/12 mx-auto my-1 py-8 "
 				>
-					<Text
-						style={{
-							color: theme.colors.text,
-							fontFamily: "BaskervilleBold",
-						}}
-						className="text-lg font-semibold"
+					<Pressable
+						className="w-full flex flex-row items-center justify-between"
+						onPress={() => setShowModal(true)}
 					>
-						Besoin d'aide ?{" "}
-					</Text>
-					<View className="flex flex-row items-center justify-between mt-2">
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-[14px] font-normal  mr-2"
-						>
-							Regardez à nouveau le tutoriel
-						</Text>
-						<Iconify icon="mdi:chevron-right" size={26} color={theme.colors.text} />
-					</View>
-				</Pressable>
+						<View>
+							<Text
+								style={{
+									color: theme.colors.text,
+									fontFamily: "BaskervilleBold",
+								}}
+								className="text-lg font-semibold"
+							>
+								{t("need_help")}
+							</Text>
+							<View className="flex flex-row items-center justify-between mt-2">
+								<Text
+									style={{
+										color: theme.colors.text,
+									}}
+									className="text-[14px] font-normal mr-2"
+								>
+									{t("look_tutorial_again")}
+								</Text>
+							</View>
+						</View>
+						<Iconify icon="mdi:chevron-right" size={40} color={theme.colors.text} />
+					</Pressable>
+				</LinearGradient>
 			</ZoomableView>
 			<HelpModal
 				visible={showModal}
