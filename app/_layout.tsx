@@ -59,7 +59,7 @@ function MainNavigator() {
 		});
 	};
 
-	const { isLoading: isSessionLoading }: any = useSession();
+	const { isLoading: isSessionLoading } = useSession();
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -152,12 +152,17 @@ function MainNavigator() {
 							headerShadowVisible: false,
 						}}
 					/>
-
 					<Stack.Screen
 						name="timerHabit"
 						options={{
 							headerShown: false,
 						}}
+					/>
+					<Stack.Screen
+						name="classement"
+						// options={{
+						// 	headerShown: false,
+						// }}
 					/>
 					<Stack.Screen
 						name="help"
