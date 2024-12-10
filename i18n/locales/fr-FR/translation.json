@@ -65,5 +65,9 @@
     "select_sound": "Sélectionner un son",
     "no_sound": "Aucun son",
     "validate": "Valider",
-    "search_habit": "Rechercher une habitude"
+    "search_habit": "Rechercher une habitude",
+    "levels": "Niveaux",
+    "days_done": "Jours complétés",
+    "statistics": "Statistiques",
+    "no_data": "Aucune donnée"
 }

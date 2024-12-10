@@ -4,6 +4,7 @@ import { Dimensions, View, Text } from "react-native";
 import { ProgressChart } from "react-native-chart-kit";
 import SectionHeader from "./SectionHeader";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const ChartLabel = ({
 	color,
@@ -29,6 +30,7 @@ const ChartLabel = ({
 
 export default function Chart() {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [showChart, setShowChart] = useState(true);
 
 	const { parsedTime, todayScore, regularity } = useChart();
@@ -50,7 +52,7 @@ export default function Chart() {
 	if (isDataEmpty) {
 		return (
 			<SectionHeader
-				title="Statistiques"
+				title={t("statistics")}
 				show={showChart}
 				setShow={setShowChart}
 				icon="graph"
@@ -61,9 +63,7 @@ export default function Chart() {
 						backgroundColor: theme.colors.cardBackground,
 					}}
 				>
-					<Text style={{ textAlign: "center", color: "#000" }}>
-						Aucune donnée disponible
-					</Text>
+					<Text style={{ textAlign: "center", color: "#000" }}>{t("no_data")}</Text>
 				</View>
 			</SectionHeader>
 		);

@@ -63,6 +63,11 @@
     "discover": "Discover",
     "color_habit": "Habit color",
     "select_sound": "Select a sound",
+    "no_sound": "No sound",
     "validate": "Validate",
-    "search_habit": "Search a habit"
+    "search_habit": "Search a habit",
+    "levels": "Levels",
+    "days_done": "Days done",
+    "statistics": "Statistics",
+    "no_data": "No data"
 }

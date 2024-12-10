@@ -6,10 +6,12 @@ import { getUserLevelsByUserId, initUserLevels } from "@db/levels";
 import SectionHeader from "./SectionHeader";
 import LevelItem from "./LevelItem";
 import { CombinedLevel } from "@type/levels";
+import { useTranslation } from "react-i18next";
 
 const Levels = () => {
 	const { genericLevels, usersLevels, setUsersLevels } = useData();
 	const { user } = useSession();
+	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
 
 	useEffect(() => {
@@ -43,7 +45,7 @@ const Levels = () => {
 	);
 	return (
 		<SectionHeader
-			title="Niveaux"
+			title={t("levels")}
 			show={showLevels}
 			setShow={setShowLevels}
 			icon="levels"
