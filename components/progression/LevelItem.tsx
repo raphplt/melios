@@ -2,10 +2,12 @@ import React from "react";
 import { Text, View, Dimensions } from "react-native";
 import * as Progress from "react-native-progress";
 import { useTheme } from "@context/ThemeContext";
-import { CombinedLevel, UserLevel } from "@type/levels";
+import { CombinedLevel } from "@type/levels";
+import { useTranslation } from "react-i18next";
 
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { width } = Dimensions.get("window");
 
 	return (
@@ -32,7 +34,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 					}}
 					className="text-[14px] mb-1 font-semibold"
 				>
-					Niveau : {level.currentLevel}
+					{t("lvl")} : {level.currentLevel}
 				</Text>
 				<Text
 					style={{

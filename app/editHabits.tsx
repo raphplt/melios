@@ -6,9 +6,11 @@ import { FlatList, TextInput, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import NumberSelected from "@components/Select/Old/NumberSelected";
 import { UserHabit } from "@type/userHabit";
+import { useTranslation } from "react-i18next";
 
 export default function EditHabits() {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { habits } = useData();
 	const [searchText, setSearchText] = useState("");
 
@@ -29,7 +31,7 @@ export default function EditHabits() {
 				>
 					<Iconify icon="mdi:magnify" size={20} color={theme.colors.text} />
 					<TextInput
-						placeholder="Rechercher une habitude"
+						placeholder={t("search_habit")}
 						placeholderTextColor={theme.colors.text}
 						className="ml-1"
 						value={searchText}

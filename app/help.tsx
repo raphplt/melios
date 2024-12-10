@@ -35,7 +35,7 @@ const FAQItem = ({
 
 	const height = animation.interpolate({
 		inputRange: [0, 1],
-		outputRange: [0, 100], // Adjust this value based on the content height
+		outputRange: [0, 100],
 	});
 
 	return (

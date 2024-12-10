@@ -1,5 +1,5 @@
-import { ThemeContext, useTheme } from "@context/ThemeContext";
-import { useContext, useEffect, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useEffect, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { Dropdown } from "react-native-element-dropdown";
@@ -11,6 +11,7 @@ import useIndex from "@hooks/useIndex";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { calcReward } from "@utils/goal";
 import { useGoal } from "@context/GoalsContext";
+import { useTranslation } from "react-i18next";
 
 export default function ModalAddGoal({
 	visible,
@@ -22,14 +23,13 @@ export default function ModalAddGoal({
 	onValidate?: () => void;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { habits, member } = useData();
 	const { getHabitDetails } = useIndex();
 	const { goals, setGoals } = useGoal();
 
-	// Extract habit IDs from existing goals
 	const existingHabitIds = goals.map((goal) => goal.habitId);
 
-	// Filter habits to exclude those already used in goals
 	const filteredHabits = habits.filter(
 		(habit) => !existingHabitIds.includes(habit.id)
 	);
@@ -117,7 +117,7 @@ export default function ModalAddGoal({
 							}}
 							className="text-lg font-semibold text-center "
 						>
-							Créer un objectif
+							{t("create_goal")}
 						</Text>
 						<Pressable
 							onPress={() => {
@@ -142,7 +142,7 @@ export default function ModalAddGoal({
 								}}
 								className="text-[16px] font-semibold py-3 mx-2"
 							>
-								Habitude
+								{t("habit")}
 							</Text>
 						</View>
 						<Dropdown
@@ -177,7 +177,7 @@ export default function ModalAddGoal({
 									}}
 									className="text-[16px] font-semibold py-3 mx-2"
 								>
-									Durée
+									{t("duration")}
 								</Text>
 							</View>
 							<Text
@@ -219,7 +219,7 @@ export default function ModalAddGoal({
 										}}
 										className="text-[16px] font-semibold py-3 "
 									>
-										Récompense:{" "}
+										{t("reward")}
 									</Text>
 								</View>
 								<View className="flex flex-row items-center">

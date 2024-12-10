@@ -16,6 +16,7 @@ import { useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CachedImage from "@components/Shared/CachedImage";
 import { getCachedImage } from "@db/files";
+import { useTranslation } from "react-i18next";
 
 export default function HelpModal({
 	visible,
@@ -28,6 +29,7 @@ export default function HelpModal({
 }) {
 	const { width, height } = useWindowDimensions();
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const scrollX = useRef(new Animated.Value(0)).current;
 	const scrollViewRef = useRef<ScrollView>(null);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -89,7 +91,7 @@ export default function HelpModal({
 							handleFinish();
 						}}
 					>
-						<Text className="text-white text-lg font-semibold">Découvrir</Text>
+						<Text className="text-white text-lg font-semibold">{t("discover")}</Text>
 					</TouchableOpacity>
 				)}
 			</View>

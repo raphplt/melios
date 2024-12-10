@@ -5,6 +5,7 @@ import { getAllRewardsPaginated } from "@db/rewards"; // Utilisation de la fonct
 import { Iconify } from "react-native-iconify";
 import { useTheme } from "@context/ThemeContext";
 import CardClassement from "@components/Agora/CardClassement";
+import { useTranslation } from "react-i18next";
 
 export default function Agora() {
 	const [usersRewards, setUsersRewards]: any = useState([]);
@@ -13,6 +14,7 @@ export default function Agora() {
 	const [hasMoreRewards, setHasMoreRewards] = useState(true);
 	const [filter, setFilter] = useState<"odyssee" | "rewards">("odyssee");
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	const fetchRewards = async (isRefreshing = false) => {
 		try {
@@ -65,7 +67,7 @@ export default function Agora() {
 						fontFamily: "Baskerville",
 					}}
 				>
-					Classement général
+					{t("general_classification")}
 				</Text>
 			</View>
 
@@ -73,11 +75,7 @@ export default function Agora() {
 				data={usersRewards}
 				keyExtractor={(item) => item.id}
 				renderItem={({ item, index }) => (
-					<CardClassement
-						key={item.id}
-						rank={index + 1}
-						reward={item}
-					/>
+					<CardClassement key={item.id} rank={index + 1} reward={item} />
 				)}
 				onEndReached={loadMoreRewards}
 				onEndReachedThreshold={0.5}

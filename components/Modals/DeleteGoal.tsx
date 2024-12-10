@@ -1,5 +1,5 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useTranslation } from "react-i18next";
 import { Modal, View, Pressable, Text } from "react-native";
 
 export default function DeleteGoal({
@@ -11,7 +11,8 @@ export default function DeleteGoal({
 	setVisible: (isConfirmVisible: boolean) => void;
 	onConfirm: () => void;
 }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	return (
 		<Modal
 			visible={visible}
@@ -39,14 +40,14 @@ export default function DeleteGoal({
 					}}
 				>
 					<Text className="text-[18px] leading-6 mb-3 font-semibold">
-						Êtes-vous sûr de vouloir supprimer cet objectif ?
+						{t("delete_goal_confirm")}
 					</Text>
 
 					<Text
 						className="text-sm my-4"
 						style={{ color: theme.colors.textTertiary }}
 					>
-						Vous ne recevrez pas de récompense pour cet objectif.
+						{t("you_wont_win_points")}
 					</Text>
 					<View className="flex items-center justify-end flex-row">
 						<Pressable
@@ -57,7 +58,7 @@ export default function DeleteGoal({
 							className="px-6 py-3 mx-2 rounded-xl"
 						>
 							<Text style={{ color: "white" }} className="font-semibold text-[16px]">
-								Annuler
+								{t("cancel")}
 							</Text>
 						</Pressable>
 						<Pressable
@@ -68,7 +69,7 @@ export default function DeleteGoal({
 							className="px-6 py-3 mx-2 rounded-xl"
 						>
 							<Text style={{ color: "white" }} className="font-semibold text-[16px]">
-								Supprimer
+								{t("delete")}
 							</Text>
 						</Pressable>
 					</View>

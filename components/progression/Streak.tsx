@@ -3,10 +3,12 @@ import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { calculateStreak } from "@utils/progressionUtils";
+import { useTranslation } from "react-i18next";
 
 export default function Streak() {
 	const { logs } = useData();
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	const streak = calculateStreak(logs);
 
@@ -22,7 +24,7 @@ export default function Streak() {
 					className="text-3xl font-semibold mb-2"
 					style={{ color: theme.colors.primary }}
 				>
-					Série
+					{t("streak")}
 				</Text>
 				<View className="mt-2">
 					<Text
@@ -35,7 +37,7 @@ export default function Streak() {
 						className="text-lg font-semibold"
 						style={{ color: theme.colors.primary }}
 					>
-						jours de suite
+						{t("days_in_a_row")}
 					</Text>
 				</View>
 			</View>
