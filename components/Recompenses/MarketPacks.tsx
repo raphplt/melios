@@ -1,12 +1,13 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
+import { useTheme } from "@context/ThemeContext";
 import { View, Text, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
 import PackItem from "./PackItem";
 import { packs } from "@constants/packs";
+import { useTranslation } from "react-i18next";
 
 export default function MarketPacks() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	return (
 		<View
@@ -26,7 +27,7 @@ export default function MarketPacks() {
 						}}
 						className="mx-2 text-[16px] font-semibold"
 					>
-						Packs de récompenses
+						{t("rewards_packs")}
 					</Text>
 				</View>
 			</View>
