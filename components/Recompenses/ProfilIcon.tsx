@@ -25,7 +25,20 @@ export default function ProfilIcon({
 	const selected = member?.profilePicture === cosmetic.slug;
 
 	// State to store the resolved image path
-	const [imagePath, setImagePath] = useState<string | null>(null);
+	const [iconPath, setIconPath] = useState<string>("");
+
+	useEffect(() => {
+		const fetchIcon = async () => {
+			try {
+				const path = getIcon(cosmetic.slug);
+				setIconPath(path);
+			} catch (error) {
+				console.error("Failed to fetch icon:", error);
+			}
+		};
+
+		fetchIcon();
+	}, [cosmetic.slug]);
 
 	// Shared values for animations
 	const scale = useSharedValue(1);
@@ -45,15 +58,6 @@ export default function ProfilIcon({
 			fogTranslation.value = 10;
 		}
 	}, [isGrayedOut]);
-
-	useEffect(() => {
-		const fetchImagePath = () => {
-			const path = getIcon(cosmetic.slug);
-			setImagePath(path);
-		};
-
-		fetchImagePath();
-	}, [cosmetic.slug]);
 
 	const handlePress = async () => {
 		if (!isGrayedOut) {
@@ -102,15 +106,7 @@ export default function ProfilIcon({
 				</Text>
 
 				{/* Icon */}
-				{imagePath && (
-					<CachedImage
-						imagePath={imagePath}
-						style={{
-							opacity: isGrayedOut ? 0.7 : 1,
-						}}
-					/>
-				)}
-
+				{<CachedImage imagePath={iconPath} className="w-24 h-24" />}
 				{/* Price & Icons */}
 				<View className="flex flex-row items-center justify-center py-2">
 					<Text

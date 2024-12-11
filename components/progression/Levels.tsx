@@ -7,12 +7,16 @@ import SectionHeader from "./SectionHeader";
 import LevelItem from "./LevelItem";
 import { CombinedLevel } from "@type/levels";
 import { useTranslation } from "react-i18next";
+import NextLevel from "@components/Modals/NextLevel";
 
 const Levels = () => {
 	const { genericLevels, usersLevels, setUsersLevels } = useData();
 	const { user } = useSession();
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
+	const [previousLevels, setPreviousLevels] = useState(usersLevels);
+	const [showNextLevelModal, setShowNextLevelModal] = useState(false);
+	const [nextLevelData, setNextLevelData] = useState<CombinedLevel | null>(null);
 
 	useEffect(() => {
 		const initializeLevels = async () => {
@@ -25,6 +29,21 @@ const Levels = () => {
 
 		initializeLevels();
 	}, [user, genericLevels, usersLevels]);
+
+	useEffect(() => {
+		// Check if any level has increased
+		Object.entries(usersLevels).forEach(([levelId, userLevel]: any) => {
+			const previousLevel = previousLevels[levelId];
+			if (previousLevel && userLevel.currentLevel > previousLevel.currentLevel) {
+				setShowNextLevelModal(true);
+				setNextLevelData({
+					...genericLevels.find((level) => level.id === levelId),
+					...userLevel,
+				});
+			}
+		});
+		setPreviousLevels(usersLevels);
+	}, [usersLevels]);
 
 	const combinedLevels: CombinedLevel[] = Object.entries(usersLevels).map(
 		([levelId, userLevel]) => {
@@ -43,21 +62,29 @@ const Levels = () => {
 			};
 		}
 	);
+
 	return (
-		<SectionHeader
-			title={t("levels")}
-			show={showLevels}
-			setShow={setShowLevels}
-			icon="levels"
-		>
-			<View className="w-[95%] mx-auto mb-2 mt-2">
-				<ScrollView>
-					{combinedLevels.map((item) => (
-						<LevelItem key={item.levelId} level={item} />
-					))}
-				</ScrollView>
-			</View>
-		</SectionHeader>
+		<>
+			<SectionHeader
+				title={t("levels")}
+				show={showLevels}
+				setShow={setShowLevels}
+				icon="levels"
+			>
+				<View className="w-[95%] mx-auto mb-2 mt-2">
+					<ScrollView>
+						{combinedLevels.map((item) => (
+							<LevelItem key={item.levelId} level={item} />
+						))}
+					</ScrollView>
+				</View>
+			</SectionHeader>
+			<NextLevel
+				visible={showNextLevelModal}
+				setVisible={setShowNextLevelModal}
+				levelData={nextLevelData}
+			/>
+		</>
 	);
 };
 

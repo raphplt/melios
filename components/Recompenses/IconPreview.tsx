@@ -1,10 +1,9 @@
 import CachedImage from "@components/Shared/CachedImage";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
-import { useData } from "@context/DataContext";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { ProfileCosmetic } from "@type/cosmetics";
 import getIcon from "@utils/cosmeticsUtils";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
 export default function IconPreview({
@@ -12,14 +11,13 @@ export default function IconPreview({
 }: {
 	cosmetic: ProfileCosmetic;
 }) {
-	const { theme } = useContext(ThemeContext);
-	const { points, setMember, member } = useData();
-	const [iconPath, setIconPath] = useState<string | null>(null);
+	const { theme } = useTheme();
+	const [iconPath, setIconPath] = useState<string>("");
 
 	useEffect(() => {
 		const fetchIcon = async () => {
 			try {
-				const path = await getIcon(cosmetic.slug);
+				const path = getIcon(cosmetic.slug);
 				setIconPath(path);
 			} catch (error) {
 				console.error("Failed to fetch icon:", error);
@@ -51,7 +49,7 @@ export default function IconPreview({
 			>
 				{cosmetic.name}
 			</Text>
-			{iconPath && <CachedImage imagePath={iconPath} className="w-24 h-24" />}
+			{<CachedImage imagePath={iconPath} className="w-24 h-24" />}
 
 			<View className="flex flex-row items-center justify-center py-2">
 				<Text

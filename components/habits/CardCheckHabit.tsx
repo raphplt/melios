@@ -240,6 +240,12 @@ function CardCheckHabit({
 							</View>
 						)}
 					</Animated.View>
+					<Button
+						onPress={() => {
+							addXp(habit, 30);
+						}}
+						title="ADD XP"
+					/>
 				</Pressable>
 			</Animated.View>
 		</ZoomableView>
