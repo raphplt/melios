@@ -14,7 +14,7 @@ export default function AddHabits() {
 				onPress={() => {
 					navigation.navigate("(select)");
 				}}
-				className="rounded-full p-2 w-10 h-10"
+				className="rounded-full p-2 "
 				style={{
 					backgroundColor: isDayTime
 						? theme.colors.primary

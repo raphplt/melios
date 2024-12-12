@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import NextLevel from "@components/Modals/NextLevel";
 
 const Levels = () => {
-	const { genericLevels, usersLevels, setUsersLevels } = useData();
+	const { genericLevels, usersLevels, setUsersLevels, isLoading } = useData();
 	const { user } = useSession();
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
@@ -20,7 +20,7 @@ const Levels = () => {
 
 	useEffect(() => {
 		const initializeLevels = async () => {
-			if (!Object.keys(usersLevels).length) {
+			if (!Object.keys(usersLevels).length && !isLoading) {
 				await initUserLevels(user.uid, genericLevels);
 				const updatedLevels = await getUserLevelsByUserId(user.uid);
 				setUsersLevels(updatedLevels);
@@ -28,7 +28,7 @@ const Levels = () => {
 		};
 
 		initializeLevels();
-	}, [user, genericLevels, usersLevels]);
+	}, [user, genericLevels, usersLevels, isLoading]);
 
 	useEffect(() => {
 		// Check if any level has increased

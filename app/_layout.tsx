@@ -158,12 +158,8 @@ function MainNavigator() {
 							headerShown: false,
 						}}
 					/>
-					<Stack.Screen
-						name="classement"
-						// options={{
-						// 	headerShown: false,
-						// }}
-					/>
+					<Stack.Screen name="classement" />
+					<Stack.Screen name="levelDetail" />
 					<Stack.Screen
 						name="help"
 						options={{

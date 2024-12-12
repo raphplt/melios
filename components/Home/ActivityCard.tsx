@@ -85,7 +85,7 @@ function Activity({ habit }: { habit: UserHabit }) {
 							color: theme.colors.text,
 						}}
 					>
-						{habit.category.slice(0, 20) + (habit.category.length > 20 ? "..." : "")}
+						{habit.category.slice(0, 15) + (habit.category.length > 15 ? "..." : "")}
 					</Text>
 					<View
 						className="px-2 py-1 rounded-bl-xl rounded-tr-xl"

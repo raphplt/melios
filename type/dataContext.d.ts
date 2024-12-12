@@ -4,7 +4,7 @@ import { UserHabit } from "./userHabit";
 import { Trophy } from "./trophy";
 import { Member } from "./member";
 import { Log } from "./log";
-import { GenericLevel, UserLevel } from "./levels";
+import { CombinedLevel, GenericLevel, UserLevel } from "./levels";
 
 interface DataContextType {
 	date: string;
@@ -32,4 +32,6 @@ interface DataContextType {
 	setGenericLevels: React.Dispatch<React.SetStateAction<GenericLevel[]>>;
 	usersLevels: UserLevel[];
 	setUsersLevels: React.Dispatch<React.SetStateAction<UserLevel[]>>;
+	selectedLevel: CombinedLevel | null;
+	setSelectedLevel: React.Dispatch<React.SetStateAction<CombinedLevel | null>>;
 }

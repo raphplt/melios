@@ -37,7 +37,7 @@ export const useRssFeed = (url: string) => {
 				const text = await response.text();
 
 				// Ajout d'une étape de débogage pour vérifier le contenu récupéré
-				console.log("Contenu récupéré :", text);
+				// console.log("Contenu récupéré :", text);
 
 				const parsedItems = await parseRSS(text);
 				setItems(parsedItems);

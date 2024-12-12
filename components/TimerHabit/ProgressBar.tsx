@@ -1,9 +1,9 @@
 import { useHabits } from "@context/HabitsContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { useTimer } from "@context/TimerContext";
-import { formatRemainingTime, formatTime } from "@utils/timeUtils";
+import { formatTime } from "@utils/timeUtils";
 import { useContext, useEffect, useRef } from "react";
-import { View, Dimensions, Animated, StyleSheet } from "react-native";
+import { View, Dimensions, Animated } from "react-native";
 import * as Progress from "react-native-progress";
 
 export default function ProgressBar() {

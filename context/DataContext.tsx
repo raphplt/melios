@@ -27,7 +27,7 @@ import { getUserHabits } from "@db/userHabit";
 import { Log } from "@type/log";
 import { getAllHabitLogs } from "@db/logs";
 import { calculateCompletedHabits } from "@utils/habitsUtils";
-import { GenericLevel, UserLevel } from "@type/levels";
+import { CombinedLevel, GenericLevel, UserLevel } from "@type/levels";
 import { getAllGenericLevels, getUserLevelsByUserId } from "@db/levels";
 
 interface DataProviderProps {
@@ -53,6 +53,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [logs, setLogs] = useState<Log[]>([]);
 	const [genericLevels, setGenericLevels] = useState<GenericLevel[]>([]);
 	const [usersLevels, setUsersLevels] = useState<UserLevel[]>([]);
+	const [selectedLevel, setSelectedLevel] = useState<CombinedLevel | null>(null);
 
 	// Progression
 	const [todayScore, setTodayScore] = useState<number>(0);
@@ -192,6 +193,8 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				setGenericLevels,
 				usersLevels,
 				setUsersLevels,
+				selectedLevel,
+				setSelectedLevel,
 			}}
 		>
 			{children}
