@@ -36,6 +36,7 @@ import { useNavigation } from "expo-router";
 import { UserHabit } from "@type/userHabit";
 import { LinearGradient } from "expo-linear-gradient";
 import { lightenColor } from "@utils/colors";
+import React from "react";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();

@@ -159,7 +159,12 @@ function MainNavigator() {
 						}}
 					/>
 					<Stack.Screen name="classement" />
-					<Stack.Screen name="levelDetail" />
+					<Stack.Screen
+						name="levelDetail"
+						options={{
+							headerShown: false,
+						}}
+					/>
 					<Stack.Screen
 						name="help"
 						options={{
