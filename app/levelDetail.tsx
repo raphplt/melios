@@ -13,7 +13,7 @@ const LevelDetail = () => {
 	if (!selectedLevel) return null;
 	return (
 		<View>
-			<View className="mt-5 ml-5 z-10 flex flex-row items-center justify-between w-10/12 mx-auto">
+			<View className="m-10 ml-5 z-10 flex flex-row items-center justify-between w-10/12 mx-auto">
 				<ButtonClose />
 			</View>
 
@@ -25,7 +25,7 @@ const LevelDetail = () => {
 				className="absolute top-0 left-0 right-0 h-48 w-full"
 			></View>
 			<View
-				className="flex flex-col items-center justify-center w-10/12 mx-auto mt-10 rounded-xl py-10"
+				className="flex flex-col items-center justify-center w-10/12 mx-auto mt-2 rounded-xl py-10"
 				style={{
 					backgroundColor: theme.colors.background,
 					borderColor: theme.colors.border,

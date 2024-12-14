@@ -1,11 +1,11 @@
 import { Tabs, useNavigation } from "expo-router";
 import { StatusBar, Text, View } from "react-native";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useSession } from "@context/UserContext";
-import { ThemeContext, useTheme } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import Melios from "@components/Svg/Melios";
 import LayoutTopRight from "@components/Shared/LayoutTopRight";
 import { useTranslation } from "react-i18next";
@@ -111,9 +111,24 @@ const TabLayout: React.FC = () => {
 				/>
 				<Tabs.Screen
 					name="agora"
-					options={createTabOptions("Agora", undefined, () => (
-						<LayoutTopRight />
-					))}
+					options={createTabOptions(
+						"",
+						() => (
+							<Text
+								style={{
+									fontSize: 20,
+									color: theme.colors.text,
+									marginLeft: 15,
+									fontWeight: "bold",
+								}}
+							>
+								Agora
+							</Text>
+						),
+						() => (
+							<LayoutTopRight />
+						)
+					)}
 				/>
 			</Tabs>
 		</>

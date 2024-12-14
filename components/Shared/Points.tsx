@@ -1,11 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import { useTranslation } from "react-i18next";
+import { UserLevel } from "@type/levels";
+
+export const calculateGlobalLevel = (usersLevels: UserLevel[]) => {
+	return (
+		Object.values(usersLevels).reduce(
+			(total, level) => total + level.currentLevel,
+			0
+		) - 3
+	);
+};
 
 export default function Points() {
 	const { theme } = useTheme();
@@ -17,14 +27,7 @@ export default function Points() {
 		setHelpVisible(!helpVisible);
 	};
 
-	const calculateGlobalLevel = () => {
-		return Object.values(usersLevels).reduce(
-			(total, level) => total + level.currentLevel,
-			0
-		);
-	};
-
-	const globalLevel = calculateGlobalLevel();
+	const globalLevel = calculateGlobalLevel(usersLevels);
 
 	if (Object.keys(usersLevels).length === 0) {
 		return (
@@ -55,15 +58,18 @@ export default function Points() {
 						backgroundColor: theme.colors.blueSecondary,
 					}}
 				>
-					<Text
-						style={{
-							color: theme.dark ? theme.colors.text : theme.colors.primary,
-							fontSize: 16,
-						}}
-						className="font-bold "
-					>
-						{t("lvl")}: {globalLevel}
-					</Text>
+					<View className="flex items-center justify-center">
+						<Image source={require("@assets/images/badge.png")} className="w-8 h-8" />
+						<Text
+							style={{
+								color: "#fff",
+								fontSize: 14,
+							}}
+							className="font-bold absolute"
+						>
+							{globalLevel}
+						</Text>
+					</View>
 				</View>
 				<View
 					className="flex items-center justify-center flex-row py-1 px-4 rounded-full"

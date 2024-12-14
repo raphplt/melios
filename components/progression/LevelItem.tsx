@@ -15,8 +15,6 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { setSelectedLevel } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-	console.log("level", level);
-
 	return (
 		<Pressable
 			style={{
