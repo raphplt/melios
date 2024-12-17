@@ -8,10 +8,12 @@ import SectionWrapper from "./SectionWrapper";
 import { Iconify } from "react-native-iconify";
 import { useTheme } from "@context/ThemeContext";
 import NoHabits from "./NoHabits";
+import { useTranslation } from "react-i18next";
 
 export default function HabitsSection() {
 	const { userHabits } = useIndex();
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	const today: DayOfWeek = new Date()
 		.toLocaleString("en-US", { weekday: "long" })
@@ -50,7 +52,7 @@ export default function HabitsSection() {
 			{/* Morning routine */}
 			{morningHabits && morningHabits.length > 0 && (
 				<SectionWrapper
-					title="Routine du matin"
+					title={t("morning_routine")}
 					icon={
 						<Iconify
 							icon="solar:sunrise-bold"
@@ -68,7 +70,7 @@ export default function HabitsSection() {
 			{/* Afternoon routine */}
 			{afternoonHabits && afternoonHabits.length > 0 && (
 				<SectionWrapper
-					title="Routine de l'après-midi"
+					title={t("afternoon_routine")}
 					icon={
 						<Iconify
 							icon="mingcute:sun-fill"
@@ -86,7 +88,7 @@ export default function HabitsSection() {
 			{/* Evening routine */}
 			{eveningHabits && eveningHabits.length > 0 && (
 				<SectionWrapper
-					title="Routine du soir"
+					title={t("evening_routine")}
 					icon={
 						<Iconify
 							icon="material-symbols:nights-stay"
@@ -104,7 +106,7 @@ export default function HabitsSection() {
 			{/* Free habits */}
 			{freeHabits && freeHabits.length > 0 && (
 				<SectionWrapper
-					title="Habitudes libres"
+					title={t("free_time_habits")}
 					icon={
 						<Iconify
 							icon="mdi:calendar-blank"

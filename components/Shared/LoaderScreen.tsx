@@ -1,9 +1,10 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Text, View } from "react-native";
 
 export default function LoaderScreen({ text }: { text?: string }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	return (
 		<View
@@ -15,8 +16,8 @@ export default function LoaderScreen({ text }: { text?: string }) {
 			}}
 		>
 			<ActivityIndicator size="large" color={theme.colors.primary} />
-			<Text style={{ color: theme.colors.text }} className="text-gray-600 mt-8">
-				{text || "Chargement..."}
+			<Text style={{ color: theme.colors.textTertiary }} className="mt-8">
+				{text || t("loading")}
 			</Text>
 		</View>
 	);

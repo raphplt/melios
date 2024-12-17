@@ -1,13 +1,25 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
+import { useTranslation } from "react-i18next";
+import { UserLevel } from "@type/levels";
+
+export const calculateGlobalLevel = (usersLevels: UserLevel[]) => {
+	return (
+		Object.values(usersLevels).reduce(
+			(total, level) => total + level.currentLevel,
+			0
+		) - 3
+	);
+};
 
 export default function Points() {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { points, usersLevels } = useData();
 	const [helpVisible, setHelpVisible] = useState(false);
 
@@ -15,14 +27,7 @@ export default function Points() {
 		setHelpVisible(!helpVisible);
 	};
 
-	const calculateGlobalLevel = () => {
-		return Object.values(usersLevels).reduce(
-			(total, level) => total + level.currentLevel,
-			0
-		);
-	};
-
-	const globalLevel = calculateGlobalLevel();
+	const globalLevel = calculateGlobalLevel(usersLevels);
 
 	if (Object.keys(usersLevels).length === 0) {
 		return (
@@ -34,7 +39,6 @@ export default function Points() {
 				}}
 			/>
 		);
-		// return <ActivityIndicator size="large" color={theme.colors.primary} />;
 	}
 
 	return (
@@ -49,22 +53,23 @@ export default function Points() {
 				}}
 			>
 				<View
-					className="flex items-center justify-center flex-row py-1 px-2 ml-1 rounded-l-full"
+					className="flex items-center justify-center flex-row  px-2 ml-2 rounded-l-full"
 					style={{
 						backgroundColor: theme.colors.blueSecondary,
 					}}
 				>
-					<Text
-						style={{
-							color: theme.dark ? theme.colors.text : theme.colors.primary,
-							fontSize: 16,
-						}}
-						className="font-bold "
-					>
-						{/* {points.odyssee} */}
-						Niv: {globalLevel}
-					</Text>
-					{/* <MoneyOdyssee /> */}
+					<View className="flex items-center justify-center">
+						<Image source={require("@assets/images/badge.png")} className="w-8 h-8" />
+						<Text
+							style={{
+								color: "#fff",
+								fontSize: 14,
+							}}
+							className="font-bold absolute"
+						>
+							{globalLevel}
+						</Text>
+					</View>
 				</View>
 				<View
 					className="flex items-center justify-center flex-row py-1 px-4 rounded-full"
@@ -87,7 +92,7 @@ export default function Points() {
 
 			{helpVisible && (
 				<View
-					className="absolute top-full mt-1 left-0 p-2 rounded-md shadow-md w-44"
+					className="absolute top-full mt-1 left-0 p-2 rounded-md shadow-md w-52"
 					style={{
 						borderColor: theme.colors.primary,
 						borderWidth: 1,
@@ -95,16 +100,32 @@ export default function Points() {
 					}}
 				>
 					<View>
-						<MoneyOdyssee />
-						<Text style={{ color: theme.colors.text }}>
-							Les points Odyssee représentent vos progrès dans l'application.
-						</Text>
+						<View className="flex items-center justify-center">
+							<Image
+								source={require("@assets/images/badge.png")}
+								className="w-8 h-8"
+							/>
+							<Text
+								style={{
+									color: "#fff",
+									fontSize: 14,
+								}}
+								className="font-bold absolute"
+							>
+								{globalLevel}
+							</Text>
+						</View>
+
+						<Text style={{ color: theme.colors.text }}>{t("explain_levels")}</Text>
 					</View>
 					<View className="mt-2">
-						<MoneyMelios />
-						<Text style={{ color: theme.colors.text }}>
-							Les points Melios peuvent être échangés contre des récompenses.
-						</Text>
+						<View className="flex items-center justify-center flex-row">
+							<Text style={{ color: theme.colors.text }} className="font-bold mr-1">
+								{points.rewards}
+							</Text>
+							<MoneyMelios />
+						</View>
+						<Text style={{ color: theme.colors.text }}>{t("explain_melios")}</Text>
 					</View>
 				</View>
 			)}

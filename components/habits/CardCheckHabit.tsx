@@ -26,6 +26,7 @@ import useHabitTimer from "@hooks/useHabitTimer";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
+import { useTranslation } from "react-i18next";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -44,6 +45,7 @@ function CardCheckHabit({
 	const { addOdysseePoints } = usePoints();
 	const { startTimer } = useHabitTimer();
 	const { addXp } = useAddXp();
+	const { t } = useTranslation();
 
 	// États
 	const [showDetails, setShowDetails] = useState(false);
@@ -186,7 +188,7 @@ function CardCheckHabit({
 							<View className="flex flex-row items-center justify-around flex-1 h-fit">
 								<Pressable
 									onPress={goHabitDetail}
-									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
 									style={{
 										backgroundColor: theme.colors.background,
 										borderWidth: 2,
@@ -202,13 +204,13 @@ function CardCheckHabit({
 										className="text-[16px]  font-semibold ml-2"
 										style={{ color: theme.colors.primary }}
 									>
-										Détails
+										{t("details")}
 									</Text>
 								</Pressable>
 								{!completed && habit.duration ? (
 									<Pressable
 										onPress={startHabit}
-										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
 										style={{
 											backgroundColor: theme.colors.primary,
 											borderWidth: 2,
@@ -217,12 +219,12 @@ function CardCheckHabit({
 									>
 										<Iconify icon="bi:play" color="white" size={20} />
 										<Text className="text-[16px] text-white font-semibold ml-2">
-											Commencer
+											{t("start")}
 										</Text>
 									</Pressable>
 								) : (
 									<View
-										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl"
+										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
 										style={{
 											backgroundColor: theme.colors.primary,
 											borderWidth: 2,
@@ -231,13 +233,19 @@ function CardCheckHabit({
 									>
 										<Iconify icon="bi:check" color="white" size={20} />
 										<Text className="text-[16px] font-semibold ml-2 text-white">
-											Complété
+											{t("done")}
 										</Text>
 									</View>
 								)}
 							</View>
 						)}
 					</Animated.View>
+					{/* <Button
+						onPress={() => {
+							addXp(habit, 30);
+						}}
+						title="ADD XP"
+					/> */}
 				</Pressable>
 			</Animated.View>
 		</ZoomableView>

@@ -1,4 +1,4 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { useContext, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
@@ -12,6 +12,7 @@ import { setRewards } from "@db/rewards";
 import * as Progress from "react-native-progress";
 import usePoints from "@hooks/usePoints";
 import DeleteGoal from "@components/Modals/DeleteGoal";
+import { useTranslation } from "react-i18next";
 
 export default function ModalCurrentGoal({
 	visible,
@@ -28,7 +29,8 @@ export default function ModalCurrentGoal({
 	habit: Habit;
 	completedDays: Date[];
 }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 	const { goals, setGoals } = useGoal();
 	const { addRewardPoints } = usePoints();
@@ -134,7 +136,7 @@ export default function ModalCurrentGoal({
 									}}
 									className="text-[16px] font-semibold py-3 "
 								>
-									Récompense:{" "}
+									{t("reward")}:
 								</Text>
 							</View>
 							<View className="flex flex-row items-center">
@@ -166,7 +168,7 @@ export default function ModalCurrentGoal({
 								}}
 								className="text-[16px] font-semibold py-3 mx-1"
 							>
-								Description
+								{t("description")}
 							</Text>
 						</View>
 						<Text
@@ -187,7 +189,7 @@ export default function ModalCurrentGoal({
 								}}
 								className="text-[16px] font-semibold py-3 mx-1"
 							>
-								Avancement
+								{t("progress")}
 							</Text>
 						</View>
 						<Progress.Bar
@@ -205,7 +207,7 @@ export default function ModalCurrentGoal({
 							style={{ color: theme.colors.textTertiary }}
 							className="text-[14px] font-semibold text-center py-2"
 						>
-							{completedDays.length}/{goal.duration} jours
+							{completedDays.length}/{goal.duration} {t("days")}
 						</Text>
 					</View>
 
@@ -218,7 +220,7 @@ export default function ModalCurrentGoal({
 							className="px-5 py-2 rounded-xl mx-auto my-3 w-11/12 "
 						>
 							<Text className="font-semibold text-white text-center">
-								Terminer l'objectif
+								{t("finish_goal")}
 							</Text>
 						</Pressable>
 					) : (
@@ -230,7 +232,7 @@ export default function ModalCurrentGoal({
 							className="px-5 py-2 rounded-xl mx-auto my-3 w-11/12 "
 						>
 							<Text className="font-semibold text-white text-center">
-								Supprimer l'objectif
+								{t("delete_goal")}
 							</Text>
 						</Pressable>
 					)}

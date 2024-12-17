@@ -1,4 +1,4 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { getAllCosmeticsIcons } from "@db/cosmetics";
 import { ProfileCosmetic } from "@type/cosmetics";
 import { useContext, useEffect, useState } from "react";
@@ -11,10 +11,12 @@ import {
 } from "@react-navigation/native";
 import IconPreview from "./IconPreview";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 
 export default function CosmeticPreviewStacked() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
@@ -47,7 +49,7 @@ export default function CosmeticPreviewStacked() {
 						}}
 						className="mx-2 text-[16px]"
 					>
-						Boutique de cosmétiques
+						{t("cosmetic_shop")}
 					</Text>
 				</View>
 			</View>
@@ -96,7 +98,7 @@ export default function CosmeticPreviewStacked() {
 						}}
 						className="mt-3 text-center"
 					>
-						Accéder à la boutique
+						{t("access_shop")}
 					</Text>
 				</View>
 			</LinearGradient>

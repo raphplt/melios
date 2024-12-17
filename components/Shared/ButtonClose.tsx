@@ -1,4 +1,4 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useContext } from "react";
@@ -6,7 +6,7 @@ import { Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function ButtonClose() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
@@ -15,7 +15,7 @@ export default function ButtonClose() {
 	};
 
 	return (
-		<Pressable onPress={handleQuit} className="p-4">
+		<Pressable onPress={handleQuit} className="p-4 z-10">
 			<Iconify icon="material-symbols:close" size={28} color={theme.colors.text} />
 		</Pressable>
 	);

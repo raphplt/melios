@@ -1,20 +1,12 @@
-import {
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-	useMemo,
-	useCallback,
-} from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import {
 	useNavigation,
 	ParamListBase,
 	NavigationProp,
 	useIsFocused,
 } from "@react-navigation/native";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { Animated } from "react-native";
-import { UserContext } from "@context/UserContext";
 import { useData } from "@context/DataContext";
 import { UserHabit } from "../type/userHabit";
 import { getMemberInfos } from "@db/member";
@@ -26,8 +18,7 @@ import { getCachedImage } from "@db/files";
 
 const useIndex = () => {
 	// Contexts
-	const { user } = useContext(UserContext);
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 
 	// Hooks
 	const isFocused = useIsFocused();
@@ -196,7 +187,6 @@ const useIndex = () => {
 	return {
 		theme,
 		navigation,
-		user,
 		userHabits,
 		loading,
 		refreshing,

@@ -1,15 +1,17 @@
 import { Calendar } from "react-native-calendars";
 import useCompletedHabitPeriods from "@hooks/useCompletedHabitPeriods";
-import { useContext, useMemo, useState } from "react";
-import { ThemeContext } from "@context/ThemeContext";
-import { ActivityIndicator, View, Text, Pressable } from "react-native";
-import { Iconify } from "react-native-iconify";
-import { Ionicons } from "@expo/vector-icons";
+import { useMemo, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { ActivityIndicator, View } from "react-native";
 import SectionHeader from "./SectionHeader";
+import { useTranslation } from "react-i18next";
+import React from "react";
+import moment from "moment";
 
 const CalendarHabits = () => {
 	const { completedHabitPeriods, loading } = useCompletedHabitPeriods();
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [showCalendar, setShowCalendar] = useState(true);
 
 	const colors = useMemo(() => {
@@ -35,6 +37,8 @@ const CalendarHabits = () => {
 		[theme.dark]
 	);
 
+	const currentDate = moment().format("YYYY-MM-DD");
+
 	if (loading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -43,20 +47,40 @@ const CalendarHabits = () => {
 		);
 	}
 
+	const markedDates = { ...completedHabitPeriods };
+
+	markedDates[currentDate] = {
+		...(markedDates[currentDate] || {}),
+		customStyles: {
+			...(markedDates[currentDate]?.customStyles || {}),
+			container: {
+				...(markedDates[currentDate]?.customStyles?.container || {}),
+				borderColor: "red",
+				borderWidth: 2,
+			},
+			text: {
+				...(markedDates[currentDate]?.customStyles?.text || {}),
+				color: "red",
+			},
+		},
+	};
+
 	return (
 		<>
 			<SectionHeader
-				title="Jours complétés"
+				title={t("days_done")}
 				show={showCalendar}
 				setShow={setShowCalendar}
 				icon="calendar"
 			>
-				<Calendar
-					key={calendarKey}
-					markingType={"period"}
-					markedDates={completedHabitPeriods}
-					theme={colors}
-				/>
+				{showCalendar && (
+					<Calendar
+						key={calendarKey}
+						markingType="custom"
+						markedDates={markedDates}
+						theme={colors}
+					/>
+				)}
 			</SectionHeader>
 		</>
 	);

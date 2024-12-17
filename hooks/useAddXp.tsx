@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { useData } from "@context/DataContext";
-import { useSession } from "@context/UserContext";
 import { calculateNextLevelXp, updateUserLevel } from "@db/levels";
 import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
@@ -8,9 +7,13 @@ import { getLevelByCategoryId } from "@utils/progressionUtils";
 import { UserLevel } from "@type/levels";
 
 const useAddXp = () => {
-	const { usersLevels, setUsersLevels, genericLevels } = useData();
-	const { user } = useSession();
+	const { usersLevels, setUsersLevels, genericLevels, member } = useData();
 	const { categories } = useHabits();
+
+	if (!member) {
+		console.error("No member found in useAddXp");
+		return null;
+	}
 
 	const updateLevel = useCallback(
 		(currentLevel: number, currentXp: number, xpToAdd: number) => {
@@ -66,7 +69,7 @@ const useAddXp = () => {
 				const updatedLevel = updateLevel(currentLevel, currentXp, xpToAdd);
 
 				// Met à jour Firebase
-				await updateUserLevel(user.uid, String(levelId), {
+				await updateUserLevel(member.uid, String(levelId), {
 					...currentLevelData,
 					...updatedLevel,
 				});
@@ -83,7 +86,7 @@ const useAddXp = () => {
 				console.error("Error updating XP: ", error);
 			}
 		},
-		[updateLevel, usersLevels, setUsersLevels, user.uid]
+		[updateLevel, usersLevels, setUsersLevels, member.uid]
 	);
 	return { addXp };
 };

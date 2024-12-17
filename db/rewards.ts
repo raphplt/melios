@@ -93,18 +93,14 @@ export const setRewards = async (
 	}
 };
 
-export const getAllRewardsPaginated = async (
-	lastVisibleDoc = null,
-	orderField = "rewards",
-	pageSize = 10
-) => {
+export const getAllRewardsPaginated = async (lastVisibleDoc = null, pageSize = 10) => {
 	try {
 		const rewardsCollectionRef = collection(db, "rewards");
 
 		// Crée la requête de pagination
 		let rewardsQuery = query(
 			rewardsCollectionRef,
-			orderBy(orderField, "desc"),
+			orderBy("rewards", "desc"),
 			limit(pageSize)
 		);
 

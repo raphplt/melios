@@ -1,5 +1,4 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext } from "react";
+import { useTheme } from "@context/ThemeContext";
 import { View } from "react-native";
 import AccountBlock from "./AccountBlock";
 import { Iconify } from "react-native-iconify";
@@ -7,14 +6,16 @@ import { useData } from "@context/DataContext";
 import RowBlock from "./RowBlock";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function General() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { habits } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	return (
-		<AccountBlock title="Général">
+		<AccountBlock title={t("general")}>
 			<RowBlock
 				icon={
 					<Iconify
@@ -23,7 +24,7 @@ export default function General() {
 						color={theme.colors.text}
 					/>
 				}
-				title="Mes habitudes"
+				title={t("my_habits")}
 				count={habits.length}
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
@@ -33,7 +34,7 @@ export default function General() {
 			<View className="w-full h-[1px] bg-gray-300"></View>
 			<RowBlock
 				icon={<Iconify icon="ph:target" size={24} color={theme.colors.text} />}
-				title="Mes objectifs"
+				title={t("my_objectives")}
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}

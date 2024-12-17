@@ -7,6 +7,7 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { useTheme } from "@context/ThemeContext";
 import CachedImage from "@components/Shared/CachedImage";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function MemberInfos({
 	member,
@@ -16,6 +17,7 @@ export default function MemberInfos({
 	auth: any;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [profilePictureUri, setProfilePictureUri] = useState<string | null>(
 		null
@@ -75,7 +77,7 @@ export default function MemberInfos({
 								navigation.navigate("editProfil");
 							}}
 						>
-							<Text className="text-[16px] text-white">Éditer le profil</Text>
+							<Text className="text-[16px] text-white">{t("edit_profile")}</Text>
 						</Pressable>
 					</ZoomableView>
 				</View>

@@ -16,6 +16,7 @@ import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
 import { TimerProvider } from "@context/TimerContext";
 import { DataProvider } from "@context/DataContext";
+import "../i18n";
 import "../global.css";
 
 export { ErrorBoundary } from "expo-router";
@@ -58,63 +59,29 @@ function MainNavigator() {
 		});
 	};
 
-	const { isLoading: isSessionLoading }: any = useSession();
-
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		if (!isSessionLoading) {
-			setIsLoading(false);
-		}
-	}, [isSessionLoading]);
-
-	if (isLoading || !loaded) return <LoaderScreen text="Chargement..." />;
-
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
 			<ThemeProvider value={theme}>
 				<StatusBar
 					barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
-					backgroundColor={
-						theme === DarkTheme ? theme.colors.background : theme.colors.background
-					}
+					backgroundColor={theme.colors.background}
 				/>
 				<Stack>
 					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
 					<Stack.Screen name="(select)" options={{ headerShown: false }} />
-
-					<Stack.Screen
-						name="habitDetail"
-						options={{
-							headerShown: false,
-						}}
-					/>
+					<Stack.Screen name="habitDetail" options={{ headerShown: false }} />
 					<Stack.Screen
 						name="account"
-						options={{
-							headerShadowVisible: false,
-							title: "Mon compte",
-							headerBackTitleVisible: false,
-						}}
+						options={{ headerShadowVisible: false, title: "Mon compte" }}
 					/>
-
 					<Stack.Screen
 						name="editProfil"
-						options={{
-							headerShadowVisible: false,
-							title: "Éditer le profil",
-							headerBackTitleVisible: false,
-						}}
+						options={{ headerShadowVisible: false, title: "Éditer le profil" }}
 					/>
-
 					<Stack.Screen
 						name="trophies"
-						options={{
-							headerShadowVisible: false,
-							title: "Trophées",
-						}}
+						options={{ headerShadowVisible: false, title: "Trophées" }}
 					/>
-
 					<Stack.Screen
 						name="login"
 						options={{
@@ -133,37 +100,22 @@ function MainNavigator() {
 					/>
 					<Stack.Screen
 						name="resetPassword"
-						options={{
-							title: "Réinitialisation du mot de passe",
-						}}
+						options={{ title: "Réinitialisation du mot de passe" }}
 					/>
 					<Stack.Screen
 						name="editHabits"
-						options={{
-							title: "Éditer mes habitudes",
-							headerShadowVisible: false,
-						}}
+						options={{ title: "Éditer mes habitudes", headerShadowVisible: false }}
 					/>
 					<Stack.Screen
 						name="editGoals"
-						options={{
-							title: "Éditer mes objectifs",
-							headerShadowVisible: false,
-						}}
+						options={{ title: "Éditer mes objectifs", headerShadowVisible: false }}
 					/>
-
-					<Stack.Screen
-						name="timerHabit"
-						options={{
-							headerShown: false,
-						}}
-					/>
+					<Stack.Screen name="timerHabit" options={{ headerShown: false }} />
+					<Stack.Screen name="classement" />
+					<Stack.Screen name="levelDetail" options={{ headerShown: false }} />
 					<Stack.Screen
 						name="help"
-						options={{
-							title: "Aide",
-							headerShadowVisible: false,
-						}}
+						options={{ title: "Aide", headerShadowVisible: false }}
 					/>
 					<Stack.Screen
 						name="cosmeticShop"
@@ -183,8 +135,8 @@ function MainNavigator() {
 	);
 }
 
-export default function RootLayout() {
-	const { user, isLoading: isSessionLoading }: any = useSession();
+function RootLayoutContent() {
+	const { user, isLoading: isSessionLoading } = useSession();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [isNavigationReady, setIsNavigationReady] = useState(false);
 
@@ -200,16 +152,31 @@ export default function RootLayout() {
 		}
 	}, [isSessionLoading, user, isNavigationReady]);
 
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		if (!isSessionLoading) {
+			setIsLoading(false);
+		}
+	}, [isSessionLoading]);
+
+	if (isLoading) return <LoaderScreen text="Chargement cc..." />;
+
+	return (
+		<TimerProvider>
+			<DataProvider>
+				<HabitsProvider>
+					<MainNavigator />
+				</HabitsProvider>
+			</DataProvider>
+		</TimerProvider>
+	);
+}
+
+export default function RootLayout() {
 	return (
 		<SessionProvider>
-			{/* TODO Move timer? */}
-			<TimerProvider>
-				<DataProvider>
-					<HabitsProvider>
-						<MainNavigator />
-					</HabitsProvider>
-				</DataProvider>
-			</TimerProvider>
+			<RootLayoutContent />
 		</SessionProvider>
 	);
 }

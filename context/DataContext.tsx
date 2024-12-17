@@ -10,25 +10,24 @@ import moment from "moment";
 import permissions from "../hooks/usePermissions";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// import { getAllTrophies } from "@db/trophiesList";
 import { getMemberInfos } from "@db/member";
 import { calculateStreak } from "@utils/progressionUtils";
 import { DataContextType } from "@type/dataContext";
 import { Member } from "@type/member";
 import { Points } from "@type/points";
 import { UserHabit } from "@type/userHabit";
-import { getRewards } from "@db/rewards";
-import { useSession } from "./UserContext";
 import { Trophy } from "@type/trophy";
-import { extractPoints } from "@utils/pointsUtils";
 import { getNotificationToken } from "@utils/notificationsUtils";
 import { getUserHabits } from "@db/userHabit";
 import { Log } from "@type/log";
 import { getAllHabitLogs } from "@db/logs";
 import { calculateCompletedHabits } from "@utils/habitsUtils";
-import { GenericLevel, UserLevel } from "@type/levels";
+import { CombinedLevel, GenericLevel, UserLevel } from "@type/levels";
 import { getAllGenericLevels, getUserLevelsByUserId } from "@db/levels";
+import { useSession } from "./UserContext";
+import { getRewards } from "@db/rewards";
+import { extractPoints } from "@utils/pointsUtils";
+import { Reward } from "@type/reward";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -38,8 +37,8 @@ export const DataContext = createContext<DataContextType | undefined>(
 );
 
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
-	const { isLoading: isSessionLoading, user } = useSession();
 	const [habits, setHabits] = useState<UserHabit[]>([]);
+	const { user } = useSession();
 	const [completedHabitsToday, setCompletedHabitsToday] = useState<UserHabit[]>(
 		[]
 	);
@@ -53,6 +52,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [logs, setLogs] = useState<Log[]>([]);
 	const [genericLevels, setGenericLevels] = useState<GenericLevel[]>([]);
 	const [usersLevels, setUsersLevels] = useState<UserLevel[]>([]);
+	const [selectedLevel, setSelectedLevel] = useState<CombinedLevel | null>(null);
 
 	// Progression
 	const [todayScore, setTodayScore] = useState<number>(0);
@@ -69,100 +69,110 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		if (!isSessionLoading && user) {
-			const abortController = new AbortController();
+		const abortController = new AbortController();
 
-			const fetchData = async () => {
-				setIsLoading(true);
-				try {
-					await getNotificationToken(
-						AskNotification,
-						setExpoPushToken,
-						expoPushToken
-					);
+		const fetchData = async () => {
+			setIsLoading(true);
+			try {
+				await getNotificationToken(
+					AskNotification,
+					setExpoPushToken,
+					expoPushToken
+				);
 
-					const notificationEnabled = await AsyncStorage.getItem(
-						"notificationEnabled"
-					);
-					setNotificationToggle(notificationEnabled === "true");
+				const notificationEnabled = await AsyncStorage.getItem(
+					"notificationEnabled"
+				);
+				setNotificationToggle(notificationEnabled === "true");
 
-					// Member infos
-					const snapshotMember = await getMemberInfos({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
-					if (!snapshotMember) throw new Error("Member not found");
-					setMember(snapshotMember);
+				// Member infos
+				const snapshotMember = await getMemberInfos({
+					signal: abortController.signal,
+					forceRefresh: true,
+				});
+				if (!snapshotMember) throw new Error("Member not found");
+				setMember(snapshotMember);
 
-					//Rewards
-					const snapshotRewards = await getRewards({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
-					if (snapshotRewards) {
-						setPoints(extractPoints(snapshotRewards));
-					}
-
-					// Habits
-					const snapshotHabits = await getUserHabits({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
-					if (snapshotHabits) {
-						setHabits(snapshotHabits);
-					}
-
-					// Logs
-					const snapshotLogs = await getAllHabitLogs({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
-					if (snapshotLogs) {
-						setLogs(snapshotLogs);
-						setStreak(calculateStreak(snapshotLogs));
-					}
-
-					if (snapshotHabits && snapshotLogs) {
-						const completedHabits = calculateCompletedHabits(
-							snapshotHabits,
-							snapshotLogs
-						);
-						setCompletedHabitsToday(completedHabits);
-					}
-
-					// Generic Levels
-					const snapshotGenericLevels = await getAllGenericLevels({
-						signal: abortController.signal,
-						forceRefresh: true,
-					});
-					setGenericLevels(snapshotGenericLevels);
-
-					// User Levels
-					const usersLevels = await getUserLevelsByUserId(user.uid);
-					setUsersLevels(usersLevels as any);
-
-					// Trophies
-					// const snapshotTrophies = await getAllTrophies({
-					// 	signal: abortController.signal,
-					// 	forceRefresh: true,
-					// });
-					// setTrophies(snapshotTrophies);
-				} catch (error: unknown) {
-					if (error instanceof Error && error.name !== "AbortError") {
-						console.log("Erreur lors de la récupération des données : ", error);
-					}
-				} finally {
-					setIsLoading(false);
+				// Habits
+				const snapshotHabits = await getUserHabits({
+					signal: abortController.signal,
+					forceRefresh: true,
+				});
+				if (snapshotHabits) {
+					setHabits(snapshotHabits);
 				}
-			};
 
-			fetchData();
+				//Rewards
+				const snapshotRewards = await getRewards({
+					signal: abortController.signal,
+					forceRefresh: true,
+				});
+				if (snapshotRewards) {
+					setPoints(extractPoints(snapshotRewards as Reward[]));
+				}
 
-			return () => {
-				abortController.abort();
-			};
-		}
-	}, [isSessionLoading, user]);
+				// Logs
+				const snapshotLogs = await getAllHabitLogs({
+					signal: abortController.signal,
+					forceRefresh: true,
+				});
+				if (snapshotLogs) {
+					setLogs(snapshotLogs);
+					setStreak(calculateStreak(snapshotLogs));
+				}
+
+				if (snapshotHabits && snapshotLogs) {
+					const completedHabits = calculateCompletedHabits(
+						snapshotHabits,
+						snapshotLogs
+					);
+					setCompletedHabitsToday(completedHabits);
+				}
+
+				// Generic Levels
+				const snapshotGenericLevels = await getAllGenericLevels({
+					signal: abortController.signal,
+					forceRefresh: true,
+				});
+				setGenericLevels(snapshotGenericLevels);
+			} catch (error: unknown) {
+				if (error instanceof Error && error.name !== "AbortError") {
+					console.log("Erreur lors de la récupération des données : ", error);
+				}
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchData();
+
+		return () => {
+			abortController.abort();
+		};
+	}, [user]);
+
+	useEffect(() => {
+		if (!user) return;
+
+		const abortController = new AbortController();
+
+		const fetchUserLevels = async () => {
+			try {
+				const fetchedUserLevels = await getUserLevelsByUserId(user.uid);
+				setUsersLevels(fetchedUserLevels);
+			} catch (error: unknown) {
+				if (error instanceof Error && error.name !== "AbortError") {
+					console.log("Erreur lors de la récupération des User Levels : ", error);
+				}
+			}
+		};
+
+		fetchUserLevels();
+
+		return () => {
+			abortController.abort();
+		};
+	}, [user]);
 
 	return (
 		<DataContext.Provider
@@ -192,6 +202,8 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				setGenericLevels,
 				usersLevels,
 				setUsersLevels,
+				selectedLevel,
+				setSelectedLevel,
 			}}
 		>
 			{children}

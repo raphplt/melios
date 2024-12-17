@@ -1,15 +1,14 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { useTimer } from "@context/TimerContext";
 import useHabitTimer from "@hooks/useHabitTimer";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import SoundsModal from "@components/Modals/SoundsModal";
 import { useSound } from "@context/SoundContext";
 
 export default function BottomButtons() {
-	const { theme } = useContext(ThemeContext);
-
+	const { theme } = useTheme();
 	const [visible, setVisible] = useState(false);
 
 	const { pauseTimer } = useHabitTimer();

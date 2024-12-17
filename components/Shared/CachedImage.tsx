@@ -33,6 +33,8 @@ const CachedImage: React.FC<CachedImageProps> = ({
 		loadCachedImage();
 	}, [imagePath]);
 
+	// console.log("CachedImage", localUri);
+
 	if (loading) {
 		return placeholder || <ActivityIndicator size="small" color="#999" />;
 	}

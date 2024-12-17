@@ -1,12 +1,14 @@
 import { fetchDailyQuote } from "@db/quote";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { Quote } from "../../type/quote";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
+import { useTranslation } from "react-i18next";
+import { Quote } from "@type/quote";
 
 export default function DailyQuote() {
 	const [quote, setQuote] = useState<Quote | null>(null);
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const getQuote = async () => {
@@ -36,10 +38,10 @@ export default function DailyQuote() {
 						fontFamily: "Baskerville",
 					}}
 				>
-					{quote ? quote.text : "Loading..."}
+					"{quote ? quote.text : t("loading")}"
 				</Text>
 				<Text style={{ color: theme.colors.text }} className="mt-2">
-					- {quote ? quote.author : "Loading..."}
+					- {quote ? quote.author : t("loading")}
 				</Text>
 			</View>
 		</View>

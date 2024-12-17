@@ -1,13 +1,14 @@
-import { useContext } from "react";
 import Activity from "./ActivityCard";
 import { FlatList, View, Text } from "react-native";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 
 import { useData } from "@context/DataContext";
+import { useTranslation } from "react-i18next";
 
 export default function ActivitiesContainer() {
 	const { habits } = useData();
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	if (!habits || habits.length === 0) {
 		return null;
@@ -26,7 +27,7 @@ export default function ActivitiesContainer() {
 					fontFamily: "BaskervilleBold",
 				}}
 			>
-				Mes activités
+				{t("my_activities")}
 			</Text>
 			<FlatList
 				horizontal={true}

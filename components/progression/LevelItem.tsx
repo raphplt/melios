@@ -1,19 +1,30 @@
 import React from "react";
-import { Text, View, Dimensions } from "react-native";
+import { Text, View, Dimensions, Pressable } from "react-native";
 import * as Progress from "react-native-progress";
 import { useTheme } from "@context/ThemeContext";
-import { CombinedLevel, UserLevel } from "@type/levels";
+import { CombinedLevel } from "@type/levels";
+import { useTranslation } from "react-i18next";
+import { useData } from "@context/DataContext";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { width } = Dimensions.get("window");
+	const { setSelectedLevel } = useData();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	return (
-		<View
+		<Pressable
 			style={{
 				backgroundColor: theme.colors.background,
 				borderColor: theme.colors.border,
 				borderWidth: 1,
+			}}
+			onPress={() => {
+				setSelectedLevel(level);
+				navigation.navigate("levelDetail");
 			}}
 			className="py-2 px-2 my-1 rounded-xl"
 		>
@@ -32,7 +43,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 					}}
 					className="text-[14px] mb-1 font-semibold"
 				>
-					Niveau : {level.currentLevel}
+					{t("lvl")} : {level.currentLevel}
 				</Text>
 				<Text
 					style={{
@@ -62,7 +73,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 			>
 				{level.description}
 			</Text>
-		</View>
+		</Pressable>
 	);
 };
 

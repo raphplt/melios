@@ -2,6 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import ModalWrapper from "./ModalWrapper";
 import { useTheme } from "@context/ThemeContext";
 import { Iconify } from "react-native-iconify";
+import { useTranslation } from "react-i18next";
 
 export default function SelectColor({
 	visible,
@@ -13,6 +14,7 @@ export default function SelectColor({
 	setColor: (color: string) => void;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	const colors = [
 		{ name: "Color 1", code: "#f1a025" },
@@ -44,7 +46,7 @@ export default function SelectColor({
 					}}
 					className="text-xl leading-6 mb-3 font-semibold"
 				>
-					Couleur de l'habitude
+					{t("color_habit")}
 				</Text>
 				<View className="flex flex-row flex-wrap justify-between w-11/12 mx-auto">
 					{colors.map((color) => (

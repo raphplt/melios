@@ -4,6 +4,7 @@ import { useSound, Sound } from "@context/SoundContext";
 import { Modal, View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
+import { useTranslation } from "react-i18next";
 
 export default function SoundsModal({
 	visible,
@@ -15,6 +16,7 @@ export default function SoundsModal({
 	onChange: (sound: string) => void;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const { sounds, soundMap, loadingSounds, currentSound, setCurrentSound } =
 		useSound();
 	const [soundObject, setSoundObject] = useState<Audio.Sound | null>(null);
@@ -92,10 +94,10 @@ export default function SoundsModal({
 						}}
 						className="text-xl leading-6 mb-3 font-semibold"
 					>
-						Choisissez un son
+						{t("select_sound")}
 					</Text>
 					{loadingSounds ? (
-						<Text>Chargement des sons...</Text>
+						<Text>{t("loading")}</Text>
 					) : (
 						<>
 							<Pressable
@@ -115,7 +117,7 @@ export default function SoundsModal({
 									}}
 									className="text-[18px] ml-2"
 								>
-									🔇 Aucun son
+									🔇 {t("no_sound")}
 								</Text>
 							</Pressable>
 							{sounds.map((sound, index) => (
@@ -163,7 +165,7 @@ export default function SoundsModal({
 							}}
 							className="text-lg text-center"
 						>
-							Valider
+							{t("validate")}
 						</Text>
 					</Pressable>
 				</View>

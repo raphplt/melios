@@ -3,22 +3,24 @@ import { useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { View, Text, Alert } from "react-native";
+import { Iconify } from "react-native-iconify";
 
 import { useTheme } from "@context/ThemeContext";
 import AccountBlock from "./AccountBlock";
 import RowBlock from "./RowBlock";
-import { Iconify } from "react-native-iconify";
 import ToggleButton from "./Switch";
 import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
 import { disconnectUser } from "@db/users";
-import CustomModal from "@components/Shared/Modal";
 import CustomPressable from "@components/Shared/CustomPressable";
 import ModalWrapper from "@components/Modals/ModalWrapper";
+import LanguageSelector from "./LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { theme, toggleTheme } = useTheme();
+	const { t } = useTranslation();
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
 	const {
 		setHabits,
@@ -73,16 +75,16 @@ export default function Preferences() {
 
 	const goAbout = () => {
 		Alert.alert(
-			"À propos",
-			"Melios v1.1.7 - © 2024 Melios. Tous droits réservés."
+			t("about"),
+			"Melios v1.1.7 - © 2024 Melios" + "\n" + t("all_rights_reserved")
 		);
 	};
 
 	return (
-		<AccountBlock title="Préférences">
+		<AccountBlock title={t("preferences")}>
 			<RowBlock
 				icon={<Iconify icon="ph:moon" size={24} color={theme.colors.text} />}
-				title="Mode sombre"
+				title={t("dark_mode")}
 				rightContent={
 					<ToggleButton onToggle={handleToggleTheme} value={isDarkTheme} />
 				}
@@ -93,7 +95,7 @@ export default function Preferences() {
 				icon={
 					<Iconify icon="mdi:bell-outline" size={24} color={theme.colors.text} />
 				}
-				title="Notifications"
+				title={t("notifications")}
 				rightContent={
 					<ToggleButton
 						onToggle={handleToggleNotifications}
@@ -104,23 +106,25 @@ export default function Preferences() {
 			<View className="w-full h-[1px] bg-gray-300"></View>
 
 			<RowBlock
-				title="Langue"
+				title={t("language")}
 				icon={<Iconify icon="mdi:earth" size={24} color={theme.colors.text} />}
-				rightContent={<Text style={{ color: theme.colors.text }}>Français</Text>}
+				rightContent={<LanguageSelector />}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 
 			<RowBlock
-				title="Aide"
+				title={t("help")}
 				icon={<Iconify icon="zondicons:buoy" size={22} color={theme.colors.text} />}
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
 				}
 				onPress={goToHelp}
 			/>
+
 			<View className="w-full h-[1px] bg-gray-300"></View>
+
 			<RowBlock
-				title="À propos"
+				title={t("about")}
 				icon={
 					<Iconify icon="mdi:information" size={24} color={theme.colors.text} />
 				}
@@ -129,34 +133,17 @@ export default function Preferences() {
 				}
 				onPress={goAbout}
 			/>
+
 			<View className="w-full h-[1px] bg-gray-300"></View>
+
 			<RowBlock
-				title="Déconnexion"
+				title={t("logout")}
 				onPress={handleLogout}
 				color={theme.colors.redPrimary}
 				icon={
 					<Iconify icon="mdi:logout" size={22} color={theme.colors.redPrimary} />
 				}
 			/>
-
-			{/* <CustomModal
-				visible={modalVisible}
-				onClose={setModalVisible}
-				title="Déconnexion"
-				subtitle="Êtes-vous sûr de vouloir vous déconnecter ?"
-			>
-				<CustomPressable
-					text="Annuler"
-					onPress={() => setModalVisible(!modalVisible)}
-				/>
-				<CustomPressable
-					text="Confirmer"
-					onPress={confirmLogout}
-					bgColor={theme.colors.redPrimary}
-					textColor="#fff"
-				/>
-			</CustomModal>
-			 */}
 
 			<ModalWrapper visible={modalVisible} setVisible={setModalVisible}>
 				<View>
@@ -166,7 +153,7 @@ export default function Preferences() {
 						}}
 						className="text-lg font-semibold mb-4"
 					>
-						Déconnexion
+						{t("logout")}
 					</Text>
 					<Text
 						style={{
@@ -174,17 +161,17 @@ export default function Preferences() {
 						}}
 						className="text-[16px]  mb-2"
 					>
-						Êtes-vous sûr de vouloir vous déconnecter ?
+						{t("confirm_logout")}
 					</Text>
 					<View className="flex flex-row justify-center items-center mx-auto w-11/12 mt-3">
 						<CustomPressable
-							text="Annuler"
+							text={t("cancel")}
 							onPress={() => setModalVisible(!modalVisible)}
 							bgColor={theme.colors.grayPrimary}
 							textColor="#fff"
 						/>
 						<CustomPressable
-							text="Confirmer"
+							text={t("confirm")}
 							onPress={confirmLogout}
 							bgColor={theme.colors.redPrimary}
 							textColor="#fff"
