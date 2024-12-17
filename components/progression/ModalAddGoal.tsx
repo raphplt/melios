@@ -99,8 +99,6 @@ export default function ModalAddGoal({
 
 	const windowWidth = Dimensions.get("window").width;
 
-	console.log("canValidate", canValidate);
-
 	return (
 		<ModalWrapper visible={visible} setVisible={setVisible}>
 			<View

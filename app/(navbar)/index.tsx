@@ -15,6 +15,15 @@ export default function Index() {
 	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
 	const { t } = useTranslation();
 
+	// console.log(
+	// 	"loading",
+	// 	loading,
+	// 	"userHabits",
+	// 	userHabits,
+	// 	"isLoading",
+	// 	isLoading
+	// );
+
 	if (loading || !userHabits || isLoading) {
 		return <LoaderScreen text={t("loading")} />;
 	}

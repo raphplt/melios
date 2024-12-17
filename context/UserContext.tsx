@@ -1,26 +1,43 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, {
+	createContext,
+	useState,
+	useEffect,
+	useContext,
+	ReactNode,
+} from "react";
 import { User } from "firebase/auth";
 import { auth } from "../db";
 
-export const UserContext = createContext<any>({});
+interface UserContextType {
+	user: User | null;
+	setUser: React.Dispatch<React.SetStateAction<User | null>>;
+	isLoading: boolean;
+}
 
-export const SessionProvider = ({ children }: any) => {
-	const [user, setUser]: any = useState<User>();
-	const [isLoading, setIsLoading]: any = useState(true);
+export const UserContext = createContext<UserContextType | undefined>(
+	undefined
+);
+
+interface SessionProviderProps {
+	children: ReactNode;
+}
+
+export const SessionProvider = ({ children }: SessionProviderProps) => {
+	const [user, setUser] = useState<User | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			if (user) {
 				setUser(user);
-				setIsLoading(false);
 			} else {
 				setUser(null);
-				setIsLoading(false);
 			}
+			setIsLoading(false);
 		});
 
 		return () => unsubscribe();
-	}, [auth]);
+	}, []);
 
 	return (
 		<UserContext.Provider value={{ user, setUser, isLoading }}>

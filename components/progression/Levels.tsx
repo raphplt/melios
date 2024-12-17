@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useData } from "@context/DataContext";
-import { useSession } from "@context/UserContext";
 import { getUserLevelsByUserId, initUserLevels } from "@db/levels";
 import SectionHeader from "./SectionHeader";
 import LevelItem from "./LevelItem";
@@ -10,25 +9,27 @@ import { useTranslation } from "react-i18next";
 import NextLevel from "@components/Modals/NextLevel";
 
 const Levels = () => {
-	const { genericLevels, usersLevels, setUsersLevels, isLoading } = useData();
-	const { user } = useSession();
+	const { genericLevels, usersLevels, setUsersLevels, isLoading, member } =
+		useData();
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
 	const [previousLevels, setPreviousLevels] = useState(usersLevels);
 	const [showNextLevelModal, setShowNextLevelModal] = useState(false);
 	const [nextLevelData, setNextLevelData] = useState<CombinedLevel | null>(null);
 
+	if (!member) return null;
+
 	useEffect(() => {
 		const initializeLevels = async () => {
 			if (!Object.keys(usersLevels).length && !isLoading) {
-				await initUserLevels(user.uid, genericLevels);
-				const updatedLevels = await getUserLevelsByUserId(user.uid);
+				await initUserLevels(member.uid, genericLevels);
+				const updatedLevels = await getUserLevelsByUserId(member.uid);
 				setUsersLevels(updatedLevels);
 			}
 		};
 
 		initializeLevels();
-	}, [user, genericLevels, usersLevels, isLoading]);
+	}, [member, genericLevels, usersLevels, isLoading]);
 
 	useEffect(() => {
 		// Check if any level has increased

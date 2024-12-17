@@ -53,7 +53,7 @@ export default function Points() {
 				}}
 			>
 				<View
-					className="flex items-center justify-center flex-row py-1 px-2 ml-1 rounded-l-full"
+					className="flex items-center justify-center flex-row  px-2 ml-2 rounded-l-full"
 					style={{
 						backgroundColor: theme.colors.blueSecondary,
 					}}
@@ -92,7 +92,7 @@ export default function Points() {
 
 			{helpVisible && (
 				<View
-					className="absolute top-full mt-1 left-0 p-2 rounded-md shadow-md w-44"
+					className="absolute top-full mt-1 left-0 p-2 rounded-md shadow-md w-52"
 					style={{
 						borderColor: theme.colors.primary,
 						borderWidth: 1,
@@ -100,11 +100,31 @@ export default function Points() {
 					}}
 				>
 					<View>
-						<MoneyOdyssee />
-						<Text style={{ color: theme.colors.text }}>{t("explain_odyssee")}</Text>
+						<View className="flex items-center justify-center">
+							<Image
+								source={require("@assets/images/badge.png")}
+								className="w-8 h-8"
+							/>
+							<Text
+								style={{
+									color: "#fff",
+									fontSize: 14,
+								}}
+								className="font-bold absolute"
+							>
+								{globalLevel}
+							</Text>
+						</View>
+
+						<Text style={{ color: theme.colors.text }}>{t("explain_levels")}</Text>
 					</View>
 					<View className="mt-2">
-						<MoneyMelios />
+						<View className="flex items-center justify-center flex-row">
+							<Text style={{ color: theme.colors.text }} className="font-bold mr-1">
+								{points.rewards}
+							</Text>
+							<MoneyMelios />
+						</View>
 						<Text style={{ color: theme.colors.text }}>{t("explain_melios")}</Text>
 					</View>
 				</View>

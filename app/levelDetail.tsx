@@ -1,6 +1,7 @@
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, Platform, StatusBar } from "react-native";
@@ -17,13 +18,16 @@ const LevelDetail = () => {
 				<ButtonClose />
 			</View>
 
-			<View
+			<LinearGradient
+				colors={[
+					selectedLevel.color || theme.colors.primary,
+					theme.colors.background,
+				]}
 				style={{
-					backgroundColor: selectedLevel.color || theme.colors.background,
 					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 				}}
 				className="absolute top-0 left-0 right-0 h-48 w-full"
-			></View>
+			></LinearGradient>
 			<View
 				className="flex flex-col items-center justify-center w-10/12 mx-auto mt-2 rounded-xl py-10"
 				style={{
@@ -49,6 +53,7 @@ const LevelDetail = () => {
 					width={300}
 					unfilledColor={theme.colors.border}
 					borderColor="transparent"
+					borderWidth={0}
 					borderRadius={15}
 					color={selectedLevel.color || theme.colors.primary}
 				/>

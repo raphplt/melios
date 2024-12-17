@@ -1,3 +1,4 @@
+import React from "react";
 import { Tabs, useNavigation } from "expo-router";
 import { StatusBar, Text, View } from "react-native";
 import { useEffect } from "react";
@@ -30,18 +31,8 @@ const createTabOptions = (
 });
 
 const TabLayout: React.FC = () => {
-	const { user, isLoading } = useSession();
 	const { theme } = useTheme();
 	const { t } = useTranslation();
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
-
-	useEffect(() => {
-		if (!isLoading && !user) {
-			navigation.navigate("login");
-		}
-	}, [isLoading, user, navigation]);
-
-	if (isLoading) return <LoaderScreen text={t("loading")} />;
 
 	return (
 		<>
