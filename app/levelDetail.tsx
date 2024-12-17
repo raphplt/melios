@@ -1,3 +1,4 @@
+import Tasks from "@components/Levels/Tasks";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
@@ -11,7 +12,9 @@ const LevelDetail = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const { selectedLevel } = useData();
+
 	if (!selectedLevel) return null;
+
 	return (
 		<View>
 			<View className="m-10 ml-5 z-10 flex flex-row items-center justify-between w-10/12 mx-auto">
@@ -36,7 +39,15 @@ const LevelDetail = () => {
 					borderWidth: 1,
 				}}
 			>
-				<Text className="text-lg font-semibold">{selectedLevel.name}</Text>
+				<Text
+					className="text-xl font-semibold w-10/12 mx-auto text-center"
+					style={{
+						color: theme.colors.text,
+						fontFamily: "BaskervilleBold",
+					}}
+				>
+					{selectedLevel.name}
+				</Text>
 				<Text className="text-[16px] mt-2 font-semibold">
 					{t("lvl")} {selectedLevel.currentLevel}
 				</Text>
@@ -58,6 +69,8 @@ const LevelDetail = () => {
 					color={selectedLevel.color || theme.colors.primary}
 				/>
 			</View>
+
+			<Tasks />
 		</View>
 	);
 };
