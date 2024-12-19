@@ -1,3 +1,4 @@
+import ArticleCard from "@components/Agora/ArticleCard";
 import { useRssFeed } from "@hooks/useRssFeed";
 import React, { useState } from "react";
 import {
@@ -7,9 +8,8 @@ import {
 	FlatList,
 	TouchableOpacity,
 } from "react-native";
-import ArticleCard from "./ArticleCard";
 
-const themes = {
+const themes: Record<string, string> = {
 	Sport: "https://www.espn.com/espn/rss/news",
 	BienEtre: "https://www.wellandgood.com/feed/",
 	ConditionPhysique: "https://breakingmuscle.com/feed/",

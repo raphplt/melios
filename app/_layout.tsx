@@ -111,11 +111,26 @@ function MainNavigator() {
 						options={{ title: "Éditer mes objectifs", headerShadowVisible: false }}
 					/>
 					<Stack.Screen name="timerHabit" options={{ headerShown: false }} />
-					<Stack.Screen name="classement" />
+					<Stack.Screen
+						name="classement"
+						options={{
+							title: "Classement",
+						}}
+					/>
 					<Stack.Screen name="levelDetail" options={{ headerShown: false }} />
+					<Stack.Screen
+						name="feed"
+						options={{
+							title: "Actualités",
+						}}
+					/>
 					<Stack.Screen
 						name="help"
 						options={{ title: "Aide", headerShadowVisible: false }}
+					/>
+					<Stack.Screen
+						name="friendList"
+						options={{ title: "Liste d'amis", headerShadowVisible: false }}
 					/>
 					<Stack.Screen
 						name="cosmeticShop"

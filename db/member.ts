@@ -9,6 +9,9 @@ import {
 	arrayUnion,
 	getDoc,
 	arrayRemove,
+	limit,
+	orderBy,
+	startAfter,
 } from "firebase/firestore";
 import { db } from ".";
 import { auth } from ".";
@@ -18,12 +21,10 @@ import { UserHabit } from "../type/userHabit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Habit } from "@type/habit";
 
-
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
 //TODO OLD
 export const setMemberHabit = async (habit: Habit) => {
-
 	try {
 		const uid: any = auth.currentUser?.uid;
 
@@ -199,6 +200,42 @@ export const updateProfilePicture = async (slug: string) => {
 		}
 	} catch (error) {
 		console.error("Error updating profile picture: ", error);
+		throw error;
+	}
+};
+
+export const getMembersPaginated = async (
+	lastVisibleDoc: any = null,
+	pageSize: number = 10
+) => {
+	try {
+		const membersCollectionRef = collection(db, "members");
+
+		let membersQuery = query(
+			membersCollectionRef,
+			orderBy("nom"),
+			limit(pageSize)
+		);
+
+		if (lastVisibleDoc) {
+			membersQuery = query(membersQuery, startAfter(lastVisibleDoc));
+		}
+
+		const querySnapshot = await getDocs(membersQuery);
+
+		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+		const members = querySnapshot.docs.map((doc) => ({
+			id: doc.id,
+			...doc.data(),
+		}));
+
+		return { members, lastVisible };
+	} catch (error) {
+		console.error(
+			"Erreur lors de la récupération des membres avec pagination: ",
+			error
+		);
 		throw error;
 	}
 };

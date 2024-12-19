@@ -71,10 +71,11 @@
     "days_done": "Jours complétés",
     "statistics": "Statistiques",
     "no_data": "Aucune donnée",
-    "access_ranking": "Accéder au classement",
+    "access_ranking": "Classement",
     "rewards_packs": "Packs de récompenses",
     "congratulations": "Félicitations",
     "you_achieve_a_new_level": "Vous avez atteint un nouveau niveau",
     "xp": "XP",
-    "linked_habits": "Habitudes liées"
+    "linked_habits": "Habitudes liées",
+    "access_news_feed": "Fil d'actualité"
 }
