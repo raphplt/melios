@@ -51,6 +51,7 @@ const FriendList = () => {
 		<View>
 			<FlatList
 				data={members}
+				numColumns={2}
 				keyExtractor={(item) => item.uid}
 				renderItem={({ item }) => <Friend member={item} key={item.uid} />}
 				onEndReached={loadMoreMembers}

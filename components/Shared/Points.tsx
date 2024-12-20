@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import MoneyMelios from "@components/Svg/MoneyMelios";
-import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
-import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import { useTranslation } from "react-i18next";
 import { UserLevel } from "@type/levels";
 
 export const calculateGlobalLevel = (usersLevels: UserLevel[]) => {
+	if (Object.keys(usersLevels).length === 0) return 1;
 	return (
 		Object.values(usersLevels).reduce(
 			(total, level) => total + level.currentLevel,
@@ -28,18 +27,6 @@ export default function Points() {
 	};
 
 	const globalLevel = calculateGlobalLevel(usersLevels);
-
-	if (Object.keys(usersLevels).length === 0) {
-		return (
-			<ShimmerPlaceholder
-				width={150}
-				height={35}
-				style={{
-					borderRadius: 15,
-				}}
-			/>
-		);
-	}
 
 	return (
 		<View className="relative">
