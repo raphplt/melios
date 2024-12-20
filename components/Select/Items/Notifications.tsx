@@ -5,6 +5,8 @@ import ToggleButton from "@components/Account/Switch";
 import { BlurView } from "expo-blur";
 import RowTitleCustom from "./RowTitleCustom";
 import ModalReminder from "../Modals/ModalReminder";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Notifications({
 	register,
@@ -14,6 +16,7 @@ export default function Notifications({
 	setValue: any;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [visible, setVisible] = useState(false);
 	const [selectedMoment, setSelectedMoment] = useState({
 		label: "5 minutes avant",
@@ -45,7 +48,7 @@ export default function Notifications({
 						}}
 						className="mr-4 text-[16px]"
 					>
-						Me rappeler
+						{t("remind_me")}
 					</Text>
 
 					<ToggleButton value={isSwitchOn} onToggle={setIsSwitchOn} />

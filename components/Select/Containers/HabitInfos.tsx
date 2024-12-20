@@ -8,6 +8,7 @@ import { useSelect } from "@context/SelectContext";
 import ModalDuration from "../Modals/ModalDuration";
 import SelectColor from "@components/Modals/SelectColor";
 import { BlurView } from "expo-blur";
+import { useTranslation } from "react-i18next";
 
 export default function HabitInfos({
 	habit,
@@ -20,6 +21,7 @@ export default function HabitInfos({
 }) {
 	const { theme } = useTheme();
 	const { customHabit } = useSelect();
+	const { t } = useTranslation();
 
 	// States
 	const [showModalColor, setShowModalColor] = useState(false);
@@ -29,7 +31,9 @@ export default function HabitInfos({
 	const [selectedDuration, setSelectedDuration] = useState(habit?.duration || 0);
 
 	// Elements dynamiques si c'est une habitude personnalisé
-	const color = customHabit ? theme.colors.text : theme.colors.textTertiary;
+	const color = customHabit
+		? theme.colors.textTertiary
+		: theme.colors.textTertiary;
 
 	const setColor = (color: string) => {
 		setValue("color", color);
@@ -65,7 +69,7 @@ export default function HabitInfos({
 				<HabitInfoSection
 					icon={selectedCategory?.icon || "shapes"}
 					text={selectedCategory?.category || "Personnalisé"}
-					color={color}
+					color={theme.colors.textTertiary}
 					// onPress={handleShowModalCategory}
 				/>
 
@@ -91,7 +95,7 @@ export default function HabitInfos({
 							color: theme.colors.text,
 						}}
 					>
-						Couleur
+						{t("color")}
 					</Text>
 				</Pressable>
 			</BlurView>

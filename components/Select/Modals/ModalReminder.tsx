@@ -1,6 +1,7 @@
-import ModalWrapper from "@components/Modals/ModalWrapper";
+import ModalWrapperSimple from "@components/Modals/ModalWrapperSimple";
 import { useTheme } from "@context/ThemeContext";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { View, Text, Pressable } from "react-native";
 import WheelPicker from "react-native-wheely";
 
@@ -14,6 +15,7 @@ export default function ModalReminder({
 	onChange: (label: string, value: number) => void;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	const moments = [
 		{ label: "5 minutes avant", value: 5 },
@@ -33,8 +35,8 @@ export default function ModalReminder({
 	};
 
 	return (
-		<ModalWrapper visible={visible} setVisible={setVisible}>
-			<View className="flex flex-col items-center">
+		<ModalWrapperSimple visible={visible} setVisible={setVisible}>
+			<View className="flex flex-col items-center w-[80vw]">
 				<View className="flex flex-row justify-between w-10/12 items-center">
 					<Text
 						className="text-lg"
@@ -43,18 +45,8 @@ export default function ModalReminder({
 							fontFamily: "BaskervilleBold",
 						}}
 					>
-						Rappel
+						{t("remind_me")}
 					</Text>
-					<Pressable onPress={handleOkPress}>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-lg"
-						>
-							OK
-						</Text>
-					</Pressable>
 				</View>
 				<View className="w-full">
 					<WheelPicker
@@ -63,7 +55,24 @@ export default function ModalReminder({
 						onChange={(index) => setSelectedIndex(index)}
 					/>
 				</View>
+
+				<Pressable
+					onPress={handleOkPress}
+					style={{
+						backgroundColor: theme.colors.primary,
+					}}
+					className="rounded-2xl p-3 w-full flex mt-3 items-center"
+				>
+					<Text
+						style={{
+							color: theme.colors.textSecondary,
+						}}
+						className="text-lg"
+					>
+						OK
+					</Text>
+				</Pressable>
 			</View>
-		</ModalWrapper>
+		</ModalWrapperSimple>
 	);
 }

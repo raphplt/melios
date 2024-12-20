@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { View, Text, Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
 import RowTitleCustom from "../Items/RowTitleCustom";
+import React from "react";
 
 export default function HabitMoment({
 	setValue,
@@ -38,11 +39,14 @@ export default function HabitMoment({
 		setSelectedMoment(moment);
 	};
 
-const handleCustomMoment = (date: Date) => {
-	setCustomMoment(date);
-	setSelectedMoment(date.getHours());
-	setVisible(false);
-};
+	const handleCustomMoment = (date: Date) => {
+		setCustomMoment(date);
+		setSelectedMoment(date.getHours());
+		setVisible(false);
+	};
+
+	const itemStyle =
+		"w-full flex flex-row items-center justify-between px-3 py-2";
 
 	return (
 		<>
@@ -57,7 +61,7 @@ const handleCustomMoment = (date: Date) => {
 					}}
 				>
 					<Pressable
-						className="w-full flex flex-row items-center justify-between px-3 py-1"
+						className={itemStyle}
 						style={{
 							backgroundColor: customMoment ? theme.colors.primary : "transparent",
 						}}
@@ -90,7 +94,7 @@ const handleCustomMoment = (date: Date) => {
 					}}
 				>
 					<Pressable
-						className="w-full flex flex-row items-center justify-between px-3 py-1"
+						className={itemStyle}
 						style={{
 							backgroundColor:
 								selectedMoment === -1 && !customMoment
@@ -134,7 +138,7 @@ const handleCustomMoment = (date: Date) => {
 					}}
 				>
 					<Pressable
-						className="w-full flex flex-row items-center justify-between px-3 py-1"
+						className={itemStyle}
 						style={{
 							backgroundColor:
 								selectedMoment >= 6 && selectedMoment < 12 && !customMoment
@@ -174,7 +178,7 @@ const handleCustomMoment = (date: Date) => {
 					}}
 				>
 					<Pressable
-						className="w-full flex flex-row items-center justify-between px-3 py-1"
+						className={itemStyle}
 						style={{
 							backgroundColor:
 								selectedMoment >= 12 && selectedMoment < 18 && !customMoment
@@ -215,7 +219,7 @@ const handleCustomMoment = (date: Date) => {
 					}}
 				>
 					<Pressable
-						className="w-full flex flex-row items-center justify-between px-3 py-1"
+						className={itemStyle}
 						style={{
 							backgroundColor:
 								selectedMoment >= 18 && selectedMoment < 24 && !customMoment

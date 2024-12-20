@@ -1,8 +1,9 @@
-import ModalWrapper from "@components/Modals/ModalWrapper";
 import { useTheme } from "@context/ThemeContext";
 import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import WheelPicker from "react-native-wheely";
+import { useTranslation } from "react-i18next";
+import ModalWrapperSimple from "@components/Modals/ModalWrapperSimple";
 
 export default function ModalDuration({
 	visible,
@@ -14,30 +15,31 @@ export default function ModalDuration({
 	onChange: (label: string, value: number) => void;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 
-	const generateDurations = () => {
-		const durations = [];
-		for (let i = 0; i <= 90; i += 5) {
-			const label = i === 0 ? "0 minute" : `${i} minutes`;
-			durations.push({ label, value: i });
+	const [selectedMinutes, setSelectedMinutes] = useState(5);
+
+	const generateDurationOptions = () => {
+		const options = [];
+		for (let i = 0; i <= 120; i += 5) {
+			const label = `${i} minute${i > 1 ? "s" : ""}`;
+			options.push({ label, value: i });
 		}
-		return durations;
+		return options;
 	};
 
-	const durations = generateDurations();
-
-	const [selectedIndex, setSelectedIndex] = useState(0);
+	const durations = generateDurationOptions();
 
 	const handleOkPress = () => {
-		const selectedDuration = durations[selectedIndex];
-		onChange(selectedDuration.label, selectedDuration.value);
+		const label = `${selectedMinutes} minute ${selectedMinutes > 1 ? "s" : ""}`;
+		onChange(label, selectedMinutes);
 		setVisible(false);
 	};
 
 	return (
-		<ModalWrapper visible={visible} setVisible={setVisible}>
-			<View className="flex flex-col items-center">
-				<View className="flex flex-row justify-between w-10/12 items-center">
+		<ModalWrapperSimple visible={visible} setVisible={setVisible}>
+			<View className="flex flex-col items-center w-[80vw]">
+				<View className=" flex flex-row items-center justify-between w-11/12 ">
 					<Text
 						className="text-lg"
 						style={{
@@ -45,27 +47,35 @@ export default function ModalDuration({
 							fontFamily: "BaskervilleBold",
 						}}
 					>
-						Durée
+						{t("duration")}
 					</Text>
-					<Pressable onPress={handleOkPress}>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-lg"
-						>
-							OK
-						</Text>
-					</Pressable>
 				</View>
 				<View className="w-full">
 					<WheelPicker
-						selectedIndex={selectedIndex}
 						options={durations.map((duration) => duration.label)}
-						onChange={(index) => setSelectedIndex(index)}
+						selectedIndex={durations.findIndex(
+							(duration) => duration.value === selectedMinutes
+						)}
+						onChange={(index) => setSelectedMinutes(durations[index].value)}
 					/>
 				</View>
+				<Pressable
+					onPress={handleOkPress}
+					style={{
+						backgroundColor: theme.colors.primary,
+					}}
+					className="rounded-2xl p-3 w-full flex mt-3 items-center"
+				>
+					<Text
+						style={{
+							color: theme.colors.textSecondary,
+						}}
+						className="text-lg"
+					>
+						OK
+					</Text>
+				</Pressable>
 			</View>
-		</ModalWrapper>
+		</ModalWrapperSimple>
 	);
 }

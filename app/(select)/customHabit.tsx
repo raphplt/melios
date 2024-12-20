@@ -37,6 +37,7 @@ import { UserHabit } from "@type/userHabit";
 import { LinearGradient } from "expo-linear-gradient";
 import { lightenColor } from "@utils/colors";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -44,6 +45,7 @@ export default function CustomHabit() {
 	const { theme } = useTheme();
 	const { habit, setHabit } = useSelect();
 	const { member, setHabits } = useData();
+	const { t } = useTranslation();
 
 	const methods = useForm({
 		resolver: zodResolver(createHabitSchema),
@@ -168,6 +170,7 @@ export default function CustomHabit() {
 								<Text style={{ color: "red" }}>{errors.category.message}</Text>
 							)}
 						</View>
+						
 					</FormProvider>
 				</ScrollView>
 				<Pressable
@@ -175,7 +178,7 @@ export default function CustomHabit() {
 						backgroundColor: theme.colors.primary,
 					}}
 					onPress={handleSubmit(onSubmit)}
-					className="rounded-xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4"
+					className="rounded-2xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4"
 				>
 					{isSubmitting ? (
 						<ActivityIndicator size="small" color="white" />
@@ -186,7 +189,7 @@ export default function CustomHabit() {
 							}}
 							className="text-lg"
 						>
-							Enregistrer
+							{t("save")}
 						</Text>
 					)}
 				</Pressable>
