@@ -1,18 +1,18 @@
 import { useTheme } from "@context/ThemeContext";
 import { useEffect, useState } from "react";
-import { Dimensions, Modal, Pressable, Text, View } from "react-native";
+import { Dimensions, Pressable, Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { Dropdown } from "react-native-element-dropdown";
 import { useData } from "@context/DataContext";
 import Slider from "@react-native-community/slider";
 import { setMemberGoal } from "@db/goal";
-import { Habit } from "@type/habit";
 import useIndex from "@hooks/useIndex";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { calcReward } from "@utils/goal";
 import { useGoal } from "@context/GoalsContext";
 import { useTranslation } from "react-i18next";
 import ModalWrapper from "@components/Modals/ModalWrapper";
+import { UserHabit } from "@type/userHabit";
 
 export default function ModalAddGoal({
 	visible,
@@ -40,17 +40,16 @@ export default function ModalAddGoal({
 		value: habit.id,
 	}));
 
-	const [selectedHabit, setSelectedHabit] = useState<Habit>();
+	const [selectedHabit, setSelectedHabit] = useState<UserHabit>();
 	const [duration, setDuration] = useState<number>(3);
 	const [canValidate, setCanValidate] = useState<boolean>(false);
-	const [selectedHabitDetail, setSelectedHabitDetail] = useState<Habit>();
 	const [error, setError] = useState<string | null>(null);
 
 	const handleValidate = async () => {
-		if (selectedHabitDetail && duration && member && member.uid) {
+		if (duration && member && member.uid) {
 			const goal = {
 				memberId: member.uid,
-				habitId: selectedHabitDetail.id,
+				habitId: selectedHabit?.id,
 				duration,
 				createdAt: new Date(),
 			};
@@ -62,19 +61,10 @@ export default function ModalAddGoal({
 				setVisible(false);
 				setError(null);
 			} catch (error) {
-				console.error("Erreur lors de l'ajout de l'objectif: ", error);
 				setError("Erreur lors de l'ajout de l'objectif. Veuillez réessayer.");
 			}
 		} else {
 			setError("Erreur lors de l'ajout de l'objectif. Veuillez réessayer.");
-			console.error(
-				"selectedHabitDetail",
-				selectedHabitDetail,
-				"duration",
-				duration,
-				"member",
-				member
-			);
 		}
 	};
 
@@ -86,27 +76,17 @@ export default function ModalAddGoal({
 		}
 	}, [selectedHabit, duration]);
 
-	const block = "w-11/12 mx-auto py-2";
-
-	useEffect(() => {
-		if (selectedHabit) {
-			const habitDetail = getHabitDetails(selectedHabit.value);
-			if (habitDetail) {
-				setSelectedHabitDetail(habitDetail);
-			}
-		}
-	}, [selectedHabit]);
-
+	const block = "w-[95%] mx-auto py-2";
 	const windowWidth = Dimensions.get("window").width;
 
 	return (
 		<ModalWrapper visible={visible} setVisible={setVisible}>
 			<View
 				style={{
-					width: windowWidth * 0.8,
+					width: windowWidth * 0.85,
 				}}
 			>
-				<View className="flex flex-row w-full mx-auto justify-between items-center py-3">
+				<View className="flex flex-row w-full mx-auto justify-between items-center mb-2">
 					<Text
 						style={{
 							color: theme.colors.text,
@@ -117,19 +97,6 @@ export default function ModalAddGoal({
 						{t("create_goal")}
 					</Text>
 				</View>
-
-				{error && (
-					<View className="w-11/12 mx-auto py-2">
-						<Text
-							style={{
-								color: theme.colors.redPrimary,
-							}}
-							className="text-[16px] font-semibold py-3 mx-2"
-						>
-							{error}
-						</Text>
-					</View>
-				)}
 
 				<View className={block}>
 					<View className="flex flex-row items-center">
@@ -150,8 +117,14 @@ export default function ModalAddGoal({
 					<Dropdown
 						labelField={"label"}
 						valueField={"value"}
-						value={selectedHabit}
-						onChange={(item) => setSelectedHabit(item)}
+						value={selectedHabit ? selectedHabit.id : null}
+						onChange={(item) => {
+							const selected = habits.find((habit) => habit.id === item.value);
+							console.log("selected", selected);
+							if (!selected) return;
+							setSelectedHabit(selected);
+							setError(null);
+						}}
 						data={habitOptions}
 						placeholder="Choisir une habitude"
 						containerStyle={{
@@ -200,14 +173,17 @@ export default function ModalAddGoal({
 						minimumTrackTintColor={theme.colors.primary}
 						maximumTrackTintColor={theme.colors.textTertiary}
 						value={duration}
-						onValueChange={(value) => setDuration(value)}
+						onValueChange={(value) => {
+							setDuration(value);
+							setError(null);
+						}}
 						step={1}
 						thumbTintColor={theme.colors.primary}
 						aria-label="Slider days"
 					/>
 				</View>
 
-				{selectedHabitDetail && (
+				{selectedHabit && (
 					<View className={block}>
 						<View className="flex flex-row justify-between items-center">
 							<View className="flex flex-row items-center">
@@ -232,11 +208,24 @@ export default function ModalAddGoal({
 									}}
 									className="mx-1 font-semibold text-[16px]"
 								>
-									{calcReward({ duration: duration, habit: selectedHabitDetail }) || 0}
+									{duration - 2 || 0}
 								</Text>
 								<MoneyMelios />
 							</View>
 						</View>
+					</View>
+				)}
+
+				{error && (
+					<View className="w-11/12 mx-auto py-2">
+						<Text
+							style={{
+								color: theme.colors.redPrimary,
+							}}
+							className="text-[14px] font-semibold py-3 mx-2"
+						>
+							{error}
+						</Text>
 					</View>
 				)}
 

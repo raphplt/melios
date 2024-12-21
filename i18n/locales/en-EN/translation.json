@@ -82,5 +82,6 @@
     "save": "Save",
     "color": "Color",
     "remind_me": "Remind me",
-    "define_goal": "Define a goal"
+    "define_goal": "Define a goal",
+    "last_days_completion": "Last days completion"
 }

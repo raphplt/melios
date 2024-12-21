@@ -6,7 +6,6 @@ import {
 	StatusBar,
 	Platform,
 	StyleSheet,
-	Image,
 } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";

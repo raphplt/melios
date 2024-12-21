@@ -82,5 +82,6 @@
     "save": "Enregistrer",
     "color": "Couleur",
     "remind_me": "Me rappeler",
-    "define_goal": "Définir un objectif"
+    "define_goal": "Définir un objectif",
+    "last_days_completion": "Derniers jours complétés"
 }

@@ -1,5 +1,5 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useEffect, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useEffect, useState } from "react";
 import { View, Text, Dimensions, Pressable } from "react-native";
 import { Goal } from "@type/goal";
 import { Habit } from "@type/habit";
@@ -14,7 +14,7 @@ import { calcReward } from "@utils/goal";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 
 export default function CurrentGoal({ goal }: { goal: Goal }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const { width } = Dimensions.get("window");
 	const { getHabitDetails, getUserHabitDetails, userHabits } = useIndex();
 	const [habit, setHabit] = useState<Habit>();
@@ -83,6 +83,10 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 			setCompletedDays(completedDays);
 		}
 	}, [userHabit, goal]);
+
+	console.log("userHabit", userHabit);
+	console.log("habit", habit);
+
 	if (!habit || !userHabit) return null;
 
 	const lightColor = lightenColor(

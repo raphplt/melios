@@ -1,17 +1,20 @@
 import moment from "moment";
 import { Text, View, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useContext, useState, useEffect } from "react";
-import { ThemeContext } from "@context/ThemeContext";
+import { useState, useEffect } from "react";
+import { useTheme } from "@context/ThemeContext";
 import { UserHabit } from "@type/userHabit";
 import { DayStatus } from "../../app/habitDetail";
 import { getHabitLogs } from "@db/logs";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function LastDays({ habit }: { habit: UserHabit }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -75,7 +78,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 						style={{ color: theme.colors.text }}
 						className="text-[16px] font-semibold "
 					>
-						Complétion des derniers jours
+						{t("last_days_completion")}
 					</Text>
 				</View>
 				<ScrollView
