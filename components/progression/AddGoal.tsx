@@ -1,11 +1,13 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useEffect, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useState } from "react";
 import { View, Text, Pressable, Dimensions } from "react-native";
 import { Iconify } from "react-native-iconify";
 import ModalAddGoal from "./ModalAddGoal";
+import { useTranslation } from "react-i18next";
 
 export default function AddGoal() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [visible, setVisible] = useState(false);
 
 	const { width } = Dimensions.get("window");
@@ -35,7 +37,7 @@ export default function AddGoal() {
 					}}
 					className="text-[16px] font-semibold mx-2"
 				>
-					Définir un objectif
+					{t("define_goal")}
 				</Text>
 				<Iconify
 					icon="bi:arrow-right"

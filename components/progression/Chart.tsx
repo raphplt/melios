@@ -35,8 +35,9 @@ export default function Chart() {
 
 	const { parsedTime, todayScore, regularity } = useChart();
 
+	// Remplacez les données vides par un tableau de 0
 	const data = {
-		data: [parsedTime, todayScore, regularity],
+		data: [parsedTime || 0, todayScore || 0, regularity || 0],
 	};
 	const screenWidth = Dimensions.get("window").width;
 
@@ -45,29 +46,6 @@ export default function Chart() {
 		theme.colors.greenPrimary,
 		theme.colors.orangePrimary,
 	];
-
-	// Check if all data values are zero
-	const isDataEmpty = data.data.every((value) => value === 0);
-
-	if (isDataEmpty) {
-		return (
-			<SectionHeader
-				title={t("statistics")}
-				show={showChart}
-				setShow={setShowChart}
-				icon="graph"
-			>
-				<View
-					className=" py-3 mx-auto w-11/12 my-3 rounded-xl"
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-					}}
-				>
-					<Text style={{ textAlign: "center", color: "#000" }}>{t("no_data")}</Text>
-				</View>
-			</SectionHeader>
-		);
-	}
 
 	return (
 		<SectionHeader
@@ -116,10 +94,18 @@ export default function Chart() {
 						<ChartLabel
 							color={colors[0]}
 							text="Temps passé"
-							percentage={parsedTime}
+							percentage={parsedTime || 0}
 						/>
-						<ChartLabel color={colors[1]} text="Complétion" percentage={todayScore} />
-						<ChartLabel color={colors[2]} text="Régularité" percentage={regularity} />
+						<ChartLabel
+							color={colors[1]}
+							text="Complétion"
+							percentage={todayScore || 0}
+						/>
+						<ChartLabel
+							color={colors[2]}
+							text="Régularité"
+							percentage={regularity || 0}
+						/>
 					</View>
 				</View>
 			</View>
