@@ -26,7 +26,6 @@ export default function ModalAddGoal({
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const { habits, member } = useData();
-	const { getHabitDetails } = useIndex();
 	const { goals, setGoals } = useGoal();
 
 	const existingHabitIds = goals.map((goal) => goal.habitId);

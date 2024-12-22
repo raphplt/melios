@@ -83,5 +83,8 @@
     "color": "Color",
     "remind_me": "Remind me",
     "define_goal": "Define a goal",
-    "last_days_completion": "Last days completion"
+    "last_days_completion": "Last days completion",
+    "failed_objective": "Failed objective",
+    "today": "Today",
+    "progress": "Progress"
 }

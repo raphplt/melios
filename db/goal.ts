@@ -17,14 +17,13 @@ export const LOCAL_STORAGE_GOAL_KEY = "goals";
 
 export const getMemberGoals = async (memberId: string) => {
 	try {
-		const storedGoal = await AsyncStorage.getItem(LOCAL_STORAGE_GOAL_KEY);
+		// const storedGoal = await AsyncStorage.getItem(LOCAL_STORAGE_GOAL_KEY);
 
-		if (storedGoal && JSON.parse(storedGoal).length > 0) {
-			console.log("Fetching goals from local storage");
-			return JSON.parse(storedGoal);
-		}
+		// if (storedGoal && JSON.parse(storedGoal).length > 0) {
+		// 	console.log("Fetching goals from local storage");
+		// 	return JSON.parse(storedGoal);
+		// }
 
-		console.log("Fetching goals from firestore");
 		const goalCollectionRef = collection(db, "goals");
 
 		const goalSnapshot = await getDocs(

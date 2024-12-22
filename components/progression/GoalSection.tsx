@@ -13,7 +13,7 @@ export default function GoalSection() {
 
 	if (loadingGoals) return <GoalPlaceHolder />;
 
-	console.log("goals", goals);
+	console.log("goals", goals.length);
 
 	return (
 		<View className="my-1">
