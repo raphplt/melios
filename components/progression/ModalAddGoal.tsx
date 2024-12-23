@@ -119,7 +119,6 @@ export default function ModalAddGoal({
 						value={selectedHabit ? selectedHabit.id : null}
 						onChange={(item) => {
 							const selected = habits.find((habit) => habit.id === item.value);
-							console.log("selected", selected);
 							if (!selected) return;
 							setSelectedHabit(selected);
 							setError(null);

@@ -46,7 +46,6 @@ export const getUserHabits = async (options: {
 }) => {
 	try {
 		if (!options.forceRefresh) {
-			console.log(`[${new Date().toISOString()}] LocalStorage getMemberHabits`);
 			const storedData = await AsyncStorage.getItem(
 				LOCAL_STORAGE_MEMBER_HABITS_KEY
 			);

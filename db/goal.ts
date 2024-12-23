@@ -52,11 +52,9 @@ export const setMemberGoal = async (goal: any) => {
 
 		if (goal.id) {
 			const goalDocRef = doc(db, "goals", goal.id);
-			console.log("Updating goal");
 			await updateDoc(goalDocRef, goal);
 			return { id: goal.id, ...goal };
 		} else {
-			console.log("Creating goal");
 			const docRef = await addDoc(goalCollectionRef, {
 				...goal,
 				createdAt: new Date(),

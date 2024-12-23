@@ -32,11 +32,6 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 
 	useEffect(() => {
 		async function getHabitInfos() {
-			console.log("goal.habitId", goal.habitId);
-			console.log(
-				"habits",
-				habits.map((h) => h.id)
-			);
 			const userHabit = getUserHabitDetails(goal.habitId);
 			setUserHabit(userHabit);
 		}

@@ -84,6 +84,7 @@ const useAddXp = () => {
 				}));
 			} catch (error) {
 				console.error("Error updating XP: ", error);
+				return null;
 			}
 		},
 		[updateLevel, usersLevels, setUsersLevels, member.uid]
