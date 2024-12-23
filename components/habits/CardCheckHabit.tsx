@@ -44,7 +44,7 @@ function CardCheckHabit({
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
 	const { startTimer } = useHabitTimer();
-	const { addXp } = useAddXp();
+	const addXp = useAddXp()?.addXp;
 	const { t } = useTranslation();
 
 	// États
@@ -112,7 +112,9 @@ function CardCheckHabit({
 		try {
 			setCompleted(true);
 			await setHabitLog(habit.id, date);
-			await addXp(habit, 30);
+			if (addXp) {
+				await addXp(habit, 30);
+			}
 			addOdysseePoints(habit.difficulty);
 			setRewards("odyssee", habit.difficulty * 2);
 			setCompletedHabitsToday((prev) => [...prev, habit]);
@@ -151,11 +153,11 @@ function CardCheckHabit({
 						backgroundColor: completed
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
-						// borderColor:
-						// 	habit.type === "Négatif"
-						// 		? theme.colors.redPrimary
-						// 		: theme.colors.cardBackground,
-						// borderWidth: 2,
+						borderColor:
+							habit.type === "Négatif"
+								? theme.colors.redPrimary
+								: theme.colors.cardBackground,
+						borderWidth: 2,
 					}}
 					className="flex-1 flex flex-col rounded-xl"
 				>

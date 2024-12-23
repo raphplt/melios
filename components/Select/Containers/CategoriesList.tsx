@@ -2,6 +2,7 @@ import { useHabits } from "@context/HabitsContext";
 import { FlatList, View } from "react-native";
 import CategoryItem from "../Items/CategoryItem";
 import { useSelect } from "@context/SelectContext";
+import { useState, useEffect } from "react";
 
 export enum CategoryType {
 	positive = "positive",
@@ -14,8 +15,9 @@ export enum CategoryTypeSelect {
 }
 
 export default function CategoriesList() {
-	const { categories } = useHabits();
+	const { categories, refreshCategories } = useHabits();
 	const { type } = useSelect();
+	const [hasRefreshed, setHasRefreshed] = useState(false);
 
 	const positiveCategories = categories.filter(
 		(category) => category.type === CategoryType.positive
@@ -24,6 +26,17 @@ export default function CategoriesList() {
 	const negativeCategories = categories.filter(
 		(category) => category.type === CategoryType.negative
 	);
+	useEffect(() => {
+		if (negativeCategories && !hasRefreshed) {
+			console.log("refreshing categories");
+			refreshCategories(true);
+			setHasRefreshed(true);
+		}
+	}, [categories, hasRefreshed, refreshCategories]);
+
+	if (!categories) {
+		return null;
+	}
 
 	return (
 		<View>

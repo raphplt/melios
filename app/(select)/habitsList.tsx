@@ -22,7 +22,6 @@ export default function CategoryList() {
 		);
 
 		if (habits.length === 0) {
-			console.log("No habits found for this category, refreshing...");
 			refreshHabits(true);
 			setHasRefreshed(true);
 		}
@@ -47,7 +46,7 @@ export default function CategoryList() {
 		>
 			<View
 				style={{
-					paddingTop: StatusBar.currentHeight,
+					paddingTop: StatusBar.currentHeight || 30,
 					backgroundColor: lightColor || theme.colors.cardBackground,
 				}}
 				className="rounded-b-3xl"

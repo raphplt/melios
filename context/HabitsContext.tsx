@@ -15,7 +15,7 @@ interface HabitsContextProps {
 	showHabitDetail?: boolean;
 	setShowHabitDetail: React.Dispatch<React.SetStateAction<boolean>>;
 	categories: Category[];
-	refreshCategories: () => void;
+	refreshCategories: (forceRefresh?: boolean) => void;
 }
 
 export const HabitsContext = createContext<HabitsContextProps>({
@@ -53,9 +53,12 @@ export const HabitsProvider = ({ children }: any) => {
 		}
 	};
 
-	const fetchCategoriesData = async (signal: AbortSignal) => {
+	const fetchCategoriesData = async (
+		signal: AbortSignal,
+		forceRefresh = false
+	) => {
 		try {
-			const data = await getAllCategories();
+			const data = await getAllCategories(forceRefresh);
 			if (!signal.aborted) {
 				setCategories(data);
 			}
@@ -92,7 +95,8 @@ export const HabitsProvider = ({ children }: any) => {
 				showHabitDetail,
 				setShowHabitDetail,
 				categories,
-				refreshCategories: () => fetchCategoriesData(new AbortController().signal),
+				refreshCategories: (forceRefresh = false) =>
+					fetchCategoriesData(new AbortController().signal, forceRefresh),
 			}}
 		>
 			{children}

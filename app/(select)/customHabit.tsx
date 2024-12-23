@@ -60,6 +60,7 @@ export default function CustomHabit() {
 			moment: habit?.moment || 0,
 			duration: habit?.duration || 0,
 			frequency: frequencyDefaultValues,
+			type: habit?.type || "Positif",
 			memberId: member?.uid || null,
 			habitId: habit?.id || "0",
 			reminderMoment: habit?.reminderMoment || 5,

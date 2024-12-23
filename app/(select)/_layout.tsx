@@ -13,7 +13,7 @@ const SelectLayout = () => {
 			/>
 			<Stack>
 				<Stack.Screen name="index" options={{ headerShown: false }} />
-				<Stack.Screen name="categoryList" options={{ headerShown: false }} />
+				<Stack.Screen name="habitsList" options={{ headerShown: false }} />
 				<Stack.Screen name="customHabit" options={{ headerShown: false }} />
 			</Stack>
 		</SelectProvider>
