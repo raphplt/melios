@@ -1,9 +1,7 @@
 import { useHabits } from "@context/HabitsContext";
-import { FlatList, View, Image, Dimensions, Text } from "react-native";
+import { FlatList, View } from "react-native";
 import CategoryItem from "../Items/CategoryItem";
 import { useSelect } from "@context/SelectContext";
-import { useTheme } from "@context/ThemeContext";
-import CachedImage from "@components/Shared/CachedImage";
 
 export enum CategoryType {
 	positive = "positive",

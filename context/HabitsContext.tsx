@@ -8,7 +8,7 @@ import { UserHabit } from "@type/userHabit";
 interface HabitsContextProps {
 	habitsData: Habit[];
 	loading: boolean;
-	refreshHabits: () => void;
+	refreshHabits: (forceRefresh?: boolean) => void;
 
 	currentHabit: UserHabit | null;
 	setCurrentHabit: React.Dispatch<React.SetStateAction<UserHabit | null>>;
@@ -39,9 +39,9 @@ export const HabitsProvider = ({ children }: any) => {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [showHabitDetail, setShowHabitDetail] = useState(true);
 
-	const fetchHabitsData = async (signal: AbortSignal) => {
+	const fetchHabitsData = async (signal: AbortSignal, forceRefresh = false) => {
 		try {
-			const data = await getHabitsWithCategories();
+			const data = await getHabitsWithCategories(forceRefresh);
 			if (!signal.aborted) {
 				setHabitsData(data);
 				setLoading(false);
@@ -84,7 +84,8 @@ export const HabitsProvider = ({ children }: any) => {
 			value={{
 				habitsData,
 				loading,
-				refreshHabits: () => fetchHabitsData(new AbortController().signal),
+				refreshHabits: (forceRefresh = false) =>
+					fetchHabitsData(new AbortController().signal, forceRefresh),
 
 				currentHabit,
 				setCurrentHabit,

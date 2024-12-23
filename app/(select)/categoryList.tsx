@@ -5,12 +5,28 @@ import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { lightenColor } from "@utils/colors";
+import { useEffect, useState } from "react";
 import { View, Text, StatusBar, FlatList } from "react-native";
 
 export default function CategoryList() {
 	const { theme } = useTheme();
 	const { category } = useSelect();
-	const { habitsData } = useHabits();
+	const { habitsData, refreshHabits } = useHabits();
+	const [hasRefreshed, setHasRefreshed] = useState(false);
+
+	useEffect(() => {
+		if (!category || hasRefreshed) return;
+
+		const habits = habitsData.filter(
+			(habit) => habit.category?.category === category.category
+		);
+
+		if (habits.length === 0) {
+			console.log("No habits found for this category, refreshing...");
+			refreshHabits(true);
+			setHasRefreshed(true);
+		}
+	}, [category, habitsData, refreshHabits, hasRefreshed]);
 
 	if (!category) {
 		return null;
@@ -21,6 +37,7 @@ export default function CategoryList() {
 	const habits = habitsData.filter(
 		(habit) => habit.category?.category === category.category
 	);
+
 	return (
 		<View
 			style={{

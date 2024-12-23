@@ -27,6 +27,7 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
 import { useTranslation } from "react-i18next";
+import { CategoryTypeSelect } from "@components/Select/Containers/CategoriesList";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -151,6 +152,11 @@ function CardCheckHabit({
 						backgroundColor: completed
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
+						// borderColor:
+						// 	habit.type === "Négatif"
+						// 		? theme.colors.redPrimary
+						// 		: theme.colors.cardBackground,
+						// borderWidth: 2,
 					}}
 					className="flex-1 flex flex-col rounded-xl"
 				>
