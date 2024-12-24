@@ -27,6 +27,7 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
 import { useTranslation } from "react-i18next";
+import { CategoryTypeSelect } from "@components/Select/Containers/CategoriesList";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -142,7 +143,9 @@ function CardCheckHabit({
 					<Ionicons
 						name={completed ? "checkmark-circle" : "ellipse-outline"}
 						size={30}
-						color={theme.colors.primary}
+						color={
+							habit.type === "Négatif" ? theme.colors.redPrimary : theme.colors.primary
+						}
 					/>
 				</Pressable>
 				<Pressable
@@ -154,7 +157,7 @@ function CardCheckHabit({
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 						borderColor:
-							habit.type === "Négatif"
+							habit.type === CategoryTypeSelect.negative
 								? theme.colors.redPrimary
 								: theme.colors.cardBackground,
 						borderWidth: 2,
