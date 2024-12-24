@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Button, ActivityIndicator } from "react-native";
+import { Text, View, Pressable, ActivityIndicator } from "react-native";
 import CachedImage from "@components/Shared/CachedImage";
 import { useTheme } from "@context/ThemeContext";
 import { Member } from "@type/member";
@@ -22,15 +22,19 @@ const Friend = ({ member }: Props) => {
 	);
 	const [loading, setLoading] = useState(false);
 
-	const { member: currentUser } = useData();
+	const { member: currentUser, setMember } = useData();
 
 	if (!currentUser) return null;
 
-	const isFriend = (currentUser.friends ?? []).includes(member.uid);
-	const requestSent =
-		currentUser.friendRequestsSent?.includes(member.uid) ?? false;
-	const requestReceived =
-		currentUser.friendRequestsReceived?.includes(member.uid) ?? false;
+	const [isFriend, setIsFriend] = useState(
+		(currentUser.friends ?? []).includes(member.uid)
+	);
+	const [requestSent, setRequestSent] = useState(
+		currentUser.friendRequestsSent?.includes(member.uid) ?? false
+	);
+	const [requestReceived, setRequestReceived] = useState(
+		currentUser.friendRequestsReceived?.includes(member.uid) ?? false
+	);
 
 	useEffect(() => {
 		const loadProfilePicture = () => {
@@ -45,7 +49,16 @@ const Friend = ({ member }: Props) => {
 	const handleSendRequest = async () => {
 		setLoading(true);
 		try {
+			if (!member.uid) return;
 			await sendFriendRequest(member.uid);
+			setRequestSent(true);
+			setMember((prevData) => {
+				if (!prevData) return prevData;
+				return {
+					...prevData,
+					friendRequestsSent: [...(prevData.friendRequestsSent ?? []), member.uid],
+				};
+			});
 		} catch (error) {
 			console.error("Erreur lors de l'envoi de la demande :", error);
 		} finally {
@@ -57,6 +70,18 @@ const Friend = ({ member }: Props) => {
 		setLoading(true);
 		try {
 			await acceptFriendRequest(member.uid);
+			setIsFriend(true);
+			setRequestReceived(false);
+			setMember((prevData) => {
+				if (!prevData) return prevData;
+				return {
+					...prevData,
+					friends: [...(prevData.friends ?? []), member.uid],
+					friendRequestsReceived: (prevData.friendRequestsReceived ?? []).filter(
+						(uid) => uid !== member.uid
+					),
+				};
+			});
 		} catch (error) {
 			console.error("Erreur lors de l'acceptation de la demande :", error);
 		} finally {
@@ -68,6 +93,16 @@ const Friend = ({ member }: Props) => {
 		setLoading(true);
 		try {
 			await declineFriendRequest(member.uid);
+			setRequestReceived(false);
+			setMember((prevData) => {
+				if (!prevData) return prevData;
+				return {
+					...prevData,
+					friendRequestsReceived: (prevData.friendRequestsReceived ?? []).filter(
+						(uid) => uid !== member.uid
+					),
+				};
+			});
 		} catch (error) {
 			console.error("Erreur lors du refus de la demande :", error);
 		} finally {
@@ -83,7 +118,6 @@ const Friend = ({ member }: Props) => {
 				borderColor: theme.colors.border,
 				borderWidth: 1,
 			}}
-			key={member.uid}
 		>
 			<CachedImage
 				imagePath={profilePictureUri || "images/cosmetics/man.png"}
@@ -98,11 +132,29 @@ const Friend = ({ member }: Props) => {
 				<Text>Demande envoyée</Text>
 			) : requestReceived ? (
 				<>
-					<Button title="Accepter" onPress={handleAcceptRequest} />
-					<Button title="Refuser" onPress={handleDeclineRequest} color="red" />
+					<Pressable
+						onPress={handleAcceptRequest}
+						style={{ backgroundColor: theme.colors.primary }}
+						className="p-2 rounded-lg mt-2"
+					>
+						<Text style={{ color: "white" }}>Accepter</Text>
+					</Pressable>
+					<Pressable
+						onPress={handleDeclineRequest}
+						style={{ backgroundColor: theme.colors.primary }}
+						className="p-2 rounded-lg mt-2"
+					>
+						<Text style={{ color: "white" }}>Refuser</Text>
+					</Pressable>
 				</>
 			) : (
-				<Button title="Ajouter" onPress={handleSendRequest} />
+				<Pressable
+					onPress={handleSendRequest}
+					style={{ backgroundColor: theme.colors.primary }}
+					className="p-2 rounded-lg mt-2"
+				>
+					<Text style={{ color: "white" }}>Ajouter</Text>
+				</Pressable>
 			)}
 		</View>
 	);
