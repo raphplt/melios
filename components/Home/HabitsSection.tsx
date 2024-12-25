@@ -1,5 +1,5 @@
-import React from "react";
-import { ScrollView } from "react-native";
+import React, { useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import useIndex from "@hooks/useIndex";
 import { UserHabit } from "@type/userHabit";
@@ -9,46 +9,80 @@ import { Iconify } from "react-native-iconify";
 import { useTheme } from "@context/ThemeContext";
 import NoHabits from "./NoHabits";
 import { useTranslation } from "react-i18next";
+import { CategoryTypeSelect } from "@components/Select/Containers/CategoriesList";
 
 export default function HabitsSection() {
 	const { userHabits } = useIndex();
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 
+	//TODO a corriger
+	const [filter, setFilter] = useState<CategoryTypeSelect | null>(null);
+
 	const today: DayOfWeek = new Date()
 		.toLocaleString("en-US", { weekday: "long" })
 		.toLowerCase() as DayOfWeek;
 
-	const morningHabits = userHabits?.filter(
-		(habit) =>
-			habit.frequency &&
-			habit.frequency[today] &&
-			habit.moment >= 6 &&
-			habit.moment < 12
+	const filteredHabits = userHabits?.filter(
+		(habit) => habit.type === filter && habit.frequency && habit.frequency[today]
 	);
 
-	const afternoonHabits = userHabits?.filter(
-		(habit) =>
-			habit.frequency &&
-			habit.frequency[today] &&
-			habit.moment >= 12 &&
-			habit.moment < 18
+	const morningHabits = filteredHabits?.filter(
+		(habit) => habit.moment >= 6 && habit.moment < 12
 	);
 
-	const eveningHabits = userHabits?.filter(
-		(habit) => habit.frequency && habit.frequency[today] && habit.moment >= 18
+	const afternoonHabits = filteredHabits?.filter(
+		(habit) => habit.moment >= 12 && habit.moment < 18
 	);
 
-	const freeHabits = userHabits?.filter(
-		(habit: UserHabit) =>
-			(habit.frequency && habit.frequency[today] && habit.moment === -1) ||
-			habit.moment < 6
+	const eveningHabits = filteredHabits?.filter((habit) => habit.moment >= 18);
+
+	const freeHabits = filteredHabits?.filter(
+		(habit: UserHabit) => habit.moment === -1 || habit.moment < 6
 	);
 
 	if (!userHabits || userHabits.length == 0) return <NoHabits />;
 
 	return (
 		<ScrollView>
+			<View
+				style={{
+					flexDirection: "row",
+					justifyContent: "center",
+					marginVertical: 10,
+				}}
+			>
+				<Pressable
+					onPress={() => setFilter(CategoryTypeSelect.positive)}
+					style={{ marginHorizontal: 10 }}
+				>
+					<Text
+						style={{
+							color: CategoryTypeSelect.positive
+								? theme.colors.primary
+								: theme.colors.text,
+						}}
+					>
+						Positives
+					</Text>
+				</Pressable>
+
+				<Pressable
+					onPress={() => setFilter(CategoryTypeSelect.negative)}
+					style={{ marginHorizontal: 10 }}
+				>
+					<Text
+						style={{
+							color: CategoryTypeSelect.negative
+								? theme.colors.primary
+								: theme.colors.text,
+						}}
+					>
+						Negatives
+					</Text>
+				</Pressable>
+			</View>
+
 			{/* Morning routine */}
 			{morningHabits && morningHabits.length > 0 && (
 				<SectionWrapper

@@ -12,6 +12,7 @@ export enum CategoryType {
 export enum CategoryTypeSelect {
 	"positive" = "Positif",
 	"negative" = "Négatif",
+	"personalized" = "Personnalisé",
 }
 
 export default function CategoriesList() {

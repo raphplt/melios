@@ -1,3 +1,4 @@
+import { CategoryTypeSelect } from "@components/Select/Containers/CategoriesList";
 import { DayOfWeek } from "@type/days";
 import { GenericLevel } from "@type/levels";
 import { Log } from "@type/log";
@@ -112,7 +113,13 @@ export const getTodayScore = (
 		.toLocaleString("en-US", { weekday: "long" })
 		.toLowerCase() as DayOfWeek;
 	const todayHabits = habits.filter(
-		(habit) => habit.frequency && habit.frequency[today]
+		(habit) =>
+			habit.frequency &&
+			habit.frequency[today] &&
+			habit.type !== CategoryTypeSelect.negative
 	);
-	return Math.round((completedHabitsToday.length / todayHabits.length) * 100);
+	const positivesToday = completedHabitsToday.filter(
+		(habit) => habit.type !== CategoryTypeSelect.negative
+	);
+	return Math.round((positivesToday.length / todayHabits.length) * 100);
 };

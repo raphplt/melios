@@ -26,12 +26,9 @@ export default function Index() {
 			}
 		>
 			<Background />
-
 			<HabitsSection />
-
 			<ActivitiesContainer />
 			<ViewHelp />
-
 			<DailyQuote />
 		</ParallaxScrollView>
 	);
