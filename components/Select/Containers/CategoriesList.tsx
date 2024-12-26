@@ -3,17 +3,7 @@ import { FlatList, View } from "react-native";
 import CategoryItem from "../Items/CategoryItem";
 import { useSelect } from "@context/SelectContext";
 import { useState, useEffect } from "react";
-
-export enum CategoryType {
-	positive = "positive",
-	negative = "negative",
-}
-
-export enum CategoryTypeSelect {
-	"positive" = "Positif",
-	"negative" = "Négatif",
-	"personalized" = "Personnalisé",
-}
+import { CategoryType, CategoryTypeSelect } from "@utils/category.type";
 
 export default function CategoriesList() {
 	const { categories, refreshCategories } = useHabits();

@@ -104,7 +104,7 @@ export default function ParallaxScrollView({
 
 					<BlurBox position={{ top: 20, right: 20 }}>
 						<View className="flex flex-row items-center gap-2">
-							<Iconify icon="mdi:calendar" color={color} size={20} />
+							<Iconify icon="mdi:calendar" color={color} size={18} />
 							<Text
 								className="font-semibold text-[15px]"
 								style={{

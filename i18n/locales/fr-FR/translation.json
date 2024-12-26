@@ -86,5 +86,14 @@
     "last_days_completion": "Derniers jours complétés",
     "failed_objective": "Objectif échoué",
     "today": "Aujourd'hui",
-    "progress": "Progression"
+    "progress": "Progression",
+    "positive_habits": "Habitudes positives",
+    "negative_habits": "Habitudes négatives",
+    "create_habit": "Créer une habitude",
+    "positive": "Positive",
+    "positives": "Positives",
+    "negative": "Négative",
+    "negatives": "Négatives",
+    "no_negative_habits": "Aucune habitude négative trouvée. Essayez d'en ajouter une !",
+    "add_negative_habit": "Ajouter une habitude négative"
 }

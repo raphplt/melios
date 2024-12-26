@@ -86,5 +86,14 @@
     "last_days_completion": "Last days completion",
     "failed_objective": "Failed objective",
     "today": "Today",
-    "progress": "Progress"
+    "progress": "Progress",
+    "positive_habits": "Positive habits",
+    "negative_habits": "Negative habits",
+    "create_habit": "Create a habit",
+    "positive": "Positive",
+    "positives": "Positives",
+    "negative": "Negative",
+    "negatives": "Negatives",
+    "no_negative_habits": "No negative habits. Add one!",
+    "add_negative_habit": "Add a negative habit"
 }

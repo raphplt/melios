@@ -1,9 +1,9 @@
-import { CategoryTypeSelect } from "@components/Select/Containers/CategoriesList";
 import { DayOfWeek } from "@type/days";
 import { GenericLevel } from "@type/levels";
 import { Log } from "@type/log";
 import { UserHabit } from "@type/userHabit";
 import moment from "moment";
+import { CategoryTypeSelect } from "./category.type";
 
 /**
  * Function to calculate the streak of the user

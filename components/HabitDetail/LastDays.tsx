@@ -17,6 +17,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 	const { t } = useTranslation();
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [currentStreak, setCurrentStreak] = useState(0);
 
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -35,6 +36,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 				}
 				setLastDays(lastDaySnapshot.reverse());
 				setLoading(false);
+				calculateCurrentStreak(lastDaySnapshot.reverse());
 			} catch (error) {
 				console.error("Erreur lors de la récupération des logs :", error);
 			}
@@ -42,6 +44,18 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 
 		fetchHabitLogs();
 	}, [habit.id]);
+
+	const calculateCurrentStreak = (days: DayStatus[]) => {
+		let streak = 0;
+		for (let i = days.length - 1; i >= 0; i--) {
+			if (days[i].done) {
+				streak++;
+			} else {
+				break;
+			}
+		}
+		setCurrentStreak(streak);
+	};
 
 	const CardPlaceHolder = () => {
 		return (
@@ -68,18 +82,35 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 					overflow: "hidden",
 				}}
 			>
-				<View className="flex flex-row items-center justify-start w-11/12 gap-1 pt-3 pb-1">
-					<Iconify
-						icon="ph:calendar-check-fill"
-						size={20}
-						color={theme.colors.text}
-					/>
-					<Text
-						style={{ color: theme.colors.text }}
-						className="text-[16px] font-semibold "
+				<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 pb-1">
+					<View className="flex flex-row items-center">
+						<Iconify
+							icon="ph:calendar-check-fill"
+							size={20}
+							color={theme.colors.text}
+						/>
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-[15px] font-semibold ml-1"
+						>
+							{t("last_days_completion")}
+						</Text>
+					</View>
+					<View
+						className="flex flex-row items-center justify-start px-3 py-1 "
+						style={{
+							backgroundColor: theme.colors.backgroundSecondary,
+							borderRadius: 10,
+						}}
 					>
-						{t("last_days_completion")}
-					</Text>
+						<Iconify icon="mdi:fire" size={20} color={theme.colors.redPrimary} />
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-[14px] font-semibold italic "
+						>
+							{t("streak")}: {currentStreak}
+						</Text>
+					</View>
 				</View>
 				<ScrollView
 					horizontal

@@ -115,11 +115,7 @@ export default function HabitDetail() {
 	}, [habitCategory]);
 
 	return (
-		<View
-			style={{
-				flex: 1,
-			}}
-		>
+		<View style={{ flex: 1 }}>
 			<CachedImage
 				imagePath={imageUri || "images/categories/fitness.jpg"}
 				blurRadius={15}
@@ -145,10 +141,3 @@ export default function HabitDetail() {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	blurView: {
-		...StyleSheet.absoluteFillObject,
-		borderRadius: 10,
-	},
-});

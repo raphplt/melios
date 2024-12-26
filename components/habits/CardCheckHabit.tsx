@@ -27,7 +27,7 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
 import { useTranslation } from "react-i18next";
-import { CategoryTypeSelect } from "@components/Select/Containers/CategoriesList";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -82,7 +82,6 @@ function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		const today = formatDate(new Date());
 		const completed = completedHabitsToday.some((h) => h.id === habit.id);
 		setCompleted(completed);
 	}, [completedHabitsToday]);
@@ -113,11 +112,14 @@ function CardCheckHabit({
 		try {
 			setCompleted(true);
 			await setHabitLog(habit.id, date);
-			if (addXp) {
-				await addXp(habit, 30);
+
+			if (habit.type === CategoryTypeSelect.negative) {
+				if (addXp) {
+					await addXp(habit, 30);
+				}
+				addOdysseePoints(habit.difficulty);
+				setRewards("odyssee", habit.difficulty * 2);
 			}
-			addOdysseePoints(habit.difficulty);
-			setRewards("odyssee", habit.difficulty * 2);
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du log :", error);
@@ -144,7 +146,9 @@ function CardCheckHabit({
 						name={completed ? "checkmark-circle" : "ellipse-outline"}
 						size={30}
 						color={
-							habit.type === "Négatif" ? theme.colors.redPrimary : theme.colors.primary
+							habit.type === CategoryTypeSelect.negative
+								? theme.colors.redPrimary
+								: theme.colors.primary
 						}
 					/>
 				</Pressable>
