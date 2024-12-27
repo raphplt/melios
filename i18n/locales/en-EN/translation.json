@@ -108,5 +108,7 @@
     "feedback_required": "Feedback is required.",
     "rating": "Rating (1-5)",
     "submit": "Submit",
-    "category": "Category"
+    "category": "Category",
+    "submitting": "Submitting...",
+    "feedback_success": "Feedback sent successfully"
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Text, View, TextInput, Pressable } from "react-native";
 import { useTheme } from "@context/ThemeContext";
@@ -6,10 +6,14 @@ import { useTranslation } from "react-i18next";
 import { Dropdown } from "react-native-element-dropdown";
 import Slider from "@react-native-community/slider";
 import ButtonClose from "@components/Shared/ButtonClose";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@db/index"; // Assurez-vous que le chemin est correct
 
 export default function FeedbackForm() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const {
 		control,
 		handleSubmit,
@@ -25,10 +29,20 @@ export default function FeedbackForm() {
 		},
 	});
 
-	const onSubmit = (data: any) => {
-		// Envoyer les données à une API ou les traiter ici
-		console.log("Feedback soumis :", data);
-		reset(); // Réinitialise le formulaire après soumission
+	const onSubmit = async (data: any) => {
+		setIsSubmitting(true);
+		setSubmitSuccess(false);
+		try {
+			// Envoyer les données à Firestore
+			await addDoc(collection(db, "feedbacks"), data);
+			console.log("Feedback soumis :", data);
+			reset(); // Réinitialise le formulaire après soumission
+			setSubmitSuccess(true);
+		} catch (error) {
+			console.error("Erreur lors de l'envoi du feedback :", error);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	const categories = [
@@ -46,6 +60,12 @@ export default function FeedbackForm() {
 			<Text className="text-center text-2xl font-bold text-text mb-4">
 				{t("feedback_form_title")}
 			</Text>
+
+			{submitSuccess && (
+				<Text className="text-center text-green-500 mb-4">
+					{t("feedback_success")}
+				</Text>
+			)}
 
 			{/* Champ Nom */}
 			<Controller
@@ -192,6 +212,7 @@ export default function FeedbackForm() {
 				className="bg-primary rounded-lg p-3"
 				onPress={handleSubmit(onSubmit)}
 				style={{ backgroundColor: theme.colors.primary }}
+				disabled={isSubmitting}
 			>
 				<Text
 					className="text-center text-textSecondary font-bold"
@@ -199,7 +220,7 @@ export default function FeedbackForm() {
 						color: theme.colors.textSecondary,
 					}}
 				>
-					{t("submit")}
+					{isSubmitting ? t("submitting") : t("submit")}
 				</Text>
 			</Pressable>
 		</View>
