@@ -20,17 +20,6 @@ const MainSubSections = () => {
 					{t("access_ranking")}
 				</Text>
 			</SubSectionLink>
-			<SubSectionLink href="feed">
-				<Iconify icon="material-symbols:feed" size={20} color={theme.colors.text} />
-				<Text
-					className="ml-3 text-lg text-center font-semibold"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					{t("access_news_feed")}
-				</Text>
-			</SubSectionLink>
 			<SubSectionLink href="friendList">
 				<Iconify icon="mdi:users" size={20} color={theme.colors.text} />
 				<Text

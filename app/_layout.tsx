@@ -115,12 +115,6 @@ function MainNavigator() {
 					/>
 					<Stack.Screen name="levelDetail" options={{ headerShown: false }} />
 					<Stack.Screen
-						name="feed"
-						options={{
-							title: "Actualités",
-						}}
-					/>
-					<Stack.Screen
 						name="help"
 						options={{ title: "Aide", headerShadowVisible: false }}
 					/>
