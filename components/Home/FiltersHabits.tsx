@@ -22,7 +22,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 				}}
-				className="mx-2 px-3 py-3 rounded-2xl flex flex-row items-center"
+				className="mx-2 px-3 py-2 rounded-2xl flex flex-row items-center"
 			>
 				<Iconify icon="lucide:smile-plus" size={20} color={theme.colors.primary} />
 				<Text
@@ -47,7 +47,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 							? theme.colors.redSecondary
 							: theme.colors.cardBackground,
 				}}
-				className="mx-2 px-3 py-3 rounded-2xl flex flex-row items-center"
+				className="mx-2 px-3 py-2 rounded-2xl flex flex-row items-center"
 			>
 				<Iconify icon="ic:round-back-hand" size={20} color={theme.colors.text} />
 				<Text

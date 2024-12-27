@@ -7,9 +7,18 @@ import {
 	where,
 	query,
 	getDocs,
+	limit,
+	orderBy,
+	startAfter,
 } from "firebase/firestore";
 import { db, auth } from ".";
+import { getMemberInfos, getMemberProfileByUid } from "./member";
 
+/**
+ *  Ajoute un log pour une habitude donnée
+ * @param habitId
+ * @param logDate
+ */
 export const setHabitLog = async (habitId: string, logDate: string) => {
 	try {
 		const uid = auth.currentUser?.uid;
@@ -54,6 +63,11 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 	}
 };
 
+/**
+ * Récupère les logs pour une habitude donnée
+ * @param habitId
+ * @returns
+ */
 export const getHabitLogs = async (habitId: string) => {
 	try {
 		const uid = auth.currentUser?.uid;
@@ -117,6 +131,50 @@ export const getAllHabitLogs = async ({
 		});
 
 		return allLogs;
+	} catch (error) {
+		console.error("Erreur lors de la récupération des logs :", error);
+		throw error;
+	}
+};
+
+/**
+ * Get all users logs
+ */
+export const getAllUsersLogsPaginated = async (
+	pageSize: number = 10,
+	lastVisibleDoc: any = null
+) => {
+	try {
+		const logsCollectionRef = collection(db, "habitsLogs");
+
+		let logsQuery = query(
+			logsCollectionRef,
+			orderBy("createdAt"),
+			limit(pageSize)
+		);
+
+		if (lastVisibleDoc) {
+			logsQuery = query(logsQuery, startAfter(lastVisibleDoc));
+		}
+
+		const querySnapshot = await getDocs(logsQuery);
+
+		if (querySnapshot.empty) {
+			console.log("Aucun log trouvé.");
+			return { logs: [], lastVisible: null };
+		}
+
+		const logs = await Promise.all(
+			querySnapshot.docs.map(async (doc) => {
+				const data = doc.data();
+				const memberInfo = await getMemberProfileByUid(data.uid);
+				return { ...data, id: doc.id, memberInfo };
+			})
+		);
+
+		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+		return { logs, lastVisible };
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);
 		throw error;

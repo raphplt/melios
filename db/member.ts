@@ -147,6 +147,42 @@ export const getMemberInfos = async (
 	}
 };
 
+export const getMemberProfileByUid = async (
+	uid: string
+): Promise<Member | undefined> => {
+	try {
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", uid))
+		);
+
+		if (!querySnapshot.empty) {
+			const memberDoc = querySnapshot.docs[0];
+			const memberProfile: Member = {
+				uid: memberDoc.data().uid,
+				nom: memberDoc.data().nom,
+				motivation: memberDoc.data().motivation,
+				objectifs: memberDoc.data().objectifs,
+				temps: memberDoc.data().temps,
+				aspects: memberDoc.data().aspects,
+				profilePicture: memberDoc.data().profilePicture,
+				friends: memberDoc.data().friends,
+				friendRequestsSent: memberDoc.data().friendRequestsSent,
+				friendRequestsReceived: memberDoc.data().friendRequestsReceived,
+			};
+
+			return memberProfile;
+		} else {
+			console.log("Member not found");
+			return undefined;
+		}
+	} catch (error) {
+		console.error("Erreur lors de la récupération du profil du membre :", error);
+		throw error;
+	}
+};
+
 export const updateMemberInfo = async (name: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
