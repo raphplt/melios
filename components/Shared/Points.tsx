@@ -34,15 +34,13 @@ export default function Points() {
 				onPress={toggleHelp}
 				className="flex items-center flex-row rounded-full"
 				style={{
-					backgroundColor: theme.colors.blueSecondary,
-					borderColor: theme.colors.primary,
-					borderWidth: 1,
+					backgroundColor: "transparent",
 				}}
 			>
 				<View
 					className="flex items-center justify-center flex-row  px-2 ml-2 rounded-l-full"
 					style={{
-						backgroundColor: theme.colors.blueSecondary,
+						backgroundColor: "transparent",
 					}}
 				>
 					<View className="flex items-center justify-center">

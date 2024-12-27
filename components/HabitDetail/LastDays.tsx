@@ -11,6 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function LastDays({ habit }: { habit: UserHabit }) {
 	const { theme } = useTheme();
@@ -21,42 +22,45 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-useEffect(() => {
-	const fetchHabitLogs = async () => {
-		try {
-			const logs = await getHabitLogs(habit.id);
-			const lastDaySnapshot: DayStatus[] = [];
-			for (let i = 14; i >= 1; i--) {
-				const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-				const done = logs ? logs.includes(day) : false;
-				lastDaySnapshot.push({
-					date: day,
-					done,
-				});
+	useEffect(() => {
+		const fetchHabitLogs = async () => {
+			try {
+				const logs = await getHabitLogs(habit.id);
+				const lastDaySnapshot: DayStatus[] = [];
+				for (let i = 14; i >= 1; i--) {
+					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+					let done = logs ? logs.includes(day) : false;
+					if (habit.type === CategoryTypeSelect.negative) {
+						done = !done;
+					}
+					lastDaySnapshot.push({
+						date: day,
+						done,
+					});
+				}
+
+				setLastDays(lastDaySnapshot.reverse());
+				setLoading(false);
+				calculateCurrentStreak(lastDaySnapshot);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des logs :", error);
 			}
+		};
 
-			setLastDays(lastDaySnapshot.reverse());
-			setLoading(false);
-			calculateCurrentStreak(lastDaySnapshot);
-		} catch (error) {
-			console.error("Erreur lors de la récupération des logs :", error);
+		fetchHabitLogs();
+	}, [habit.id]);
+
+	const calculateCurrentStreak = (days: DayStatus[]) => {
+		let streak = 0;
+		for (let i = days.length - 2; i >= 0; i--) {
+			if (days[i].done) {
+				streak++;
+			} else {
+				break;
+			}
 		}
+		setCurrentStreak(streak);
 	};
-
-	fetchHabitLogs();
-}, [habit.id]);
-
-const calculateCurrentStreak = (days: DayStatus[]) => {
-	let streak = 0;
-	for (let i = days.length - 2; i >= 0; i--) {
-		if (days[i].done) {
-			streak++;
-		} else {
-			break;
-		}
-	}
-	setCurrentStreak(streak);
-};
 
 	const CardPlaceHolder = () => {
 		return (
