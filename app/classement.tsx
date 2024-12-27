@@ -54,6 +54,8 @@ export default function Classement() {
 
 	if (loading) return <LoaderScreen text="Chargement du classement..." />;
 
+	console.log(usersRewards);
+
 	return (
 		<View className="flex-1">
 			<View className="my-3 pt-2 flex items-center justify-center flex-row gap-2">
