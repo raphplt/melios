@@ -79,10 +79,6 @@ function MainNavigator() {
 						options={{ headerShadowVisible: false, title: "Éditer le profil" }}
 					/>
 					<Stack.Screen
-						name="trophies"
-						options={{ headerShadowVisible: false, title: "Trophées" }}
-					/>
-					<Stack.Screen
 						name="login"
 						options={{
 							title: "Connexion",
@@ -131,6 +127,10 @@ function MainNavigator() {
 					<Stack.Screen
 						name="friendList"
 						options={{ title: "Liste d'amis", headerShadowVisible: false }}
+					/>
+					<Stack.Screen
+						name="feedbackForm"
+						options={{ title: "Liste d'amis", headerShown: false }}
 					/>
 					<Stack.Screen
 						name="cosmeticShop"

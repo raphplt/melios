@@ -95,5 +95,18 @@
     "negative": "Negative",
     "negatives": "Negatives",
     "no_negative_habits": "No negative habits. Add one!",
-    "add_negative_habit": "Add a negative habit"
+    "add_negative_habit": "Add a negative habit",
+    "news": "News",
+    "filter": "Filter",
+    "feedback_form_title": "Your feedback",
+    "name": "Name",
+    "name_required": "Name is required.",
+    "email": "Email",
+    "email_required": "Email is required.",
+    "email_invalid": "Email address is not valid.",
+    "feedback": "Your feedback",
+    "feedback_required": "Feedback is required.",
+    "rating": "Rating (1-5)",
+    "submit": "Submit",
+    "category": "Category"
 }

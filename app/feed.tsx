@@ -1,59 +1,126 @@
 import ArticleCard from "@components/Agora/ArticleCard";
+import { themes } from "@constants/feed";
+import { useTheme } from "@context/ThemeContext";
 import { useRssFeed } from "@hooks/useRssFeed";
-import React, { useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	View,
 	Text,
-	StyleSheet,
 	FlatList,
 	TouchableOpacity,
+	Pressable,
+	Animated,
+	ScrollView,
+	Platform,
+	StatusBar,
+	ActivityIndicator,
 } from "react-native";
-
-const themes: Record<string, string> = {
-	Sport: "https://www.espn.com/espn/rss/news",
-	BienEtre: "https://www.wellandgood.com/feed/",
-	ConditionPhysique: "https://breakingmuscle.com/feed/",
-	SanteMentale: "https://www.mentalhealth.org.uk/rss/news",
-	Alimentation: "https://rss.nytimes.com/services/xml/rss/nyt/Food.xml",
-	TachesMenageres: "https://feeds.feedburner.com/TheSpruceCleaning",
-	VieSociale: "https://www.psychologytoday.com/intl/social-life.rss",
-	Budget: "https://www.thebalance.com/personal-finance-4074014.rss",
-	Culture: "http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml",
-	Creativite: "https://99u.adobe.com/feed",
-	Travail: "https://www.fastcompany.com/rss",
-	Competences: "https://www.skillshare.com/blog/feed/",
-	Ecologie: "https://www.nationalgeographic.com/environment/feed/",
-	Spiritualite: "https://spiritualityhealth.com/rss",
-	Productivite: "https://zenhabits.net/feed/",
-};
+import { Iconify } from "react-native-iconify";
 
 const HomeFeed = () => {
-	const [selectedTheme, setSelectedTheme] = useState<string>("Sport");
-	const { items, loading } = useRssFeed(themes[selectedTheme]);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
+	const [selectedTheme, setSelectedTheme] = useState<string>("sport");
+	const [showFilters, setShowFilters] = useState<boolean>(false);
+	const { items, loading } = useRssFeed(themes[selectedTheme].urls[0]);
+
+	const filterHeight = useRef(new Animated.Value(0)).current;
+
+	useEffect(() => {
+		const maxHeight = Math.min(Object.keys(themes).length * 50, 200);
+		Animated.timing(filterHeight, {
+			toValue: showFilters ? maxHeight : 0,
+			duration: 300,
+			useNativeDriver: false,
+		}).start();
+	}, [showFilters]);
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>Actualités</Text>
-			<View style={styles.filters}>
-				{Object.keys(themes).map((theme) => (
-					<TouchableOpacity
-						key={theme}
-						style={[
-							styles.filterButton,
-							theme === selectedTheme && styles.filterButtonActive,
-						]}
-						onPress={() => setSelectedTheme(theme)}
-					>
-						<Text style={styles.filterText}>{theme}</Text>
-					</TouchableOpacity>
-				))}
+		<View className="flex flex-col w-full">
+			{/* Gradient d'arrière-plan */}
+			<LinearGradient
+				colors={[theme.colors.backgroundTertiary, theme.colors.background]}
+				style={{
+					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+				}}
+				className="absolute top-0 left-0 right-0 h-full w-full"
+			></LinearGradient>
+
+			{/* Barre de filtre */}
+			<View className="flex flex-row items-center justify-between mx-4 mt-4 mb-2">
+				<Text
+					style={{
+						color: theme.colors.text,
+						fontFamily: "BaskervilleBold",
+					}}
+					className="text-xl pb-2"
+				>
+					{t("filter")}
+				</Text>
+				<Pressable onPress={() => setShowFilters(!showFilters)}>
+					{showFilters ? (
+						<Iconify icon="mdi:filter-off" size={24} color={theme.colors.primary} />
+					) : (
+						<Iconify
+							icon="material-symbols:filter-alt"
+							size={24}
+							color={theme.colors.primary}
+						/>
+					)}
+				</Pressable>
 			</View>
+
+			{/* Filtres animés */}
+			<Animated.View style={{ height: filterHeight, overflow: "hidden" }}>
+				<ScrollView>
+					<View className="flex flex-row items-center justify-start flex-wrap h-full">
+						{Object.keys(themes).map((slug) => (
+							<TouchableOpacity
+								key={slug}
+								className="p-2 mx-2 my-1 rounded-2xl"
+								style={{
+									backgroundColor:
+										selectedTheme === slug
+											? theme.colors.primary
+											: theme.colors.cardBackground,
+								}}
+								onPress={() => setSelectedTheme(slug)}
+							>
+								<Text
+									style={{
+										color:
+											selectedTheme === slug
+												? theme.colors.textSecondary
+												: theme.colors.primary,
+									}}
+								>
+									{themes[slug].name}
+								</Text>
+							</TouchableOpacity>
+						))}
+					</View>
+				</ScrollView>
+			</Animated.View>
+
+			{/* Contenu principal */}
 			{loading ? (
-				<Text>Chargement des articles...</Text>
+				<>
+					<ActivityIndicator size="large" color={theme.colors.primary} />
+					<Text
+						className="text-center text-xl font-bold"
+						style={{ color: theme.colors.text }}
+					>
+						{t("loading")}
+					</Text>
+				</>
 			) : (
 				<FlatList
 					data={items}
 					keyExtractor={(item, index) => index.toString()}
+					className="bg-transparent"
+					showsVerticalScrollIndicator={false}
 					renderItem={({ item }) => (
 						<ArticleCard
 							title={item.title}
@@ -66,36 +133,5 @@ const HomeFeed = () => {
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 20,
-		backgroundColor: "#f8f9fa",
-	},
-	title: {
-		fontSize: 24,
-		fontWeight: "bold",
-		marginBottom: 20,
-	},
-	filters: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-		marginBottom: 15,
-	},
-	filterButton: {
-		padding: 10,
-		backgroundColor: "#e9ecef",
-		margin: 5,
-		borderRadius: 5,
-	},
-	filterButtonActive: {
-		backgroundColor: "#007bff",
-	},
-	filterText: {
-		color: "#000",
-		fontSize: 14,
-	},
-});
 
 export default HomeFeed;

@@ -95,5 +95,18 @@
     "negative": "Négative",
     "negatives": "Négatives",
     "no_negative_habits": "Aucune habitude négative trouvée. Essayez d'en ajouter une !",
-    "add_negative_habit": "Ajouter une habitude négative"
+    "add_negative_habit": "Ajouter une habitude négative",
+    "news": "Actualités",
+    "filter": "Filtrer",
+    "feedback_form_title": "Votre feedback",
+    "name": "Nom",
+    "name_required": "Le nom est requis.",
+    "email": "Email",
+    "email_required": "L'email est requis.",
+    "email_invalid": "L'adresse email n'est pas valide.",
+    "feedback": "Votre feedback",
+    "feedback_required": "Le feedback est requis.",
+    "rating": "Note (1-5)",
+    "submit": "Envoyer",
+    "category": "Catégorie"
 }

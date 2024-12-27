@@ -40,6 +40,22 @@ export default function General() {
 				}
 				onPress={() => navigation.navigate("editGoals")}
 			/>
+			<View className="w-full h-[1px] bg-gray-300"></View>
+
+			<RowBlock
+				icon={
+					<Iconify
+						icon="fluent:person-feedback-16-regular"
+						size={24}
+						color={theme.colors.text}
+					/>
+				}
+				title={t("feedback")}
+				rightContent={
+					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
+				}
+				onPress={() => navigation.navigate("feedbackForm")}
+			/>
 		</AccountBlock>
 	);
 }
