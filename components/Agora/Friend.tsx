@@ -10,6 +10,7 @@ import {
 } from "@db/member";
 import getIcon from "@utils/cosmeticsUtils";
 import { useData } from "@context/DataContext";
+import { useTranslation } from "react-i18next";
 
 type Props = {
 	member: Member;
@@ -17,6 +18,7 @@ type Props = {
 
 const Friend = ({ member }: Props) => {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [profilePictureUri, setProfilePictureUri] = useState<string | null>(
 		null
 	);
@@ -46,26 +48,26 @@ const Friend = ({ member }: Props) => {
 		loadProfilePicture();
 	}, [member]);
 
-const handleSendRequest = async () => {
-	setLoading(true);
-	try {
-		if (!member.uid) return;
-		await sendFriendRequest(member.uid);
+	const handleSendRequest = async () => {
+		setLoading(true);
+		try {
+			if (!member.uid) return;
+			await sendFriendRequest(member.uid);
 
-		setRequestSent(true);
-		setMember((prevData) => {
-			if (!prevData) return prevData;
-			return {
-				...prevData,
-				friendRequestsSent: [...(prevData.friendRequestsSent ?? []), member.uid],
-			};
-		});
-	} catch (error) {
-		console.error("Erreur lors de l'envoi de la demande :", error);
-	} finally {
-		setLoading(false);
-	}
-};
+			setRequestSent(true);
+			setMember((prevData) => {
+				if (!prevData) return prevData;
+				return {
+					...prevData,
+					friendRequestsSent: [...(prevData.friendRequestsSent ?? []), member.uid],
+				};
+			});
+		} catch (error) {
+			console.error("Erreur lors de l'envoi de la demande :", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const handleAcceptRequest = async () => {
 		setLoading(true);
@@ -113,7 +115,7 @@ const handleSendRequest = async () => {
 
 	return (
 		<View
-			className="flex flex-col items-center justify-between w-[45%] p-2 my-2 rounded-lg mx-auto"
+			className="flex flex-col items-center justify-between w-[47%] p-2 my-2 rounded-lg mx-auto"
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 				borderColor: theme.colors.border,
@@ -128,9 +130,9 @@ const handleSendRequest = async () => {
 			{loading ? (
 				<ActivityIndicator size="small" color={theme.colors.primary} />
 			) : isFriend ? (
-				<Text>Déjà ami</Text>
+				<Text>{t("already_friend")}</Text>
 			) : requestSent ? (
-				<Text>Demande envoyée</Text>
+				<Text>{t("request_sent")}</Text>
 			) : requestReceived ? (
 				<>
 					<Pressable
@@ -138,14 +140,14 @@ const handleSendRequest = async () => {
 						style={{ backgroundColor: theme.colors.primary }}
 						className="p-2 rounded-lg mt-2"
 					>
-						<Text style={{ color: "white" }}>Accepter</Text>
+						<Text style={{ color: "white" }}>{t("accept")}</Text>
 					</Pressable>
 					<Pressable
 						onPress={handleDeclineRequest}
 						style={{ backgroundColor: theme.colors.primary }}
 						className="p-2 rounded-lg mt-2"
 					>
-						<Text style={{ color: "white" }}>Refuser</Text>
+						<Text style={{ color: "white" }}>{t("decline")}</Text>
 					</Pressable>
 				</>
 			) : (
@@ -154,7 +156,7 @@ const handleSendRequest = async () => {
 					style={{ backgroundColor: theme.colors.primary }}
 					className="p-2 rounded-lg mt-2"
 				>
-					<Text style={{ color: "white" }}>Ajouter</Text>
+					<Text style={{ color: "white" }}>{t("add_friend")}</Text>
 				</Pressable>
 			)}
 		</View>

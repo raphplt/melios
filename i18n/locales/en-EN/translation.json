@@ -123,5 +123,10 @@
     "private": "Private",
     "friends": "Friends",
     "manage_confidentiality_habits": "Manage confidentiality of habits",
-    "manage_confidentiality_habits_description": "You can choose who can see your habits: everyone, only your friends or only you."
+    "manage_confidentiality_habits_description": "You can choose who can see your habits: everyone, only your friends or only you.",
+    "already_friend": "Already friend",
+    "request_sent": "Request sent",
+    "accept": "Accept",
+    "decline": "Decline",
+    "add_friend": "Add"
 }

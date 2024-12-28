@@ -123,5 +123,10 @@
     "private": "Privé",
     "friends": "Amis",
     "manage_confidentiality_habits": "Gérer la confidentialité",
-    "manage_confidentiality_habits_description": "Vous pouvez choisir qui peut voir vos habitudes: tout le monde, seulement vos amis ou seulement vous."
+    "manage_confidentiality_habits_description": "Vous pouvez choisir qui peut voir vos habitudes: tout le monde, seulement vos amis ou seulement vous.",
+    "already_friend": "Déjà ami",
+    "request_sent": "Demande envoyée",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "add_friend": "Ajouter"
 }
