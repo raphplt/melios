@@ -92,6 +92,7 @@ export default function Login() {
 			const firstTime = await AsyncStorage.getItem("firstTime");
 			if (!firstTime || firstTime === "true") {
 				setShowModal(true);
+				await AsyncStorage.setItem("firstTime", "false");
 			}
 		};
 

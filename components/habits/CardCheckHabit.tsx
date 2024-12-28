@@ -13,6 +13,7 @@ import Animated, {
 	withTiming,
 	withDelay,
 } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 
 // Customs imports
@@ -26,7 +27,6 @@ import useHabitTimer from "@hooks/useHabitTimer";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
-import { useTranslation } from "react-i18next";
 import { CategoryTypeSelect } from "@utils/category.type";
 
 const formatDate = (date: Date) => {
@@ -158,7 +158,9 @@ function CardCheckHabit({
 					}}
 					style={{
 						backgroundColor: completed
-							? theme.colors.backgroundTertiary
+							? habit.type === CategoryTypeSelect.negative
+								? theme.colors.redSecondary
+								: theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 						borderColor:
 							habit.type === CategoryTypeSelect.negative
@@ -215,13 +217,15 @@ function CardCheckHabit({
 										size={20}
 									/>
 									<Text
-										className="text-[16px]  font-semibold ml-2"
+										className="text-[16px] font-semibold ml-2"
 										style={{ color: theme.colors.primary }}
 									>
 										{t("details")}
 									</Text>
 								</Pressable>
-								{!completed && habit.duration ? (
+
+								{habit.type === CategoryTypeSelect.negative ? null : !completed &&
+								  habit.duration ? (
 									<Pressable
 										onPress={startHabit}
 										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
@@ -254,12 +258,6 @@ function CardCheckHabit({
 							</View>
 						)}
 					</Animated.View>
-					{/* <Button
-						onPress={() => {
-							addXp(habit, 30);
-						}}
-						title="ADD XP"
-					/> */}
 				</Pressable>
 			</Animated.View>
 		</ZoomableView>

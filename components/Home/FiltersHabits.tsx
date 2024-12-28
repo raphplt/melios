@@ -17,14 +17,23 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 			<Pressable
 				onPress={() => setFilter(CategoryTypeSelect.positive)}
 				style={{
-					backgroundColor:
+					borderColor:
 						filter === CategoryTypeSelect.positive
-							? theme.colors.backgroundTertiary
-							: theme.colors.cardBackground,
+							? theme.colors.primary
+							: theme.colors.border,
+					borderWidth: 2,
 				}}
-				className="mx-2 px-3 py-2 rounded-2xl flex flex-row items-center"
+				className="mx-2 px-3 py-1 rounded-3xl flex flex-row items-center"
 			>
-				<Iconify icon="lucide:smile-plus" size={20} color={theme.colors.primary} />
+				<Iconify
+					icon="lucide:smile-plus"
+					size={18}
+					color={
+						filter === CategoryTypeSelect.positive
+							? theme.colors.primary
+							: theme.colors.textTertiary
+					}
+				/>
 				<Text
 					style={{
 						color:
@@ -42,14 +51,23 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 			<Pressable
 				onPress={() => setFilter(CategoryTypeSelect.negative)}
 				style={{
-					backgroundColor:
+					borderColor:
 						filter === CategoryTypeSelect.negative
-							? theme.colors.redSecondary
-							: theme.colors.cardBackground,
+							? theme.colors.redPrimary
+							: theme.colors.border,
+					borderWidth: 2,
 				}}
-				className="mx-2 px-3 py-2 rounded-2xl flex flex-row items-center"
+				className="mx-2 px-3 py-1 rounded-3xl flex flex-row items-center"
 			>
-				<Iconify icon="ic:round-back-hand" size={20} color={theme.colors.text} />
+				<Iconify
+					icon="ic:round-back-hand"
+					size={18}
+					color={
+						filter === CategoryTypeSelect.negative
+							? theme.colors.redPrimary
+							: theme.colors.textTertiary
+					}
+				/>
 				<Text
 					style={{
 						color:

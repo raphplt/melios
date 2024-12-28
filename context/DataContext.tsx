@@ -112,7 +112,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				}
 
 				// Logs
-				const snapshotLogs = await getAllHabitLogs({
+				const snapshotLogs: any = await getAllHabitLogs({
 					signal: abortController.signal,
 					forceRefresh: true,
 				});

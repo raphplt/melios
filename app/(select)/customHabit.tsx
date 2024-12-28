@@ -55,6 +55,7 @@ export default function CustomHabit() {
 			description: habit?.description || "",
 			difficulty: habit?.difficulty || 1,
 			category: habit?.category?.category || "Personnalisé",
+			categoryId: habit?.category?.id || "0",
 			color: habit?.category?.color || "#A9A9A9",
 			icon: habit?.category?.icon || "smile-beam",
 			moment: habit?.moment || 0,

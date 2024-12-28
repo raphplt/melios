@@ -47,8 +47,6 @@ const useAddXp = () => {
 				const associatedLevel = getLevelByCategoryId(idCategory, genericLevels);
 
 				if (!associatedLevel) {
-					console.log("No associated level found for idCategory:", idCategory);
-					console.log("genericLevels:", genericLevels);
 					return null;
 				}
 

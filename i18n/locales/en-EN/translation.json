@@ -115,5 +115,7 @@
     "has_done_habit": "has done the habit",
     "activity_users": "Activity of the users",
     "all_logs_are_displayed": "All logs are displayed",
-    "the": "the"
+    "the": "the",
+    "launch": "Launch",
+    "complete": "Complete"
 }

@@ -115,5 +115,7 @@
     "has_done_habit": "a complété l'habitude",
     "activity_users": "Activité des utilisateurs",
     "all_logs_are_displayed": "Tous les logs sont affichés",
-    "the": "le"
+    "the": "le",
+    "launch": "Lancer",
+    "complete": "Compléter"
 }
