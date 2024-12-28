@@ -12,6 +12,7 @@ import {
 	limit,
 	orderBy,
 	startAfter,
+	runTransaction,
 } from "firebase/firestore";
 import { db } from ".";
 import { auth } from ".";
@@ -271,11 +272,11 @@ export const updateProfilePicture = async (slug: string) => {
 };
 
 /**
- * 
+ *
  * Méthode pour récupérer les membres avec pagination
- * @param lastVisibleDoc 
- * @param pageSize 
- * @returns 
+ * @param lastVisibleDoc
+ * @param pageSize
+ * @returns
  */
 export const getMembersPaginated = async (
 	lastVisibleDoc: any = null,
@@ -298,10 +299,19 @@ export const getMembersPaginated = async (
 
 		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-		const members = querySnapshot.docs.map((doc) => ({
-			id: doc.id,
-			...doc.data(),
-		}));
+		const uniqueMembers = new Set();
+		const members = querySnapshot.docs
+			.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}))
+			.filter((member: any) => {
+				if (uniqueMembers.has(member.uid)) {
+					return false;
+				}
+				uniqueMembers.add(member.uid);
+				return true;
+			});
 
 		return { members, lastVisible };
 	} catch (error) {
@@ -314,37 +324,9 @@ export const getMembersPaginated = async (
 };
 
 /**
- * 
- * Méthode pour ajouter un ami
- * @param friendUid 
- */
-export const addFriend = async (friendUid: string) => {
-	try {
-		const currentUid = auth.currentUser?.uid;
-		if (!currentUid) throw new Error("Utilisateur non authentifié");
-
-		const currentMemberRef = doc(db, "members", currentUid);
-		const friendMemberRef = doc(db, "members", friendUid);
-
-		await updateDoc(currentMemberRef, {
-			friends: arrayUnion(friendUid),
-		});
-
-		await updateDoc(friendMemberRef, {
-			friends: arrayUnion(currentUid),
-		});
-
-		console.log(`Ami ajouté : ${friendUid}`);
-	} catch (error) {
-		console.error("Erreur lors de l'ajout d'un ami :", error);
-		throw error;
-	}
-};
-
-/**
- * 
+ *
  * Méthode pour supprimer un ami
- * @param friendUid 
+ * @param friendUid
  */
 export const removeFriend = async (friendUid: string) => {
 	try {
@@ -369,68 +351,105 @@ export const removeFriend = async (friendUid: string) => {
 	}
 };
 
-
 /**
- * 
+ *
  * Méthode pour vérifier si deux membres sont amis
- * @returns 
+ * @returns
  */
 export const areFriends = async (friendUid: string): Promise<boolean> => {
-    try {
-        const currentUid = auth.currentUser?.uid;
-        if (!currentUid) throw new Error("Utilisateur non authentifié");
+	try {
+		const currentUid = auth.currentUser?.uid;
+		if (!currentUid) throw new Error("Utilisateur non authentifié");
 
-        const currentMemberRef = doc(db, "members", currentUid);
-        const currentMemberSnap = await getDoc(currentMemberRef);
+		const currentMemberRef = doc(db, "members", currentUid);
+		const currentMemberSnap = await getDoc(currentMemberRef);
 
-        if (currentMemberSnap.exists()) {
-            const friends = currentMemberSnap.data().friends || [];
-            return friends.includes(friendUid);
-        }
-        return false;
-    } catch (error) {
-        console.error("Erreur lors de la vérification d'amitié :", error);
-        throw error;
-    }
+		if (currentMemberSnap.exists()) {
+			const friends = currentMemberSnap.data().friends || [];
+			return friends.includes(friendUid);
+		}
+		return false;
+	} catch (error) {
+		console.error("Erreur lors de la vérification d'amitié :", error);
+		throw error;
+	}
 };
 
 /**
  * Demande d'amitié
- * @param friendUid 
+ * @param friendUid
  */
 export const sendFriendRequest = async (friendUid: string) => {
 	try {
 		const currentUid = auth.currentUser?.uid;
 		if (!currentUid) throw new Error("Utilisateur non authentifié");
 
-		const currentMemberRef = doc(db, "members", currentUid);
-		const friendMemberRef = doc(db, "members", friendUid);
+		console.log("currentUid:", currentUid);
+		console.log("friendUid:", friendUid);
 
-		// Vérifier ou créer les documents si nécessaire
-		const currentMemberSnap = await getDoc(currentMemberRef);
-		if (!currentMemberSnap.exists()) {
-			await setDoc(currentMemberRef, { friendRequestsSent: [], friends: [] });
+		// Rechercher le document du membre courant basé sur la propriété `uid`
+		const membersCollection = collection(db, "members");
+		const currentMemberQuery = query(
+			membersCollection,
+			where("uid", "==", currentUid)
+		);
+		const currentMemberSnapshot = await getDocs(currentMemberQuery);
+
+		if (currentMemberSnapshot.empty) {
+			throw new Error(
+				"[CURRENT] Document membre introuvable avec la propriété uid."
+			);
 		}
 
-		const friendMemberSnap = await getDoc(friendMemberRef);
-		if (!friendMemberSnap.exists()) {
-			await setDoc(friendMemberRef, { friendRequestsReceived: [], friends: [] });
+		const currentMemberDoc = currentMemberSnapshot.docs[0]; // Le premier document correspondant
+		const currentMemberData = currentMemberDoc.data();
+
+		// Rechercher le document du membre ami basé sur la propriété `uid`
+		const friendMemberQuery = query(
+			membersCollection,
+			where("uid", "==", friendUid)
+		);
+		const friendMemberSnapshot = await getDocs(friendMemberQuery);
+
+		if (friendMemberSnapshot.empty) {
+			throw new Error(
+				"[FRIEND] Document membre introuvable avec la propriété uid."
+			);
 		}
 
-		await updateDoc(currentMemberRef, {
+		const friendMemberDoc = friendMemberSnapshot.docs[0]; // Le premier document correspondant
+		const friendMemberData = friendMemberDoc.data();
+
+		// Vérifier si une demande d’amitié a déjà été envoyée ou si les utilisateurs sont déjà amis
+		if (
+			currentMemberData.friendRequestsSent?.includes(friendUid) ||
+			friendMemberData.friendRequestsReceived?.includes(currentUid)
+		) {
+			console.log("Demande d’amitié déjà envoyée ou reçue.");
+			return;
+		}
+
+		if (currentMemberData.friends?.includes(friendUid)) {
+			console.log("Vous êtes déjà amis avec cet utilisateur.");
+			return;
+		}
+
+		// Mise à jour des données
+		await updateDoc(currentMemberDoc.ref, {
 			friendRequestsSent: arrayUnion(friendUid),
 		});
 
-		await updateDoc(friendMemberRef, {
+		await updateDoc(friendMemberDoc.ref, {
 			friendRequestsReceived: arrayUnion(currentUid),
 		});
 
-		console.log(`Demande d'amitié envoyée à : ${friendUid}`);
+		console.log("Demande d'amitié envoyée !");
 	} catch (error) {
 		console.error("Erreur lors de l'envoi de la demande d'amitié :", error);
 		throw error;
 	}
 };
+
 
 /**
  * 	Accepter une demande d'amitié

@@ -46,25 +46,26 @@ const Friend = ({ member }: Props) => {
 		loadProfilePicture();
 	}, [member]);
 
-	const handleSendRequest = async () => {
-		setLoading(true);
-		try {
-			if (!member.uid) return;
-			await sendFriendRequest(member.uid);
-			setRequestSent(true);
-			setMember((prevData) => {
-				if (!prevData) return prevData;
-				return {
-					...prevData,
-					friendRequestsSent: [...(prevData.friendRequestsSent ?? []), member.uid],
-				};
-			});
-		} catch (error) {
-			console.error("Erreur lors de l'envoi de la demande :", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+const handleSendRequest = async () => {
+	setLoading(true);
+	try {
+		if (!member.uid) return;
+		await sendFriendRequest(member.uid);
+
+		setRequestSent(true);
+		setMember((prevData) => {
+			if (!prevData) return prevData;
+			return {
+				...prevData,
+				friendRequestsSent: [...(prevData.friendRequestsSent ?? []), member.uid],
+			};
+		});
+	} catch (error) {
+		console.error("Erreur lors de l'envoi de la demande :", error);
+	} finally {
+		setLoading(false);
+	}
+};
 
 	const handleAcceptRequest = async () => {
 		setLoading(true);
