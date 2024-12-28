@@ -1,13 +1,13 @@
-import { useTheme } from "@context/ThemeContext";
 import React, { useEffect, useState } from "react";
-import { Text, View, FlatList, ActivityIndicator } from "react-native";
+import { Text, FlatList, ActivityIndicator } from "react-native";
+import { useTheme } from "@context/ThemeContext";
+import { useTranslation } from "react-i18next";
 import { getAllUsersLogsPaginated } from "../../db/logs";
 import { Member } from "@type/member";
 import { Habit } from "@type/habit";
-import { useTranslation } from "react-i18next";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { LogItem } from "./LogItem";
 
-export type Log = {
+export type LogExtended = {
 	id: string;
 	habitId: string;
 	member: Member | null;
@@ -20,8 +20,8 @@ export type Log = {
 const AllLogs = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
-	const [logs, setLogs] = useState<Log[] | null>([]);
-	const [lastVisible, setLastVisible] = useState(null);
+	const [logs, setLogs] = useState<LogExtended[] | null>([]);
+	const [lastVisible, setLastVisible] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 
@@ -50,49 +50,9 @@ const AllLogs = () => {
 		fetchLogs();
 	}, []);
 
-	const renderItem = ({ item }: { item: Log }) => {
-		const mostRecentDate: Date | undefined = item.logs
-			.map((logDate: string) => new Date(logDate))
-			.sort((a: Date, b: Date) => b.getTime() - a.getTime())[0];
-
-		return (
-			<View
-				className="mb-4 p-3 rounded-lg"
-				style={{
-					backgroundColor: theme.colors.background,
-					borderWidth: 1,
-					borderColor: theme.colors.border,
-				}}
-			>
-				<View className="flex flex-row items-center mb-2">
-					<Text className="text-lg font-bold" style={{ color: theme.colors.text }}>
-						{item.member?.nom || "Nom inconnu"}{" "}
-					</Text>
-					<Text className=" " style={{ color: theme.colors.textTertiary }}>
-						{t("has_done_habit")}
-					</Text>
-				</View>
-				<View className="flex flex-row justify-center items-center my-2">
-					<FontAwesome6
-						name={item.habit?.icon || "question"}
-						size={24}
-						color={item.habit?.color || theme.colors.text}
-					/>
-				</View>
-				<Text
-					className=" font-semibold text-xl mb-2 text-center"
-					style={{ color: theme.colors.text }}
-				>
-					{item.habit?.name || item.habitId}
-				</Text>
-				{mostRecentDate && (
-					<Text className="text-sm" style={{ color: theme.colors.text }}>
-						{t("the")} {mostRecentDate.toLocaleDateString("fr-FR")}
-					</Text>
-				)}
-			</View>
-		);
-	};
+	const renderItem = ({ item }: { item: LogExtended }) => (
+		<LogItem item={item} />
+	);
 
 	return (
 		<FlatList
@@ -100,6 +60,7 @@ const AllLogs = () => {
 			renderItem={renderItem}
 			keyExtractor={(item) => item.id}
 			onEndReached={fetchLogs}
+			className="w-[95%] mx-auto"
 			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
 				<Text
@@ -117,10 +78,10 @@ const AllLogs = () => {
 					<ActivityIndicator size="large" color={theme.colors.primary} />
 				) : !hasMore ? (
 					<Text
-						className="text-center mt-4"
+						className="text-center mt-4 mb-20"
 						style={{ color: theme.colors.textTertiary }}
 					>
-						{t("all_logs_are_displayed")}
+						{" "}
 					</Text>
 				) : null
 			}

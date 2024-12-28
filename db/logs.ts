@@ -173,6 +173,11 @@ export const getAllUsersLogsPaginated = async (
 				const logData = doc.data();
 				const memberInfo = await getMemberProfileByUid(logData.uid);
 				const habitInfo = await getHabitById(logData.habitId);
+
+				if (memberInfo?.activityConfidentiality !== "public") {
+					return null;
+				}
+
 				return {
 					id: doc.id,
 					...logData,
@@ -182,9 +187,15 @@ export const getAllUsersLogsPaginated = async (
 			})
 		);
 
+		const filteredLogs = logs.filter((log) => log !== null);
+
 		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-		return { logs, lastVisible, hasMore: logs.length === pageSize };
+		return {
+			logs: filteredLogs,
+			lastVisible,
+			hasMore: filteredLogs.length === pageSize,
+		};
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);
 		throw error;

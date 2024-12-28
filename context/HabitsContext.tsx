@@ -32,12 +32,16 @@ export const HabitsContext = createContext<HabitsContextProps>({
 	refreshCategories: function (): void {},
 });
 
-export const HabitsProvider = ({ children }: any) => {
+type HabitsProviderProps = {
+	children: React.ReactNode;
+};
+
+export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 	const [habitsData, setHabitsData] = useState<Habit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [currentHabit, setCurrentHabit] = useState<UserHabit | null>(null);
 	const [categories, setCategories] = useState<Category[]>([]);
-	const [showHabitDetail, setShowHabitDetail] = useState(true);
+	const [showHabitDetail, setShowHabitDetail] = useState(false);
 
 	const fetchHabitsData = async (signal: AbortSignal, forceRefresh = false) => {
 		try {
@@ -74,7 +78,7 @@ export const HabitsProvider = ({ children }: any) => {
 		const { signal } = controller;
 
 		fetchHabitsData(signal);
-		fetchCategoriesData(signal);
+		fetchCategoriesData(signal); //TODO à retirer
 
 		return () => {
 			console.log("HabitsProvider - cleanup");
