@@ -110,7 +110,7 @@ function MainNavigator() {
 					<Stack.Screen
 						name="classement"
 						options={{
-							title: "Classement",
+							headerShown: false,
 						}}
 					/>
 					<Stack.Screen name="levelDetail" options={{ headerShown: false }} />

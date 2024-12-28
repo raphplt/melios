@@ -110,5 +110,10 @@
     "submit": "Envoyer",
     "category": "Catégorie",
     "submitting": "Envoi en cours...",
-    "feedback_success": "Feedback envoyé avec succès"
+    "feedback_success": "Feedback envoyé avec succès",
+    "current_season": "Saison actuelle",
+    "has_done_habit": "a complété l'habitude",
+    "activity_users": "Activité des utilisateurs",
+    "all_logs_are_displayed": "Tous les logs sont affichés",
+    "the": "le"
 }
