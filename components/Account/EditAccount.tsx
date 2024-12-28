@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { View, Text, TextInput, Button, Alert, Pressable } from "react-native";
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { updateMemberInfo } from "@db/member";
 import AccountBlock from "./AccountBlock";
 import { useData } from "@context/DataContext";
@@ -12,9 +12,11 @@ import {
 import { auth } from "@db/index";
 import { Iconify } from "react-native-iconify";
 import ZoomableView from "@components/Shared/ZoomableView";
+import { useTranslation } from "react-i18next";
 
 export default function EditAccount() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [initialEmail, setInitialEmail] = useState("");
@@ -84,11 +86,11 @@ export default function EditAccount() {
 						backgroundColor: theme.colors.background,
 						color: theme.colors.text,
 					}}
-					className="h-10  mb-4 px-2 w-full rounded-xl"
+					className="h-12 mb-4 py-2 px-2 w-full rounded-xl"
 				/>
 
 				<Text style={{ color: theme.colors.text }} className="mb-1 font-semibold">
-					Email
+					{t("email")}
 				</Text>
 				<TextInput
 					value={email}
@@ -97,13 +99,13 @@ export default function EditAccount() {
 						backgroundColor: theme.colors.background,
 						color: theme.colors.text,
 					}}
-					className="h-10  mb-4 px-2 w-full rounded-xl"
+					className="h-12 mb-4 py-2 px-2 w-full rounded-xl"
 				/>
 
 				{email !== initialEmail && (
 					<>
 						<Text style={{ color: theme.colors.text }} className="mb-1 font-semibold">
-							Mot de passe
+							{t("password")}
 						</Text>
 						<TextInput
 							value={password}

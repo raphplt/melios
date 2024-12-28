@@ -5,7 +5,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import i18n from "../../i18n";
 
 const LanguageSelector = () => {
-	const [selectedLanguage, setSelectedLanguage] = useState<string>("en-US");
+	const [selectedLanguage, setSelectedLanguage] = useState<string>("fr-FR");
 
 	useEffect(() => {
 		const loadLanguage = async () => {

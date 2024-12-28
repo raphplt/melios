@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text, FlatList, ActivityIndicator } from "react-native";
+import { Text, FlatList, ActivityIndicator, View } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { getAllUsersLogsPaginated } from "../../db/logs";
 import { Member } from "@type/member";
 import { Habit } from "@type/habit";
 import { LogItem } from "./LogItem";
+import Confidentiality from "@components/Modals/Confidentiality";
+import { Iconify } from "react-native-iconify";
 
 export type LogExtended = {
 	id: string;
@@ -60,22 +62,36 @@ const AllLogs = () => {
 			renderItem={renderItem}
 			keyExtractor={(item) => item.id}
 			onEndReached={fetchLogs}
-			className="w-[95%] mx-auto"
+			className="w-[94%] mx-auto"
 			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
-				<Text
-					className="text-lg mt-2 mb-4"
+				<View
+					className="flex flex-row items-center justify-center py-3 my-2 mb-3 rounded-lg"
 					style={{
-						color: theme.colors.text,
-						fontFamily: "BaskervilleBold",
+						borderColor: theme.colors.border,
+						borderWidth: 1,
 					}}
 				>
-					{t("activity_users")}
-				</Text>
+					<Iconify icon="mdi:account-group" size={24} color={theme.colors.text} />
+					<Text
+						className="text-lg mx-2"
+						style={{
+							color: theme.colors.text,
+							fontFamily: "BaskervilleBold",
+						}}
+					>
+						{t("activity_users")}
+					</Text>
+					<Confidentiality />
+				</View>
 			}
 			ListFooterComponent={
 				loading ? (
-					<ActivityIndicator size="large" color={theme.colors.primary} />
+					<ActivityIndicator
+						size="large"
+						color={theme.colors.primary}
+						className="py-10"
+					/>
 				) : !hasMore ? (
 					<Text
 						className="text-center mt-4 mb-20"

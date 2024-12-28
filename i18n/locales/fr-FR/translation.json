@@ -117,5 +117,11 @@
     "all_logs_are_displayed": "Tous les logs sont affichés",
     "the": "le",
     "launch": "Lancer",
-    "complete": "Compléter"
+    "complete": "Compléter",
+    "confidentiality": "Confidentialité",
+    "public": "Public",
+    "private": "Privé",
+    "friends": "Amis",
+    "manage_confidentiality_habits": "Gérer la confidentialité",
+    "manage_confidentiality_habits_description": "Vous pouvez choisir qui peut voir vos habitudes: tout le monde, seulement vos amis ou seulement vous."
 }

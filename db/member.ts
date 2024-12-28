@@ -127,6 +127,10 @@ export const getMemberInfos = async (
 				temps: memberDoc.data().temps,
 				aspects: memberDoc.data().aspects,
 				profilePicture: memberDoc.data().profilePicture,
+				activityConfidentiality: memberDoc.data().activityConfidentiality,
+				friends: memberDoc.data().friends,
+				friendRequestsReceived: memberDoc.data().friendRequestsReceived,
+				friendRequestsSent: memberDoc.data().friendRequestsSent,
 			};
 
 			await AsyncStorage.setItem(
@@ -170,6 +174,7 @@ export const getMemberProfileByUid = async (
 				friends: memberDoc.data().friends,
 				friendRequestsSent: memberDoc.data().friendRequestsSent,
 				friendRequestsReceived: memberDoc.data().friendRequestsReceived,
+				activityConfidentiality: memberDoc.data().activityConfidentiality,
 			};
 
 			return memberProfile;
@@ -204,6 +209,31 @@ export const updateMemberInfo = async (name: string) => {
 		}
 	} catch (error) {
 		console.error("Error updating member info: ", error);
+		throw error;
+	}
+};
+
+export const updateMemberField = async (field: keyof Member, value: any) => {
+	try {
+		const uid = auth.currentUser?.uid;
+
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", uid))
+		);
+
+		if (!querySnapshot.empty) {
+			const memberDoc = querySnapshot.docs[0];
+			const updates: any = { [field]: value };
+
+			await updateDoc(memberDoc.ref, updates);
+			console.log(`Member ${field} updated successfully`);
+		} else {
+			console.log("Member not found");
+		}
+	} catch (error) {
+		console.error(`Error updating member ${field}: `, error);
 		throw error;
 	}
 };
