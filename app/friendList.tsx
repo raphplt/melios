@@ -3,8 +3,10 @@ import { Text, View, FlatList, ActivityIndicator } from "react-native";
 import { getMembersPaginated } from "@db/member";
 import { Member } from "@type/member";
 import Friend from "@components/Agora/Friend";
+import { useData } from "@context/DataContext";
 
 const FriendList = () => {
+	const { member } = useData();
 	const [members, setMembers] = useState<Member[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [lastVisibleDoc, setLastVisibleDoc] = useState<any>(null);
@@ -26,7 +28,14 @@ const FriendList = () => {
 			setMembers((prevMembers: any) => {
 				const updatedMembers = isRefreshing
 					? newMembers
-					: [...prevMembers, ...newMembers];
+					: [
+							...prevMembers,
+							...newMembers.filter(
+								(newMember) =>
+									!prevMembers.some((member: any) => member.uid === newMember.uid)
+							),
+					  ];
+
 				return updatedMembers;
 			});
 
@@ -51,10 +60,25 @@ const FriendList = () => {
 		<View>
 			<FlatList
 				data={members}
+				numColumns={2}
 				keyExtractor={(item) => item.uid}
-				renderItem={({ item }) => <Friend member={item} key={item.uid} />}
+				showsVerticalScrollIndicator={false}
+				ListHeaderComponent={
+					<View>
+						<Text>Amis</Text>
+						<Text>Vous avez {member?.friends?.length ?? "0"} amis</Text>
+						<Text>
+							Vous avez {member?.friendRequestsReceived?.length ?? "0"} demandes recues
+						</Text>
+						<Text>
+							Vous avez {member?.friendRequestsSent?.length ?? "0"} demandes envoyées
+						</Text>
+					</View>
+				}
+				renderItem={({ item }) => <Friend member={item} />}
 				onEndReached={loadMoreMembers}
 				onEndReachedThreshold={0.5}
+				className="w-[95%] mx-auto"
 				ListFooterComponent={
 					hasMoreMembers ? <ActivityIndicator size="large" color="#0000ff" /> : null
 				}

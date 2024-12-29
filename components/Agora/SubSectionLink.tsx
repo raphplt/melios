@@ -25,8 +25,8 @@ const SubSectionLink = ({ href, children }: SubSectionLinkProps) => {
 				className="p-4 rounded-lg my-2 w-11/12 mx-auto flex flex-row items-center justify-between"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
-					borderColor: theme.colors.border,
-					borderWidth: 1,
+					// borderColor: theme.colors.border,
+					// borderWidth: 1,
 				}}
 				onPress={() => navigation.navigate(href)}
 			>

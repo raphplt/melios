@@ -29,6 +29,9 @@ export default function SelectColor({
 		{ name: "Color 10", code: "#AEC6CF" },
 		{ name: "Color 11", code: "#FDFD96" },
 		{ name: "Color 12", code: "#CBAACB" },
+		{ name: "Color 13", code: "#6495ED" },
+		{ name: "Color 14", code: "#FF69B4" },
+		{ name: "Color 15", code: "#FFA07A" },
 	];
 
 	const handleSelectColor = (colorCode: string) => {
@@ -38,7 +41,7 @@ export default function SelectColor({
 
 	return (
 		<ModalWrapper visible={visible} setVisible={setVisible}>
-			<View>
+			<View className="flex flex-col items-center w-[80vw]">
 				<Text
 					style={{
 						color: theme.colors.text,
@@ -48,12 +51,12 @@ export default function SelectColor({
 				>
 					{t("color_habit")}
 				</Text>
-				<View className="flex flex-row flex-wrap justify-between w-11/12 mx-auto">
+				<View className="flex flex-row flex-wrap justify-center w-full mx-auto">
 					{colors.map((color) => (
 						<Pressable
 							key={color.name}
 							onPress={() => handleSelectColor(color.code)}
-							className="flex flex-col items-center justify-center my-3 px-3"
+							className="flex flex-col items-center justify-center my-3 px-4"
 						>
 							<View
 								style={{

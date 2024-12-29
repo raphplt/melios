@@ -1,19 +1,24 @@
 import moment from "moment";
 import { Text, View, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useContext, useState, useEffect } from "react";
-import { ThemeContext } from "@context/ThemeContext";
+import { useState, useEffect } from "react";
+import { useTheme } from "@context/ThemeContext";
 import { UserHabit } from "@type/userHabit";
 import { DayStatus } from "../../app/habitDetail";
 import { getHabitLogs } from "@db/logs";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function LastDays({ habit }: { habit: UserHabit }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { t } = useTranslation();
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [currentStreak, setCurrentStreak] = useState(0);
 
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -24,14 +29,19 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 				const lastDaySnapshot: DayStatus[] = [];
 				for (let i = 14; i >= 1; i--) {
 					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-					const done = logs ? logs.includes(day) : false;
+					let done = logs ? logs.includes(day) : false;
+					if (habit.type === CategoryTypeSelect.negative) {
+						done = !done;
+					}
 					lastDaySnapshot.push({
 						date: day,
 						done,
 					});
 				}
+
 				setLastDays(lastDaySnapshot.reverse());
 				setLoading(false);
+				calculateCurrentStreak(lastDaySnapshot);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des logs :", error);
 			}
@@ -39,6 +49,18 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 
 		fetchHabitLogs();
 	}, [habit.id]);
+
+	const calculateCurrentStreak = (days: DayStatus[]) => {
+		let streak = 0;
+		for (let i = days.length - 2; i >= 0; i--) {
+			if (days[i].done) {
+				streak++;
+			} else {
+				break;
+			}
+		}
+		setCurrentStreak(streak);
+	};
 
 	const CardPlaceHolder = () => {
 		return (
@@ -65,18 +87,35 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 					overflow: "hidden",
 				}}
 			>
-				<View className="flex flex-row items-center justify-start w-11/12 gap-1 pt-3 pb-1">
-					<Iconify
-						icon="ph:calendar-check-fill"
-						size={20}
-						color={theme.colors.text}
-					/>
-					<Text
-						style={{ color: theme.colors.text }}
-						className="text-[16px] font-semibold "
+				<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 pb-1">
+					<View className="flex flex-row items-center">
+						<Iconify
+							icon="ph:calendar-check-fill"
+							size={20}
+							color={theme.colors.text}
+						/>
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-[15px] font-semibold ml-1"
+						>
+							{t("last_days_completion")}
+						</Text>
+					</View>
+					<View
+						className="flex flex-row items-center justify-start px-3 py-1 "
+						style={{
+							backgroundColor: theme.colors.backgroundSecondary,
+							borderRadius: 10,
+						}}
 					>
-						Complétion des derniers jours
-					</Text>
+						<Iconify icon="mdi:fire" size={20} color={theme.colors.redPrimary} />
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-[14px] font-semibold italic "
+						>
+							{t("streak")}: {currentStreak}
+						</Text>
+					</View>
 				</View>
 				<ScrollView
 					horizontal

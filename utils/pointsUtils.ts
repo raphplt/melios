@@ -27,15 +27,3 @@ export const getHabitPoints = (habit?: UserHabit) => {
 		rewards: habit.difficulty,
 	};
 };
-
-/**
- * Calculates the global level of the user
- * @param usersLevels
- * @returns {number}
- */
-export const calculateGlobalLevel = (usersLevels: UserLevel[]) => {
-	return Object.values(usersLevels).reduce(
-		(total, level) => total + level.currentLevel,
-		0
-	);
-};

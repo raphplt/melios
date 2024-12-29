@@ -3,6 +3,7 @@ import { GenericLevel } from "@type/levels";
 import { Log } from "@type/log";
 import { UserHabit } from "@type/userHabit";
 import moment from "moment";
+import { CategoryTypeSelect } from "./category.type";
 
 /**
  * Function to calculate the streak of the user
@@ -112,7 +113,13 @@ export const getTodayScore = (
 		.toLocaleString("en-US", { weekday: "long" })
 		.toLowerCase() as DayOfWeek;
 	const todayHabits = habits.filter(
-		(habit) => habit.frequency && habit.frequency[today]
+		(habit) =>
+			habit.frequency &&
+			habit.frequency[today] &&
+			habit.type !== CategoryTypeSelect.negative
 	);
-	return Math.round((completedHabitsToday.length / todayHabits.length) * 100);
+	const positivesToday = completedHabitsToday.filter(
+		(habit) => habit.type !== CategoryTypeSelect.negative
+	);
+	return Math.round((positivesToday.length / todayHabits.length) * 100);
 };

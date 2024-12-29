@@ -6,6 +6,7 @@ import {
 	query,
 	where,
 	deleteDoc,
+	getDoc,
 } from "firebase/firestore";
 import { auth, db } from ".";
 import { FieldValues } from "react-hook-form";
@@ -46,7 +47,6 @@ export const getUserHabits = async (options: {
 }) => {
 	try {
 		if (!options.forceRefresh) {
-			console.log(`[${new Date().toISOString()}] LocalStorage getMemberHabits`);
 			const storedData = await AsyncStorage.getItem(
 				LOCAL_STORAGE_MEMBER_HABITS_KEY
 			);
@@ -88,6 +88,24 @@ export const deleteHabitById = async (habitId: string) => {
 		console.log(`Habitude avec l'ID ${habitId} supprimée avec succès`);
 	} catch (error) {
 		console.error("Erreur lors de la suppression de l'habituation: ", error);
+		throw error;
+	}
+};
+
+// Fonction pour récupérer une habitude par ID
+export const getHabitById = async (habitId: string) => {
+	try {
+		const habitDocRef = doc(db, "userHabits", habitId);
+		const habitDoc = await getDoc(habitDocRef);
+
+		if (!habitDoc.exists()) {
+			console.error("Aucun document trouvé pour cet ID");
+			return null;
+		}
+
+		return { id: habitDoc.id, ...habitDoc.data() };
+	} catch (error) {
+		console.error("Erreur lors de la récupération de l'habitude: ", error);
 		throw error;
 	}
 };

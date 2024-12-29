@@ -12,6 +12,7 @@ import {
 	deleteHabitById,
 	LOCAL_STORAGE_MEMBER_HABITS_KEY,
 } from "@db/userHabit";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
@@ -44,25 +45,23 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	};
 
 	return (
-		<View>
+		<ZoomableView>
 			<View
 				className="flex flex-row items-center justify-between mx-auto w-11/12 py-3 px-2 my-[6px] rounded-2xl"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
-					borderColor: theme.colors.border,
-					borderWidth: 1,
 				}}
 			>
 				<View className="flex flex-row items-center">
-					<View className="w-6 ml-1">
+					<View className="w-8 ml-1">
 						<FontAwesome6
 							name={habit.icon || "question"}
-							size={20}
+							size={18}
 							color={habit.color || theme.colors.text}
 						/>
 					</View>
 					<Text
-						className="ml-3 w-10/12 overflow-clip"
+						className="ml-2 w-2/3 font-semibold overflow-clip"
 						style={{
 							color: theme.colors.text,
 						}}
@@ -76,6 +75,7 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 						icon="mdi:trash-outline"
 						size={26}
 						color={theme.colors.redPrimary}
+						className="mr-2"
 					/>
 				</Pressable>
 			</View>
@@ -86,6 +86,6 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 				habit={habit}
 				handleDelete={handleDeleteConfirm}
 			/>
-		</View>
+		</ZoomableView>
 	);
 }

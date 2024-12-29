@@ -18,6 +18,7 @@ import { TimerProvider } from "@context/TimerContext";
 import { DataProvider } from "@context/DataContext";
 import "../i18n";
 import "../global.css";
+import { useTranslation } from "react-i18next";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -67,7 +68,10 @@ function MainNavigator() {
 					backgroundColor={theme.colors.background}
 				/>
 				<Stack>
-					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+					<Stack.Screen
+						name="(navbar)"
+						options={{ headerShown: false, title: "" }}
+					/>
 					<Stack.Screen name="(select)" options={{ headerShown: false }} />
 					<Stack.Screen name="habitDetail" options={{ headerShown: false }} />
 					<Stack.Screen
@@ -77,10 +81,6 @@ function MainNavigator() {
 					<Stack.Screen
 						name="editProfil"
 						options={{ headerShadowVisible: false, title: "Éditer le profil" }}
-					/>
-					<Stack.Screen
-						name="trophies"
-						options={{ headerShadowVisible: false, title: "Trophées" }}
 					/>
 					<Stack.Screen
 						name="login"
@@ -114,16 +114,10 @@ function MainNavigator() {
 					<Stack.Screen
 						name="classement"
 						options={{
-							title: "Classement",
+							headerShown: false,
 						}}
 					/>
 					<Stack.Screen name="levelDetail" options={{ headerShown: false }} />
-					<Stack.Screen
-						name="feed"
-						options={{
-							title: "Actualités",
-						}}
-					/>
 					<Stack.Screen
 						name="help"
 						options={{ title: "Aide", headerShadowVisible: false }}
@@ -131,6 +125,10 @@ function MainNavigator() {
 					<Stack.Screen
 						name="friendList"
 						options={{ title: "Liste d'amis", headerShadowVisible: false }}
+					/>
+					<Stack.Screen
+						name="feedbackForm"
+						options={{ title: "Liste d'amis", headerShown: false }}
 					/>
 					<Stack.Screen
 						name="cosmeticShop"
@@ -154,6 +152,7 @@ function RootLayoutContent() {
 	const { user, isLoading: isSessionLoading } = useSession();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [isNavigationReady, setIsNavigationReady] = useState(false);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		return navigation.addListener("state", () => {
@@ -175,7 +174,7 @@ function RootLayoutContent() {
 		}
 	}, [isSessionLoading]);
 
-	if (isLoading) return <LoaderScreen text="Chargement cc..." />;
+	if (isLoading) return <LoaderScreen text={t("loading")} />;
 
 	return (
 		<TimerProvider>

@@ -7,14 +7,24 @@ import {
 	where,
 	query,
 	getDocs,
+	limit,
+	orderBy,
+	startAfter,
 } from "firebase/firestore";
 import { db, auth } from ".";
+import { getMemberInfos, getMemberProfileByUid } from "./member";
+import { getHabitById } from "./userHabit";
 
+/**
+ *  Ajoute un log pour une habitude donnée
+ * @param habitId
+ * @param logDate
+ */
 export const setHabitLog = async (habitId: string, logDate: string) => {
 	try {
 		const uid = auth.currentUser?.uid;
 		if (!uid) throw new Error("Utilisateur non authentifié");
-		if (!habitId) throw new Error("[SET] -Identifiant de l'habitude manquant");
+		if (!habitId) throw new Error("[SET] - Identifiant de l'habitude manquant");
 
 		const logsCollectionRef = collection(db, "habitsLogs");
 
@@ -26,6 +36,8 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 
 		const querySnapshot = await getDocs(q);
 
+		const logDateObj = new Date(logDate);
+
 		if (querySnapshot.empty) {
 			const newLogDocRef = doc(logsCollectionRef);
 
@@ -33,16 +45,22 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 				uid: uid,
 				habitId: habitId,
 				logs: [logDate],
+				mostRecentLog: logDateObj.toISOString(),
 				createdAt: serverTimestamp(),
 			});
-
-			console.log("Nouveau log créé avec succès pour cette habitude.");
 		} else {
 			const logDoc = querySnapshot.docs[0];
 			const logDocRef = doc(db, "habitsLogs", logDoc.id);
 
+			const existingLogs = logDoc.data().logs || [];
+			const updatedLogs = [...existingLogs, logDate].map((date) => new Date(date));
+			const mostRecentLog = updatedLogs
+				.sort((a, b) => b.getTime() - a.getTime())[0]
+				.toISOString();
+
 			await updateDoc(logDocRef, {
-				logs: [...logDoc.data().logs, logDate],
+				logs: [...existingLogs, logDate],
+				mostRecentLog,
 				updatedAt: serverTimestamp(),
 			});
 
@@ -54,6 +72,11 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 	}
 };
 
+/**
+ * Récupère les logs pour une habitude donnée
+ * @param habitId
+ * @returns
+ */
 export const getHabitLogs = async (habitId: string) => {
 	try {
 		const uid = auth.currentUser?.uid;
@@ -71,7 +94,6 @@ export const getHabitLogs = async (habitId: string) => {
 		const querySnapshot = await getDocs(q);
 
 		if (querySnapshot.empty) {
-			// console.log("Aucun log trouvé pour cette habitude.");
 			return null;
 		}
 
@@ -117,6 +139,64 @@ export const getAllHabitLogs = async ({
 		});
 
 		return allLogs;
+	} catch (error) {
+		console.error("Erreur lors de la récupération des logs :", error);
+		throw error;
+	}
+};
+
+export const getAllUsersLogsPaginated = async (
+	pageSize: number = 10,
+	lastVisibleDoc: any = null
+) => {
+	try {
+		const logsCollectionRef = collection(db, "habitsLogs");
+
+		let logsQuery = query(
+			logsCollectionRef,
+			orderBy("mostRecentLog", "desc"),
+
+			limit(pageSize)
+		);
+
+		if (lastVisibleDoc) {
+			logsQuery = query(logsQuery, startAfter(lastVisibleDoc));
+		}
+
+		const querySnapshot = await getDocs(logsQuery);
+
+		if (querySnapshot.empty) {
+			return { logs: [], lastVisible: null, hasMore: false };
+		}
+
+		const logs = await Promise.all(
+			querySnapshot.docs.map(async (doc) => {
+				const logData = doc.data();
+				const memberInfo = await getMemberProfileByUid(logData.uid);
+				const habitInfo = await getHabitById(logData.habitId);
+
+				if (memberInfo?.activityConfidentiality !== "public") {
+					return null;
+				}
+
+				return {
+					id: doc.id,
+					...logData,
+					member: memberInfo || null,
+					habit: habitInfo || null,
+				};
+			})
+		);
+
+		const filteredLogs = logs.filter((log) => log !== null);
+
+		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+		return {
+			logs: filteredLogs,
+			lastVisible,
+			hasMore: filteredLogs.length === pageSize,
+		};
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);
 		throw error;

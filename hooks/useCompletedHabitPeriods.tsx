@@ -1,16 +1,14 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
+import moment from "moment";
+import useIndex from "./useIndex";
 import { ThemeContext } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
 
 const useCompletedHabitPeriods = () => {
+	// const { userHabits: habits } = useIndex();
 	const { logs } = useData();
 	const { theme } = useContext(ThemeContext);
 	const [loading, setLoading] = useState(true);
-
-	if (!logs) {
-		setLoading(false);
-		return { completedHabitPeriods: {}, loading };
-	}
 
 	const bgColor = theme.colors.primary;
 
@@ -28,24 +26,103 @@ const useCompletedHabitPeriods = () => {
 			});
 		});
 
-		const markedDates: Record<string, any> = {};
+		const sortedDates = Array.from(completedDates).sort();
+		const periods: Record<string, any> = {};
 
-		completedDates.forEach((date) => {
-			markedDates[date] = {
-				customStyles: {
-					container: {
-						backgroundColor: bgColor,
-					},
-					text: {
-						color: "white",
-					},
-				},
+		let start = sortedDates[0];
+		let end = start;
+
+		for (let i = 1; i < sortedDates.length; i++) {
+			const currentDate = sortedDates[i];
+			const previousDate = moment(sortedDates[i - 1]);
+
+			if (moment(currentDate).diff(previousDate, "days") === 1) {
+				end = currentDate;
+			} else {
+				if (start === end) {
+					periods[start] = {
+						startingDay: true,
+						endingDay: true,
+						color: bgColor,
+						textColor: "white",
+					};
+				} else {
+					periods[start] = {
+						startingDay: true,
+						color: bgColor,
+						textColor: "white",
+					};
+					periods[end] = {
+						endingDay: true,
+						color: bgColor,
+						textColor: "white",
+					};
+
+					for (
+						let j = moment(start).add(1, "days");
+						j.isBefore(end);
+						j.add(1, "days")
+					) {
+						periods[j.format("YYYY-MM-DD")] = {
+							color: bgColor,
+							textColor: "white",
+						};
+					}
+				}
+				start = currentDate;
+				end = start;
+			}
+		}
+
+		// Gère la dernière période
+		if (start === end) {
+			periods[start] = {
+				startingDay: true,
+				endingDay: true,
+				color: bgColor,
+				textColor: "white",
 			};
-		});
+		} else {
+			periods[start] = {
+				startingDay: true,
+				color: bgColor,
+				textColor: "white",
+			};
+			periods[end] = {
+				endingDay: true,
+				color: bgColor,
+				textColor: "white",
+			};
+
+			for (
+				let j = moment(start).add(1, "days");
+				j.isBefore(end);
+				j.add(1, "days")
+			) {
+				periods[j.format("YYYY-MM-DD")] = {
+					color: bgColor,
+					textColor: "white",
+				};
+			}
+		}
+
+		const today = moment().format("YYYY-MM-DD");
+		const highlightColor = theme.dark ? "#ffcc00" : "#C95355";
+		if (periods[today]) {
+			periods[today].color = highlightColor;
+			periods[today].textColor = "white";
+		} else {
+			periods[today] = {
+				startingDay: true,
+				endingDay: true,
+				color: highlightColor,
+				textColor: "white",
+			};
+		}
 
 		setLoading(false);
-		return markedDates;
-	}, [logs, bgColor]);
+		return periods;
+	}, [logs, theme.dark]);
 
 	return { completedHabitPeriods, loading };
 };

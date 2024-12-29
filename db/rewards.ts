@@ -10,6 +10,7 @@ import {
 	where,
 } from "firebase/firestore";
 import { auth, db } from ".";
+import { faker } from "@faker-js/faker";
 
 export const getRewards = async (
 	options: {
@@ -93,14 +94,17 @@ export const setRewards = async (
 	}
 };
 
-export const getAllRewardsPaginated = async (lastVisibleDoc = null, pageSize = 10) => {
+export const getAllRewardsPaginated = async (
+	lastVisibleDoc = null,
+	pageSize = 10
+) => {
 	try {
 		const rewardsCollectionRef = collection(db, "rewards");
 
 		// Crée la requête de pagination
 		let rewardsQuery = query(
 			rewardsCollectionRef,
-			orderBy("rewards", "desc"),
+			orderBy("odyssee", "desc"),
 			limit(pageSize)
 		);
 
@@ -127,8 +131,10 @@ export const getAllRewardsPaginated = async (lastVisibleDoc = null, pageSize = 1
 				if (!userSnapshot.empty) {
 					const userDoc = userSnapshot.docs[0];
 					const userData = userDoc.data();
-					userName = userData.nom || "Unknown User";
+					userName = userData.nom || faker.person.firstName();
 					profilePicture = userData.profilePicture || null;
+				} else {
+					userName = faker.person.firstName();
 				}
 
 				return {

@@ -13,6 +13,7 @@ import Animated, {
 	withTiming,
 	withDelay,
 } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 
 // Customs imports
@@ -26,7 +27,7 @@ import useHabitTimer from "@hooks/useHabitTimer";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
-import { useTranslation } from "react-i18next";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -44,7 +45,7 @@ function CardCheckHabit({
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
 	const { startTimer } = useHabitTimer();
-	const { addXp } = useAddXp();
+	const addXp = useAddXp()?.addXp;
 	const { t } = useTranslation();
 
 	// États
@@ -81,7 +82,6 @@ function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		const today = formatDate(new Date());
 		const completed = completedHabitsToday.some((h) => h.id === habit.id);
 		setCompleted(completed);
 	}, [completedHabitsToday]);
@@ -112,9 +112,14 @@ function CardCheckHabit({
 		try {
 			setCompleted(true);
 			await setHabitLog(habit.id, date);
-			await addXp(habit, 30);
-			addOdysseePoints(habit.difficulty);
-			setRewards("odyssee", habit.difficulty * 2);
+
+			if (habit.type !== CategoryTypeSelect.negative) {
+				if (addXp) {
+					await addXp(habit, 30);
+				}
+				addOdysseePoints(habit.difficulty); // set local points
+				setRewards("odyssee", habit.difficulty * 2); // set database points
+			}
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {
 			console.error("Erreur lors de l'ajout du log :", error);
@@ -140,7 +145,11 @@ function CardCheckHabit({
 					<Ionicons
 						name={completed ? "checkmark-circle" : "ellipse-outline"}
 						size={30}
-						color={theme.colors.primary}
+						color={
+							habit.type === CategoryTypeSelect.negative
+								? theme.colors.redPrimary
+								: theme.colors.primary
+						}
 					/>
 				</Pressable>
 				<Pressable
@@ -149,8 +158,15 @@ function CardCheckHabit({
 					}}
 					style={{
 						backgroundColor: completed
-							? theme.colors.backgroundTertiary
+							? habit.type === CategoryTypeSelect.negative
+								? theme.colors.redSecondary
+								: theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
+						borderColor:
+							habit.type === CategoryTypeSelect.negative
+								? theme.colors.redPrimary
+								: theme.colors.cardBackground,
+						borderWidth: 2,
 					}}
 					className="flex-1 flex flex-col rounded-xl"
 				>
@@ -165,7 +181,7 @@ function CardCheckHabit({
 								style={{
 									color: theme.colors.text,
 								}}
-								className="text-[16px] font-semibold w-[80%] ml-2"
+								className="text-[16px] font-semibold w-[85%] ml-2"
 								numberOfLines={1}
 								ellipsizeMode="tail"
 							>
@@ -174,7 +190,7 @@ function CardCheckHabit({
 						</View>
 						<Pressable
 							onPress={() => setShowDetails(!showDetails)}
-							className="flex items-center justify-center"
+							className="flex items-center justify-center relative"
 						>
 							{showDetails ? (
 								<Iconify icon="mdi:chevron-up" color={theme.colors.text} size={24} />
@@ -185,7 +201,7 @@ function CardCheckHabit({
 					</View>
 					<Animated.View style={[detailsAnimatedStyle]}>
 						{showDetails && (
-							<View className="flex flex-row items-center justify-around flex-1 h-fit">
+							<View className="flex flex-row items-center justify-around">
 								<Pressable
 									onPress={goHabitDetail}
 									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
@@ -201,13 +217,15 @@ function CardCheckHabit({
 										size={20}
 									/>
 									<Text
-										className="text-[16px]  font-semibold ml-2"
+										className="text-[16px] font-semibold ml-2"
 										style={{ color: theme.colors.primary }}
 									>
 										{t("details")}
 									</Text>
 								</Pressable>
-								{!completed && habit.duration ? (
+
+								{habit.type === CategoryTypeSelect.negative ? null : !completed &&
+								  habit.duration ? (
 									<Pressable
 										onPress={startHabit}
 										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
@@ -240,12 +258,6 @@ function CardCheckHabit({
 							</View>
 						)}
 					</Animated.View>
-					{/* <Button
-						onPress={() => {
-							addXp(habit, 30);
-						}}
-						title="ADD XP"
-					/> */}
 				</Pressable>
 			</Animated.View>
 		</ZoomableView>

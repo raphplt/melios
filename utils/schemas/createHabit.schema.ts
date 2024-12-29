@@ -28,6 +28,7 @@ export const createHabitSchema = z.object({
 		.string()
 		.min(3, { message: "La catégorie doit contenir au moins 3 caractères." })
 		.max(255, { message: "La catégorie ne doit pas dépasser 255 caractères." }),
+	categoryId: z.string().optional().nullable(),
 	color: z
 		.string()
 		.min(3, { message: "La couleur doit contenir au moins 3 caractères." })
@@ -36,6 +37,10 @@ export const createHabitSchema = z.object({
 		.string()
 		.min(3, { message: "L'icône doit contenir au moins 3 caractères." })
 		.max(255, { message: "L'icône ne doit pas dépasser 255 caractères." }),
+	type: z
+		.string()
+		.min(3, { message: "Le type doit contenir au moins 3 caractères." })
+		.max(255, { message: "Le type ne doit pas dépasser 255 caractères." }),
 	duration: z
 		.number()
 		.int({ message: "La durée doit être un nombre entier." })

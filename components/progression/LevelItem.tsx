@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import { useData } from "@context/DataContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
+import { FontAwesome6 } from "@expo/vector-icons";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
@@ -16,64 +18,73 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	return (
-		<Pressable
-			style={{
-				backgroundColor: theme.colors.background,
-				borderColor: theme.colors.border,
-				borderWidth: 1,
-			}}
-			onPress={() => {
-				setSelectedLevel(level);
-				navigation.navigate("levelDetail");
-			}}
-			className="py-2 px-2 my-1 rounded-xl"
-		>
-			<Text
+		<ZoomableView>
+			<Pressable
 				style={{
-					color: theme.colors.text,
+					backgroundColor: theme.colors.background,
+					borderColor: theme.colors.border,
+					borderWidth: 1,
 				}}
-				className="text-[16px] font-bold"
+				onPress={() => {
+					setSelectedLevel(level);
+					navigation.navigate("levelDetail");
+				}}
+				className="py-2 px-2 my-1 rounded-xl"
 			>
-				{level.name}
-			</Text>
-			<View className="flex flex-row items-center justify-between">
-				<Text
+				<View className="flex flex-row items-center justify-start py-1 mx-1">
+					<FontAwesome6
+						name={level.icon || "question"}
+						size={20}
+						color={level.color || theme.colors.primary}
+					/>
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-[15px] ml-2 font-bold"
+					>
+						{level.name}
+					</Text>
+				</View>
+				<View className="flex flex-row items-center justify-between p-2">
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-[15px] font-semibold"
+					>
+						{t("lvl")} : {level.currentLevel}
+					</Text>
+					<View
+						style={{
+							borderColor: level.color || theme.colors.primary,
+							borderWidth: 2,
+						}}
+						className="px-2 py-1 rounded-2xl"
+					>
+						<Text
+							style={{
+								color: theme.colors.textTertiary,
+							}}
+							className="text-[14px] font-semibold "
+						>
+							{level.currentXp} / {level.nextLevelXp}
+						</Text>
+					</View>
+				</View>
+				<Progress.Bar
+					progress={level.currentXp / level.nextLevelXp}
+					width={width * 0.9}
+					height={10}
+					color={level.color || theme.colors.primary}
+					borderRadius={15}
+					borderWidth={0}
 					style={{
-						color: theme.colors.text,
+						backgroundColor: theme.colors.border,
 					}}
-					className="text-[14px] mb-1 font-semibold"
-				>
-					{t("lvl")} : {level.currentLevel}
-				</Text>
-				<Text
-					style={{
-						color: theme.colors.text,
-					}}
-					className="text-[14px] mb-1"
-				>
-					{level.currentXp} / {level.nextLevelXp}
-				</Text>
-			</View>
-			<Progress.Bar
-				progress={level.currentXp / level.nextLevelXp}
-				width={width * 0.9}
-				height={12}
-				color={level.color || theme.colors.primary}
-				borderRadius={15}
-				borderWidth={0}
-				style={{
-					backgroundColor: theme.colors.border,
-				}}
-			/>
-			<Text
-				style={{
-					color: theme.colors.textTertiary,
-				}}
-				className="text-[13px] mt-1"
-			>
-				{level.description}
-			</Text>
-		</Pressable>
+				/>
+			</Pressable>
+		</ZoomableView>
 	);
 };
 

@@ -4,14 +4,14 @@ import { useMemo, useState } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { ActivityIndicator, View } from "react-native";
 import SectionHeader from "./SectionHeader";
-import { useTranslation } from "react-i18next";
 import React from "react";
-import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 const CalendarHabits = () => {
 	const { completedHabitPeriods, loading } = useCompletedHabitPeriods();
-	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const { theme } = useTheme();
+
 	const [showCalendar, setShowCalendar] = useState(true);
 
 	const colors = useMemo(() => {
@@ -37,8 +37,6 @@ const CalendarHabits = () => {
 		[theme.dark]
 	);
 
-	const currentDate = moment().format("YYYY-MM-DD");
-
 	if (loading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -46,24 +44,6 @@ const CalendarHabits = () => {
 			</View>
 		);
 	}
-
-	const markedDates = { ...completedHabitPeriods };
-
-	markedDates[currentDate] = {
-		...(markedDates[currentDate] || {}),
-		customStyles: {
-			...(markedDates[currentDate]?.customStyles || {}),
-			container: {
-				...(markedDates[currentDate]?.customStyles?.container || {}),
-				borderColor: "red",
-				borderWidth: 2,
-			},
-			text: {
-				...(markedDates[currentDate]?.customStyles?.text || {}),
-				color: "red",
-			},
-		},
-	};
 
 	return (
 		<>
@@ -73,14 +53,21 @@ const CalendarHabits = () => {
 				setShow={setShowCalendar}
 				icon="calendar"
 			>
-				{showCalendar && (
+				<View
+					className="w-[95%] mx-auto rounded-xl my-2"
+					style={{
+						borderColor: theme.colors.border,
+						borderWidth: 2,
+					}}
+				>
 					<Calendar
 						key={calendarKey}
-						markingType="custom"
-						markedDates={markedDates}
+						markingType={"period"}
+						markedDates={completedHabitPeriods}
 						theme={colors}
+						style={[{ borderRadius: 10 }]}
 					/>
-				)}
+				</View>
 			</SectionHeader>
 		</>
 	);

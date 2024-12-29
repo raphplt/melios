@@ -7,6 +7,7 @@ import {
 } from "@utils/schemas/createHabit.schema";
 import { BlurView } from "expo-blur";
 import RowTitleCustom from "./RowTitleCustom";
+import React from "react";
 
 export default function RepeatHabit({
 	register,

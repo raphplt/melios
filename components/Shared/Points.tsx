@@ -1,21 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import MoneyMelios from "@components/Svg/MoneyMelios";
-import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
-import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import { useTranslation } from "react-i18next";
-import { UserLevel } from "@type/levels";
-
-export const calculateGlobalLevel = (usersLevels: UserLevel[]) => {
-	return (
-		Object.values(usersLevels).reduce(
-			(total, level) => total + level.currentLevel,
-			0
-		) - 3
-	);
-};
+import * as Progress from "react-native-progress";
 
 export default function Points() {
 	const { theme } = useTheme();
@@ -27,47 +16,35 @@ export default function Points() {
 		setHelpVisible(!helpVisible);
 	};
 
-	const globalLevel = calculateGlobalLevel(usersLevels);
+	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any]; //TODO change
 
-	if (Object.keys(usersLevels).length === 0) {
-		return (
-			<ShimmerPlaceholder
-				width={150}
-				height={35}
-				style={{
-					borderRadius: 15,
-				}}
-			/>
-		);
-	}
+	const xpPercentage = globalLevel
+		? (globalLevel.currentXp / globalLevel.nextLevelXp) * 100
+		: 0;
 
 	return (
 		<View className="relative">
 			<TouchableOpacity
 				onPress={toggleHelp}
 				className="flex items-center flex-row rounded-full"
-				style={{
-					backgroundColor: theme.colors.blueSecondary,
-					borderColor: theme.colors.primary,
-					borderWidth: 1,
-				}}
 			>
-				<View
-					className="flex items-center justify-center flex-row  px-2 ml-2 rounded-l-full"
-					style={{
-						backgroundColor: theme.colors.blueSecondary,
-					}}
-				>
+				<View className="flex items-center justify-center flex-row px-2 mx-2 rounded-l-full">
 					<View className="flex items-center justify-center">
-						<Image source={require("@assets/images/badge.png")} className="w-8 h-8" />
+						<Progress.Circle
+							size={28}
+							progress={xpPercentage / 100}
+							color={theme.colors.primary}
+							unfilledColor={theme.colors.border}
+							borderWidth={0}
+						/>
 						<Text
 							style={{
-								color: "#fff",
-								fontSize: 14,
+								fontSize: 12,
+								color: theme.colors.primary,
 							}}
 							className="font-bold absolute"
 						>
-							{globalLevel}
+							{globalLevel?.currentLevel}
 						</Text>
 					</View>
 				</View>
@@ -101,18 +78,21 @@ export default function Points() {
 				>
 					<View>
 						<View className="flex items-center justify-center">
-							<Image
-								source={require("@assets/images/badge.png")}
-								className="w-8 h-8"
+							<Progress.Circle
+								size={28}
+								progress={xpPercentage / 100}
+								color={theme.colors.primary}
+								unfilledColor={theme.colors.border}
+								borderWidth={0}
 							/>
 							<Text
 								style={{
-									color: "#fff",
-									fontSize: 14,
+									fontSize: 12,
+									color: theme.colors.primary,
 								}}
 								className="font-bold absolute"
 							>
-								{globalLevel}
+								{globalLevel?.currentLevel}
 							</Text>
 						</View>
 

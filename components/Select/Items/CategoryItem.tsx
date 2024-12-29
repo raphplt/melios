@@ -17,7 +17,7 @@ export default function CategoryItem({ category }: { category: Category }) {
 
 	const handlePress = () => {
 		setCategory(category);
-		navigation.navigate("categoryList");
+		navigation.navigate("habitsList");
 	};
 
 	return (

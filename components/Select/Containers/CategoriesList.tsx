@@ -1,57 +1,56 @@
 import { useHabits } from "@context/HabitsContext";
-import { FlatList, View, Image, Dimensions, Text } from "react-native";
+import { FlatList, View } from "react-native";
 import CategoryItem from "../Items/CategoryItem";
 import { useSelect } from "@context/SelectContext";
-import { useTheme } from "@context/ThemeContext";
-import CachedImage from "@components/Shared/CachedImage";
+import { useState, useEffect } from "react";
+import { CategoryType, CategoryTypeSelect } from "@utils/category.type";
 
 export default function CategoriesList() {
-	const { categories } = useHabits();
-	const { type } = useSelect();
-	const { theme } = useTheme();
+const { categories, refreshCategories } = useHabits();
+const { type } = useSelect();
+const [hasRefreshed, setHasRefreshed] = useState(false);
 
-	const { width } = Dimensions.get("window");
+const positiveCategories = categories
+	.filter((category) => category.type === CategoryType.positive)
+	.sort((a: any, b: any) => a.id - b.id);
 
-	const positiveCategories = categories.filter(
-		(category) => category.type === "positive"
-	);
+const negativeCategories = categories
+	.filter((category) => category.type === CategoryType.negative)
+	.sort((a: any, b: any) => a.id - b.id);
 
-	return (
-		<View>
-			{type === "Positif" ? (
+useEffect(() => {
+	if ((!negativeCategories || !positiveCategories) && !hasRefreshed) {
+		console.log("refreshing categories");
+		refreshCategories(true);
+		setHasRefreshed(true);
+	}
+}, [categories, hasRefreshed, refreshCategories]);
+
+if (!categories) {
+	return null;
+}
+
+return (
+	<View>
+		{type === CategoryTypeSelect.positive ? (
+			<FlatList
+				data={positiveCategories}
+				renderItem={({ item }) => <CategoryItem category={item} />}
+				keyExtractor={(item) => item.id}
+				numColumns={2}
+				className="w-[95%] mx-auto pb-4"
+			/>
+		) : (
+			type === CategoryTypeSelect.negative && (
 				<FlatList
-					data={positiveCategories}
+					data={negativeCategories}
 					renderItem={({ item }) => <CategoryItem category={item} />}
 					keyExtractor={(item) => item.id}
 					numColumns={2}
 					className="w-[95%] mx-auto pb-4"
 				/>
-			) : (
-				<View
-					className="flex flex-col items-center justify-center py-12"
-					style={{
-						backgroundColor: theme.colors.background,
-					}}
-				>
-					<CachedImage
-						imagePath="images/illustrations/character3.png"
-						style={{
-							width: width * 0.4,
-							height: width * 0.4,
-							marginVertical: 16,
-							resizeMode: "contain",
-						}}
-					/>
-					<Text
-						className="text-center mt-4 text-[16px] w-11/12 mx-auto"
-						style={{
-							color: theme.colors.textTertiary,
-						}}
-					>
-						Les habitudes négatives arrivent bientôt !
-					</Text>
-				</View>
-			)}
-		</View>
-	);
+			)
+		)}
+	</View>
+);
 }

@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { View, Text, Alert } from "react-native";
 import { Iconify } from "react-native-iconify";
+import { useTranslation } from "react-i18next";
 
 import { useTheme } from "@context/ThemeContext";
 import AccountBlock from "./AccountBlock";
@@ -15,7 +16,7 @@ import { disconnectUser } from "@db/users";
 import CustomPressable from "@components/Shared/CustomPressable";
 import ModalWrapper from "@components/Modals/ModalWrapper";
 import LanguageSelector from "./LanguageSelector";
-import { useTranslation } from "react-i18next";
+import ConfidentialitySelector from "./ConfidentialitySelector";
 
 export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -102,6 +103,15 @@ export default function Preferences() {
 						value={notificationToggle}
 					/>
 				}
+			/>
+			<View className="w-full h-[1px] bg-gray-300"></View>
+
+			<RowBlock
+				icon={
+					<Iconify icon="iconoir:community" size={24} color={theme.colors.text} />
+				}
+				title={t("confidentiality")}
+				rightContent={<ConfidentialitySelector />}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 

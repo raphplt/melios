@@ -5,7 +5,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, Text, Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { LinearGradient } from "expo-linear-gradient"; // Correction de l'importation
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
 
 export default function ViewHelp() {
 	const { theme } = useTheme();

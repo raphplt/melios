@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import * as Linking from "expo-linking";
+import { useTheme } from "@context/ThemeContext";
+import { BlurView } from "expo-blur";
 
 interface ArticleProps {
 	title: string;
@@ -9,11 +11,33 @@ interface ArticleProps {
 }
 
 const ArticleCard: React.FC<ArticleProps> = ({ title, description, link }) => {
+	const { theme } = useTheme();
 	return (
-		<TouchableOpacity onPress={() => Linking.openURL(link)}>
-			<View style={styles.card}>
-				<Text style={styles.title}>{title}</Text>
-				<Text style={styles.description} numberOfLines={3}>
+		<TouchableOpacity
+			onPress={() => Linking.openURL(link)}
+			className="w-[95%] mx-auto"
+		>
+			<View
+				style={{
+					backgroundColor: theme.colors.card,
+				}}
+				className="p-4 rounded-lg shadow-sm my-1"
+			>
+				<Text
+					style={{
+						color: theme.colors.text,
+					}}
+					className="text-xl font-bold"
+				>
+					{title}
+				</Text>
+				<Text
+					style={{
+						color: theme.colors.textTertiary,
+					}}
+					className="text-sm"
+					numberOfLines={3}
+				>
 					{description}
 				</Text>
 			</View>
@@ -22,25 +46,11 @@ const ArticleCard: React.FC<ArticleProps> = ({ title, description, link }) => {
 };
 
 const styles = StyleSheet.create({
-	card: {
-		backgroundColor: "#fff",
-		padding: 15,
-		borderRadius: 8,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.2,
-		shadowRadius: 4,
-		marginVertical: 8,
-	},
-	title: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 5,
-	},
-	description: {
-		fontSize: 14,
-		color: "#555",
+	blurView: {
+		...StyleSheet.absoluteFillObject,
+		borderRadius: 10,
 	},
 });
+
 
 export default ArticleCard;

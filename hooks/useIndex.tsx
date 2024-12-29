@@ -89,8 +89,8 @@ const useIndex = () => {
 		[member]
 	);
 
-	const getHabitDetails = (habitId: string) => {
-		return habitsData.find((habit: Habit) => habit.id === habitId);
+	const getHabitDetails = (name: string) => {
+		return habitsData.find((habit: Habit) => habit.name === name);
 	};
 
 	const getUserHabitDetails = (habitId: string) => {

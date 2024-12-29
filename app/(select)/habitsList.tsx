@@ -4,13 +4,37 @@ import { useHabits } from "@context/HabitsContext";
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { Habit } from "@type/habit";
 import { lightenColor } from "@utils/colors";
+import { useEffect, useState } from "react";
 import { View, Text, StatusBar, FlatList } from "react-native";
 
 export default function CategoryList() {
 	const { theme } = useTheme();
 	const { category } = useSelect();
-	const { habitsData } = useHabits();
+	const { habitsData, refreshHabits } = useHabits();
+	const [hasRefreshed, setHasRefreshed] = useState(false);
+	const [habits, setHabits] = useState<Habit[]>([]);
+
+	useEffect(() => {
+		if (!category || hasRefreshed) return;
+
+		let filteredHabits = [];
+		if (category.slug === "recommended") {
+			filteredHabits = habitsData.filter((habit) => habit.recommended);
+		} else {
+			filteredHabits = habitsData.filter(
+				(habit) => habit.category?.category === category.category
+			);
+		}
+
+		setHabits(filteredHabits);
+
+		if (filteredHabits.length === 0) {
+			refreshHabits(true);
+			setHasRefreshed(true);
+		}
+	}, [category, habitsData, refreshHabits, hasRefreshed]);
 
 	if (!category) {
 		return null;
@@ -18,9 +42,6 @@ export default function CategoryList() {
 
 	const lightColor = lightenColor(category.color, 0.2);
 
-	const habits = habitsData.filter(
-		(habit) => habit.category?.category === category.category
-	);
 	return (
 		<View
 			style={{
@@ -30,7 +51,7 @@ export default function CategoryList() {
 		>
 			<View
 				style={{
-					paddingTop: StatusBar.currentHeight,
+					paddingTop: StatusBar.currentHeight || 30,
 					backgroundColor: lightColor || theme.colors.cardBackground,
 				}}
 				className="rounded-b-3xl"

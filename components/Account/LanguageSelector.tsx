@@ -3,9 +3,11 @@ import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dropdown } from "react-native-element-dropdown";
 import i18n from "../../i18n";
+import { useTheme } from "@context/ThemeContext";
 
 const LanguageSelector = () => {
-	const [selectedLanguage, setSelectedLanguage] = useState<string>("en-US");
+	const { theme } = useTheme();
+	const [selectedLanguage, setSelectedLanguage] = useState<string>("fr-FR");
 
 	useEffect(() => {
 		const loadLanguage = async () => {
@@ -30,14 +32,17 @@ const LanguageSelector = () => {
 				labelField={"label"}
 				valueField={"value"}
 				onChange={(item) => changeLanguage(item.value)}
+				iconColor={theme.colors.textTertiary}
 				value={selectedLanguage}
 				data={[
 					{ label: "English", value: "en-US" },
 					{ label: "Français", value: "fr-FR" },
 				]}
 				style={{
-					borderRadius: 10,
-					width: 120,
+					width: 110,
+				}}
+				containerStyle={{
+					borderRadius: 5,
 				}}
 			/>
 		</View>

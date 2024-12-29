@@ -9,6 +9,7 @@ import { StatusBar, Alert, Text } from "react-native";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { useHabits } from "@context/HabitsContext";
 import { SoundProvider } from "@context/SoundContext";
+import React from "react";
 
 export default function TimerHabit() {
 	const { currentHabit } = useHabits();

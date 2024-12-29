@@ -1,8 +1,7 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useEffect, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useEffect, useState } from "react";
 import { View, Text, Dimensions, Pressable } from "react-native";
 import { Goal } from "@type/goal";
-import { Habit } from "@type/habit";
 import useIndex from "@hooks/useIndex";
 import { UserHabit } from "@type/userHabit";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
@@ -10,14 +9,18 @@ import { lightenColor } from "@utils/colors";
 import { Iconify } from "react-native-iconify";
 import ModalCurrentGoal from "./ModalCurrentGoal";
 import * as Progress from "react-native-progress";
-import { calcReward } from "@utils/goal";
 import MoneyMelios from "@components/Svg/MoneyMelios";
+import { getHabitLogs } from "@db/logs";
+import { useTranslation } from "react-i18next";
+import { useData } from "@context/DataContext";
 
 export default function CurrentGoal({ goal }: { goal: Goal }) {
-	const { theme } = useContext(ThemeContext);
 	const { width } = Dimensions.get("window");
-	const { getHabitDetails, getUserHabitDetails, userHabits } = useIndex();
-	const [habit, setHabit] = useState<Habit>();
+	const { getUserHabitDetails, userHabits } = useIndex();
+	const { theme } = useTheme();
+	const { habits } = useData();
+	const { t } = useTranslation();
+
 	const [userHabit, setUserHabit] = useState<UserHabit>();
 	const [goalStreak, setGoalStreak] = useState(0);
 	const [isCompletedToday, setIsCompletedToday] = useState(false);
@@ -29,8 +32,6 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 
 	useEffect(() => {
 		async function getHabitInfos() {
-			const habit = getHabitDetails(goal.habitId);
-			setHabit(habit);
 			const userHabit = getUserHabitDetails(goal.habitId);
 			setUserHabit(userHabit);
 		}
@@ -39,56 +40,62 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 
 	useEffect(() => {
 		if (userHabit && goal) {
-			const startDate = new Date(goal.createdAt.seconds * 1000);
-			let streak = 0;
-			let completedToday = false;
-			let goalMissed = false;
-			let completedDays: Date[] = [];
-			const today = new Date();
-			today.setHours(0, 0, 0, 0);
+			const fetchLogs = async () => {
+				try {
+					const logs = await getHabitLogs(goal.habitId);
+					const startDate = new Date(goal.createdAt.seconds * 1000);
+					let streak = 0;
+					let completedToday = false;
+					let goalMissed = false;
+					let completedDays: Date[] = [];
+					const today = new Date();
+					today.setHours(0, 0, 0, 0);
 
-			for (let i = 0; i < goal.duration; i++) {
-				const currentDate = new Date(startDate);
-				currentDate.setDate(startDate.getDate() + i);
-				currentDate.setHours(0, 0, 0, 0);
+					for (let i = 0; i < goal.duration; i++) {
+						const currentDate = new Date(startDate);
+						currentDate.setDate(startDate.getDate() + i);
+						currentDate.setHours(0, 0, 0, 0);
 
-				if (currentDate > today) {
-					break;
-				}
+						if (currentDate > today) {
+							break;
+						}
 
-				const log =
-					userHabit &&
-					userHabit.logs &&
-					userHabit.logs.find(
-						(log) => new Date(log.date).toDateString() === currentDate.toDateString()
-					);
+						const log =
+							logs && logs.includes(currentDate.toISOString().split("T")[0]);
 
-				if (log && log.done) {
-					streak++;
-					completedDays.push(currentDate);
-					if (currentDate.toDateString() === today.toDateString()) {
-						completedToday = true;
+						if (log) {
+							streak++;
+							completedDays.push(currentDate);
+							if (currentDate.toDateString() === today.toDateString()) {
+								completedToday = true;
+							}
+						} else {
+							if (currentDate.toDateString() !== today.toDateString()) {
+								goalMissed = true;
+								break;
+							}
+						}
 					}
-				} else {
-					if (currentDate.toDateString() !== today.toDateString()) {
-						goalMissed = true;
-						break;
-					}
-				}
-			}
 
-			setGoalStreak(streak);
-			setIsCompletedToday(completedToday);
-			setIsGoalMissed(goalMissed);
-			setCompletedDays(completedDays);
+					setGoalStreak(streak);
+					setIsCompletedToday(completedToday);
+					setIsGoalMissed(goalMissed);
+					setCompletedDays(completedDays);
+				} catch (error) {
+					console.error("Erreur lors de la récupération des logs :", error);
+				}
+			};
+
+			fetchLogs();
 		}
 	}, [userHabit, goal]);
-	if (!habit || !userHabit) return null;
 
-	const lightColor = lightenColor(
-		habit.category.color || theme.colors.primary,
-		0.1
-	);
+	if (!userHabit) {
+		// console.error("Habit not found");
+		return null;
+	}
+
+	const lightColor = lightenColor(userHabit.color || theme.colors.primary, 0.1);
 
 	const completionPercentage = (goalStreak / goal.duration) * 100;
 	let streakColor;
@@ -101,18 +108,12 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 	}
 
 	return (
-		<View
-			className="flex-1 my-2"
-			style={{
-				width: width,
-			}}
-		>
+		<View className="flex-1 my-2" style={{ width: width }}>
 			<Pressable
 				style={{
 					width: width * 0.95,
 					backgroundColor: lightColor || theme.colors.cardBackground,
-					borderColor: habit.category.color || theme.colors.primary,
-					// borderWidth: 2,
+					borderColor: userHabit.color || theme.colors.primary,
 				}}
 				className="mx-auto rounded-2xl flex px-5 py-2"
 				onPress={() => setVisible(true)}
@@ -120,9 +121,9 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 				<View className="flex justify-between flex-row">
 					<View className="flex flex-row items-center">
 						<FontAwesome6
-							name={habit.category.icon || "question"}
+							name={userHabit.icon || "question"}
 							size={18}
-							color={habit.category.color || theme.colors.text}
+							color={userHabit.color || theme.colors.text}
 						/>
 						<Text
 							style={{
@@ -130,7 +131,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 							}}
 							className="text-[15px] font-semibold ml-2 "
 						>
-							{habit?.name}
+							{userHabit?.name}
 						</Text>
 					</View>
 					{isGoalMissed ? (
@@ -146,14 +147,14 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 								}}
 								className="text-[14px] font-bold ml-1"
 							>
-								Objectif manqué
+								{t("failed_objective")}
 							</Text>
 						</View>
 					) : (
 						<Progress.Circle
 							size={24}
 							progress={completionPercentage / 100}
-							color={habit.category.color || theme.colors.primary}
+							color={userHabit.color || theme.colors.primary}
 							unfilledColor={theme.colors.border}
 							borderWidth={0}
 							animated={true}
@@ -181,7 +182,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 								}}
 								className=" font-semibold ml-1"
 							>
-								Aujourd'hui
+								{t("today")}
 							</Text>
 						</View>
 					)}
@@ -193,7 +194,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 							}}
 							className="mx-1 font-semibold text-[16px]"
 						>
-							{calcReward({ duration: goal.duration, habit: habit }) || 0}
+							{goal.duration - 2 || 0}
 						</Text>
 						<MoneyMelios width={22} height={22} />
 					</View>
@@ -203,7 +204,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 				visible={visible}
 				setVisible={setVisible}
 				goal={goal}
-				habit={habit}
+				habit={userHabit}
 				completedDays={completedDays}
 			/>
 		</View>

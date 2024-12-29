@@ -7,15 +7,17 @@ import LevelItem from "./LevelItem";
 import { CombinedLevel } from "@type/levels";
 import { useTranslation } from "react-i18next";
 import NextLevel from "@components/Modals/NextLevel";
+import { useHabits } from "@context/HabitsContext";
 
 const Levels = () => {
-	const { genericLevels, usersLevels, setUsersLevels, isLoading, member } =
-		useData();
+	const { usersLevels, setUsersLevels, isLoading, member } = useData();
+	const { genericLevels, refreshGenericLevels, setGenericLevels } = useHabits();
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
 	const [previousLevels, setPreviousLevels] = useState(usersLevels);
 	const [showNextLevelModal, setShowNextLevelModal] = useState(false);
 	const [nextLevelData, setNextLevelData] = useState<CombinedLevel | null>(null);
+	const [hasRefetched, setHasRefetched] = useState(false);
 
 	if (!member) return null;
 
@@ -32,7 +34,7 @@ const Levels = () => {
 	}, [member, genericLevels, usersLevels, isLoading]);
 
 	useEffect(() => {
-		// Check if any level has increased
+		// On regarde si le niveau a augmenté
 		Object.entries(usersLevels).forEach(([levelId, userLevel]: any) => {
 			const previousLevel = previousLevels[levelId];
 			if (previousLevel && userLevel.currentLevel > previousLevel.currentLevel) {
@@ -46,11 +48,23 @@ const Levels = () => {
 		setPreviousLevels(usersLevels);
 	}, [usersLevels]);
 
-	const combinedLevels: CombinedLevel[] = Object.entries(usersLevels).map(
-		([levelId, userLevel]) => {
+	useEffect(() => {
+		// Vérifie si un des genericLevels n'a pas de propriété icon
+		const missingIcon = genericLevels.some((level) => !level.icon);
+		if (missingIcon && !hasRefetched) {
+			console.log("Refreshing generic levels");
+			refreshGenericLevels(true);
+			setHasRefetched(true);
+			setGenericLevels(genericLevels);
+		}
+	}, [genericLevels, hasRefetched, refreshGenericLevels]);
+
+	const combinedLevels: CombinedLevel[] = Object.entries(usersLevels)
+		.map(([levelId, userLevel]) => {
 			const genericLevel = genericLevels.find((level) => level.id === levelId);
 			if (!genericLevel) {
-				throw new Error(`Generic level not found for levelId: ${levelId}`);
+				console.log(`No generic level found for levelId: ${levelId}`);
+				return null;
 			}
 			return {
 				...userLevel,
@@ -61,7 +75,11 @@ const Levels = () => {
 				color: genericLevel.color || "#000",
 				associatedCategoryIds: genericLevel.associatedCategoryIds || [],
 			};
-		}
+		})
+		.filter((level): level is CombinedLevel => level !== null);
+
+	const filteredLevels = combinedLevels.filter(
+		(level) => level.name !== "Niveau général"
 	);
 
 	return (
@@ -74,7 +92,7 @@ const Levels = () => {
 			>
 				<View className="w-[95%] mx-auto mb-2 mt-2">
 					<ScrollView>
-						{combinedLevels.map((item) => (
+						{filteredLevels.map((item) => (
 							<LevelItem key={item.levelId} level={item} />
 						))}
 					</ScrollView>

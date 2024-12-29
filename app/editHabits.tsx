@@ -20,7 +20,7 @@ export default function EditHabits() {
 
 	return (
 		<View style={{ backgroundColor: theme.colors.background }} className="flex-1">
-			<View className="w-11/12 hfu flex flex-row items-center mx-auto">
+			<View className="w-[95%] flex flex-row items-center mx-auto">
 				<View
 					className="flex flex-row items-center w-10/12 my-6 py-2 px-4 rounded-3xl"
 					style={{

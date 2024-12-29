@@ -12,6 +12,7 @@ export type Habit = {
 	moment: number;
 	category: Category;
 	reminderMoment: number;
+	recommended: boolean;
 };
 
 export type HabitType = "Positif" | "Négatif" | "Personnalisé";

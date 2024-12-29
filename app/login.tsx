@@ -31,6 +31,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import HelpModal from "@components/Modals/HelpModal";
 import { useTheme } from "@context/ThemeContext";
 import { getCachedImage } from "@db/files";
+import { useHabits } from "@context/HabitsContext";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -43,6 +44,7 @@ export default function Login() {
 	const isFocused = useIsFocused();
 
 	const { user, isLoading } = useSession();
+	const { refreshCategories, refreshHabits } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
@@ -75,6 +77,8 @@ export default function Login() {
 				setError(snapshot.error);
 				return;
 			} else {
+				refreshCategories(true);
+				refreshHabits(true);
 				navigation.navigate("index");
 			}
 		} catch (error) {
@@ -92,6 +96,7 @@ export default function Login() {
 			const firstTime = await AsyncStorage.getItem("firstTime");
 			if (!firstTime || firstTime === "true") {
 				setShowModal(true);
+				await AsyncStorage.setItem("firstTime", "false");
 			}
 		};
 

@@ -1,7 +1,6 @@
-import { ThemeContext, useTheme } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import { useContext } from "react";
 import { Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
 
