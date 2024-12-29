@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import { LogExtended } from "./AllLogs";
 import { useTheme } from "@context/ThemeContext";
+import { lightenColor } from "@utils/colors";
 
 export const LogItem = ({ item }: { item: LogExtended }) => {
 	const { theme } = useTheme();
@@ -28,11 +29,13 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 		.map((logDate: string) => new Date(logDate))
 		.sort((a: Date, b: Date) => b.getTime() - a.getTime())[0];
 
+	const lightColor = lightenColor(item.habit?.color || theme.colors.border, 0.1);
+
 	return (
 		<View
 			className="mb-3 px-3 py-2 rounded-xl"
 			style={{
-				backgroundColor: theme.colors.background,
+				backgroundColor: lightColor || theme.colors.background,
 				borderWidth: 2,
 				borderColor: item.habit?.color || theme.colors.border,
 			}}

@@ -113,12 +113,12 @@ function CardCheckHabit({
 			setCompleted(true);
 			await setHabitLog(habit.id, date);
 
-			if (habit.type === CategoryTypeSelect.negative) {
+			if (habit.type !== CategoryTypeSelect.negative) {
 				if (addXp) {
 					await addXp(habit, 30);
 				}
-				addOdysseePoints(habit.difficulty);
-				setRewards("odyssee", habit.difficulty * 2);
+				addOdysseePoints(habit.difficulty); // set local points
+				setRewards("odyssee", habit.difficulty * 2); // set database points
 			}
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {

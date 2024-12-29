@@ -32,7 +32,7 @@ const FriendList = () => {
 							...prevMembers,
 							...newMembers.filter(
 								(newMember) =>
-									!prevMembers.some((member) => member.uid === newMember.uid)
+									!prevMembers.some((member: any) => member.uid === newMember.uid)
 							),
 					  ];
 

@@ -66,15 +66,15 @@ const AllLogs = () => {
 			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
 				<View
-					className="flex flex-row items-center justify-center py-3 my-2 mb-3 rounded-lg"
+					className="flex flex-row items-center justify-start px-3 py-3 my-3 mb-3 rounded-lg"
 					style={{
-						borderColor: theme.colors.border,
+						borderColor: theme.colors.grayPrimary,
 						borderWidth: 1,
 					}}
 				>
 					<Iconify icon="mdi:account-group" size={24} color={theme.colors.text} />
 					<Text
-						className="text-lg mx-2"
+						className="text-[16px] mx-3"
 						style={{
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
@@ -82,6 +82,8 @@ const AllLogs = () => {
 					>
 						{t("activity_users")}
 					</Text>
+
+					{/* Modale */}
 					<Confidentiality />
 				</View>
 			}

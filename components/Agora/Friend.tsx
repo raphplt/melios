@@ -119,7 +119,7 @@ const Friend = ({ member }: Props) => {
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 				borderColor: theme.colors.border,
-				borderWidth: 1,
+				// borderWidth: 1,
 			}}
 		>
 			<CachedImage

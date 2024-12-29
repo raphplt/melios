@@ -67,7 +67,10 @@ function MainNavigator() {
 					backgroundColor={theme.colors.background}
 				/>
 				<Stack>
-					<Stack.Screen name="(navbar)" options={{ headerShown: false }} />
+					<Stack.Screen
+						name="(navbar)"
+						options={{ headerShown: false, title: "" }}
+					/>
 					<Stack.Screen name="(select)" options={{ headerShown: false }} />
 					<Stack.Screen name="habitDetail" options={{ headerShown: false }} />
 					<Stack.Screen

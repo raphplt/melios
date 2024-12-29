@@ -55,10 +55,10 @@ export default function CardClassement({
 			}}
 			className="flex flex-row justify-between items-center w-11/12 rounded-xl px-2 py-2 my-1 mx-auto"
 		>
-			<View className="flex items-center flex-row justify-center gap-2">
+			<View className="flex items-center flex-row justify-center gap-1">
 				<Text
 					style={{ color: theme.colors.text, fontWeight: "bold" }}
-					className="w-7"
+					className="w-8"
 				>
 					#{rank}
 				</Text>
@@ -73,7 +73,7 @@ export default function CardClassement({
 				<View className="flex items-center flex-row w-fit">
 					<MoneyOdyssee />
 					<Text
-						className="ml-2 w-10 font-semibold"
+						className="ml-2 w-12 font-semibold"
 						style={{ color: theme.colors.text }}
 					>
 						{reward.odyssee}

@@ -4,17 +4,6 @@ import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import { UserLevel } from "@type/levels";
-
-export const calculateGlobalLevel = (usersLevels: UserLevel[]) => {
-	if (Object.keys(usersLevels).length === 0) return 1;
-	return (
-		Object.values(usersLevels).reduce(
-			(total, level) => total + level.currentLevel,
-			0
-		) - 3
-	);
-};
 
 export default function Points() {
 	const { theme } = useTheme();
@@ -26,7 +15,11 @@ export default function Points() {
 		setHelpVisible(!helpVisible);
 	};
 
-	const globalLevel = calculateGlobalLevel(usersLevels);
+	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
+
+	const xpPercentage = globalLevel
+		? (globalLevel.currentXp / globalLevel.nextLevelXp) * 100
+		: 0;
 
 	return (
 		<View className="relative">
@@ -52,7 +45,7 @@ export default function Points() {
 							}}
 							className="font-bold absolute"
 						>
-							{globalLevel}
+							{globalLevel?.currentLevel}
 						</Text>
 					</View>
 				</View>
@@ -74,6 +67,13 @@ export default function Points() {
 					<MoneyMelios />
 				</View>
 			</TouchableOpacity>
+
+			<View className="mt-2 w-full bg-gray-300 rounded-full h-2.5">
+				<View
+					className="bg-blue-600 h-2.5 rounded-full"
+					style={{ width: `${xpPercentage}%` }}
+				/>
+			</View>
 
 			{helpVisible && (
 				<View
@@ -97,7 +97,7 @@ export default function Points() {
 								}}
 								className="font-bold absolute"
 							>
-								{globalLevel}
+								{globalLevel?.currentLevel}
 							</Text>
 						</View>
 
