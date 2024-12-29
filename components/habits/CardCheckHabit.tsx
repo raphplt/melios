@@ -181,7 +181,7 @@ function CardCheckHabit({
 								style={{
 									color: theme.colors.text,
 								}}
-								className="text-[16px] font-semibold w-[80%] ml-2"
+								className="text-[16px] font-semibold w-[85%] ml-2"
 								numberOfLines={1}
 								ellipsizeMode="tail"
 							>
@@ -201,7 +201,7 @@ function CardCheckHabit({
 					</View>
 					<Animated.View style={[detailsAnimatedStyle]}>
 						{showDetails && (
-							<View className="flex flex-row items-center justify-around flex-1 h-fit">
+							<View className="flex flex-row items-center justify-around">
 								<Pressable
 									onPress={goHabitDetail}
 									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"

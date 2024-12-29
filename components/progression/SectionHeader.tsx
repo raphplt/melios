@@ -1,9 +1,25 @@
-import React, { useEffect, useRef } from "react";
-import { Pressable, View, Text, Animated } from "react-native";
+import React, { useRef, useEffect, useState } from "react";
+import {
+	View,
+	Text,
+	Pressable,
+	LayoutAnimation,
+	UIManager,
+	Platform,
+	Animated,
+} from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Iconify } from "react-native-iconify";
 import ZoomableView from "@components/Shared/ZoomableView";
+
+// Activer LayoutAnimation pour Android
+if (
+	Platform.OS === "android" &&
+	UIManager.setLayoutAnimationEnabledExperimental
+) {
+	UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 type Props = {
 	title: string;
@@ -25,20 +41,24 @@ export default function SectionHeader({
 	// Valeur animée pour la rotation
 	const rotationValue = useRef(new Animated.Value(0)).current;
 
-	// Effet pour synchroniser la rotation avec l’état "show"
 	useEffect(() => {
 		Animated.timing(rotationValue, {
-			toValue: show ? 1 : 0, // 1 pour "ouvert", 0 pour "fermé"
-			duration: 300, // Durée de l’animation
-			useNativeDriver: true, // Optimisation pour les animations
+			toValue: show ? 1 : 0,
+			duration: 300,
+			useNativeDriver: true,
 		}).start();
 	}, [show]);
 
-	// Interpolation pour convertir la valeur en degrés
+	// Calculer l'angle de rotation
 	const rotation = rotationValue.interpolate({
 		inputRange: [0, 1],
-		outputRange: ["0deg", "180deg"], // Rotation de 0 à 180 degrés
+		outputRange: ["0deg", "180deg"],
 	});
+
+	const toggleShow = () => {
+		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+		setShow(!show);
+	};
 
 	// Rendu de l’icône
 	const renderIcon = () => {
@@ -68,7 +88,7 @@ export default function SectionHeader({
 						borderColor: theme.colors.primary,
 						borderWidth: 2,
 					}}
-					onPress={() => setShow(!show)}
+					onPress={toggleShow}
 				>
 					<View className="flex flex-row items-center">
 						{renderIcon()}
@@ -82,19 +102,21 @@ export default function SectionHeader({
 						</Text>
 					</View>
 
-					{/* Icône animée */}
 					<Animated.View style={{ transform: [{ rotate: rotation }] }}>
-						<Ionicons
-							name="chevron-down" // Icône fixe, rotation gérée par Animated
-							size={24}
-							color={theme.colors.primary}
-						/>
+						<Ionicons name="chevron-down" size={24} color={theme.colors.primary} />
 					</Animated.View>
 				</Pressable>
 			</ZoomableView>
 
-			{/* Affichage conditionnel des enfants */}
-			{show && children}
+			{show && (
+				<View
+					style={{
+						overflow: "hidden",
+					}}
+				>
+					{children}
+				</View>
+			)}
 		</>
 	);
 }

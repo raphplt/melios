@@ -56,7 +56,7 @@ const CalendarHabits = () => {
 				<View
 					className="w-[95%] mx-auto rounded-xl my-2"
 					style={{
-						borderColor: theme.colors.primary,
+						borderColor: theme.colors.border,
 						borderWidth: 2,
 					}}
 				>

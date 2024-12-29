@@ -35,7 +35,6 @@ export default function Chart() {
 
 	const { parsedTime, todayScore, regularity } = useChart();
 
-	// Remplacez les données vides par un tableau de 0
 	const data = {
 		data: [parsedTime || 0, todayScore || 0, regularity || 0],
 	};
@@ -55,9 +54,11 @@ export default function Chart() {
 			icon="graph"
 		>
 			<View
-				className=" py-3 mx-auto w-11/12 my-3 rounded-xl"
+				className=" py-3 mx-auto w-[95%] my-3 rounded-xl"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
+					borderColor: theme.colors.border,
+					borderWidth: 1,
 				}}
 			>
 				<View style={{ flexDirection: "row", justifyContent: "center" }}>
@@ -93,17 +94,17 @@ export default function Chart() {
 					<View className=" flex flex-col justify-center items-end">
 						<ChartLabel
 							color={colors[0]}
-							text="Temps passé"
+							text={t("time_spend")}
 							percentage={parsedTime || 0}
 						/>
 						<ChartLabel
 							color={colors[1]}
-							text="Complétion"
+							text={t("completion")}
 							percentage={todayScore || 0}
 						/>
 						<ChartLabel
 							color={colors[2]}
-							text="Régularité"
+							text={t("regularity")}
 							percentage={regularity || 0}
 						/>
 					</View>

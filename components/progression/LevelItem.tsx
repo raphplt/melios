@@ -29,7 +29,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 					setSelectedLevel(level);
 					navigation.navigate("levelDetail");
 				}}
-				className="py-3 px-2 my-1 rounded-xl"
+				className="py-2 px-2 my-1 rounded-xl"
 			>
 				<View className="flex flex-row items-center justify-start py-1 mx-1">
 					<FontAwesome6
@@ -46,24 +46,31 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 						{level.name}
 					</Text>
 				</View>
-				<View className="flex flex-row items-center justify-between my-1 mx-1">
+				<View className="flex flex-row items-center justify-between p-2">
 					<Text
 						style={{
 							color: theme.colors.text,
 						}}
-						className="text-[14px] font-semibold"
+						className="text-[15px] font-semibold"
 					>
 						{t("lvl")} : {level.currentLevel}
 					</Text>
-					<Text
+					<View
 						style={{
-							color: theme.colors.textTertiary,
-							backgroundColor: theme.colors.cardBackground,
+							borderColor: level.color || theme.colors.primary,
+							borderWidth: 2,
 						}}
-						className="text-[14px] font-semibold p-1 rounded-full"
+						className="px-2 py-1 rounded-2xl"
 					>
-						{level.currentXp} / {level.nextLevelXp}
-					</Text>
+						<Text
+							style={{
+								color: theme.colors.textTertiary,
+							}}
+							className="text-[14px] font-semibold "
+						>
+							{level.currentXp} / {level.nextLevelXp}
+						</Text>
+					</View>
 				</View>
 				<Progress.Bar
 					progress={level.currentXp / level.nextLevelXp}

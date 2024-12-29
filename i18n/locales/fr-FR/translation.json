@@ -128,5 +128,8 @@
     "request_sent": "Demande envoyée",
     "accept": "Accepter",
     "decline": "Refuser",
-    "add_friend": "Ajouter"
+    "add_friend": "Ajouter",
+    "time_spend": "Temps passé",
+    "regularity": "Régularité",
+    "completion": "Complétion"
 }

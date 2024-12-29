@@ -35,19 +35,17 @@ export default function SectionWrapper({
 	// Valeur animée pour la rotation
 	const rotationValue = useRef(new Animated.Value(0)).current;
 
-	// Effet pour gérer l'animation de rotation
 	useEffect(() => {
 		Animated.timing(rotationValue, {
-			toValue: showHabits ? 0 : 1, // 0 pour ouvert, 1 pour fermé
-			duration: 300, // Durée de l'animation
-			useNativeDriver: true, // Active l'optimisation
+			toValue: showHabits ? 0 : 1,
+			duration: 300,
+			useNativeDriver: true,
 		}).start();
 	}, [showHabits]);
 
-	// Calculer l'angle de rotation
 	const rotation = rotationValue.interpolate({
 		inputRange: [0, 1],
-		outputRange: ["0deg", "180deg"], // Tourne de 180 degrés
+		outputRange: ["0deg", "180deg"],
 	});
 
 	const toggleShowHabits = () => {
@@ -71,7 +69,6 @@ export default function SectionWrapper({
 					{title}
 				</Text>
 				<View className="absolute right-0">
-					{/* Utilisation d'Animated.View pour animer l'icône */}
 					<Animated.View style={{ transform: [{ rotate: rotation }] }}>
 						{showHabits ? (
 							<Iconify
