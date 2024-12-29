@@ -2,7 +2,7 @@ import { useTheme } from "@context/ThemeContext";
 import { CategoryTypeSelect } from "@utils/category.type";
 import { t } from "i18next";
 import React from "react";
-import { View, Pressable, Text } from "react-native";
+import { View, Pressable, Text, TouchableOpacity } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 type Props = {
@@ -14,7 +14,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 	const { theme } = useTheme();
 	return (
 		<View className="flex flex-row items-center justify-center pt-4">
-			<Pressable
+			<TouchableOpacity
 				onPress={() => setFilter(CategoryTypeSelect.positive)}
 				style={{
 					borderColor:
@@ -46,9 +46,9 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 				>
 					{t("positive_habits")}
 				</Text>
-			</Pressable>
+			</TouchableOpacity>
 
-			<Pressable
+			<TouchableOpacity
 				onPress={() => setFilter(CategoryTypeSelect.negative)}
 				style={{
 					borderColor:
@@ -80,7 +80,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 				>
 					{t("negative_habits")}
 				</Text>
-			</Pressable>
+			</TouchableOpacity>
 		</View>
 	);
 };

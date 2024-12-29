@@ -4,11 +4,13 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useTranslation } from "react-i18next";
 import { useData } from "@context/DataContext";
 import { updateMemberField } from "@db/member";
+import { useTheme } from "@context/ThemeContext";
 
 type Confidentialities = "public" | "private" | "friends";
 
 const ConfidentialitySelector = () => {
 	const { member, setMember } = useData();
+	const { theme } = useTheme();
 	const [selectedConfidentiality, setSelectedConfidentiality] =
 		useState<Confidentialities>(member?.activityConfidentiality || "private");
 	const { t } = useTranslation();
@@ -35,8 +37,12 @@ const ConfidentialitySelector = () => {
 				]}
 				style={{
 					borderRadius: 10,
-					width: 120,
+					width: 110,
 				}}
+				containerStyle={{
+					borderRadius: 5,
+				}}
+				iconColor={theme.colors.textTertiary}
 			/>
 		</View>
 	);

@@ -7,6 +7,7 @@ import { Text, View } from "react-native";
 import { LogExtended } from "./AllLogs";
 import { useTheme } from "@context/ThemeContext";
 import { lightenColor } from "@utils/colors";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export const LogItem = ({ item }: { item: LogExtended }) => {
 	const { theme } = useTheme();
@@ -30,14 +31,23 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 		.sort((a: Date, b: Date) => b.getTime() - a.getTime())[0];
 
 	const lightColor = lightenColor(item.habit?.color || theme.colors.border, 0.1);
+	const lightColorRed = lightenColor(theme.colors.redPrimary, 0.1);
+
+	const bgColor =
+		item.habit?.type === CategoryTypeSelect.negative ? lightColorRed : lightColor;
+
+	const borderColor =
+		item.habit?.type === CategoryTypeSelect.negative
+			? theme.colors.redPrimary
+			: item.habit?.color || theme.colors.border;
 
 	return (
 		<View
 			className="mb-3 px-3 py-2 rounded-xl"
 			style={{
-				backgroundColor: lightColor || theme.colors.background,
+				backgroundColor: bgColor,
 				borderWidth: 2,
-				borderColor: item.habit?.color || theme.colors.border,
+				borderColor: borderColor,
 			}}
 		>
 			<View className="flex flex-row items-center mb-2">

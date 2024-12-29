@@ -7,8 +7,8 @@ import { getLevelByCategoryId } from "@utils/progressionUtils";
 import { UserLevel } from "@type/levels";
 
 const useAddXp = () => {
-	const { usersLevels, setUsersLevels, genericLevels, member } = useData();
-	const { categories } = useHabits();
+	const { usersLevels, setUsersLevels, member } = useData();
+	const { categories, genericLevels } = useHabits();
 
 	if (!member) {
 		console.error("No member found in useAddXp");

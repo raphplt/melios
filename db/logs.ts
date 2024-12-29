@@ -155,6 +155,7 @@ export const getAllUsersLogsPaginated = async (
 		let logsQuery = query(
 			logsCollectionRef,
 			orderBy("mostRecentLog", "desc"),
+
 			limit(pageSize)
 		);
 

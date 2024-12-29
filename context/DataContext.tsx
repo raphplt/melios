@@ -50,7 +50,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [member, setMember] = useState<Member>();
 	const [trophies, setTrophies] = useState<Trophy[]>([]);
 	const [logs, setLogs] = useState<Log[]>([]);
-	const [genericLevels, setGenericLevels] = useState<GenericLevel[]>([]);
 	const [usersLevels, setUsersLevels] = useState<UserLevel[]>([]);
 	const [selectedLevel, setSelectedLevel] = useState<CombinedLevel | null>(null);
 
@@ -128,13 +127,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 					);
 					setCompletedHabitsToday(completedHabits);
 				}
-
-				// Generic Levels
-				const snapshotGenericLevels = await getAllGenericLevels({
-					signal: abortController.signal,
-					forceRefresh: true,
-				});
-				setGenericLevels(snapshotGenericLevels);
 			} catch (error: unknown) {
 				if (error instanceof Error && error.name !== "AbortError") {
 					console.log("Erreur lors de la récupération des données : ", error);
@@ -198,8 +190,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				logs,
 				completedHabitsToday,
 				setCompletedHabitsToday,
-				genericLevels,
-				setGenericLevels,
 				usersLevels,
 				setUsersLevels,
 				selectedLevel,

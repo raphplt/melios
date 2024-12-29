@@ -53,12 +53,21 @@ const CalendarHabits = () => {
 				setShow={setShowCalendar}
 				icon="calendar"
 			>
-				<Calendar
-					key={calendarKey}
-					markingType={"period"}
-					markedDates={completedHabitPeriods}
-					theme={colors}
-				/>
+				<View
+					className="w-[95%] mx-auto rounded-xl my-2"
+					style={{
+						borderColor: theme.colors.primary,
+						borderWidth: 2,
+					}}
+				>
+					<Calendar
+						key={calendarKey}
+						markingType={"period"}
+						markedDates={completedHabitPeriods}
+						theme={colors}
+						style={[{ borderRadius: 10 }]}
+					/>
+				</View>
 			</SectionHeader>
 		</>
 	);

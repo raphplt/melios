@@ -67,76 +67,86 @@ export default function HabitsSection() {
 
 			{/* Liste des habitudes */}
 			<ScrollView>
-				{/* Routine Matinale */}
-				{morningHabits && morningHabits.length > 0 && (
-					<SectionWrapper
-						title={t("morning_routine")}
-						icon={
-							<Iconify
-								icon="solar:sunrise-bold"
-								size={24}
-								color={theme.colors.textTertiary}
-							/>
-						}
-					>
-						{morningHabits.map((habit, index) => (
+				{filter === CategoryTypeSelect.negative ? (
+					<View className="mt-4">
+						{filteredHabits.map((habit, index) => (
 							<CardCheckHabit key={index} habit={habit} />
 						))}
-					</SectionWrapper>
-				)}
+					</View>
+				) : (
+					<>
+						{/* Routine Matinale */}
+						{morningHabits && morningHabits.length > 0 && (
+							<SectionWrapper
+								title={t("morning_routine")}
+								icon={
+									<Iconify
+										icon="solar:sunrise-bold"
+										size={24}
+										color={theme.colors.textTertiary}
+									/>
+								}
+							>
+								{morningHabits.map((habit, index) => (
+									<CardCheckHabit key={index} habit={habit} />
+								))}
+							</SectionWrapper>
+						)}
 
-				{/* Routine de l'après-midi */}
-				{afternoonHabits && afternoonHabits.length > 0 && (
-					<SectionWrapper
-						title={t("afternoon_routine")}
-						icon={
-							<Iconify
-								icon="mingcute:sun-fill"
-								size={24}
-								color={theme.colors.textTertiary}
-							/>
-						}
-					>
-						{afternoonHabits.map((habit, index) => (
-							<CardCheckHabit key={index} habit={habit} />
-						))}
-					</SectionWrapper>
-				)}
+						{/* Routine de l'après-midi */}
+						{afternoonHabits && afternoonHabits.length > 0 && (
+							<SectionWrapper
+								title={t("afternoon_routine")}
+								icon={
+									<Iconify
+										icon="mingcute:sun-fill"
+										size={24}
+										color={theme.colors.textTertiary}
+									/>
+								}
+							>
+								{afternoonHabits.map((habit, index) => (
+									<CardCheckHabit key={index} habit={habit} />
+								))}
+							</SectionWrapper>
+						)}
 
-				{/* Routine du soir */}
-				{eveningHabits && eveningHabits.length > 0 && (
-					<SectionWrapper
-						title={t("evening_routine")}
-						icon={
-							<Iconify
-								icon="material-symbols:nights-stay"
-								size={24}
-								color={theme.colors.textTertiary}
-							/>
-						}
-					>
-						{eveningHabits.map((habit, index) => (
-							<CardCheckHabit key={index} habit={habit} />
-						))}
-					</SectionWrapper>
-				)}
+						{/* Routine du soir */}
+						{eveningHabits && eveningHabits.length > 0 && (
+							<SectionWrapper
+								title={t("evening_routine")}
+								icon={
+									<Iconify
+										icon="material-symbols:nights-stay"
+										size={24}
+										color={theme.colors.textTertiary}
+									/>
+								}
+							>
+								{eveningHabits.map((habit, index) => (
+									<CardCheckHabit key={index} habit={habit} />
+								))}
+							</SectionWrapper>
+						)}
 
-				{/* Habitudes libres */}
-				{freeHabits && freeHabits.length > 0 && (
-					<SectionWrapper
-						title={t("free_time_habits")}
-						icon={
-							<Iconify
-								icon="mdi:calendar-blank"
-								size={24}
-								color={theme.colors.textTertiary}
-							/>
-						}
-					>
-						{freeHabits.map((habit, index) => (
-							<CardCheckHabit key={index} habit={habit} />
-						))}
-					</SectionWrapper>
+						{/* Habitudes libres */}
+						{freeHabits && freeHabits.length > 0 && (
+							<SectionWrapper
+								title={t("free_time_habits")}
+								icon={
+									<Iconify
+										icon="mdi:calendar-blank"
+										size={24}
+										color={theme.colors.textTertiary}
+									/>
+								}
+							>
+								{freeHabits.map((habit, index) => (
+									<CardCheckHabit key={index} habit={habit} />
+								))}
+							</SectionWrapper>
+						)}
+					</>
 				)}
 
 				{filter === CategoryTypeSelect.negative && filteredHabits.length === 0 && (

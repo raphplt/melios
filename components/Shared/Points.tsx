@@ -4,6 +4,7 @@ import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import * as Progress from "react-native-progress";
 
 export default function Points() {
 	const { theme } = useTheme();
@@ -15,7 +16,7 @@ export default function Points() {
 		setHelpVisible(!helpVisible);
 	};
 
-	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
+	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any]; //TODO change
 
 	const xpPercentage = globalLevel
 		? (globalLevel.currentXp / globalLevel.nextLevelXp) * 100
@@ -26,22 +27,20 @@ export default function Points() {
 			<TouchableOpacity
 				onPress={toggleHelp}
 				className="flex items-center flex-row rounded-full"
-				style={{
-					backgroundColor: "transparent",
-				}}
 			>
-				<View
-					className="flex items-center justify-center flex-row  px-2 ml-2 rounded-l-full"
-					style={{
-						backgroundColor: "transparent",
-					}}
-				>
+				<View className="flex items-center justify-center flex-row px-2 mx-2 rounded-l-full">
 					<View className="flex items-center justify-center">
-						<Image source={require("@assets/images/badge.png")} className="w-8 h-8" />
+						<Progress.Circle
+							size={28}
+							progress={xpPercentage / 100}
+							color={theme.colors.primary}
+							unfilledColor={theme.colors.border}
+							borderWidth={0}
+						/>
 						<Text
 							style={{
-								color: "#fff",
-								fontSize: 14,
+								fontSize: 12,
+								color: theme.colors.primary,
 							}}
 							className="font-bold absolute"
 						>
@@ -68,13 +67,6 @@ export default function Points() {
 				</View>
 			</TouchableOpacity>
 
-			<View className="mt-2 w-full bg-gray-300 rounded-full h-2.5">
-				<View
-					className="bg-blue-600 h-2.5 rounded-full"
-					style={{ width: `${xpPercentage}%` }}
-				/>
-			</View>
-
 			{helpVisible && (
 				<View
 					className="absolute top-full mt-1 left-0 p-2 rounded-md shadow-md w-52"
@@ -86,14 +78,17 @@ export default function Points() {
 				>
 					<View>
 						<View className="flex items-center justify-center">
-							<Image
-								source={require("@assets/images/badge.png")}
-								className="w-8 h-8"
+							<Progress.Circle
+								size={28}
+								progress={xpPercentage / 100}
+								color={theme.colors.primary}
+								unfilledColor={theme.colors.border}
+								borderWidth={0}
 							/>
 							<Text
 								style={{
-									color: "#fff",
-									fontSize: 14,
+									fontSize: 12,
+									color: theme.colors.primary,
 								}}
 								className="font-bold absolute"
 							>

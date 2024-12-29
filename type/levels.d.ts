@@ -5,7 +5,6 @@ export type GenericLevel = {
 	color: string;
 	associatedCategoryIds: string[];
 	icon?: string;
-	priority?: number;
 };
 
 export type UserLevel = {

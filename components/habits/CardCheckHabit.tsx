@@ -190,7 +190,7 @@ function CardCheckHabit({
 						</View>
 						<Pressable
 							onPress={() => setShowDetails(!showDetails)}
-							className="flex items-center justify-center"
+							className="flex items-center justify-center relative"
 						>
 							{showDetails ? (
 								<Iconify icon="mdi:chevron-up" color={theme.colors.text} size={24} />

@@ -14,7 +14,7 @@ export default function GoalSection() {
 	if (loadingGoals) return <GoalPlaceHolder />;
 
 	return (
-		<View className="my-1">
+		<View className="mt-1">
 			<FlatList
 				data={goalWithAddButton}
 				renderItem={({ item }) =>

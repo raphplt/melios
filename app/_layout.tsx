@@ -18,6 +18,7 @@ import { TimerProvider } from "@context/TimerContext";
 import { DataProvider } from "@context/DataContext";
 import "../i18n";
 import "../global.css";
+import { useTranslation } from "react-i18next";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -151,6 +152,7 @@ function RootLayoutContent() {
 	const { user, isLoading: isSessionLoading } = useSession();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [isNavigationReady, setIsNavigationReady] = useState(false);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		return navigation.addListener("state", () => {
@@ -172,7 +174,7 @@ function RootLayoutContent() {
 		}
 	}, [isSessionLoading]);
 
-	if (isLoading) return <LoaderScreen text="Chargement cc..." />;
+	if (isLoading) return <LoaderScreen text={t("loading")} />;
 
 	return (
 		<TimerProvider>
