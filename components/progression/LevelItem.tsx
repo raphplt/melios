@@ -58,7 +58,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 					<View
 						style={{
 							borderColor: level.color || theme.colors.primary,
-							borderWidth: 2,
+							borderWidth: 1,
 						}}
 						className="px-2 py-1 rounded-2xl"
 					>
