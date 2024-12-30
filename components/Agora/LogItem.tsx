@@ -40,6 +40,8 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 		item.habit?.type === CategoryTypeSelect.negative
 			? theme.colors.redPrimary
 			: item.habit?.color || theme.colors.border;
+	
+	if (!item.member || !item.habit) return;
 
 	return (
 		<View
