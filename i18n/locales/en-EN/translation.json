@@ -134,5 +134,9 @@
     "regularity": "Regularity",
     "habit_already_completed": "You have already completed this habit today!",
     "new": "New",
-    "understood": "I understood"
+    "understood": "I understood",
+    "moment": "Moment",
+    "minutes": "minutes",
+    "frequency": "Frequency",
+    "category_required": "Category is required."
 }

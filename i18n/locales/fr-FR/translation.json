@@ -134,5 +134,9 @@
     "completion": "Complétion",
     "habit_already_completed": "Vous avez déjà complété cette habitude aujourd'hui !",
     "new": "Nouveau",
-    "understood": "J'ai compris"
+    "understood": "J'ai compris",
+    "moment": "Moment",
+    "minutes": "minutes",
+    "frequency": "Fréquence",
+    "category_required": "La catégorie est requise."
 }

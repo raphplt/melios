@@ -15,12 +15,7 @@ export default function RewardDetail({
 
 	return (
 		<View className="flex flex-row items-center mx-1">
-			<Text
-				style={{
-					color: color || theme.colors.text,
-				}}
-				className="text-[16px] font-semibold ml-2 px-1"
-			>
+			<Text className="text-[16px] font-semibold ml-2 px-1 text-white">
 				+{point}
 			</Text>
 			{money}

@@ -5,6 +5,7 @@ import { UserHabit } from "@type/userHabit";
 import { useTheme } from "@context/ThemeContext";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import { useTranslation } from "react-i18next";
 
 export default function InfosPanel({
 	habit,
@@ -14,11 +15,15 @@ export default function InfosPanel({
 	lightenedColor: string;
 }) {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 
 	const rowStyle =
 		"flex flex-row justify-between items-center w-full mx-auto px-4";
 
 	const rowBox = "flex flex-row items-center gap-2";
+
+	const dark = theme.dark;
+	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
 	const Separator = () => (
 		<View
@@ -43,7 +48,7 @@ export default function InfosPanel({
 		>
 			<Text
 				style={{
-					color: theme.colors.text,
+					color: textColor,
 				}}
 				className="text-[16px] text-pretty ml-4 py-2 w-11/12 mx-auto font-semibold"
 			>
@@ -55,17 +60,13 @@ export default function InfosPanel({
 			{/* Durée */}
 			<View className={rowStyle}>
 				<View className={rowBox}>
-					<Iconify
-						size={24}
-						color={theme.colors.text}
-						icon="material-symbols:timer"
-					/>
-					<Text style={{ color: theme.colors.text }} className="font-semibold">
-						Durée
+					<Iconify size={24} color={textColor} icon="material-symbols:timer" />
+					<Text style={{ color: textColor }} className="font-semibold">
+						{t("duration")}
 					</Text>
 				</View>
-				<Text style={{ color: theme.colors.text }}>
-					{habit.duration ?? 0} minutes
+				<Text style={{ color: textColor }}>
+					{habit.duration ?? 0} {t("minutes")}
 				</Text>
 			</View>
 
@@ -75,16 +76,12 @@ export default function InfosPanel({
 
 			<View className={rowStyle}>
 				<View className={rowBox}>
-					<Iconify
-						size={24}
-						color={theme.colors.text}
-						icon="material-symbols:category"
-					/>
-					<Text style={{ color: theme.colors.text }} className="font-semibold">
-						Catégorie
+					<Iconify size={24} color={textColor} icon="material-symbols:category" />
+					<Text style={{ color: textColor }} className="font-semibold">
+						{t("category")}
 					</Text>
 				</View>
-				<Text style={{ color: theme.colors.text }}>{habit.category}</Text>
+				<Text style={{ color: textColor }}>{habit.category}</Text>
 			</View>
 
 			<Separator />
@@ -95,15 +92,15 @@ export default function InfosPanel({
 				<View className={rowBox}>
 					<Iconify
 						size={24}
-						color={theme.colors.text}
+						color={textColor}
 						icon="material-symbols:view-agenda-outline"
 					/>
-					<Text style={{ color: theme.colors.text }} className="font-semibold">
-						Moment
+					<Text style={{ color: textColor }} className="font-semibold">
+						{t("moment")}
 					</Text>
 				</View>
 
-				<Text style={{ color: theme.colors.text }}>
+				<Text style={{ color: textColor }}>
 					à {habit.moment !== -1 ? habit.moment : habit.moment} heure
 				</Text>
 			</View>
@@ -114,17 +111,13 @@ export default function InfosPanel({
 
 			<View className="px-4 mx-auto">
 				<View className={rowBox}>
-					<Iconify
-						size={24}
-						color={theme.colors.text}
-						icon="material-symbols:repeat"
-					/>
+					<Iconify size={24} color={textColor} icon="material-symbols:repeat" />
 
 					<Text
-						style={{ color: theme.colors.text }}
+						style={{ color: textColor }}
 						className="font-semibold flex w-11/12 mx-auto"
 					>
-						Fréquence
+						{t("frequency")}
 					</Text>
 				</View>
 				<View className="flex flex-row items-center justify-center w-full mt-2">

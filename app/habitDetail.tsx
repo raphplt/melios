@@ -114,30 +114,33 @@ export default function HabitDetail() {
 		loadCategoryImage();
 	}, [habitCategory]);
 
-	return (
-		<View style={{ flex: 1 }}>
-			<CachedImage
-				imagePath={imageUri || "images/categories/fitness.jpg"}
-				blurRadius={15}
-				style={StyleSheet.absoluteFill}
-			/>
+		const dark = theme.dark;
+		const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
-			<View
-				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-4 mb-2"
-				style={{
-					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
-				}}
-			>
-				<ButtonBack handleQuit={() => navigation.goBack()} />
-				<SettingsButton />
-			</View>
-			<View className="w-full mx-auto flex justify-center flex-col">
-				<HabitDetailHeader habit={currentHabit} lightenedColor={lightenedColor} />
+		return (
+			<View style={{ flex: 1 }}>
+				<CachedImage
+					imagePath={imageUri || "images/categories/fitness.jpg"}
+					blurRadius={15}
+					style={StyleSheet.absoluteFill}
+				/>
 
-				<InfosPanel habit={currentHabit} lightenedColor={lightenedColor} />
-				<LastDays habit={currentHabit} />
-				<ButtonsBox />
+				<View
+					className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-4 mb-2"
+					style={{
+						paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+					}}
+				>
+					<ButtonBack handleQuit={() => navigation.goBack()} color={textColor} />
+					<SettingsButton />
+				</View>
+				<View className="w-full mx-auto flex justify-center flex-col">
+					<HabitDetailHeader habit={currentHabit} lightenedColor={lightenedColor} />
+
+					<InfosPanel habit={currentHabit} lightenedColor={lightenedColor} />
+					<LastDays habit={currentHabit} />
+					<ButtonsBox />
+				</View>
 			</View>
-		</View>
-	);
+		);
 }

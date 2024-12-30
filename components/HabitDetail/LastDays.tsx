@@ -21,6 +21,9 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
+	const dark = theme.dark;
+	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
+
 	useEffect(() => {
 		const fetchHabitLogs = async () => {
 			try {
@@ -91,13 +94,9 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 			>
 				<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 pb-1">
 					<View className="flex flex-row items-center">
-						<Iconify
-							icon="ph:calendar-check-fill"
-							size={20}
-							color={theme.colors.text}
-						/>
+						<Iconify icon="ph:calendar-check-fill" size={20} color={textColor} />
 						<Text
-							style={{ color: theme.colors.text }}
+							style={{ color: textColor }}
 							className="text-[15px] font-semibold ml-1"
 						>
 							{t("last_days_completion")}

@@ -45,7 +45,7 @@ const DarkTheme: Theme = {
 		notification: "rgb(255, 69, 58)",
 		backgroundSecondary: "#4A4A4A",
 		backgroundTertiary: "rgb(30, 30, 60)",
-		cardBackground: "#5A5A5A",
+		cardBackground: "#3A3A3A",
 		greenPrimary: "#47A86C",
 		greenSecondary: "#E6F5E8",
 		yellowPrimary: "#D1A916",

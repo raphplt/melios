@@ -12,6 +12,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
 import { useNavigation } from "expo-router";
+import React from "react";
 import { useState, useEffect } from "react";
 import { Animated, View } from "react-native";
 import { Pressable } from "react-native";
@@ -78,6 +79,9 @@ export default function ButtonBack() {
 	const buttonStyle =
 		"px-1 mx-1 rounded-2xl w-fit flex flex-row items-center justify-center";
 
+	const dark = theme.dark;
+	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
+
 	return (
 		<>
 			<View className="flex flex-row items-center justify-end py-1">
@@ -92,7 +96,7 @@ export default function ButtonBack() {
 								/* Action pour éditer */
 							}}
 						>
-							<Iconify icon="mdi:pencil" size={24} color={theme.colors.text} />
+							<Iconify icon="mdi:pencil" size={24} color={textColor} />
 						</Pressable>
 						<Pressable
 							className={buttonStyle}
@@ -100,7 +104,7 @@ export default function ButtonBack() {
 								setModalDeleteVisible(true);
 							}}
 						>
-							<Iconify icon="mdi:trash-can" size={24} color={theme.colors.text} />
+							<Iconify icon="mdi:trash-can" size={24} color={textColor} />
 						</Pressable>
 					</Reanimated.View>
 				)}
@@ -111,11 +115,7 @@ export default function ButtonBack() {
 						onPressOut={handlePressOut}
 						className="px-1"
 					>
-						<Iconify
-							icon="material-symbols:settings"
-							size={24}
-							color={theme.colors.text}
-						/>
+						<Iconify icon="material-symbols:settings" size={24} color={textColor} />
 					</Pressable>
 				</Animated.View>
 			</View>

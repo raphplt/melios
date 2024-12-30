@@ -12,29 +12,31 @@ export default function HabitDetailHeader({
 	lightenedColor: string;
 }) {
 	const { theme } = useTheme();
-	return (
-		<BlurView
-			intensity={70}
-			className="py-5 px-6 rounded-xl w-11/12 mx-auto flex items-center flex-row justify-center"
-			style={{
-				overflow: "hidden",
-			}}
-		>
-			<FontAwesome6
-				name={habit.icon || "question"}
-				size={24}
-				color={theme.colors.text}
-				style={{ marginRight: 15 }}
-			/>
-			<Text
+		const dark = theme.dark;
+		const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
+		return (
+			<BlurView
+				intensity={70}
+				className="py-5 px-6 rounded-xl w-11/12 mx-auto flex items-center flex-row justify-center"
 				style={{
-					color: theme.colors.text,
-					fontFamily: "BaskervilleBold",
+					overflow: "hidden",
 				}}
-				className="text-lg text-center font-semibold"
 			>
-				{habit.name}
-			</Text>
-		</BlurView>
-	);
+				<FontAwesome6
+					name={habit.icon || "question"}
+					size={24}
+					color={textColor}
+					style={{ marginRight: 15 }}
+				/>
+				<Text
+					style={{
+						color: textColor,
+						fontFamily: "BaskervilleBold",
+					}}
+					className="text-lg text-center font-semibold"
+				>
+					{habit.name}
+				</Text>
+			</BlurView>
+		);
 }

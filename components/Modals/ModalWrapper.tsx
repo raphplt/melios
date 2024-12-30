@@ -36,6 +36,8 @@ export default function ModalWrapper({
 								backgroundColor: theme.colors.cardBackground,
 								padding: 20,
 								borderRadius: 10,
+								borderColor: theme.dark ? "#B0B0B0" : theme.colors.border,
+								borderWidth: 1,
 							}}
 						>
 							<Pressable

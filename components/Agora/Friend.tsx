@@ -127,7 +127,14 @@ const Friend = ({ member }: Props) => {
 				imagePath={profilePictureUri || "images/cosmetics/man.png"}
 				style={{ width: 60, height: 60, marginTop: 5 }}
 			/>
-			<Text className="text-center text-[14px] font-bold mt-1">{member.nom}</Text>
+			<Text
+				className="text-center text-[14px] font-bold mt-1 py-1"
+				style={{
+					color: theme.colors.text,
+				}}
+			>
+				{member.nom}
+			</Text>
 			{loading ? (
 				<ActivityIndicator size="small" color={theme.colors.primary} />
 			) : isFriend ? null : requestSent ? (

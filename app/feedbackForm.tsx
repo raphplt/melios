@@ -8,6 +8,7 @@ import Slider from "@react-native-community/slider";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "@db/index"; // Assurez-vous que le chemin est correct
+import { Iconify } from "react-native-iconify";
 
 export default function FeedbackForm() {
 	const { theme } = useTheme();
@@ -54,10 +55,15 @@ export default function FeedbackForm() {
 	];
 
 	return (
-		<View className="flex-1 bg-background p-6 mt-4">
+		<View className="flex-1 bg-background p-4 mt-8">
 			<ButtonClose />
 
-			<Text className="text-center text-2xl font-bold text-text mb-4">
+			<Text
+				className="text-center text-2xl font-bold text-text mb-6"
+				style={{
+					color: theme.colors.text,
+				}}
+			>
 				{t("feedback_form_title")}
 			</Text>
 
@@ -74,9 +80,12 @@ export default function FeedbackForm() {
 				render={({ field: { onChange, onBlur, value } }) => (
 					<View className="mb-4">
 						<TextInput
-							className={`border ${
-								errors.name ? "border-red-500" : "border-cardBackground"
-							} bg-cardBackground rounded-md p-3 text-text`}
+							style={{
+								borderColor: errors.name ? "red" : theme.colors.textTertiary,
+								borderWidth: 1,
+								backgroundColor: theme.colors.cardBackground,
+							}}
+							className={`rounded-lg p-3 text-text`}
 							placeholder={t("name")}
 							placeholderTextColor={theme.colors.textTertiary}
 							onBlur={onBlur}
@@ -104,9 +113,12 @@ export default function FeedbackForm() {
 				render={({ field: { onChange, onBlur, value } }) => (
 					<View className="mb-4">
 						<TextInput
-							className={`border ${
-								errors.email ? "border-red-500" : "border-cardBackground"
-							} bg-cardBackground rounded-md p-3 text-text`}
+							style={{
+								borderColor: errors.email ? "red" : theme.colors.textTertiary,
+								borderWidth: 1,
+								backgroundColor: theme.colors.cardBackground,
+							}}
+							className={`rounded-lg p-3 text-text`}
 							placeholder={t("email")}
 							placeholderTextColor={theme.colors.textTertiary}
 							onBlur={onBlur}
@@ -161,9 +173,12 @@ export default function FeedbackForm() {
 				render={({ field: { onChange, onBlur, value } }) => (
 					<View className="mb-4">
 						<TextInput
-							className={`border ${
-								errors.feedback ? "border-red-500" : "border-cardBackground"
-							} bg-cardBackground rounded-md p-3 text-text h-24`}
+							style={{
+								borderColor: errors.name ? "red" : theme.colors.textTertiary,
+								borderWidth: 1,
+								backgroundColor: theme.colors.cardBackground,
+							}}
+							className={`rounded-lg p-3 text-text`}
 							placeholder={t("feedback")}
 							placeholderTextColor={theme.colors.textTertiary}
 							onBlur={onBlur}
@@ -188,9 +203,49 @@ export default function FeedbackForm() {
 				control={control}
 				render={({ field: { onChange, value } }) => (
 					<View className="mb-4">
-						<Text className="text-text mb-1">
-							{t("rating")}: {value}
-						</Text>
+						<View className="flex flex-row items-center justify-between w-11/12 mx-auto">
+							<Text
+								className="text-text mb-1 font-semibold"
+								style={{
+									color: theme.colors.text,
+								}}
+							>
+								{t("rating")}:
+							</Text>
+
+							<View
+								className="flex flex-row justify-end px-3 py-1 items-center"
+								style={{
+									backgroundColor: theme.colors.cardBackground,
+
+									borderRadius: 8,
+								}}
+							>
+								<View className="flex flex-row justify-end items-center w-fit">
+									{[1, 2, 3, 4, 5].map((star) => (
+										<Iconify
+											key={star}
+											icon="mdi:star"
+											size={24}
+											color={
+												star <= value
+													? theme.colors.yellowPrimary
+													: theme.colors.textTertiary
+											}
+										/>
+									))}
+								</View>
+
+								<Text
+									className="text-textSecondary text-center w-fit ml-2"
+									style={{
+										color: theme.colors.textTertiary,
+									}}
+								>
+									{value}
+								</Text>
+							</View>
+						</View>
 						<Slider
 							style={{ width: "100%", height: 40 }}
 							minimumValue={1}
