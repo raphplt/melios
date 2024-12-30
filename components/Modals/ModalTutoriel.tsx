@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { BlurView } from "expo-blur";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 export default function ModalTutorial({
 	title = "Tutoriel",
@@ -150,26 +151,28 @@ export default function ModalTutorial({
 					</ScrollView>
 
 					{/* Button to close */}
-					<Pressable
-						style={{
-							backgroundColor: theme.colors.primary,
-							borderRadius: 8,
-							marginTop: 10,
-							paddingVertical: 10,
-						}}
-						onPress={() => handleClose()}
-					>
-						<Text
+					<ZoomableView>
+						<Pressable
 							style={{
-								color: theme.colors.textSecondary,
-								textAlign: "center",
-								fontSize: 16,
-								fontWeight: "bold",
+								backgroundColor: theme.colors.primary,
+								borderRadius: 8,
+								marginTop: 10,
+								paddingVertical: 10,
 							}}
+							onPress={() => handleClose()}
 						>
-							{t("understood")}
-						</Text>
-					</Pressable>
+							<Text
+								style={{
+									color: theme.colors.textSecondary,
+									textAlign: "center",
+									fontSize: 16,
+									fontWeight: "bold",
+								}}
+							>
+								{t("understood")}
+							</Text>
+						</Pressable>
+					</ZoomableView>
 				</View>
 			</View>
 		</Modal>

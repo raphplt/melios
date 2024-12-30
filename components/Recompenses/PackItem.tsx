@@ -16,13 +16,11 @@ export default function PackItem({ pack }: { pack: Pack }) {
 	return (
 		<LinearGradient
 			style={{
-				flex: 1,
-				borderColor: pack.color ?? theme.colors.cardBackground,
-				borderWidth: 2,
+				borderRadius: 10,
 			}}
 			start={[0, 0]}
-			colors={[theme.colors.cardBackground, pack.color ?? theme.colors.background]}
-			className="mx-auto rounded-xl w-[95%] p-3 my-2 opacity-50"
+			colors={[pack.color ?? theme.colors.background, theme.colors.cardBackground]}
+			className="mx-auto rounded-xl w-[95%] p-3 my-2"
 		>
 			<View className="flex flex-row items-center justify-between">
 				<Text
@@ -34,7 +32,7 @@ export default function PackItem({ pack }: { pack: Pack }) {
 				>
 					{pack.name}
 				</Text>
-				<View className="flex flex-row items-center">
+				{/* <View className="flex flex-row items-center">
 					<Text
 						className="font-semibold mx-1 text-[16px]"
 						style={{
@@ -44,7 +42,7 @@ export default function PackItem({ pack }: { pack: Pack }) {
 						{pack.price}
 					</Text>
 					<MoneyMelios />
-				</View>
+				</View> */}
 			</View>
 			<Text
 				style={{

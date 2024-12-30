@@ -36,6 +36,7 @@ export default function Points() {
 							color={theme.colors.primary}
 							unfilledColor={theme.colors.border}
 							borderWidth={0}
+							thickness={4}
 						/>
 						<Text
 							style={{
@@ -84,6 +85,7 @@ export default function Points() {
 								color={theme.colors.primary}
 								unfilledColor={theme.colors.border}
 								borderWidth={0}
+								thickness={4}
 							/>
 							<Text
 								style={{
