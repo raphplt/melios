@@ -9,32 +9,18 @@ import { useTranslation } from "react-i18next";
 import { useHabits } from "@context/HabitsContext";
 
 const Levels = () => {
-	const { usersLevels, setUsersLevels, isLoading, member } = useData();
+	const { usersLevels, member } = useData();
 	const { genericLevels, refreshGenericLevels, setGenericLevels } = useHabits();
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
-	const [previousLevels, setPreviousLevels] = useState(usersLevels);
 	const [hasRefetched, setHasRefetched] = useState(false);
 
 	if (!member) return null;
-	// useEffect(() => {
-	// 	const initializeLevels = async () => {
-	// 		if (!Object.keys(usersLevels).length && !isLoading) {
-	// 			await initUserLevels(member.uid, genericLevels);
-	// 			const updatedLevels = await getUserLevelsByUserId(member.uid);
-	// 			console.log("Updated levels: ", updatedLevels);
-	// 			setUsersLevels(updatedLevels);
-	// 		}
-	// 	};
-
-	// 	initializeLevels();
-	// }, [member, genericLevels, usersLevels, isLoading]);
 
 	useEffect(() => {
 		// Vérifie si un des genericLevels n'a pas de propriété icon
 		const missingIcon = genericLevels.some((level) => !level.icon);
 		if (missingIcon && !hasRefetched) {
-			console.log("Refreshing generic levels");
 			refreshGenericLevels(true);
 			setHasRefetched(true);
 			setGenericLevels(genericLevels);
@@ -45,7 +31,6 @@ const Levels = () => {
 		.map(([levelId, userLevel]) => {
 			const genericLevel = genericLevels.find((level) => level.id === levelId);
 			if (!genericLevel) {
-				console.log(`No generic level found for levelId: ${levelId}`);
 				return null;
 			}
 			return {
@@ -63,8 +48,6 @@ const Levels = () => {
 	const filteredLevels = combinedLevels.filter(
 		(level) => level.name !== "Niveau général"
 	);
-
-	// console.log("Filtered levels: ", filteredLevels);
 
 	return (
 		<>

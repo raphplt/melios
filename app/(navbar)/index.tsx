@@ -11,6 +11,7 @@ import HabitsSection from "@components/Home/HabitsSection";
 import ActivitiesContainer from "@components/Home/ActivitiesContainer";
 import ViewHelp from "@components/Home/ViewHelp";
 import NextLevelHandler from "@components/Progression/NextLevelHandler";
+import ModalTutorial from "@components/Modals/ModalTutoriel";
 
 export default function Index() {
 	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
@@ -19,7 +20,6 @@ export default function Index() {
 	if (loading || !userHabits || isLoading) {
 		return <LoaderScreen text={t("loading")} />;
 	}
-
 	return (
 		<ParallaxScrollView
 			refreshControl={
@@ -31,7 +31,19 @@ export default function Index() {
 			<ActivitiesContainer />
 			<ViewHelp />
 			<DailyQuote />
+
+			{/* Modales */}
 			<NextLevelHandler />
+			<ModalTutorial
+				title="Comment utiliser la page Accueil"
+				paragraphs={[
+					"1. Consultez vos habitudes positives et négatives dans les routines.",
+					"2. Cliquez sur une habitude pour la valider ou la lancer avec un timer.",
+					"3. Ajoutez de nouvelles habitudes en cliquant sur le bouton +.",
+				]}
+				imagePath="images/illustrations/character3.png"
+				slug="index"
+			/>
 		</ParallaxScrollView>
 	);
 }

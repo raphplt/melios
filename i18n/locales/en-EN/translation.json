@@ -133,5 +133,6 @@
     "completion": "Completion",
     "regularity": "Regularity",
     "habit_already_completed": "You have already completed this habit today!",
-    "new": "New"
+    "new": "New",
+    "understood": "I understood"
 }

@@ -11,7 +11,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function LastDays({ habit }: { habit: UserHabit }) {
 	const { theme } = useTheme();
