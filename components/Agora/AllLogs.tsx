@@ -68,8 +68,8 @@ const AllLogs = () => {
 				<View
 					className="flex flex-row items-center justify-start px-3 py-3 my-3 mb-3 rounded-lg"
 					style={{
-						borderColor: theme.colors.grayPrimary,
-						borderWidth: 1,
+						borderColor: theme.colors.border,
+						borderWidth: 2,
 					}}
 				>
 					<Iconify icon="mdi:account-group" size={24} color={theme.colors.text} />

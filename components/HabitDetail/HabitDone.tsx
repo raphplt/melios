@@ -1,9 +1,11 @@
 import { useTheme } from "@context/ThemeContext";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function HabitDone() {
 	const { theme } = useTheme();
+	const { t } = useTranslation();
 	return (
 		<View
 			style={{
@@ -30,7 +32,7 @@ export default function HabitDone() {
 					color: theme.colors.primary,
 				}}
 			>
-				Vous avez déjà complété cette habitude aujourd'hui !
+				{t("habit_already_completed")}
 			</Text>
 		</View>
 	);

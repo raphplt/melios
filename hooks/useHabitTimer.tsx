@@ -2,16 +2,15 @@ import { useData } from "@context/DataContext";
 import { setRewards } from "@db/rewards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
-import usePoints from "./usePoints";
-import { Habit } from "../type/habit";
-import {  useHabits } from "@context/HabitsContext";
+import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { useTimer } from "@context/TimerContext";
 import { getHabitPoints } from "@utils/pointsUtils";
+import useAddXp from "./useAddXp";
+import { setHabitLog } from "@db/logs";
 
 const useHabitTimer = () => {
 	const date = moment().format("YYYY-MM-DD");
-	const { addOdysseePoints } = usePoints();
 	const { setShowHabitDetail } = useHabits();
 
 	const {
@@ -22,8 +21,8 @@ const useHabitTimer = () => {
 		timerRef,
 	} = useTimer();
 
-	const { points, setPoints } =
-		useData();
+	const addXp = useAddXp()?.addXp;
+	const { points, setPoints, setCompletedHabitsToday } = useData();
 
 	const startTimer = (habit: UserHabit) => {
 		if (!isTimerActive) {
@@ -84,7 +83,7 @@ const useHabitTimer = () => {
 				return;
 			}
 
-			// await setMemberHabitLog(habit.id, date, true);
+			await setHabitLog(habit.id, date);
 
 			const habitPoints = getHabitPoints(habit);
 
@@ -97,10 +96,11 @@ const useHabitTimer = () => {
 				odyssee: habitPoints.odyssee,
 			});
 
-			// setCompletedHabitsData((prevHabits: UserHabit[]) => [...prevHabits, habit]);
-			// setUncompletedHabitsData((prevHabits: UserHabit[]) =>
-			// 	prevHabits.filter((oldHabit: UserHabit) => oldHabit.id !== habit.id)
-			// );
+			setCompletedHabitsToday((prev) => [...prev, habit]);
+
+			if (addXp) {
+				await addXp(habit, 10 * habit.difficulty);
+			}
 
 			await AsyncStorage.removeItem("timerSeconds");
 		} catch (error) {

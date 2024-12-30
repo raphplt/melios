@@ -118,8 +118,8 @@ const Friend = ({ member }: Props) => {
 			className="flex flex-col items-center justify-between w-[47%] p-2 my-2 rounded-lg mx-auto"
 			style={{
 				backgroundColor: theme.colors.cardBackground,
-				borderColor: theme.colors.border,
-				// borderWidth: 1,
+				// borderColor: theme.colors.primary,
+				// borderWidth: 2,
 			}}
 		>
 			<CachedImage

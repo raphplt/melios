@@ -6,7 +6,6 @@ import SectionHeader from "./SectionHeader";
 import LevelItem from "./LevelItem";
 import { CombinedLevel } from "@type/levels";
 import { useTranslation } from "react-i18next";
-import NextLevel from "@components/Modals/NextLevel";
 import { useHabits } from "@context/HabitsContext";
 
 const Levels = () => {
@@ -15,8 +14,6 @@ const Levels = () => {
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
 	const [previousLevels, setPreviousLevels] = useState(usersLevels);
-	const [showNextLevelModal, setShowNextLevelModal] = useState(false);
-	const [nextLevelData, setNextLevelData] = useState<CombinedLevel | null>(null);
 	const [hasRefetched, setHasRefetched] = useState(false);
 
 	if (!member) return null;
@@ -32,21 +29,6 @@ const Levels = () => {
 
 		initializeLevels();
 	}, [member, genericLevels, usersLevels, isLoading]);
-
-	useEffect(() => {
-		// On regarde si le niveau a augmenté
-		Object.entries(usersLevels).forEach(([levelId, userLevel]: any) => {
-			const previousLevel = previousLevels[levelId];
-			if (previousLevel && userLevel.currentLevel > previousLevel.currentLevel) {
-				setShowNextLevelModal(true);
-				setNextLevelData({
-					...genericLevels.find((level) => level.id === levelId),
-					...userLevel,
-				});
-			}
-		});
-		setPreviousLevels(usersLevels);
-	}, [usersLevels]);
 
 	useEffect(() => {
 		// Vérifie si un des genericLevels n'a pas de propriété icon
@@ -98,11 +80,6 @@ const Levels = () => {
 					</ScrollView>
 				</View>
 			</SectionHeader>
-			<NextLevel
-				visible={showNextLevelModal}
-				setVisible={setShowNextLevelModal}
-				levelData={nextLevelData}
-			/>
 		</>
 	);
 };

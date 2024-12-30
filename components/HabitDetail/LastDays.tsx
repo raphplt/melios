@@ -30,9 +30,9 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 				for (let i = 365; i >= 1; i--) {
 					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
 					let done = logs ? logs.includes(day) : false;
-					if (habit.type === CategoryTypeSelect.negative) {
-						done = !done;
-					}
+					// if (habit.type === CategoryTypeSelect.negative) {
+					// 	done = !done;
+					// }
 					lastDaySnapshot.push({
 						date: day,
 						done,

@@ -1,12 +1,11 @@
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useHabits } from "@context/HabitsContext";
-import { ThemeContext, useTheme } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { getHabitPoints } from "@utils/pointsUtils";
 import { useNavigation } from "expo-router";
-import { useContext, useRef } from "react";
-import { Animated, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import RewardDetail from "./RewardDetail";
 import React from "react";
 import ZoomableView from "@components/Shared/ZoomableView";

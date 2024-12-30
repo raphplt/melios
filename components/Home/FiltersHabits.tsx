@@ -23,11 +23,11 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 							: theme.colors.border,
 					borderWidth: 2,
 				}}
-				className="mx-2 px-3 py-1 rounded-3xl flex flex-row items-center"
+				className="mx-2 px-3 py-[6px] rounded-3xl flex flex-row items-center"
 			>
 				<Iconify
 					icon="lucide:smile-plus"
-					size={18}
+					size={16}
 					color={
 						filter === CategoryTypeSelect.positive
 							? theme.colors.primary
@@ -40,7 +40,6 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 							filter === CategoryTypeSelect.positive
 								? theme.colors.primary
 								: theme.colors.text,
-						fontWeight: filter === CategoryTypeSelect.positive ? "bold" : "normal",
 					}}
 					className="text-[13px] mx-2"
 				>
@@ -57,11 +56,11 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 							: theme.colors.border,
 					borderWidth: 2,
 				}}
-				className="mx-2 px-3 py-1 rounded-3xl flex flex-row items-center"
+				className="mx-2 px-3 py-[6px] rounded-3xl flex flex-row items-center"
 			>
 				<Iconify
 					icon="ic:round-back-hand"
-					size={18}
+					size={16}
 					color={
 						filter === CategoryTypeSelect.negative
 							? theme.colors.redPrimary
@@ -72,9 +71,8 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 					style={{
 						color:
 							filter === CategoryTypeSelect.negative
-								? theme.colors.text
+								? theme.colors.redPrimary
 								: theme.colors.text,
-						fontWeight: filter === CategoryTypeSelect.negative ? "bold" : "normal",
 					}}
 					className="text-[13px] mx-2"
 				>

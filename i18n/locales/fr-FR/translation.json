@@ -131,5 +131,6 @@
     "add_friend": "Ajouter",
     "time_spend": "Temps passé",
     "regularity": "Régularité",
-    "completion": "Complétion"
+    "completion": "Complétion",
+    "habit_already_completed": "Vous avez déjà complété cette habitude aujourd'hui !"
 }

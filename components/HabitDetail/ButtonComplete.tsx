@@ -1,7 +1,6 @@
 import { useHabits } from "@context/HabitsContext";
 import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { getHabitPoints } from "@utils/pointsUtils";
 import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, View, ActivityIndicator, Image } from "react-native";
@@ -12,13 +11,15 @@ import { setRewards } from "@db/rewards";
 import React from "react";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { useTranslation } from "react-i18next";
+import { incrementStreak } from "@db/streaks";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function ButtonComplete() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { currentHabit } = useHabits();
-	const { date, setCompletedHabitsToday } = useData();
+	const { date, setCompletedHabitsToday, setStreak } = useData();
 	const { addOdysseePoints } = usePoints();
 
 	const [loading, setLoading] = useState(false);
@@ -32,6 +33,11 @@ export default function ButtonComplete() {
 		setRewards("odyssee", currentHabit.difficulty * 2);
 
 		setCompletedHabitsToday((prev) => [...prev, currentHabit]);
+
+		const streak = await incrementStreak();
+		if (streak) {
+			setStreak(streak);
+		}
 
 		navigation.navigate("index");
 		setLoading(false);
@@ -59,39 +65,34 @@ export default function ButtonComplete() {
 								{t("complete")}
 							</Text>
 
-							<View className="flex flex-row items-center mx-1">
-								<Text
-									style={{
-										color: theme.colors.text,
-									}}
-									className="text-[16px] font-semibold ml-2 px-1"
-								></Text>
-
-								<View
-									style={{
-										width: 28,
-										height: 28,
-										justifyContent: "center",
-										alignItems: "center",
-									}}
-								>
-									<Image
-										source={require("@assets/images/badge.png")}
-										style={{ width: "100%", height: "100%", position: "absolute" }}
-									/>
-									<Text className="text-[12px] font-bold text-white text-center">
-										{10 * currentHabit.difficulty}
+							{currentHabit.type !== CategoryTypeSelect.negative && (
+								<View className="flex flex-row items-center mx-1">
+									<View
+										style={{
+											width: 28,
+											height: 28,
+											justifyContent: "center",
+											alignItems: "center",
+										}}
+									>
+										<Image
+											source={require("@assets/images/badge.png")}
+											style={{ width: "100%", height: "100%", position: "absolute" }}
+										/>
+										<Text className="text-[12px] font-bold text-white text-center">
+											{10 * currentHabit.difficulty}
+										</Text>
+									</View>
+									<Text
+										style={{
+											color: theme.colors.primary,
+										}}
+										className="text-[12x] font-semibold px-1"
+									>
+										XP
 									</Text>
 								</View>
-								<Text
-									style={{
-										color: theme.colors.primary,
-									}}
-									className="text-[12x] font-semibold px-1"
-								>
-									XP
-								</Text>
-							</View>
+							)}
 						</>
 					)}
 				</View>

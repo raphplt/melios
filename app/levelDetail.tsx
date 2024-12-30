@@ -56,15 +56,21 @@ const LevelDetail = () => {
 				>
 					{selectedLevel.description}
 				</Text>
-				<Text
-					className="mt-4 font-semibold px-5 py-2 rounded-full"
+				<View
 					style={{
 						backgroundColor: theme.colors.primary,
-						color: theme.colors.textSecondary,
 					}}
+					className="px-5 py-2 rounded-full mt-4"
 				>
-					{t("lvl")} {selectedLevel.currentLevel}
-				</Text>
+					<Text
+						className="font-semibold "
+						style={{
+							color: theme.colors.textSecondary,
+						}}
+					>
+						{t("lvl")} {selectedLevel.currentLevel}
+					</Text>
+				</View>
 
 				<View className="mt-2 flex flex-row w-10/12 mb-2 justify-between items-center">
 					<Text
