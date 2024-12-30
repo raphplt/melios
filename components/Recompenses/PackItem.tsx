@@ -16,6 +16,7 @@ export default function PackItem({ pack }: { pack: Pack }) {
 	return (
 		<LinearGradient
 			style={{
+				flex: 1,
 				borderColor: pack.color ?? theme.colors.cardBackground,
 				borderWidth: 2,
 			}}
