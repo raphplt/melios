@@ -168,7 +168,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
 				// Si les genericLevels sont vides, les récupérer directement
 				if (!localGenericLevels || localGenericLevels.length === 0) {
-					console.log("Fetching generic levels from database...");
 					localGenericLevels = await getAllGenericLevels({ forceRefresh: true });
 				}
 
@@ -176,7 +175,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				const fetchedUserLevels = await getUserLevelsByUserId(user.uid);
 
 				if (!fetchedUserLevels || Object.keys(fetchedUserLevels).length === 0) {
-					console.log("No levels found for this user, initializing...");
 					await initUserLevels(user.uid, localGenericLevels);
 
 					const initializedLevels = await getUserLevelsByUserId(user.uid);

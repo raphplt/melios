@@ -19,15 +19,19 @@ const negativeCategories = categories
 	.sort((a: any, b: any) => a.id - b.id);
 
 useEffect(() => {
-	if ((!negativeCategories || !positiveCategories) && !hasRefreshed) {
-		console.log("refreshing categories");
-		refreshCategories(true);
-		setHasRefreshed(true);
-	}
+    const missingIcon = categories.some((category) => !category.icon);
+				if (
+					(!negativeCategories || !positiveCategories || missingIcon) &&
+					!hasRefreshed
+				) {
+					console.log("refreshing categories");
+					refreshCategories(true);
+					setHasRefreshed(true);
+				}
 }, [categories, hasRefreshed, refreshCategories]);
 
 if (!categories) {
-	return null;
+    return null;
 }
 
 return (

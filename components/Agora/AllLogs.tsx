@@ -8,67 +8,82 @@ import { Habit } from "@type/habit";
 import { LogItem } from "./LogItem";
 import Confidentiality from "@components/Modals/Confidentiality";
 import { Iconify } from "react-native-iconify";
+import { useData } from "@context/DataContext";
 
 export type LogExtended = {
-	id: string;
-	habitId: string;
-	member: Member | null;
-	habit: Habit | null;
-	logs: string[];
-	uid: string;
-	createAt: Date;
+    id: string;
+    habitId: string;
+    member: Member | null;
+    habit: Habit | null;
+    logs: string[];
+    uid: string;
+    createAt: Date;
 };
 
 const AllLogs = () => {
-	const { theme } = useTheme();
-	const { t } = useTranslation();
-	const [logs, setLogs] = useState<LogExtended[] | null>([]);
-	const [lastVisible, setLastVisible] = useState<any>(null);
-	const [loading, setLoading] = useState(false);
-	const [hasMore, setHasMore] = useState(true);
+    const { theme } = useTheme();
+    const { t } = useTranslation();
+    const { member } = useData();
+    const [logs, setLogs] = useState<LogExtended[] | null>([]);
+    const [lastVisible, setLastVisible] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [confidentiality, setConfidentiality] = useState("public");
 
-	const fetchLogs = async () => {
-		if (loading || !hasMore) return;
-		setLoading(true);
+    const fetchLogs = async (isRefreshing = false) => {
+        if (loading || (!hasMore && !isRefreshing)) return;
+        setLoading(true);
 
-		try {
-			const {
-				logs: newLogs,
-				lastVisible: newLastVisible,
-				hasMore: moreLogs,
-			} = await getAllUsersLogsPaginated(10, lastVisible);
+        try {
+            if (isRefreshing) {
+                setLastVisible(null);
+                setLogs([]);
+            }
 
-			setLogs((prevLogs: any) => [...prevLogs, ...newLogs]);
-			setLastVisible(newLastVisible);
-			setHasMore(moreLogs);
-		} catch (error) {
-			console.error("Erreur lors de la récupération des logs :", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+            const {
+                logs: newLogs,
+                lastVisible: newLastVisible,
+                hasMore: moreLogs,
+            } = await getAllUsersLogsPaginated(
+                10,
+                isRefreshing ? null : lastVisible,
+                confidentiality,
+                member?.friends
+            );
 
-	useEffect(() => {
-		fetchLogs();
-	}, []);
+            setLogs((prevLogs: any) => [...(isRefreshing ? [] : prevLogs), ...newLogs]);
+            setLastVisible(newLastVisible);
+            setHasMore(moreLogs);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des logs :", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-	const renderItem = ({ item }: { item: LogExtended }) => (
-		<LogItem item={item} />
-	);
+    useEffect(() => {
+        fetchLogs(true);
+    }, [confidentiality]);
 
-	return (
-		<FlatList
-			data={logs}
-			renderItem={renderItem}
-			keyExtractor={(item) => item.id}
-			onEndReached={fetchLogs}
-			className="w-[94%] mx-auto"
-			onEndReachedThreshold={0.5}
-			ListHeaderComponent={
-				<View
-					className="flex flex-row items-center justify-start px-3 py-3 my-3 mb-3 rounded-lg"
-					style={{
-						borderColor: theme.colors.border,
+    const renderItem = ({ item }: { item: LogExtended }) => (
+        <LogItem item={item} />
+    );
+
+    console.log("confidentiality", confidentiality);
+
+    return (
+        <FlatList
+            data={logs}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            onEndReached={() => fetchLogs(false)}
+            className="w-[94%] mx-auto"
+            onEndReachedThreshold={0.5}
+            ListHeaderComponent={
+                <View
+                    className="flex flex-row items-center justify-start px-3 py-3 my-3 mb-3 rounded-lg"
+                    style={{
+                        borderColor: theme.colors.border,
 						borderWidth: 2,
 					}}
 				>
@@ -83,6 +98,25 @@ const AllLogs = () => {
 						{t("activity_users")}
 					</Text>
 
+					<View className="flex flex-row items-center justify-start">
+						<Iconify
+							icon="mynaui:globe"
+							size={24}
+							color={
+								confidentiality === "public" ? theme.colors.primary : theme.colors.text
+							}
+							onPress={() => setConfidentiality("public")}
+						/>
+
+						<Iconify
+							icon="ion:people"
+							size={24}
+							color={
+								confidentiality === "friends" ? theme.colors.primary : theme.colors.text
+							}
+							onPress={() => setConfidentiality("friends")}
+						/>
+					</View>
 					{/* Modale */}
 					<Confidentiality />
 				</View>

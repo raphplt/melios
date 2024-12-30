@@ -46,10 +46,8 @@ export const getUserLevelsByUserId = async (userId: string) => {
 		const userLevelDoc = await getDoc(userLevelDocRef);
 
 		if (userLevelDoc.exists() && userLevelDoc.data().levels) {
-			console.log("Levels found for this user", userLevelDoc.data().levels);
 			return userLevelDoc.data().levels;
 		} else {
-			console.log("No levels found for this user");
 			return {};
 		}
 	} catch (error) {

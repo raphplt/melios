@@ -146,7 +146,9 @@ export const getAllHabitLogs = async ({
 
 export const getAllUsersLogsPaginated = async (
 	pageSize: number = 10,
-	lastVisibleDoc: any = null
+	lastVisibleDoc: any = null,
+	confidentiality: string = "public",
+	friends: string[] = []
 ) => {
 	try {
 		const logsCollectionRef = collection(db, "habitsLogs");
@@ -174,8 +176,21 @@ export const getAllUsersLogsPaginated = async (
 				const memberInfo = await getMemberProfileByUid(logData.uid);
 				const habitInfo = await getHabitById(logData.habitId);
 
-				if (memberInfo?.activityConfidentiality !== "public") {
+				// Si l'activité est confidentielle, on ne la retourne pas
+				if (memberInfo?.activityConfidentiality === "private") {
 					return null;
+				}
+
+				if (memberInfo?.activityConfidentiality === "friends") {
+					if (!friends.includes(memberInfo.uid)) {
+						return null;
+					}
+				}
+
+				if (confidentiality === "friends") {
+					if (memberInfo && !friends.includes(memberInfo.uid)) {
+						return null;
+					}
 				}
 
 				return {

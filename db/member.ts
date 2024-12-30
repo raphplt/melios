@@ -280,8 +280,10 @@ export const updateProfilePicture = async (slug: string) => {
  */
 export const getMembersPaginated = async (
 	lastVisibleDoc: any = null,
-	pageSize: number = 10
+	pageSize: number = 10,
+	filter = "all"
 ) => {
+	const uid = auth.currentUser?.uid;
 	try {
 		const membersCollectionRef = collection(db, "members");
 

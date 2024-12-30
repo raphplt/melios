@@ -1,6 +1,11 @@
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
-import { ReactNode, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CategoryTypeSelect } from "@utils/category.type";
+import { ReactNode, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { View } from "react-native";
+import { Text } from "react-native";
 import { Pressable } from "react-native";
 import Animated, {
 	useSharedValue,
@@ -28,6 +33,18 @@ export default function HabitTypeBox({
 	const backgroundColor = useSharedValue(theme.colors.cardBackground);
 	const borderColor = useSharedValue(theme.colors.border);
 	const textColor = useSharedValue(theme.colors.text);
+	const [haveSeenNegative, setHaveSeenNegative] = useState(false);
+	const { t } = useTranslation();
+
+	useEffect(() => {
+		const fetchLocalNew = async () => {
+			const newHabit = await AsyncStorage.getItem("haveSeenNegative");
+			if (newHabit) {
+				setHaveSeenNegative(true);
+			}
+		};
+		fetchLocalNew();
+	}, []);
 
 	useEffect(() => {
 		if (type === typeHabit) {
@@ -57,13 +74,34 @@ export default function HabitTypeBox({
 		color: textColor.value,
 	}));
 
+	const handlePress = () => {
+		if (typeHabit === CategoryTypeSelect.negative) {
+			AsyncStorage.setItem("haveSeenNegative", "true");
+			setHaveSeenNegative(true);
+		}
+		if (onPress) {
+			onPress();
+		}
+	};
+
 	return (
 		<Animated.View
 			style={[animatedStyle, { borderWidth: 2 }]}
 			className="w-[45%] rounded-xl mx-2"
 		>
+			{/* Temp */}
+			{!haveSeenNegative && typeHabit === CategoryTypeSelect.negative && (
+				<View
+					className="absolute top-1 right-1 px-2 py-1 rounded-xl"
+					style={{
+						backgroundColor: theme.colors.redPrimary,
+					}}
+				>
+					<Text className="text-white text-xs font-semibold">{t("new")}</Text>
+				</View>
+			)}
 			<Pressable
-				onPress={onPress}
+				onPress={handlePress}
 				className="flex flex-col items-center justify-center w-full h-full p-4"
 				style={{
 					flex: 1,

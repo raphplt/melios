@@ -115,8 +115,6 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 		};
 	}, []);
 
-	console.log("genericLevels habitscontext", genericLevels.length);
-
 	return (
 		<HabitsContext.Provider
 			value={{

@@ -19,7 +19,9 @@ const FriendList = () => {
 	const [loading, setLoading] = useState(true);
 	const [lastVisibleDoc, setLastVisibleDoc] = useState<any>(null);
 	const [hasMoreMembers, setHasMoreMembers] = useState(true);
-	const [filter, setFilter] = useState("all");
+	const [filter, setFilter] = useState<"all" | "friends" | "received" | "sent">(
+		"all"
+	);
 
 	const fetchMembers = async (isRefreshing = false) => {
 		try {
@@ -29,7 +31,9 @@ const FriendList = () => {
 			}
 
 			const { members: newMembers, lastVisible } = await getMembersPaginated(
-				lastVisibleDoc
+				lastVisibleDoc,
+				10,
+				filter
 			);
 
 			if (newMembers.length < 10) setHasMoreMembers(false);
@@ -41,7 +45,7 @@ const FriendList = () => {
 							...prevMembers,
 							...newMembers.filter(
 								(newMember) =>
-									!prevMembers.some((member: any) => member.uid === newMember.uid)
+									!prevMembers.some((member: Member) => member.uid === newMember.uid)
 							),
 					  ];
 
@@ -89,6 +93,22 @@ const FriendList = () => {
 	return (
 		<View>
 			<View className="flex flex-row items-center justify-center mb-4">
+				<Pressable
+					onPress={() => setFilter("all")}
+					style={{
+						backgroundColor:
+							filter === "all" ? theme.colors.primary : theme.colors.cardBackground,
+					}}
+					className={filterStyle}
+				>
+					<Text
+						style={{
+							color: filter === "all" ? theme.colors.textSecondary : theme.colors.text,
+						}}
+					>
+						Tous
+					</Text>
+				</Pressable>
 				<Pressable
 					onPress={() => setFilter("friends")}
 					style={{
@@ -143,22 +163,6 @@ const FriendList = () => {
 						}}
 					>
 						Envoyées
-					</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => setFilter("all")}
-					style={{
-						backgroundColor:
-							filter === "all" ? theme.colors.primary : theme.colors.cardBackground,
-					}}
-					className={filterStyle}
-				>
-					<Text
-						style={{
-							color: filter === "all" ? theme.colors.textSecondary : theme.colors.text,
-						}}
-					>
-						Tous
 					</Text>
 				</Pressable>
 			</View>
