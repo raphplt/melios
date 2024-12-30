@@ -2,10 +2,8 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import { t } from "i18next";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text } from "react-native";
 import { Pressable, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 
