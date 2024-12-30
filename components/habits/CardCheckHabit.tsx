@@ -28,6 +28,7 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
 import { CategoryTypeSelect } from "@utils/category.type";
+import { incrementStreak } from "@db/streaks";
 
 const formatDate = (date: Date) => {
 	return date.toISOString().split("T")[0];
@@ -40,7 +41,8 @@ function CardCheckHabit({
 	habit: UserHabit;
 	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
 }) {
-	const { date, completedHabitsToday, setCompletedHabitsToday } = useData();
+	const { date, completedHabitsToday, setCompletedHabitsToday, setStreak } =
+		useData();
 	const { theme } = useTheme();
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
@@ -115,10 +117,18 @@ function CardCheckHabit({
 
 			if (habit.type !== CategoryTypeSelect.negative) {
 				if (addXp) {
-					await addXp(habit, 30);
+					await addXp(habit, 10 * habit.difficulty);
 				}
+
+				// set points
 				addOdysseePoints(habit.difficulty); // set local points
 				setRewards("odyssee", habit.difficulty * 2); // set database points
+
+				// set streak
+				const streak = await incrementStreak();
+				if (streak) {
+					setStreak(streak);
+				}
 			}
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {

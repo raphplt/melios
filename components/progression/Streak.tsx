@@ -2,15 +2,12 @@ import { View, Text } from "react-native";
 import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
-import { calculateStreak } from "@utils/progressionUtils";
 import { useTranslation } from "react-i18next";
 
 export default function Streak() {
-	const { logs } = useData();
+	const { streak } = useData();
 	const { theme } = useTheme();
 	const { t } = useTranslation();
-
-	const streak = calculateStreak(logs);
 
 	return (
 		<View
@@ -31,7 +28,7 @@ export default function Streak() {
 						className="text-8xl font-bold"
 						style={{ color: theme.colors.primary }}
 					>
-						{streak}
+						{streak?.value ?? "0"}
 					</Text>
 					<Text
 						className="text-lg font-semibold"

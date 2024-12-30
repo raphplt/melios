@@ -4,7 +4,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { getHabitPoints } from "@utils/pointsUtils";
 import { useNavigation } from "expo-router";
 import { useState } from "react";
-import { Pressable, Text, View, ActivityIndicator } from "react-native";
+import { Pressable, Text, View, ActivityIndicator, Image } from "react-native";
 import { setHabitLog } from "@db/logs";
 import { useData } from "@context/DataContext";
 import usePoints from "@hooks/usePoints";
@@ -36,9 +36,6 @@ export default function ButtonComplete() {
 		navigation.navigate("index");
 		setLoading(false);
 	};
-
-	const habitPoints = getHabitPoints(currentHabit);
-
 	return (
 		<ZoomableView>
 			<Pressable
@@ -61,7 +58,40 @@ export default function ButtonComplete() {
 							>
 								{t("complete")}
 							</Text>
-							{/* <RewardDetail point={habitPoints.odyssee} money={<MoneyOdyssee />} /> */}
+
+							<View className="flex flex-row items-center mx-1">
+								<Text
+									style={{
+										color: theme.colors.text,
+									}}
+									className="text-[16px] font-semibold ml-2 px-1"
+								></Text>
+
+								<View
+									style={{
+										width: 28,
+										height: 28,
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<Image
+										source={require("@assets/images/badge.png")}
+										style={{ width: "100%", height: "100%", position: "absolute" }}
+									/>
+									<Text className="text-[12px] font-bold text-white text-center">
+										{10 * currentHabit.difficulty}
+									</Text>
+								</View>
+								<Text
+									style={{
+										color: theme.colors.primary,
+									}}
+									className="text-[12x] font-semibold px-1"
+								>
+									XP
+								</Text>
+							</View>
 						</>
 					)}
 				</View>

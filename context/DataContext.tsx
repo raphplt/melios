@@ -6,12 +6,10 @@ import React, {
 	ReactNode,
 } from "react";
 import moment from "moment";
-
-import permissions from "../hooks/usePermissions";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import permissions from "@hooks/usePermissions";
 import { getMemberInfos } from "@db/member";
-import { calculateStreak } from "@utils/progressionUtils";
 import { DataContextType } from "@type/dataContext";
 import { Member } from "@type/member";
 import { Points } from "@type/points";
@@ -22,12 +20,14 @@ import { getUserHabits } from "@db/userHabit";
 import { Log } from "@type/log";
 import { getAllHabitLogs } from "@db/logs";
 import { calculateCompletedHabits } from "@utils/habitsUtils";
-import { CombinedLevel, GenericLevel, UserLevel } from "@type/levels";
-import { getAllGenericLevels, getUserLevelsByUserId } from "@db/levels";
+import { CombinedLevel, UserLevel } from "@type/levels";
+import { getUserLevelsByUserId } from "@db/levels";
 import { useSession } from "./UserContext";
 import { getRewards } from "@db/rewards";
 import { extractPoints } from "@utils/pointsUtils";
 import { Reward } from "@type/reward";
+import { Streak } from "@type/streak";
+import { getUserStreak, initializeStreak } from "@db/streaks";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -52,10 +52,10 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [logs, setLogs] = useState<Log[]>([]);
 	const [usersLevels, setUsersLevels] = useState<UserLevel[]>([]);
 	const [selectedLevel, setSelectedLevel] = useState<CombinedLevel | null>(null);
+	const [streak, setStreak] = useState<Streak | null>(null);
 
 	// Progression
 	const [todayScore, setTodayScore] = useState<number>(0);
-	const [streak, setStreak] = useState<number>(0);
 
 	const { AskNotification } = permissions();
 
@@ -110,6 +110,15 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 					setPoints(extractPoints(snapshotRewards as Reward[]));
 				}
 
+				// Streak
+				const snapshotStreak = await getUserStreak();
+				if (snapshotStreak) {
+					setStreak(snapshotStreak);
+				} else {
+					const streak = await initializeStreak();
+					if (streak) setStreak(streak);
+				}
+
 				// Logs
 				const snapshotLogs: any = await getAllHabitLogs({
 					signal: abortController.signal,
@@ -117,7 +126,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				});
 				if (snapshotLogs) {
 					setLogs(snapshotLogs);
-					setStreak(calculateStreak(snapshotLogs));
 				}
 
 				if (snapshotHabits && snapshotLogs) {

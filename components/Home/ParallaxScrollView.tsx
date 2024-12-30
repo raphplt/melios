@@ -111,7 +111,8 @@ export default function ParallaxScrollView({
 									color: color,
 								}}
 							>
-								{t("streak")} : {streak} {streak > 1 ? t("days") : t("day")}
+								{t("streak")} : {streak?.value}{" "}
+								{streak && streak?.value > 1 ? t("days") : t("day")}
 							</Text>
 						</View>
 					</BlurBox>

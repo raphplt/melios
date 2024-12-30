@@ -123,7 +123,7 @@ export default function HabitDetail() {
 			/>
 
 			<View
-				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-2 mb-2"
+				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-4 mb-2"
 				style={{
 					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 				}}

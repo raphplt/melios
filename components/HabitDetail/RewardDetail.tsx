@@ -1,4 +1,4 @@
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 import { ReactNode, useContext } from "react";
 import { View, Text } from "react-native";
 
@@ -11,7 +11,7 @@ export default function RewardDetail({
 	money: ReactNode;
 	color?: string;
 }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 
 	return (
 		<View className="flex flex-row items-center mx-1">

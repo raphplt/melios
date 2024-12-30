@@ -5,6 +5,7 @@ import { Trophy } from "./trophy";
 import { Member } from "./member";
 import { Log } from "./log";
 import { CombinedLevel, GenericLevel, UserLevel } from "./levels";
+import { Streak } from "./streak";
 
 interface DataContextType {
 	date: string;
@@ -23,8 +24,8 @@ interface DataContextType {
 	setTrophies: React.Dispatch<React.SetStateAction<Trophy[]>>;
 	todayScore: number;
 	setTodayScore: React.Dispatch<React.SetStateAction<number>>;
-	streak: number;
-	setStreak: React.Dispatch<React.SetStateAction<number>>;
+	streak: Streak | null;
+	setStreak: React.Dispatch<React.SetStateAction<Streak | null>>;
 	logs: Log[];
 	completedHabitsToday: UserHabit[];
 	setCompletedHabitsToday: React.Dispatch<React.SetStateAction<UserHabit[]>>;

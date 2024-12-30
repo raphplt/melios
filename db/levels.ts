@@ -103,6 +103,12 @@ export const initUserLevels = async (
 ) => {
 	try {
 		const userLevelDocRef = doc(db, "usersLevels", userId);
+		const docSnap = await getDoc(userLevelDocRef);
+
+		if (docSnap.exists()) {
+			console.log("Document already exists for userId: ", userId);
+			return; // Vous pouvez également lever une erreur ou retourner une valeur spécifique
+		}
 
 		const userLevels = genericLevels.reduce(
 			(acc: { [key: string]: UserLevel }, level) => {
