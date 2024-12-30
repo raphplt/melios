@@ -33,7 +33,8 @@ const FriendList = () => {
 			const { members: newMembers, lastVisible } = await getMembersPaginated(
 				lastVisibleDoc,
 				10,
-				filter
+				filter,
+				member
 			);
 
 			if (newMembers.length < 10) setHasMoreMembers(false);
@@ -44,7 +45,7 @@ const FriendList = () => {
 					: [
 							...prevMembers,
 							...newMembers.filter(
-								(newMember) =>
+								(newMember: any) =>
 									!prevMembers.some((member: Member) => member.uid === newMember.uid)
 							),
 					  ];
@@ -126,7 +127,7 @@ const FriendList = () => {
 						}}
 						className="text-sm"
 					>
-						Amis
+						Amis ({member?.friends?.length || 0})
 					</Text>
 				</Pressable>
 				<Pressable
@@ -145,7 +146,7 @@ const FriendList = () => {
 								filter === "received" ? theme.colors.textSecondary : theme.colors.text,
 						}}
 					>
-						Reçues
+						Reçues ({member?.friendRequestsReceived?.length || 0})
 					</Text>
 				</Pressable>
 				<Pressable
@@ -162,7 +163,7 @@ const FriendList = () => {
 								filter === "sent" ? theme.colors.textSecondary : theme.colors.text,
 						}}
 					>
-						Envoyées
+						Envoyées ({member?.friendRequestsSent?.length || 0})
 					</Text>
 				</Pressable>
 			</View>

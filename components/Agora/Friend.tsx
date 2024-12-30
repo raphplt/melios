@@ -11,6 +11,7 @@ import {
 import getIcon from "@utils/cosmeticsUtils";
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
+import { Iconify } from "react-native-iconify";
 
 type Props = {
 	member: Member;
@@ -118,8 +119,8 @@ const Friend = ({ member }: Props) => {
 			className="flex flex-col items-center justify-between w-[47%] p-2 my-2 rounded-lg mx-auto"
 			style={{
 				backgroundColor: theme.colors.cardBackground,
-				// borderColor: theme.colors.primary,
-				// borderWidth: 2,
+				borderColor: theme.colors.border,
+				borderWidth: 1,
 			}}
 		>
 			<CachedImage
@@ -129,34 +130,43 @@ const Friend = ({ member }: Props) => {
 			<Text className="text-center text-[14px] font-bold mt-1">{member.nom}</Text>
 			{loading ? (
 				<ActivityIndicator size="small" color={theme.colors.primary} />
-			) : isFriend ? (
-				<Text>{t("already_friend")}</Text>
-			) : requestSent ? (
-				<Text>{t("request_sent")}</Text>
+			) : isFriend ? null : requestSent ? (
+				<Text
+					style={{
+						color: theme.colors.textTertiary,
+					}}
+					className="text-center mt-1"
+				>
+					{t("request_sent")}
+				</Text>
 			) : requestReceived ? (
-				<>
+				<View className="flex flex-row items-center justify-evenly w-full py-1">
 					<Pressable
 						onPress={handleAcceptRequest}
 						style={{ backgroundColor: theme.colors.primary }}
 						className="p-2 rounded-lg mt-2"
 					>
-						<Text style={{ color: "white" }}>{t("accept")}</Text>
+						<Iconify icon="material-symbols:done" size={20} color="white" />
 					</Pressable>
 					<Pressable
 						onPress={handleDeclineRequest}
-						style={{ backgroundColor: theme.colors.primary }}
+						style={{ backgroundColor: theme.colors.redPrimary }}
 						className="p-2 rounded-lg mt-2"
 					>
-						<Text style={{ color: "white" }}>{t("decline")}</Text>
+						<Iconify icon="material-symbols:close" size={20} color="white" />
 					</Pressable>
-				</>
+				</View>
 			) : (
 				<Pressable
 					onPress={handleSendRequest}
 					style={{ backgroundColor: theme.colors.primary }}
-					className="p-2 rounded-lg mt-2"
+					className="py-[6px] px-3 rounded-lg mt-2 flex flex-row items-center justify-center"
 				>
-					<Text style={{ color: "white" }}>{t("add_friend")}</Text>
+					<Iconify icon="mdi:account-plus" size={18} color="white" />
+
+					<Text style={{ color: "white" }} className="text-center ml-2 text-sm">
+						{t("add_friend")}
+					</Text>
 				</Pressable>
 			)}
 		</View>

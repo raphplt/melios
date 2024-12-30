@@ -22,7 +22,7 @@ const SubSectionLink = ({ href, children }: SubSectionLinkProps) => {
 	return (
 		<ZoomableView>
 			<Pressable
-				className="p-4 rounded-lg my-2 w-11/12 mx-auto flex flex-row items-center justify-between"
+				className="p-4 rounded-lg my-2 w-[95%] mx-auto flex flex-row items-center justify-between"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 					// borderColor: theme.colors.border,

@@ -281,7 +281,8 @@ export const updateProfilePicture = async (slug: string) => {
 export const getMembersPaginated = async (
 	lastVisibleDoc: any = null,
 	pageSize: number = 10,
-	filter = "all"
+	filter: "all" | "friends" | "received" | "sent" = "all",
+	member?: Member
 ) => {
 	const uid = auth.currentUser?.uid;
 	try {
@@ -295,6 +296,29 @@ export const getMembersPaginated = async (
 
 		if (lastVisibleDoc) {
 			membersQuery = query(membersQuery, startAfter(lastVisibleDoc));
+		}
+
+		if (filter === "friends" && member?.friends) {
+			membersQuery = query(
+				membersCollectionRef,
+				where("uid", "in", member.friends),
+				orderBy("nom"),
+				limit(pageSize)
+			);
+		} else if (filter === "received" && member?.friendRequestsReceived) {
+			membersQuery = query(
+				membersCollectionRef,
+				where("uid", "in", member.friendRequestsReceived),
+				orderBy("nom"),
+				limit(pageSize)
+			);
+		} else if (filter === "sent" && member?.friendRequestsSent) {
+			membersQuery = query(
+				membersCollectionRef,
+				where("uid", "in", member.friendRequestsSent),
+				orderBy("nom"),
+				limit(pageSize)
+			);
 		}
 
 		const querySnapshot = await getDocs(membersQuery);
@@ -386,9 +410,6 @@ export const sendFriendRequest = async (friendUid: string) => {
 		const currentUid = auth.currentUser?.uid;
 		if (!currentUid) throw new Error("Utilisateur non authentifié");
 
-		console.log("currentUid:", currentUid);
-		console.log("friendUid:", friendUid);
-
 		// Rechercher le document du membre courant basé sur la propriété `uid`
 		const membersCollection = collection(db, "members");
 		const currentMemberQuery = query(
@@ -403,7 +424,7 @@ export const sendFriendRequest = async (friendUid: string) => {
 			);
 		}
 
-		const currentMemberDoc = currentMemberSnapshot.docs[0]; // Le premier document correspondant
+		const currentMemberDoc = currentMemberSnapshot.docs[0];
 		const currentMemberData = currentMemberDoc.data();
 
 		// Rechercher le document du membre ami basé sur la propriété `uid`
@@ -419,7 +440,7 @@ export const sendFriendRequest = async (friendUid: string) => {
 			);
 		}
 
-		const friendMemberDoc = friendMemberSnapshot.docs[0]; // Le premier document correspondant
+		const friendMemberDoc = friendMemberSnapshot.docs[0];
 		const friendMemberData = friendMemberDoc.data();
 
 		// Vérifier si une demande d’amitié a déjà été envoyée ou si les utilisateurs sont déjà amis
@@ -452,25 +473,53 @@ export const sendFriendRequest = async (friendUid: string) => {
 	}
 };
 
-
 /**
  * 	Accepter une demande d'amitié
- * @param friendUid 
+ * @param friendUid
  */
+
 export const acceptFriendRequest = async (friendUid: string) => {
 	try {
 		const currentUid = auth.currentUser?.uid;
 		if (!currentUid) throw new Error("Utilisateur non authentifié");
 
-		const currentMemberRef = doc(db, "members", currentUid);
-		const friendMemberRef = doc(db, "members", friendUid);
+		console.log("currentUid:", currentUid);
+		console.log("friendUid:", friendUid);
 
-		await updateDoc(currentMemberRef, {
+		const membersCollectionRef = collection(db, "members");
+
+		// Rechercher le document du membre courant basé sur la propriété `uid`
+		const currentMemberQuery = query(
+			membersCollectionRef,
+			where("uid", "==", currentUid)
+		);
+		const currentMemberSnapshot = await getDocs(currentMemberQuery);
+
+		if (currentMemberSnapshot.empty) {
+			throw new Error(`No document found for current user: ${currentUid}`);
+		}
+
+		const currentMemberDoc = currentMemberSnapshot.docs[0];
+
+		// Rechercher le document du membre ami basé sur la propriété `uid`
+		const friendMemberQuery = query(
+			membersCollectionRef,
+			where("uid", "==", friendUid)
+		);
+		const friendMemberSnapshot = await getDocs(friendMemberQuery);
+
+		if (friendMemberSnapshot.empty) {
+			throw new Error(`No document found for friend user: ${friendUid}`);
+		}
+
+		const friendMemberDoc = friendMemberSnapshot.docs[0];
+
+		await updateDoc(currentMemberDoc.ref, {
 			friends: arrayUnion(friendUid),
 			friendRequestsReceived: arrayRemove(friendUid),
 		});
 
-		await updateDoc(friendMemberRef, {
+		await updateDoc(friendMemberDoc.ref, {
 			friends: arrayUnion(currentUid),
 			friendRequestsSent: arrayRemove(currentUid),
 		});
