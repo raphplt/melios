@@ -99,7 +99,7 @@ export const getHabitById = async (habitId: string) => {
 		const habitDoc = await getDoc(habitDocRef);
 
 		if (!habitDoc.exists()) {
-			console.error("Aucun document trouvé pour cet ID");
+			console.log("Aucun document trouvé pour cet ID");
 			return null;
 		}
 

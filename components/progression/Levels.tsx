@@ -17,18 +17,18 @@ const Levels = () => {
 	const [hasRefetched, setHasRefetched] = useState(false);
 
 	if (!member) return null;
+	// useEffect(() => {
+	// 	const initializeLevels = async () => {
+	// 		if (!Object.keys(usersLevels).length && !isLoading) {
+	// 			await initUserLevels(member.uid, genericLevels);
+	// 			const updatedLevels = await getUserLevelsByUserId(member.uid);
+	// 			console.log("Updated levels: ", updatedLevels);
+	// 			setUsersLevels(updatedLevels);
+	// 		}
+	// 	};
 
-	useEffect(() => {
-		const initializeLevels = async () => {
-			if (!Object.keys(usersLevels).length && !isLoading) {
-				await initUserLevels(member.uid, genericLevels);
-				const updatedLevels = await getUserLevelsByUserId(member.uid);
-				setUsersLevels(updatedLevels);
-			}
-		};
-
-		initializeLevels();
-	}, [member, genericLevels, usersLevels, isLoading]);
+	// 	initializeLevels();
+	// }, [member, genericLevels, usersLevels, isLoading]);
 
 	useEffect(() => {
 		// Vérifie si un des genericLevels n'a pas de propriété icon
@@ -63,6 +63,8 @@ const Levels = () => {
 	const filteredLevels = combinedLevels.filter(
 		(level) => level.name !== "Niveau général"
 	);
+
+	// console.log("Filtered levels: ", filteredLevels);
 
 	return (
 		<>

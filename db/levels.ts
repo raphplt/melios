@@ -22,7 +22,7 @@ export const getAllGenericLevels = async (
 		const storedData = await AsyncStorage.getItem(
 			LOCAL_STORAGE_GENERIC_LEVELS_ICONS_KEY
 		);
-		if (storedData) {
+		if (storedData && Object.keys(JSON.parse(storedData)).length > 0) {
 			return JSON.parse(storedData);
 		}
 	}
@@ -45,7 +45,8 @@ export const getUserLevelsByUserId = async (userId: string) => {
 		const userLevelDocRef = doc(db, "usersLevels", userId);
 		const userLevelDoc = await getDoc(userLevelDocRef);
 
-		if (userLevelDoc.exists()) {
+		if (userLevelDoc.exists() && userLevelDoc.data().levels) {
+			console.log("Levels found for this user", userLevelDoc.data().levels);
 			return userLevelDoc.data().levels;
 		} else {
 			console.log("No levels found for this user");
@@ -100,14 +101,19 @@ export const updateUserLevel = async (
 export const initUserLevels = async (
 	userId: string,
 	genericLevels: GenericLevel[]
-) => {
+): Promise<{ [key: string]: UserLevel }> => {
+	if (genericLevels.length === 0) {
+		console.error("Cannot initialize user levels: genericLevels is empty");
+		return {};
+	}
+
 	try {
 		const userLevelDocRef = doc(db, "usersLevels", userId);
 		const docSnap = await getDoc(userLevelDocRef);
 
 		if (docSnap.exists()) {
 			console.log("Document already exists for userId: ", userId);
-			return; // Vous pouvez également lever une erreur ou retourner une valeur spécifique
+			return docSnap.data().levels; // Retourne les niveaux existants
 		}
 
 		const userLevels = genericLevels.reduce(
@@ -126,11 +132,15 @@ export const initUserLevels = async (
 		);
 
 		await setDoc(userLevelDocRef, { levels: userLevels });
+		console.log("User levels initialized successfully");
+		return userLevels;
 	} catch (error) {
 		console.error("Error initializing user levels: ", error);
 		throw error;
 	}
 };
+
+
 
 export const calculateNextLevelXp = (level: number): number => {
 	return Math.floor(100 * Math.pow(1.5, level - 1));

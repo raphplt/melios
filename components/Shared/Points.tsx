@@ -44,7 +44,7 @@ export default function Points() {
 							}}
 							className="font-bold absolute"
 						>
-							{globalLevel?.currentLevel}
+							{globalLevel?.currentLevel || "1"}
 						</Text>
 					</View>
 				</View>
@@ -92,7 +92,7 @@ export default function Points() {
 								}}
 								className="font-bold absolute"
 							>
-								{globalLevel?.currentLevel}
+								{globalLevel?.currentLevel || "1"}
 							</Text>
 						</View>
 

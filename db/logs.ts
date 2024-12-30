@@ -129,7 +129,6 @@ export const getAllHabitLogs = async ({
 		const querySnapshot = await getDocs(q);
 
 		if (querySnapshot.empty) {
-			console.log("Aucun log trouvé pour cet utilisateur.");
 			return [];
 		}
 

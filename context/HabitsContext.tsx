@@ -1,3 +1,4 @@
+// HabitsProvider.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Category } from "@type/category";
 import { getHabitsWithCategories } from "@db/fetch";
@@ -25,20 +26,16 @@ interface HabitsContextProps {
 export const HabitsContext = createContext<HabitsContextProps>({
 	habitsData: [],
 	loading: false,
-	refreshHabits: function (): void {},
+	refreshHabits: () => {},
 	currentHabit: null,
-	setCurrentHabit: function (
-		value: React.SetStateAction<UserHabit | null>
-	): void {},
+	setCurrentHabit: () => {},
 	showHabitDetail: false,
-	setShowHabitDetail: function (value: React.SetStateAction<boolean>): void {},
+	setShowHabitDetail: () => {},
 	categories: [],
-	refreshCategories: function (): void {},
+	refreshCategories: () => {},
 	genericLevels: [],
-	setGenericLevels: function (
-		value: React.SetStateAction<GenericLevel[]>
-	): void {},
-	refreshGenericLevels: function (): void {},
+	setGenericLevels: () => {},
+	refreshGenericLevels: () => {},
 });
 
 type HabitsProviderProps = {
@@ -62,7 +59,7 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 			}
 		} catch (error) {
 			if (!signal.aborted) {
-				console.log("Erreur lors de la récupération des habitudes : ", error);
+				console.log("Erreur lors de la récupération des habitudes :", error);
 			}
 		}
 	};
@@ -78,7 +75,7 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 			}
 		} catch (error) {
 			if (!signal.aborted) {
-				console.log("Erreur lors de la récupération des catégories : ", error);
+				console.log("Erreur lors de la récupération des catégories :", error);
 			}
 		}
 	};
@@ -89,13 +86,15 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 	) => {
 		try {
 			const snapshotGenericLevels = await getAllGenericLevels({
-				forceRefresh: forceRefresh,
+				forceRefresh,
 			});
-			setGenericLevels(snapshotGenericLevels);
+			if (!signal.aborted) {
+				setGenericLevels(snapshotGenericLevels);
+			}
 		} catch (error) {
 			if (!signal.aborted) {
 				console.log(
-					"Erreur lors de la récupération des niveaux génériques : ",
+					"Erreur lors de la récupération des niveaux génériques :",
 					error
 				);
 			}
@@ -108,13 +107,15 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 
 		fetchHabitsData(signal);
 		fetchGenericLevelsData(signal);
-		fetchCategoriesData(signal); //TODO à retirer
+		fetchCategoriesData(signal); // TODO à retirer si inutile
 
 		return () => {
 			console.log("HabitsProvider - cleanup");
 			controller.abort();
 		};
 	}, []);
+
+	console.log("genericLevels habitscontext", genericLevels.length);
 
 	return (
 		<HabitsContext.Provider
@@ -123,7 +124,6 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 				loading,
 				refreshHabits: (forceRefresh = false) =>
 					fetchHabitsData(new AbortController().signal, forceRefresh),
-
 				currentHabit,
 				setCurrentHabit,
 				showHabitDetail,
@@ -133,9 +133,8 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 					fetchCategoriesData(new AbortController().signal, forceRefresh),
 				genericLevels,
 				setGenericLevels,
-				refreshGenericLevels: function (forceRefresh = false): void {
-					fetchGenericLevelsData(new AbortController().signal, forceRefresh);
-				},
+				refreshGenericLevels: (forceRefresh = false) =>
+					fetchGenericLevelsData(new AbortController().signal, forceRefresh),
 			}}
 		>
 			{children}

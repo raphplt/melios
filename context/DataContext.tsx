@@ -21,13 +21,18 @@ import { Log } from "@type/log";
 import { getAllHabitLogs } from "@db/logs";
 import { calculateCompletedHabits } from "@utils/habitsUtils";
 import { CombinedLevel, UserLevel } from "@type/levels";
-import { getUserLevelsByUserId } from "@db/levels";
+import {
+	getAllGenericLevels,
+	getUserLevelsByUserId,
+	initUserLevels,
+} from "@db/levels";
 import { useSession } from "./UserContext";
 import { getRewards } from "@db/rewards";
 import { extractPoints } from "@utils/pointsUtils";
 import { Reward } from "@type/reward";
 import { Streak } from "@type/streak";
 import { getUserStreak, initializeStreak } from "@db/streaks";
+import { useHabits } from "./HabitsContext";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -42,6 +47,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [completedHabitsToday, setCompletedHabitsToday] = useState<UserHabit[]>(
 		[]
 	);
+	const { genericLevels } = useHabits();
 	const [isLoading, setIsLoading] = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
@@ -152,27 +158,41 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	}, [user]);
 
 	useEffect(() => {
-		if (!user) return;
-
-		const abortController = new AbortController();
-
 		const fetchUserLevels = async () => {
+			if (!user) {
+				return;
+			}
+
 			try {
-				const fetchedUserLevels = await getUserLevelsByUserId(user.uid);
-				setUsersLevels(fetchedUserLevels);
-			} catch (error: unknown) {
-				if (error instanceof Error && error.name !== "AbortError") {
-					console.log("Erreur lors de la récupération des User Levels : ", error);
+				let localGenericLevels = genericLevels;
+
+				// Si les genericLevels sont vides, les récupérer directement
+				if (!localGenericLevels || localGenericLevels.length === 0) {
+					console.log("Fetching generic levels from database...");
+					localGenericLevels = await getAllGenericLevels({ forceRefresh: true });
 				}
+
+				// Vérifier si les niveaux utilisateur existent
+				const fetchedUserLevels = await getUserLevelsByUserId(user.uid);
+
+				if (!fetchedUserLevels || Object.keys(fetchedUserLevels).length === 0) {
+					console.log("No levels found for this user, initializing...");
+					await initUserLevels(user.uid, localGenericLevels);
+
+					const initializedLevels = await getUserLevelsByUserId(user.uid);
+					setUsersLevels(initializedLevels);
+				} else {
+					setUsersLevels(fetchedUserLevels);
+				}
+			} catch (error) {
+				console.error("Erreur lors de la récupération des User Levels : ", error);
 			}
 		};
 
-		fetchUserLevels();
-
-		return () => {
-			abortController.abort();
-		};
-	}, [user]);
+		if (user) {
+			fetchUserLevels();
+		}
+	}, [user, genericLevels]);
 
 	return (
 		<DataContext.Provider
