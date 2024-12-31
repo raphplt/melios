@@ -138,6 +138,7 @@ export default function HabitDetail() {
 					<HabitDetailHeader habit={currentHabit} lightenedColor={lightenedColor} />
 
 					<InfosPanel habit={currentHabit} lightenedColor={lightenedColor} />
+					{/* Ajouter un timer depuis le début de l'ajout pour les habitudes négatives */}
 					<LastDays habit={currentHabit} />
 					<ButtonsBox />
 				</View>

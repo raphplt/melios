@@ -25,6 +25,8 @@ export default function InfosPanel({
 	const dark = theme.dark;
 	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
+	// console.log(habit.cr)
+
 	const Separator = () => (
 		<View
 			style={{

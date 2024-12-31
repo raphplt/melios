@@ -22,4 +22,5 @@ export type UserHabit = {
 		saturday?: boolean;
 		sunday?: boolean;
 	};
+	createAt: Date;
 };

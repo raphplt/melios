@@ -59,6 +59,7 @@ export const createHabitSchema = z.object({
 		.max(24, { message: "Le moment de rappel ne doit pas dépasser 24." }),
 	memberId: z.string({ message: "L'ID du membre est requis." }),
 	habitId: z.string().optional().nullable(),
+	createAt: z.date().optional(),
 });
 
 export const frequencyDefaultValues = {

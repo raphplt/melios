@@ -65,6 +65,7 @@ export default function CustomHabit() {
 			memberId: member?.uid || null,
 			habitId: habit?.id || "0",
 			reminderMoment: habit?.reminderMoment || 5,
+			createAt: new Date(),
 		},
 	});
 
