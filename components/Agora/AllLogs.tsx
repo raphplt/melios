@@ -87,8 +87,6 @@ const AllLogs = () => {
 				<View
 					className="flex flex-row items-center justify-between px-4 py-4 my-3 rounded-lg"
 					style={{
-						// borderColor: theme.colors.border,
-						// borderWidth: 2,
 						backgroundColor: theme.colors.cardBackground,
 					}}
 				>
@@ -105,8 +103,24 @@ const AllLogs = () => {
 						</Text>
 					</View>
 
-					<View className="flex flex-row items-center justify-start gap-2">
-						<TouchableOpacity onPress={() => setConfidentiality("public")}>
+					<View
+						className="flex flex-row items-center justify-start gap-2 rounded-2xl"
+						style={{
+							backgroundColor: theme.colors.background,
+							borderColor: theme.colors.border,
+							borderWidth: 1,
+						}}
+					>
+						<TouchableOpacity
+							onPress={() => setConfidentiality("public")}
+							style={{
+								backgroundColor:
+									confidentiality === "public"
+										? theme.colors.backgroundTertiary
+										: theme.colors.background,
+							}}
+							className="px-3 py-1 rounded-2xl"
+						>
 							<Iconify
 								icon="mynaui:globe"
 								size={24}
@@ -117,7 +131,16 @@ const AllLogs = () => {
 								}
 							/>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => setConfidentiality("friends")}>
+						<TouchableOpacity
+							onPress={() => setConfidentiality("friends")}
+							style={{
+								backgroundColor:
+									confidentiality === "friends"
+										? theme.colors.backgroundTertiary
+										: theme.colors.background,
+							}}
+							className="px-3 py-1 rounded-2xl"
+						>
 							<Iconify
 								icon="ion:people"
 								size={24}
