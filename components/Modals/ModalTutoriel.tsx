@@ -11,7 +11,6 @@ import {
 	ScrollView,
 	Platform,
 } from "react-native";
-import { Iconify } from "react-native-iconify";
 import { BlurView } from "expo-blur";
 import ZoomableView from "@components/Shared/ZoomableView";
 
@@ -29,13 +28,13 @@ export default function ModalTutorial({
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 
-	const [isTutorialVisible, setTutorialVisible] = useState(true);
+	const [isTutorialVisible, setTutorialVisible] = useState(false);
 
 	useEffect(() => {
 		const fetchLocalNew = async () => {
 			const alreadyView = await AsyncStorage.getItem(slug);
-			if (alreadyView) {
-				setTutorialVisible(false);
+			if (!alreadyView) {
+				setTutorialVisible(true);
 			}
 		};
 		fetchLocalNew();
