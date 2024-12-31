@@ -150,6 +150,7 @@ export default function Login() {
 				contentContainerStyle={{
 					flexGrow: 1,
 				}}
+				keyboardShouldPersistTaps="handled"
 			>
 				<ImageBackground
 					source={image ? { uri: image } : undefined}

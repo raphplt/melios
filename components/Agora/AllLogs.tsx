@@ -107,8 +107,8 @@ const AllLogs = () => {
 						className="flex flex-row items-center justify-start gap-2 rounded-2xl"
 						style={{
 							backgroundColor: theme.colors.background,
-							borderColor: theme.colors.border,
-							borderWidth: 1,
+							// borderColor: theme.colors.border,
+							// borderWidth: 1,
 						}}
 					>
 						<TouchableOpacity

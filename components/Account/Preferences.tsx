@@ -58,12 +58,10 @@ export default function Preferences() {
 
 	const confirmLogout = async () => {
 		setHabits([]);
-
 		setPoints({ odyssee: 0, rewards: 0 });
-
-		await disconnectUser();
 		setMember(undefined);
 		setModalVisible(false);
+		await disconnectUser();
 	};
 
 	const handleLogout = () => {
