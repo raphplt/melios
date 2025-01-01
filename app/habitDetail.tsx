@@ -30,6 +30,8 @@ import { useTheme } from "@context/ThemeContext";
 import SettingsButton from "@components/HabitDetail/SettingsButton";
 import getImage from "@utils/getImage";
 import CachedImage from "@components/Shared/CachedImage";
+import { useTranslation } from "react-i18next";
+import NegativeCounter from "@components/HabitDetail/NegativeCounter";
 
 export interface DayStatus {
 	date: string;
@@ -38,8 +40,9 @@ export interface DayStatus {
 
 export default function HabitDetail() {
 	const { currentHabit } = useHabits();
+	const { t } = useTranslation();
 
-	if (!currentHabit) return <LoaderScreen text="Chargement des détails..." />;
+	if (!currentHabit) return <LoaderScreen text={t("loading")} />;
 
 	// Contexts
 	const { theme } = useTheme();
@@ -114,34 +117,37 @@ export default function HabitDetail() {
 		loadCategoryImage();
 	}, [habitCategory]);
 
-		const dark = theme.dark;
-		const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
+	const dark = theme.dark;
+	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
-		return (
-			<View style={{ flex: 1 }}>
-				<CachedImage
-					imagePath={imageUri || "images/categories/fitness.jpg"}
-					blurRadius={15}
-					style={StyleSheet.absoluteFill}
-				/>
+	return (
+		<View style={{ flex: 1 }}>
+			<CachedImage
+				imagePath={imageUri || "images/categories/fitness.jpg"}
+				blurRadius={15}
+				style={StyleSheet.absoluteFill}
+			/>
 
-				<View
-					className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-4 mb-2"
-					style={{
-						paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
-					}}
-				>
-					<ButtonBack handleQuit={() => navigation.goBack()} color={textColor} />
-					<SettingsButton />
-				</View>
-				<View className="w-full mx-auto flex justify-center flex-col">
-					<HabitDetailHeader habit={currentHabit} lightenedColor={lightenedColor} />
-
-					<InfosPanel habit={currentHabit} lightenedColor={lightenedColor} />
-					{/* Ajouter un timer depuis le début de l'ajout pour les habitudes négatives */}
-					<LastDays habit={currentHabit} />
-					<ButtonsBox />
-				</View>
+			<View
+				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-4 mb-2"
+				style={{
+					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+				}}
+			>
+				<ButtonBack handleQuit={() => navigation.goBack()} color={textColor} />
+				<SettingsButton />
 			</View>
-		);
+			<View className="w-full mx-auto flex justify-center flex-col">
+				<HabitDetailHeader />
+
+				<InfosPanel />
+
+				{/* <NegativeCounter /> */}
+
+				{/* Ajouter un timer depuis le début de l'ajout pour les habitudes négatives */}
+				<LastDays />
+				<ButtonsBox />
+			</View>
+		</View>
+	);
 }

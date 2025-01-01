@@ -3,19 +3,16 @@ import { Iconify } from "react-native-iconify";
 
 import { UserHabit } from "@type/userHabit";
 import { useTheme } from "@context/ThemeContext";
-import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
+import { useHabits } from "@context/HabitsContext";
 
-export default function InfosPanel({
-	habit,
-	lightenedColor,
-}: {
-	habit: UserHabit;
-	lightenedColor: string;
-}) {
+export default function InfosPanel() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const { currentHabit } = useHabits();
+
+	if (!currentHabit) return null;
 
 	const rowStyle =
 		"flex flex-row justify-between items-center w-full mx-auto px-4";
@@ -25,12 +22,10 @@ export default function InfosPanel({
 	const dark = theme.dark;
 	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
-	// console.log(habit.cr)
-
 	const Separator = () => (
 		<View
 			style={{
-				borderBottomColor: habit.color || theme.colors.border,
+				borderBottomColor: currentHabit.color || theme.colors.border,
 				width: "100%",
 				height: 1,
 				borderBottomWidth: 1,
@@ -54,7 +49,7 @@ export default function InfosPanel({
 				}}
 				className="text-[16px] text-pretty ml-4 py-2 w-11/12 mx-auto font-semibold"
 			>
-				{habit.description}
+				{currentHabit.description}
 			</Text>
 
 			<Separator />
@@ -68,7 +63,7 @@ export default function InfosPanel({
 					</Text>
 				</View>
 				<Text style={{ color: textColor }}>
-					{habit.duration ?? 0} {t("minutes")}
+					{currentHabit.duration ?? 0} {t("minutes")}
 				</Text>
 			</View>
 
@@ -83,7 +78,7 @@ export default function InfosPanel({
 						{t("category")}
 					</Text>
 				</View>
-				<Text style={{ color: textColor }}>{habit.category}</Text>
+				<Text style={{ color: textColor }}>{currentHabit.category}</Text>
 			</View>
 
 			<Separator />
@@ -103,7 +98,8 @@ export default function InfosPanel({
 				</View>
 
 				<Text style={{ color: textColor }}>
-					à {habit.moment !== -1 ? habit.moment : habit.moment} heure
+					à {currentHabit.moment !== -1 ? currentHabit.moment : currentHabit.moment}{" "}
+					heure
 				</Text>
 			</View>
 
@@ -123,12 +119,12 @@ export default function InfosPanel({
 					</Text>
 				</View>
 				<View className="flex flex-row items-center justify-center w-full mt-2">
-					{Object.entries(habit.frequency as any).map(([day, isActive]) => (
+					{Object.entries(currentHabit.frequency as any).map(([day, isActive]) => (
 						<View
 							key={day}
 							style={{
 								backgroundColor: isActive
-									? habit.color || theme.colors.primary
+									? currentHabit.color || theme.colors.primary
 									: theme.colors.background,
 							}}
 							className="rounded-full p-2 mx-1 w-11"

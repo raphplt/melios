@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import ZoomableView from "@components/Shared/ZoomableView";
+import { useData } from "@context/DataContext";
 
 export default function ModalTutorial({
 	title = "Tutoriel",
@@ -26,6 +27,10 @@ export default function ModalTutorial({
 	slug: string;
 }) {
 	const { theme } = useTheme();
+	const { member } = useData();
+
+	if (!member) return null;
+
 	const { t } = useTranslation();
 
 	const [isTutorialVisible, setTutorialVisible] = useState(false);

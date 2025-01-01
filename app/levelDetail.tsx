@@ -2,6 +2,7 @@ import Tasks from "@components/Levels/Tasks";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -39,6 +40,12 @@ const LevelDetail = () => {
 					borderWidth: 1,
 				}}
 			>
+				<FontAwesome6
+					name={selectedLevel.icon}
+					size={40}
+					color={selectedLevel.color || theme.colors.primary}
+					style={{ marginBottom: 10 }}
+				/>
 				<Text
 					className="text-xl font-semibold w-10/12 mx-auto text-center"
 					style={{

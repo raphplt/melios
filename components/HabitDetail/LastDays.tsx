@@ -11,13 +11,17 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useHabits } from "@context/HabitsContext";
 
-export default function LastDays({ habit }: { habit: UserHabit }) {
+export default function LastDays() {
 	const { theme } = useTheme();
+	const { currentHabit } = useHabits();
 	const { t } = useTranslation();
 	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [currentStreak, setCurrentStreak] = useState(0);
+
+	if (!currentHabit) return null;
 
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -27,7 +31,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 	useEffect(() => {
 		const fetchHabitLogs = async () => {
 			try {
-				const logs = await getHabitLogs(habit.id);
+				const logs = await getHabitLogs(currentHabit.id);
 				const lastDaySnapshot: DayStatus[] = [];
 				for (let i = 365; i >= 1; i--) {
 					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
@@ -51,7 +55,7 @@ export default function LastDays({ habit }: { habit: UserHabit }) {
 		};
 
 		fetchHabitLogs();
-	}, [habit.id]);
+	}, [currentHabit.id]);
 
 	const calculateCurrentStreak = (days: DayStatus[]) => {
 		let streak = 0;
