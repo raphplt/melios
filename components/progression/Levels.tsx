@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useData } from "@context/DataContext";
-import { getUserLevelsByUserId, initUserLevels } from "@db/levels";
 import SectionHeader from "./SectionHeader";
 import LevelItem from "./LevelItem";
 import { CombinedLevel } from "@type/levels";
 import { useTranslation } from "react-i18next";
 import { useHabits } from "@context/HabitsContext";
 
-const Levels = () => {
+export default function Levels() {
 	const { usersLevels, member } = useData();
 	const { genericLevels, refreshGenericLevels, setGenericLevels } = useHabits();
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
 	const [hasRefetched, setHasRefetched] = useState(false);
 
-	if (!member) return null;
-
 	useEffect(() => {
-		// Vérifie si un des genericLevels n'a pas de propriété icon
+		if (!member) return; // Si member est absent, on ne fait rien dans l'effet
 		const missingIcon = genericLevels.some((level) => !level.icon);
 		if (missingIcon && !hasRefetched) {
 			refreshGenericLevels(true);
 			setHasRefetched(true);
 			setGenericLevels(genericLevels);
 		}
-	}, [genericLevels, hasRefetched, refreshGenericLevels]);
+	}, [genericLevels, hasRefetched, refreshGenericLevels, member]);
+
+	if (!member) return null; // La condition est déplacée après les hooks
 
 	const combinedLevels: CombinedLevel[] = Object.entries(usersLevels)
 		.map(([levelId, userLevel]) => {
@@ -67,6 +66,4 @@ const Levels = () => {
 			</SectionHeader>
 		</>
 	);
-};
-
-export default Levels;
+}

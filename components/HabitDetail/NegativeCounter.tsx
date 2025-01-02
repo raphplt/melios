@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { useHabits } from "@context/HabitsContext";
 import { useTheme } from "@context/ThemeContext";
 import { CategoryTypeSelect } from "@utils/category.type";
@@ -8,10 +8,22 @@ import Animated, {
 	useAnimatedStyle,
 	withTiming,
 } from "react-native-reanimated";
+import { Timestamp } from "firebase/firestore";
+import { BlurView } from "expo-blur";
 
-const calculateTimeDifferences = (createAt: string) => {
+const calculateTimeDifferences = (
+	createAt: Timestamp | string | number | Date
+) => {
 	const now = new Date();
-	const createdAtDate = new Date(createAt);
+	let createdAtDate;
+
+	if (createAt instanceof Timestamp) {
+		createdAtDate = createAt.toDate();
+	} else if (typeof createAt === "string" || typeof createAt === "number") {
+		createdAtDate = new Date(createAt);
+	} else {
+		createdAtDate = new Date();
+	}
 
 	const diffInSeconds = Math.floor(
 		(now.getTime() - createdAtDate.getTime()) / 1000
@@ -35,7 +47,7 @@ const NegativeCounter = () => {
 	}
 
 	const [time, setTime] = useState(
-		calculateTimeDifferences(currentHabit.createAt.toString())
+		calculateTimeDifferences(currentHabit.createAt)
 	);
 
 	const secondProgress = useSharedValue(time.seconds);
@@ -43,14 +55,9 @@ const NegativeCounter = () => {
 	const dayProgress = useSharedValue(time.days);
 	const monthProgress = useSharedValue(time.months);
 
-	console.log("secondProgress", secondProgress);
-	console.log("minuteProgress", minuteProgress);
-	console.log("dayProgress", dayProgress);
-	console.log("monthProgress", monthProgress);
-
 	useEffect(() => {
 		const interval = setInterval(() => {
-			const newTime = calculateTimeDifferences(currentHabit.createAt.toString());
+			const newTime = calculateTimeDifferences(currentHabit.createAt);
 			setTime(newTime);
 
 			// Update animations
@@ -80,75 +87,62 @@ const NegativeCounter = () => {
 	}));
 
 	return (
-		<View style={styles.container}>
-			<Text style={[styles.label, { color: theme.colors.text }]}>
-				Time since creation : {currentHabit.createAt.toString()}
-			</Text>
-
-			<View style={styles.barContainer}>
-				<Text style={[styles.text, { color: theme.colors.text }]}>
-					Seconds: {time.seconds}
+		<BlurView
+			intensity={70}
+			className="w-11/12 mx-auto p-4 rounded-xl my-4 overflow-hidden"
+		>
+			<View className="p-4">
+				<Text
+					className="text-xl font-bold mb-4"
+					style={{ color: theme.colors.text }}
+				>
+					Bravo! You have been free for:
 				</Text>
-				<Animated.View style={[styles.bar, styles.secondBar, secondStyle]} />
-			</View>
+				<View className="mb-4">
+					<Text
+						className="text-sm mb-1"
+						style={{
+							color: theme.colors.text,
+						}}
+					>
+						Months: {time.months}
+					</Text>
+					<Animated.View
+						className="h-4 rounded-full bg-blue-500"
+						style={monthStyle}
+					/>
+				</View>
+				<View className="mb-4">
+					<Text className="text-sm mb-1" style={{ color: theme.colors.text }}>
+						Days: {time.days}
+					</Text>
+					<Animated.View
+						className="h-4 rounded-full bg-green-500"
+						style={dayStyle}
+					/>
+				</View>
+				<View className="mb-4">
+					<Text className="text-sm mb-1" style={{ color: theme.colors.text }}>
+						Minutes: {time.minutes}
+					</Text>
+					<Animated.View
+						className="h-4 rounded-full bg-orange-500"
+						style={minuteStyle}
+					/>
+				</View>
 
-			<View style={styles.barContainer}>
-				<Text style={[styles.text, { color: theme.colors.text }]}>
-					Minutes: {time.minutes}
-				</Text>
-				<Animated.View style={[styles.bar, styles.minuteBar, minuteStyle]} />
+				<View className="mb-4">
+					<Text className="text-sm mb-1" style={{ color: theme.colors.text }}>
+						Seconds: {time.seconds}
+					</Text>
+					<Animated.View
+						className="h-4 rounded-full bg-red-500"
+						style={secondStyle}
+					/>
+				</View>
 			</View>
-
-			<View style={styles.barContainer}>
-				<Text style={[styles.text, { color: theme.colors.text }]}>
-					Days: {time.days}
-				</Text>
-				<Animated.View style={[styles.bar, styles.dayBar, dayStyle]} />
-			</View>
-
-			<View style={styles.barContainer}>
-				<Text style={[styles.text, { color: theme.colors.text }]}>
-					Months: {time.months}
-				</Text>
-				<Animated.View style={[styles.bar, styles.monthBar, monthStyle]} />
-			</View>
-		</View>
+		</BlurView>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		padding: 16,
-	},
-	label: {
-		fontSize: 20,
-		fontWeight: "bold",
-		marginBottom: 16,
-	},
-	barContainer: {
-		marginBottom: 16,
-	},
-	text: {
-		marginBottom: 4,
-		fontSize: 14,
-	},
-	bar: {
-		height: 10,
-		borderRadius: 5,
-		backgroundColor: "#ccc",
-	},
-	secondBar: {
-		backgroundColor: "#ff4d4d",
-	},
-	minuteBar: {
-		backgroundColor: "#ff9933",
-	},
-	dayBar: {
-		backgroundColor: "#4caf50",
-	},
-	monthBar: {
-		backgroundColor: "#2196f3",
-	},
-});
 
 export default NegativeCounter;

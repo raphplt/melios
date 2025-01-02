@@ -138,5 +138,6 @@
     "moment": "Moment",
     "minutes": "minutes",
     "frequency": "Frequency",
-    "category_required": "Category is required."
+    "category_required": "Category is required.",
+    "relaunch": "Relaunch"
 }

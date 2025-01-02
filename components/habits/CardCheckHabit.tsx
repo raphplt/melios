@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { View, Pressable, Button } from "react-native";
+import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import {
@@ -29,10 +29,6 @@ import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
 import { CategoryTypeSelect } from "@utils/category.type";
 import { incrementStreak } from "@db/streaks";
-
-const formatDate = (date: Date) => {
-	return date.toISOString().split("T")[0];
-};
 
 function CardCheckHabit({
 	habit,
@@ -140,6 +136,7 @@ function CardCheckHabit({
 		}
 	};
 
+	const isNegative = habit.type === CategoryTypeSelect.negative;
 	return (
 		<ZoomableView>
 			<Animated.View
@@ -155,11 +152,7 @@ function CardCheckHabit({
 					<Ionicons
 						name={completed ? "checkmark-circle" : "ellipse-outline"}
 						size={30}
-						color={
-							habit.type === CategoryTypeSelect.negative
-								? theme.colors.redPrimary
-								: theme.colors.primary
-						}
+						color={isNegative ? theme.colors.redPrimary : theme.colors.primary}
 					/>
 				</Pressable>
 				<Pressable
@@ -168,14 +161,13 @@ function CardCheckHabit({
 					}}
 					style={{
 						backgroundColor: completed
-							? habit.type === CategoryTypeSelect.negative
+							? isNegative
 								? theme.colors.redSecondary
 								: theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
-						borderColor:
-							habit.type === CategoryTypeSelect.negative
-								? theme.colors.redPrimary
-								: theme.colors.cardBackground,
+						borderColor: isNegative
+							? theme.colors.redPrimary
+							: theme.colors.cardBackground,
 						borderWidth: 2,
 					}}
 					className="flex-1 flex flex-col rounded-xl"
@@ -234,10 +226,9 @@ function CardCheckHabit({
 									</Text>
 								</Pressable>
 
-								{habit.type === CategoryTypeSelect.negative ? null : !completed &&
-								  habit.duration ? (
+								{!completed && habit.duration ? (
 									<Pressable
-										onPress={startHabit}
+										onPress={isNegative ? setHabitDone : startHabit}
 										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
 										style={{
 											backgroundColor: theme.colors.primary,
@@ -245,9 +236,15 @@ function CardCheckHabit({
 											borderColor: theme.colors.primary,
 										}}
 									>
-										<Iconify icon="bi:play" color="white" size={20} />
+										{isNegative ? (
+											<Iconify icon="ri:reset-right-fill" color="white" size={20} />
+										) : (
+											<Iconify icon="bi:play" color="white" size={20} />
+										)}
 										<Text className="text-[16px] text-white font-semibold ml-2">
-											{t("start")}
+											{habit.type === CategoryTypeSelect.negative
+												? t("relaunch")
+												: t("start")}
 										</Text>
 									</Pressable>
 								) : (

@@ -6,6 +6,8 @@ import {
 	StatusBar,
 	Platform,
 	StyleSheet,
+	ScrollView,
+	Dimensions,
 } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,60 +43,14 @@ export interface DayStatus {
 export default function HabitDetail() {
 	const { currentHabit } = useHabits();
 	const { t } = useTranslation();
-
-	if (!currentHabit) return <LoaderScreen text={t("loading")} />;
-
-	// Contexts
 	const { theme } = useTheme();
-	const { timerSeconds, isTimerActive } = useTimer();
-	const { startTimer } = useHabitTimer();
-	const { sendPushNotification } = useNotifications();
-	const { expoPushToken } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const appState = useRef(AppState.currentState);
 	const { categories } = useHabits();
 
-	useEffect(() => {
-		const subscription = AppState.addEventListener(
-			"change",
-			handleAppStateChange
-		);
-		return () => subscription.remove();
-	}, []);
+	if (!currentHabit) return <LoaderScreen text={t("loading")} />;
 
-	const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-		if (
-			appState.current.match(/inactive|background/) &&
-			nextAppState === "active"
-		) {
-			const remainingSeconds = await AsyncStorage.getItem("timerSeconds");
-			if (remainingSeconds) {
-				startTimer(currentHabit);
-			}
-		} else if (nextAppState === "background") {
-			if (!expoPushToken) {
-				throw new Error("No expoPushToken");
-			}
-			sendPushNotification(expoPushToken, {
-				title: `${currentHabit.name || "Habitude"} en pause`,
-				body: `Cliquez pour revenir sur votre habitude en cours.`,
-			});
-			if (isTimerActive) {
-				await AsyncStorage.setItem("timerSeconds", timerSeconds.toString());
-
-				await Notifications.scheduleNotificationAsync({
-					content: {
-						title: "Minuteur en cours",
-						body: `Il reste ${formatTime(
-							timerSeconds
-						)} pour compléter votre habitude.`,
-					},
-					trigger: null,
-				});
-			}
-		}
-		appState.current = nextAppState;
-	};
+	const screenHeight = Dimensions.get("window").height; // Hauteur de l'écran
 
 	const lightenedColor = lightenColor(
 		currentHabit.color || theme.colors.primary,
@@ -121,7 +77,14 @@ export default function HabitDetail() {
 	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
 	return (
-		<View style={{ flex: 1 }}>
+		<ScrollView
+			style={{ flex: 1 }}
+			contentContainerStyle={{
+				minHeight: screenHeight,
+				flexGrow: 1,
+			}}
+			showsVerticalScrollIndicator={false}
+		>
 			<CachedImage
 				imagePath={imageUri || "images/categories/fitness.jpg"}
 				blurRadius={15}
@@ -137,17 +100,16 @@ export default function HabitDetail() {
 				<ButtonBack handleQuit={() => navigation.goBack()} color={textColor} />
 				<SettingsButton />
 			</View>
-			<View className="w-full mx-auto flex justify-center flex-col">
+			<View
+				className="w-full mx-auto flex justify-center flex-col"
+				style={{ flexGrow: 1 }}
+			>
 				<HabitDetailHeader />
-
 				<InfosPanel />
-
-				{/* <NegativeCounter /> */}
-
-				{/* Ajouter un timer depuis le début de l'ajout pour les habitudes négatives */}
+				<NegativeCounter />
 				<LastDays />
 				<ButtonsBox />
 			</View>
-		</View>
+		</ScrollView>
 	);
 }
