@@ -139,5 +139,9 @@
     "minutes": "minutes",
     "frequency": "Frequency",
     "category_required": "Category is required.",
-    "relaunch": "Relaunch"
+    "relaunch": "Relaunch",
+    "congratulations_free": "Congratulations! You have been free for:",
+    "months": "months",
+    "seconds": "seconds",
+    "restart": "Recommencer"
 }

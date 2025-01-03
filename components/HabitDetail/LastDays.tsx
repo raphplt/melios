@@ -3,7 +3,6 @@ import { Text, View, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { useState, useEffect } from "react";
 import { useTheme } from "@context/ThemeContext";
-import { UserHabit } from "@type/userHabit";
 import { DayStatus } from "../../app/habitDetail";
 import { getHabitLogs } from "@db/logs";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
@@ -12,6 +11,7 @@ import { BlurView } from "expo-blur";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHabits } from "@context/HabitsContext";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function LastDays() {
 	const { theme } = useTheme();
@@ -22,6 +22,10 @@ export default function LastDays() {
 	const [currentStreak, setCurrentStreak] = useState(0);
 
 	if (!currentHabit) return null;
+
+	if (currentHabit.type === CategoryTypeSelect.negative) {
+		return null;
+	}
 
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 

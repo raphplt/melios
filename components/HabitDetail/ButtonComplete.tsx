@@ -62,7 +62,9 @@ export default function ButtonComplete() {
 									color: theme.colors.text,
 								}}
 							>
-								{t("complete")}
+								{currentHabit.type === CategoryTypeSelect.negative
+									? t("restart")
+									: t("complete")}
 							</Text>
 
 							{currentHabit.type !== CategoryTypeSelect.negative && (

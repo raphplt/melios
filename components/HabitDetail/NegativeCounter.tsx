@@ -10,10 +10,19 @@ import Animated, {
 } from "react-native-reanimated";
 import { Timestamp } from "firebase/firestore";
 import { BlurView } from "expo-blur";
+import { useTranslation } from "react-i18next";
+
+type TimeDifferences = {
+	seconds: number;
+	minutes: number;
+	hours: number;
+	days: number;
+	months: number;
+};
 
 const calculateTimeDifferences = (
 	createAt: Timestamp | string | number | Date
-) => {
+): TimeDifferences => {
 	const now = new Date();
 	let createdAtDate;
 
@@ -38,15 +47,16 @@ const calculateTimeDifferences = (
 	};
 };
 
-const NegativeCounter = () => {
+const NegativeCounter: React.FC = () => {
 	const { currentHabit } = useHabits();
+	const { t } = useTranslation();
 	const { theme } = useTheme();
 
 	if (!currentHabit || currentHabit.type !== CategoryTypeSelect.negative) {
 		return null;
 	}
 
-	const [time, setTime] = useState(
+	const [time, setTime] = useState<TimeDifferences>(
 		calculateTimeDifferences(currentHabit.createAt)
 	);
 
@@ -70,79 +80,89 @@ const NegativeCounter = () => {
 		return () => clearInterval(interval);
 	}, [currentHabit.createAt]);
 
-	const secondStyle = useAnimatedStyle(() => ({
-		width: `${(secondProgress.value / 60) * 100}%`,
-	}));
+	const createProgressStyle = (
+		progressValue: Animated.SharedValue<number>,
+		maxValue: number
+	) =>
+		useAnimatedStyle(() => ({
+			width: `${(progressValue.value / maxValue) * 100}%`,
+		}));
 
-	const minuteStyle = useAnimatedStyle(() => ({
-		width: `${(minuteProgress.value / 60) * 100}%`,
-	}));
-
-	const dayStyle = useAnimatedStyle(() => ({
-		width: `${(dayProgress.value / 30) * 100}%`,
-	}));
-
-	const monthStyle = useAnimatedStyle(() => ({
-		width: `${(monthProgress.value / 12) * 100}%`,
-	}));
+	const secondStyle = createProgressStyle(secondProgress, 60);
+	const minuteStyle = createProgressStyle(minuteProgress, 60);
+	const dayStyle = createProgressStyle(dayProgress, 30);
+	const monthStyle = createProgressStyle(monthProgress, 12);
 
 	return (
 		<BlurView
 			intensity={70}
-			className="w-11/12 mx-auto p-4 rounded-xl my-4 overflow-hidden"
+			className="w-11/12 mx-auto p-4 rounded-xl my-2 overflow-hidden"
 		>
 			<View className="p-4">
 				<Text
 					className="text-xl font-bold mb-4"
 					style={{ color: theme.colors.text }}
 				>
-					Bravo! You have been free for:
+					{t("congratulations_free")}
 				</Text>
-				<View className="mb-4">
-					<Text
-						className="text-sm mb-1"
-						style={{
-							color: theme.colors.text,
-						}}
-					>
-						Months: {time.months}
-					</Text>
-					<Animated.View
-						className="h-4 rounded-full bg-blue-500"
-						style={monthStyle}
-					/>
-				</View>
-				<View className="mb-4">
-					<Text className="text-sm mb-1" style={{ color: theme.colors.text }}>
-						Days: {time.days}
-					</Text>
-					<Animated.View
-						className="h-4 rounded-full bg-green-500"
-						style={dayStyle}
-					/>
-				</View>
-				<View className="mb-4">
-					<Text className="text-sm mb-1" style={{ color: theme.colors.text }}>
-						Minutes: {time.minutes}
-					</Text>
-					<Animated.View
-						className="h-4 rounded-full bg-orange-500"
-						style={minuteStyle}
-					/>
-				</View>
-
-				<View className="mb-4">
-					<Text className="text-sm mb-1" style={{ color: theme.colors.text }}>
-						Seconds: {time.seconds}
-					</Text>
-					<Animated.View
-						className="h-4 rounded-full bg-red-500"
-						style={secondStyle}
-					/>
-				</View>
+				<ProgressBar
+					label={t("months")}
+					value={time.months}
+					style={monthStyle}
+					theme={theme}
+				/>
+				<ProgressBar
+					label={t("days")}
+					value={time.days}
+					style={dayStyle}
+					theme={theme}
+				/>
+				<ProgressBar
+					label={t("minutes")}
+					value={time.minutes}
+					style={minuteStyle}
+					theme={theme}
+				/>
+				<ProgressBar
+					label={t("seconds")}
+					value={time.seconds}
+					style={secondStyle}
+					theme={theme}
+				/>
 			</View>
 		</BlurView>
 	);
 };
+
+type ProgressBarProps = {
+	label: string;
+	value: number;
+	style: ReturnType<typeof useAnimatedStyle>;
+	theme: any;
+};
+
+const ProgressBar: React.FC<ProgressBarProps> = ({
+	label,
+	value,
+	style,
+	theme,
+}) => (
+	<View className="mb-4">
+		<Text className="font-semibold pb-2" style={{ color: theme.colors.text }}>
+			{value} {label}
+		</Text>
+		<View
+			className="h-4 rounded-lg border"
+			style={{
+				backgroundColor: theme.colors.cardBackground,
+			}}
+		>
+			<Animated.View
+				className="h-full rounded-lg"
+				style={[style, { backgroundColor: theme.colors.primary }]}
+			/>
+		</View>
+	</View>
+);
 
 export default NegativeCounter;
