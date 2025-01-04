@@ -1,10 +1,13 @@
+import { useData } from "@context/DataContext";
 import React from "react";
 import { Text, View } from "react-native";
 
 const Pack = () => {
+	const { selectedPack } = useData();
 	return (
 		<View>
-			<Text>Pack</Text>
+			<Text>{selectedPack?.name}</Text>
+			<Text>{selectedPack?.image}</Text>
 		</View>
 	);
 };

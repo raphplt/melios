@@ -61,6 +61,7 @@ export default function CosmeticPreviewStacked() {
 					flex: 1,
 					justifyContent: "center",
 					alignItems: "center",
+					borderRadius: 10,
 				}}
 				className="flex flex-row items-center justify-center w-[95%] h-40 mx-auto rounded-lg shadow-md"
 			>

@@ -9,12 +9,14 @@ import { Iconify } from "react-native-iconify";
 import * as Progress from "react-native-progress";
 import { useData } from "@context/DataContext";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
+import { useTranslation } from "react-i18next";
 
 export default function MarketCosmetics() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);
 	const { theme } = useTheme();
 	const [loading, setLoading] = useState(true);
 	const { points } = useData();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		async function fetchCosmetics() {
@@ -47,7 +49,7 @@ export default function MarketCosmetics() {
 							}}
 							className="text-lg font-bold mr-3"
 						>
-							Mes points
+							{t("my_points")}
 						</Text>
 						<View className="flex flex-row items-center justify-start">
 							<Text

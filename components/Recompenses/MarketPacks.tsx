@@ -1,13 +1,40 @@
+import { useEffect, useState } from "react";
 import { useTheme } from "@context/ThemeContext";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { Iconify } from "react-native-iconify";
 import PackItem from "./PackItem";
-import { packs } from "@constants/packs";
 import { useTranslation } from "react-i18next";
+import { getAllPacks } from "@db/packs";
+import { Pack } from "@type/pack";
 
 export default function MarketPacks() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const [packs, setPacks] = useState<Pack[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchPacks = async () => {
+			try {
+				const data = await getAllPacks({ forceRefresh: true });
+				setPacks(data);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des packs :", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchPacks();
+	}, []);
+
+	if (loading) {
+		return (
+			<View className="py-10">
+				<ActivityIndicator size="large" color={theme.colors.primary} />
+			</View>
+		);
+	}
 
 	return (
 		<View

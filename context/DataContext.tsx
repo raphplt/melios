@@ -33,6 +33,7 @@ import { Reward } from "@type/reward";
 import { Streak } from "@type/streak";
 import { getUserStreak, initializeStreak } from "@db/streaks";
 import { useHabits } from "./HabitsContext";
+import { Pack } from "@type/pack";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -58,6 +59,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [logs, setLogs] = useState<Log[]>([]);
 	const [usersLevels, setUsersLevels] = useState<UserLevel[]>([]);
 	const [selectedLevel, setSelectedLevel] = useState<CombinedLevel | null>(null);
+	const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
 	const [streak, setStreak] = useState<Streak | null>(null);
 
 	// Progression
@@ -220,6 +222,8 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				setUsersLevels,
 				selectedLevel,
 				setSelectedLevel,
+				selectedPack,
+				setSelectedPack,
 			}}
 		>
 			{children}

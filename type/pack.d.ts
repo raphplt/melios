@@ -1,16 +1,16 @@
 export type Pack = {
 	name: string;
 	description: string;
-	image?: string;
-	color?: string;
 	price: number;
-	items?: PackItem[];
+	image: string;
+	category: string;
+	color: string;
+	content: {
+		sections: Section[];
+	};
 };
 
-export type PackItem = {
+type Section = {
 	title: string;
-	description: string;
-	image?: string;
-	icon?: string;
-	trick?: string;
+	details: string[];
 };

@@ -6,6 +6,7 @@ import { Member } from "./member";
 import { Log } from "./log";
 import { CombinedLevel, GenericLevel, UserLevel } from "./levels";
 import { Streak } from "./streak";
+import { Pack } from "./pack";
 
 interface DataContextType {
 	date: string;
@@ -33,4 +34,6 @@ interface DataContextType {
 	setUsersLevels: React.Dispatch<React.SetStateAction<UserLevel[]>>;
 	selectedLevel: CombinedLevel | null;
 	setSelectedLevel: React.Dispatch<React.SetStateAction<CombinedLevel | null>>;
+	selectedPack: Pack | null;
+	setSelectedPack: React.Dispatch<React.SetStateAction<Pack | null>>;
 }
