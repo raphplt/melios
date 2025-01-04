@@ -4,13 +4,16 @@ import { useTheme } from "@context/ThemeContext";
 import { Pack } from "@type/pack";
 import { View, Text, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 export default function PackItem({ pack }: { pack: Pack }) {
 	const { theme } = useTheme();
 	const [buttonText, setButtonText] = useState("Découvrir");
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const handlePress = () => {
-		setButtonText("Bientôt disponible");
+		navigation.navigate("pack");
 	};
 
 	return (
@@ -32,17 +35,6 @@ export default function PackItem({ pack }: { pack: Pack }) {
 				>
 					{pack.name}
 				</Text>
-				{/* <View className="flex flex-row items-center">
-					<Text
-						className="font-semibold mx-1 text-[16px]"
-						style={{
-							color: theme.colors.textTertiary,
-						}}
-					>
-						{pack.price}
-					</Text>
-					<MoneyMelios />
-				</View> */}
 			</View>
 			<Text
 				style={{

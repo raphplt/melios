@@ -131,6 +131,10 @@ function MainNavigator() {
 						options={{ title: "Liste d'amis", headerShown: false }}
 					/>
 					<Stack.Screen
+						name="pack"
+						options={{ title: "Pack", headerShadowVisible: false }}
+					/>
+					<Stack.Screen
 						name="cosmeticShop"
 						options={{
 							title: "Boutique cosmétique",
