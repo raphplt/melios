@@ -29,6 +29,7 @@ import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
 import { CategoryTypeSelect } from "@utils/category.type";
 import { incrementStreak } from "@db/streaks";
+import RestartHabit from "@components/Modals/RestartHabit";
 
 function CardCheckHabit({
 	habit,
@@ -49,6 +50,7 @@ function CardCheckHabit({
 	// États
 	const [showDetails, setShowDetails] = useState(false);
 	const [completed, setCompleted] = useState(false);
+	const [showModalNegative, setShowModalNegative] = useState(false);
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
@@ -137,6 +139,15 @@ function CardCheckHabit({
 	};
 
 	const isNegative = habit.type === CategoryTypeSelect.negative;
+
+	const handlePress = () => {
+		if (isNegative) {
+			setShowModalNegative(true);
+		} else {
+			setHabitDone();
+		}
+	};
+
 	return (
 		<ZoomableView>
 			<Animated.View
@@ -144,7 +155,7 @@ function CardCheckHabit({
 				className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
 			>
 				<Pressable
-					onPress={setHabitDone}
+					onPress={handlePress}
 					className="flex items-center justify-center"
 					disabled={completed}
 					style={{ flexBasis: "12.5%" }}
@@ -267,6 +278,11 @@ function CardCheckHabit({
 					</Animated.View>
 				</Pressable>
 			</Animated.View>
+			<RestartHabit
+				visible={showModalNegative}
+				setVisible={setShowModalNegative}
+				habit={habit}
+			/>
 		</ZoomableView>
 	);
 }

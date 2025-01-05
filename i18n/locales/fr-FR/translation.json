@@ -149,5 +149,6 @@
     "unlock": "Débloquer",
     "coming_soon_message": "Bientôt disponible",
     "coming_soon_description": "Ce pack sera bientôt disponible. Restez à l'écoute!",
-    "ok": "OK"
+    "ok": "OK",
+    "restart_habit_question": "Êtes-vous sûr de vouloir redémarrer cette habitude ?"
 }

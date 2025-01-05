@@ -5,6 +5,7 @@ import { Modal, View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useTranslation } from "react-i18next";
+import React from "react";
 
 export default function SoundsModal({
 	visible,

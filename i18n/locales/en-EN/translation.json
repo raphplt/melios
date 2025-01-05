@@ -148,5 +148,6 @@
     "see_more": "See more",
     "unlock": "Unlock",
     "coming_soon_message": "Coming soon",
-    "coming_soon_description": "This feature is not available yet. Stay tuned!"
+    "coming_soon_description": "This feature is not available yet. Stay tuned!",
+    "restart_habit_question": "Are you sure you want to restart this habit?"
 }
