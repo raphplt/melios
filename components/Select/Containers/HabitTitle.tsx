@@ -4,6 +4,7 @@ import { useTheme } from "@context/ThemeContext";
 import { useSelect } from "@context/SelectContext";
 import { BlurView } from "expo-blur";
 import { Iconify } from "react-native-iconify";
+import React from "react";
 
 export default function HabitTitle({
 	register,

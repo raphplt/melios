@@ -14,6 +14,8 @@ import {
 import { db, auth } from ".";
 import { getMemberInfos, getMemberProfileByUid } from "./member";
 import { getHabitById } from "./userHabit";
+import { UserHabit } from "@type/userHabit";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 /**
  *  Ajoute un log pour une habitude donnée
@@ -174,7 +176,12 @@ export const getAllUsersLogsPaginated = async (
 			querySnapshot.docs.map(async (doc) => {
 				const logData = doc.data();
 				const memberInfo = await getMemberProfileByUid(logData.uid);
-				const habitInfo = await getHabitById(logData.habitId);
+				const habitInfo = (await getHabitById(logData.habitId)) as any;
+
+				// Si l'habitude est négative, on ne la retourne pas
+				if (habitInfo.type && habitInfo.type === CategoryTypeSelect.negative) {
+					return null;
+				}
 
 				// Si l'activité est confidentielle, on ne la retourne pas
 				if (memberInfo?.activityConfidentiality === "private") {

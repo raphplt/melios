@@ -145,5 +145,9 @@
     "seconds": "secondes",
     "restart": "Redémarrer",
     "my_points": "Mes points",
-    "see_more": "Voir plus"
+    "see_more": "Voir plus",
+    "unlock": "Débloquer",
+    "coming_soon_message": "Bientôt disponible",
+    "coming_soon_description": "Ce pack sera bientôt disponible. Restez à l'écoute!",
+    "ok": "OK"
 }

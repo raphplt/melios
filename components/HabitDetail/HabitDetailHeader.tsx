@@ -1,9 +1,8 @@
 import { useHabits } from "@context/HabitsContext";
 import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { UserHabit } from "@type/userHabit";
 import { BlurView } from "expo-blur";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 
 export default function HabitDetailHeader() {
 	const { theme } = useTheme();
