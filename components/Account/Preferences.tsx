@@ -57,10 +57,6 @@ export default function Preferences() {
 	};
 
 	const confirmLogout = async () => {
-		setHabits([]);
-		setPoints({ odyssee: 0, rewards: 0 });
-		setMember(undefined);
-		setModalVisible(false);
 		await disconnectUser();
 	};
 
