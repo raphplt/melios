@@ -176,26 +176,41 @@ export const getAllUsersLogsPaginated = async (
 			querySnapshot.docs.map(async (doc) => {
 				const logData = doc.data();
 				const memberInfo = await getMemberProfileByUid(logData.uid);
-				const habitInfo = (await getHabitById(logData.habitId)) as any;
+
+				const habitInfo: UserHabit = (await getHabitById(logData.habitId)) as any;
+
+				// Vérifier si habitInfo est null
+				if (!habitInfo) {
+					console.log(
+						`Aucun document trouvé pour l'ID d'habitude: ${logData.habitId}`
+					);
+					return null;
+				}
 
 				// Si l'habitude est négative, on ne la retourne pas
 				if (habitInfo.type && habitInfo.type === CategoryTypeSelect.negative) {
 					return null;
 				}
 
-				// Si l'activité est confidentielle, on ne la retourne pas
-				if (memberInfo?.activityConfidentiality === "private") {
+				// Vérifier si memberInfo est null
+				if (!memberInfo) {
+					console.log(`Aucun document trouvé pour l'ID de membre: ${logData.uid}`);
 					return null;
 				}
 
-				if (memberInfo?.activityConfidentiality === "friends") {
+				// Si l'activité est confidentielle, on ne la retourne pas
+				if (memberInfo.activityConfidentiality === "private") {
+					return null;
+				}
+
+				if (memberInfo.activityConfidentiality === "friends") {
 					if (!friends.includes(memberInfo.uid)) {
 						return null;
 					}
 				}
 
 				if (confidentiality === "friends") {
-					if (memberInfo && !friends.includes(memberInfo.uid)) {
+					if (!friends.includes(memberInfo.uid)) {
 						return null;
 					}
 				}
