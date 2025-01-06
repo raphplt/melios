@@ -4,6 +4,7 @@ import { View, Pressable, Text } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { Iconify } from "react-native-iconify";
 
 export default function RestartHabit({
 	visible,
@@ -20,9 +21,9 @@ export default function RestartHabit({
 
 	return (
 		<ModalWrapper visible={visible} setVisible={setVisible}>
-			<View className="w-11/12 mx-auto">
+			<View className="w-[95%] mx-auto">
 				<Text
-					className=" text-lg font-semibold mb-4"
+					className=" text-lg font-semibold mb-4 pr-5"
 					style={{
 						color: theme.colors.text,
 						fontFamily: "BaskervilleBold",
@@ -33,7 +34,7 @@ export default function RestartHabit({
 				<Text
 					className=" text-lg font-semibold mb-4"
 					style={{
-						color: habit.color || theme.colors.text,
+						color: theme.colors.text,
 					}}
 				>
 					{habit.name}
@@ -57,7 +58,7 @@ export default function RestartHabit({
 							borderColor: theme.colors.primary,
 						}}
 					>
-						<FontAwesome6 name="times" size={20} color="white" />
+						<Iconify icon="mdi:close" size={20} color="white" />
 						<Text className="text-[16px] font-semibold ml-2 text-white">
 							{t("cancel")}
 						</Text>
@@ -66,9 +67,9 @@ export default function RestartHabit({
 						onPress={() => setVisible(false)}
 						className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
 						style={{
-							backgroundColor: theme.colors.primary,
+							backgroundColor: theme.colors.redPrimary,
 							borderWidth: 2,
-							borderColor: theme.colors.primary,
+							borderColor: theme.colors.redPrimary,
 						}}
 					>
 						<FontAwesome6 name="check" size={20} color="white" />

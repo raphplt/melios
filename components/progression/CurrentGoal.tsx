@@ -12,13 +12,13 @@ import * as Progress from "react-native-progress";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { getHabitLogs } from "@db/logs";
 import { useTranslation } from "react-i18next";
-import { useData } from "@context/DataContext";
+import { deleteMemberGoal } from "@db/goal";
+import { useGoal } from "@context/GoalsContext";
 
 export default function CurrentGoal({ goal }: { goal: Goal }) {
 	const { width } = Dimensions.get("window");
 	const { getUserHabitDetails, userHabits } = useIndex();
 	const { theme } = useTheme();
-	const { habits } = useData();
 	const { t } = useTranslation();
 
 	const [userHabit, setUserHabit] = useState<UserHabit>();
@@ -26,6 +26,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 	const [isCompletedToday, setIsCompletedToday] = useState(false);
 	const [isGoalMissed, setIsGoalMissed] = useState(false);
 	const [completedDays, setCompletedDays] = useState<Date[]>([]);
+	const { goals, setGoals } = useGoal();
 
 	// State for modal
 	const [visible, setVisible] = useState(false);
@@ -91,7 +92,6 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 	}, [userHabit, goal]);
 
 	if (!userHabit) {
-		// console.error("Habit not found");
 		return null;
 	}
 
@@ -106,6 +106,17 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 	} else {
 		streakColor = theme.colors.yellowPrimary;
 	}
+
+	const handleDelete = async () => {
+		try {
+			await deleteMemberGoal(goal.memberId, goal.id);
+			setVisible(false);
+			const newGoals = goals.filter((g) => g.id !== goal.id);
+			setGoals(newGoals);
+		} catch (error) {
+			console.error("Erreur lors de la suppression de l'objectif: ", error);
+		}
+	};
 
 	return (
 		<View className="flex-1 my-2" style={{ width: width }}>
@@ -164,9 +175,9 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 						/>
 					)}
 				</View>
-				<View className="flex flex-row items-center justify-between">
-					{!isGoalMissed && (
-						<View className="flex items-center justify-start flex-row py-2">
+				<View className="flex flex-row items-center justify-between py-1">
+					{!isGoalMissed ? (
+						<View className="flex items-center justify-start flex-row ">
 							<Ionicons
 								name={isCompletedToday ? "checkmark-circle" : "ellipse-outline"}
 								size={20}
@@ -185,6 +196,16 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 								{t("today")}
 							</Text>
 						</View>
+					) : (
+						<Pressable
+							onPress={handleDelete}
+							style={{
+								backgroundColor: theme.colors.redSecondary,
+							}}
+							className="p-1 rounded-xl"
+						>
+							<Iconify icon="mdi:trash" size={24} color={theme.colors.redPrimary} />
+						</Pressable>
 					)}
 
 					<View className="flex flex-row items-center">
