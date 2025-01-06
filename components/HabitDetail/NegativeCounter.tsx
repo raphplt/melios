@@ -56,8 +56,14 @@ const NegativeCounter: React.FC = () => {
 		return null;
 	}
 
+	const date = currentHabit.resetAt
+		? currentHabit.resetAt
+		: currentHabit.createAt
+		? currentHabit.createAt
+		: new Date();
+
 	const [time, setTime] = useState<TimeDifferences>(
-		calculateTimeDifferences(currentHabit.createAt)
+		calculateTimeDifferences(date)
 	);
 
 	const secondProgress = useSharedValue(time.seconds);
@@ -67,7 +73,7 @@ const NegativeCounter: React.FC = () => {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			const newTime = calculateTimeDifferences(currentHabit.createAt);
+			const newTime = calculateTimeDifferences(date);
 			setTime(newTime);
 
 			// Update animations

@@ -5,6 +5,9 @@ import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Iconify } from "react-native-iconify";
+import { resetHabit } from "@db/userHabit";
+import { setHabitLog } from "@db/logs";
+import { useData } from "@context/DataContext";
 
 export default function RestartHabit({
 	visible,
@@ -16,8 +19,21 @@ export default function RestartHabit({
 	habit: UserHabit;
 }) {
 	const { theme } = useTheme();
-	// const {}
 	const { t } = useTranslation();
+
+	const { date, setCompletedHabitsToday } = useData();
+	const handleReset = async () => {
+		try {
+			await resetHabit(habit.id);
+			await setHabitLog(habit.id, date);
+
+			setCompletedHabitsToday((prev) => [...prev, habit]);
+
+			setVisible(false);
+		} catch (error) {
+			console.error("Erreur lors de la réinitialisation de l'habitude: ", error);
+		}
+	};
 
 	return (
 		<ModalWrapper visible={visible} setVisible={setVisible}>
@@ -64,7 +80,7 @@ export default function RestartHabit({
 						</Text>
 					</Pressable>
 					<Pressable
-						onPress={() => setVisible(false)}
+						onPress={handleReset}
 						className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
 						style={{
 							backgroundColor: theme.colors.redPrimary,

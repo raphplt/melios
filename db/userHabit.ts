@@ -7,6 +7,7 @@ import {
 	where,
 	deleteDoc,
 	getDoc,
+	updateDoc,
 } from "firebase/firestore";
 import { auth, db } from ".";
 import { FieldValues } from "react-hook-form";
@@ -106,6 +107,19 @@ export const getHabitById = async (habitId: string) => {
 		return { id: habitDoc.id, ...habitDoc.data() };
 	} catch (error) {
 		console.error("Erreur lors de la récupération de l'habitude: ", error);
+		throw error;
+	}
+};
+
+export const resetHabit = async (habitId: string) => {
+	try {
+		const habitDocRef = doc(db, "userHabits", habitId);
+		await updateDoc(habitDocRef, {
+			resetAt: new Date(),
+		});
+		console.log(`Habitude avec l'ID ${habitId} réinitialisée avec succès`);
+	} catch (error) {
+		console.error("Erreur lors de la réinitialisation de l'habitude: ", error);
 		throw error;
 	}
 };
