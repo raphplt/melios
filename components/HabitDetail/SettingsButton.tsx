@@ -90,14 +90,13 @@ export default function ButtonBack() {
 						className="flex flex-row items-center justify-center w-fit mx-2"
 						style={[animatedStyle]}
 					>
-						<Pressable
+						{/* <Pressable
 							className={buttonStyle}
 							onPress={() => {
-								/* Action pour éditer */
 							}}
 						>
 							<Iconify icon="mdi:pencil" size={24} color={textColor} />
-						</Pressable>
+						</Pressable> */}
 						<Pressable
 							className={buttonStyle}
 							onPress={() => {

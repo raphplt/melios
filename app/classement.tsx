@@ -95,20 +95,33 @@ export default function Classement() {
 			</View>
 
 			<LinearGradient
-				colors={[theme.colors.yellowSecondary, theme.colors.greenSecondary]}
+				colors={[theme.colors.redSecondary, theme.colors.blueSecondary]}
 				style={{
 					borderRadius: 10,
 					padding: 5,
+					width: "92%",
+					marginTop: 10,
+					marginBottom: 10,
+					paddingTop: 20,
+					paddingBottom: 20,
+					margin: "auto",
 				}}
 				start={[0, 0]}
-				className="w-11/12 mx-auto my-3 py-6"
 			>
 				<View className="flex flex-row items-center justify-center ">
-					<Iconify icon="mdi:fire" size={24} color={theme.colors.redPrimary} />
+					<Iconify
+						icon="mingcute:snow-fill"
+						size={24}
+						color={theme.colors.bluePrimary}
+					/>
 					<Text style={{}} className="text-center text-lg font-semibold mx-3">
 						{t("current_season")} : {maj(currentMonth)}
 					</Text>
-					<Iconify icon="mdi:fire" size={24} color={theme.colors.redPrimary} />
+					<Iconify
+						icon="mingcute:snow-fill"
+						size={24}
+						color={theme.colors.bluePrimary}
+					/>
 				</View>
 			</LinearGradient>
 
