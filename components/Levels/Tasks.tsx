@@ -22,7 +22,7 @@ const Tasks = () => {
 	const filteredHabits = habits.filter((habit) => {
 		const category = categories.find(
 			(category) => category.category === habit.category
-		);
+		) || { id: "" };
 		const categoryId = category?.id || "";
 		const categoryIdNumber = Number(categoryId);
 		const isIncluded = selectedLevel.associatedCategoryIds.includes(

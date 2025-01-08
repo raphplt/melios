@@ -63,6 +63,10 @@ export default function LastDays() {
 
 	const calculateCurrentStreak = (days: DayStatus[]) => {
 		let streak = 0;
+		if (days.length === 0) {
+			setCurrentStreak(streak);
+			return;
+		}
 
 		for (let i = 0; i < days.length; i++) {
 			if (days[i].done) {
@@ -99,6 +103,7 @@ export default function LastDays() {
 				style={{
 					overflow: "hidden",
 				}}
+				tint="light"
 			>
 				<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 pb-1">
 					<View className="flex flex-row items-center">

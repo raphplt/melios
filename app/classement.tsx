@@ -36,7 +36,7 @@ export default function Classement() {
 				lastVisibleDoc
 			);
 
-			if (rewards.length < 10) setHasMoreRewards(false);
+			if (rewards && rewards.length < 10) setHasMoreRewards(false);
 
 			setUsersRewards((prevRewards: any) => {
 				const newRewards = isRefreshing ? rewards : [...prevRewards, ...rewards];

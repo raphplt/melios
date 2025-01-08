@@ -42,6 +42,7 @@ export default function InfosPanel() {
 			style={{
 				overflow: "hidden",
 			}}
+			tint="light"
 		>
 			<Text
 				style={{

@@ -14,9 +14,11 @@ export default function EditHabits() {
 	const { habits } = useData();
 	const [searchText, setSearchText] = useState("");
 
-	const filteredHabits = habits.filter((habit: UserHabit) =>
-		habit.name.toLowerCase().includes(searchText.toLowerCase())
-	);
+	const filteredHabits =
+		habits &&
+		habits.filter((habit: UserHabit) =>
+			habit.name.toLowerCase().includes(searchText.toLowerCase())
+		);
 
 	return (
 		<View style={{ backgroundColor: theme.colors.background }} className="flex-1">

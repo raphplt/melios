@@ -19,6 +19,7 @@ export default function HabitDetailHeader() {
 			style={{
 				overflow: "hidden",
 			}}
+			tint="light"
 		>
 			<FontAwesome6
 				name={currentHabit.icon || "question"}

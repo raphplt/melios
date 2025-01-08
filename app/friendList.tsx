@@ -37,7 +37,7 @@ const FriendList = () => {
 				member
 			);
 
-			if (newMembers.length < 10) setHasMoreMembers(false);
+			if (newMembers && newMembers.length < 10) setHasMoreMembers(false);
 
 			setMembers((prevMembers: any) => {
 				const updatedMembers = isRefreshing

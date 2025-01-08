@@ -103,6 +103,7 @@ const NegativeCounter: React.FC = () => {
 		<BlurView
 			intensity={70}
 			className="w-11/12 mx-auto p-4 rounded-xl my-2 overflow-hidden"
+			tint="light"
 		>
 			<View className="p-4">
 				<Text

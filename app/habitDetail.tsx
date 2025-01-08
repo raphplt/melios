@@ -101,7 +101,7 @@ export default function HabitDetail() {
 				<SettingsButton />
 			</View>
 			<View
-				className="w-full mx-auto flex justify-center flex-col"
+				className="w-full mx-auto flex justify-start flex-col"
 				style={{ flexGrow: 1 }}
 			>
 				<HabitDetailHeader />
