@@ -5,23 +5,28 @@ import {
 	FlatList,
 	ActivityIndicator,
 	Pressable,
+	TextInput,
 } from "react-native";
 import { getMembersPaginated } from "@db/member";
 import { Member } from "@type/member";
 import Friend from "@components/Agora/Friend";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
+import { useTranslation } from "react-i18next";
+import { Iconify } from "react-native-iconify";
 
 const FriendList = () => {
 	const { member } = useData();
 	const { theme } = useTheme();
 	const [members, setMembers] = useState<Member[]>([]);
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState(true);
 	const [lastVisibleDoc, setLastVisibleDoc] = useState<any>(null);
 	const [hasMoreMembers, setHasMoreMembers] = useState(true);
 	const [filter, setFilter] = useState<"all" | "friends" | "received" | "sent">(
 		"all"
 	);
+	const [searchQuery, setSearchQuery] = useState<string>("");
 
 	const fetchMembers = async (isRefreshing = false) => {
 		try {
@@ -70,21 +75,15 @@ const FriendList = () => {
 
 	const filteredMembers = members.filter((m) => {
 		if (!member) return false;
-		if (filter === "friends") {
-			return member.friends?.includes(m.uid);
-		} else if (filter === "received") {
-			return member.friendRequestsReceived?.includes(m.uid);
-		} else if (filter === "sent") {
-			return member.friendRequestsSent?.includes(m.uid);
-		} else if (filter === "all") {
-			return (
-				!member.friends?.includes(m.uid) &&
-				!member.friendRequestsReceived?.includes(m.uid) &&
-				!member.friendRequestsSent?.includes(m.uid)
-			);
-		} else {
-			return true;
-		}
+		const isCurrentUser = m.uid === member.uid;
+		const isFriend = member.friends?.includes(m.uid);
+		const matchesFilter =
+			(filter === "all" && !isFriend) ||
+			(filter === "friends" && isFriend) ||
+			(filter === "received" && member.friendRequestsReceived?.includes(m.uid)) ||
+			(filter === "sent" && member.friendRequestsSent?.includes(m.uid));
+		const matchesSearch = m.nom.toLowerCase().includes(searchQuery.toLowerCase());
+		return !isCurrentUser && matchesFilter && matchesSearch;
 	});
 
 	if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
@@ -107,7 +106,7 @@ const FriendList = () => {
 							color: filter === "all" ? theme.colors.textSecondary : theme.colors.text,
 						}}
 					>
-						Tous
+						{t("all")}
 					</Text>
 				</Pressable>
 				<Pressable
@@ -127,7 +126,7 @@ const FriendList = () => {
 						}}
 						className="text-sm"
 					>
-						Amis ({member?.friends?.length || 0})
+						{t("friends")} ({member?.friends?.length || 0})
 					</Text>
 				</Pressable>
 				<Pressable
@@ -146,7 +145,7 @@ const FriendList = () => {
 								filter === "received" ? theme.colors.textSecondary : theme.colors.text,
 						}}
 					>
-						Reçues ({member?.friendRequestsReceived?.length || 0})
+						{t("received")} ({member?.friendRequestsReceived?.length || 0})
 					</Text>
 				</Pressable>
 				<Pressable
@@ -163,10 +162,26 @@ const FriendList = () => {
 								filter === "sent" ? theme.colors.textSecondary : theme.colors.text,
 						}}
 					>
-						Envoyées ({member?.friendRequestsSent?.length || 0})
+						{t("sent")} ({member?.friendRequestsSent?.length || 0})
 					</Text>
 				</Pressable>
 			</View>
+			<View className="flex flex-row items-center justify-center mb-4 w-11/12 mx-auto">
+				<TextInput
+					placeholder={t("search_friend")}
+					value={searchQuery}
+					onChangeText={setSearchQuery}
+					style={{
+						borderRadius: 8,
+						padding: 8,
+						backgroundColor: theme.colors.cardBackground,
+						width: "90%",
+					}}
+					className="mr-2"
+				/>
+				<Iconify icon="mdi:search" size={24} color={theme.colors.text} />
+			</View>
+
 			<FlatList
 				data={filteredMembers}
 				numColumns={2}
@@ -177,7 +192,16 @@ const FriendList = () => {
 				onEndReachedThreshold={0.5}
 				className="w-[95%] mx-auto"
 				ListFooterComponent={
-					hasMoreMembers ? <ActivityIndicator size="large" color="#0000ff" /> : null
+					loading && hasMoreMembers ? (
+						<ActivityIndicator size="large" color="#0000ff" />
+					) : null
+				}
+				ListEmptyComponent={
+					!loading ? (
+						<Text style={{ textAlign: "center", marginTop: 20 }}>
+							{t("no_results")}
+						</Text>
+					) : null
 				}
 			/>
 		</View>

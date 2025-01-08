@@ -155,5 +155,12 @@
     "morning": "Matin",
     "afternoon": "Après-midi",
     "evening": "Soir",
-    "add_habit": "Ajouter une habitude"
+    "add_habit": "Ajouter une habitude",
+    "all": "Tous",
+    "sent": "Envoyés",
+    "received": "Reçus",
+    "no_friends": "Aucun ami",
+    "no_results": "Aucun résultat",
+    "search_friend": "Rechercher un ami",
+    "is_friend": "Ami"
 }

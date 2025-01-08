@@ -154,5 +154,11 @@
     "morning": "Morning",
     "afternoon": "Afternoon",
     "evening": "Evening",
-    "add_habit": "Add a habit"
+    "add_habit": "Add a habit",
+    "all": "All",
+    "sent": "Sent",
+    "received": "Received",
+    "no_results": "No results",
+    "search_friend": "Search a friend",
+    "is_friend": "Friend"
 }

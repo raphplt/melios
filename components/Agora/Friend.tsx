@@ -118,9 +118,8 @@ const Friend = ({ member }: Props) => {
 		<View
 			className="flex flex-col items-center justify-between w-[47%] p-2 my-2 rounded-lg mx-auto"
 			style={{
-				backgroundColor: theme.colors.cardBackground,
-				borderColor: theme.colors.border,
-				borderWidth: 1,
+				borderColor: theme.colors.primary,
+				borderWidth: 2,
 			}}
 		>
 			<CachedImage
@@ -137,7 +136,22 @@ const Friend = ({ member }: Props) => {
 			</Text>
 			{loading ? (
 				<ActivityIndicator size="small" color={theme.colors.primary} />
-			) : isFriend ? null : requestSent ? (
+			) : isFriend ? (
+				<View
+					className="flex flex-row items-center justify-evenly rounded-lg w-fit py-1 px-4"
+					style={{ backgroundColor: theme.colors.primary }}
+				>
+					<Iconify icon="mdi:account-check" size={20} color="white" />
+					<Text
+						style={{
+							color: theme.colors.textSecondary,
+						}}
+						className="text-center py-[2px] ml-2"
+					>
+						{t("is_friend")}
+					</Text>
+				</View>
+			) : requestSent ? (
 				<Text
 					style={{
 						color: theme.colors.textTertiary,

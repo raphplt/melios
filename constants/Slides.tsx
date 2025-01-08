@@ -14,7 +14,7 @@ export interface Question {
 
 export const Questions: Question[] = [
 	{
-		question: "Quel est votre nom ?",
+		question: "Quel est votre pseudo ?",
 		slug: "nom",
 		answers: [],
 		questionType: "Text",
