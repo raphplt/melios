@@ -29,8 +29,13 @@ const LevelDetail = () => {
 				]}
 				style={{
 					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+					position: "absolute",
+					top: 0,
+					left: 0,
+					right: 0,
+					height: 300,
+					width: "100%",
 				}}
-				className="absolute top-0 left-0 right-0 h-96 w-full"
 			></LinearGradient>
 			<View
 				className="flex flex-col items-center justify-center w-10/12 mx-auto rounded-xl py-8"

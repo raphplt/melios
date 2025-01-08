@@ -8,6 +8,7 @@ import { View, Text, Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
 import RowTitleCustom from "../Items/RowTitleCustom";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function HabitMoment({
 	setValue,
@@ -18,6 +19,7 @@ export default function HabitMoment({
 }) {
 	const { theme } = useTheme();
 	const { habit } = useSelect();
+	const { t } = useTranslation();
 
 	const blockStyle =
 		"flex flex-row items-center justify-evenly flex-1 rounded-2xl mx-2";
@@ -59,6 +61,7 @@ export default function HabitMoment({
 					style={{
 						overflow: "hidden",
 					}}
+					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -92,6 +95,7 @@ export default function HabitMoment({
 					style={{
 						overflow: "hidden",
 					}}
+					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -113,7 +117,7 @@ export default function HabitMoment({
 										: theme.colors.text,
 							}}
 						>
-							Heure libre
+							{t("free_time")}
 						</Text>
 						<Iconify
 							icon="tabler:time-duration-off"
@@ -136,6 +140,7 @@ export default function HabitMoment({
 					style={{
 						overflow: "hidden",
 					}}
+					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -157,7 +162,7 @@ export default function HabitMoment({
 										: theme.colors.text,
 							}}
 						>
-							Matin
+							{t("morning")}
 						</Text>
 						<Iconify
 							icon="ph:sun-horizon"
@@ -176,6 +181,7 @@ export default function HabitMoment({
 					style={{
 						overflow: "hidden",
 					}}
+					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -197,7 +203,7 @@ export default function HabitMoment({
 										: theme.colors.text,
 							}}
 						>
-							Midi
+							{t("afternoon")}
 						</Text>
 						<Iconify
 							icon="ph:sun"
@@ -217,6 +223,7 @@ export default function HabitMoment({
 					style={{
 						overflow: "hidden",
 					}}
+					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -238,7 +245,7 @@ export default function HabitMoment({
 										: theme.colors.text,
 							}}
 						>
-							Soir
+							{t("evening")}
 						</Text>
 						<Iconify
 							icon="ph:moon"

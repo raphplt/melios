@@ -67,10 +67,11 @@ export default function HabitTitle({
 
 			<BlurView
 				intensity={90}
-				className="rounded-xl px-3 py-2 mt-3 flex flex-row items-center justify-between"
+				className="rounded-xl px-4 py-2 pb-3 mt-3 flex flex-row items-center justify-between"
 				style={{
 					overflow: "hidden",
 				}}
+				tint="light"
 			>
 				<TextInput
 					style={{
@@ -92,9 +93,7 @@ export default function HabitTitle({
 					onPress={() =>
 						toggleFocus("description", isEditingDescription, setIsEditingDescription)
 					}
-				>
-					{/* <EditButton isEditing={isEditingDescription} /> */}
-				</Pressable>
+				></Pressable>
 			</BlurView>
 		</>
 	);

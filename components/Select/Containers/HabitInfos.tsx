@@ -52,6 +52,7 @@ export default function HabitInfos({
 				style={{
 					overflow: "hidden",
 				}}
+				tint="light"
 			>
 				{/* Durée */}
 				<HabitInfoSection

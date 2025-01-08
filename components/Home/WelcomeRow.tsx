@@ -11,11 +11,11 @@ export default function WelcomeRow() {
 
 	const message = useMemo(() => {
 		if (hours >= 5 && hours < 13) {
-			return "🌞 " + " " + t("morning");
+			return "🌞 " + " " + t("good_morning");
 		} else if (hours >= 13 && hours < 18) {
-			return "☀️" + " " + t("afternoon");
+			return "☀️" + " " + t("good_afternoon");
 		} else {
-			return "🌜" + " " + t("evening");
+			return "🌜" + " " + t("good_evening");
 		}
 	}, [hours, t]);
 

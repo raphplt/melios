@@ -42,6 +42,7 @@ export default function RepeatHabit({
 				style={{
 					overflow: "hidden",
 				}}
+				tint="light"
 			>
 				{daysList.map((day) => (
 					<Pressable

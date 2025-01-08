@@ -2,9 +2,9 @@
     "welcome": "Bienvenue",
     "login": "Connexion",
     "register": "Inscription",
-    "morning": " Bonjour",
-    "afternoon": "Bon après-midi",
-    "evening": "Bonsoir",
+    "good_morning": " Bonjour",
+    "good_afternoon": "Bon après-midi",
+    "good_evening": "Bonsoir",
     "streak": "Série",
     "day": "jour",
     "days": "jours",
@@ -150,5 +150,10 @@
     "coming_soon_message": "Bientôt disponible",
     "coming_soon_description": "Ce pack sera bientôt disponible. Restez à l'écoute!",
     "ok": "OK",
-    "restart_habit_question": "Êtes-vous sûr de vouloir redémarrer cette habitude ?"
+    "restart_habit_question": "Êtes-vous sûr de vouloir redémarrer cette habitude ?",
+    "free_time": "Heure libre",
+    "morning": "Matin",
+    "afternoon": "Après-midi",
+    "evening": "Soir",
+    "add_habit": "Ajouter une habitude"
 }

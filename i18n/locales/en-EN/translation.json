@@ -2,9 +2,9 @@
     "welcome": "Welcome",
     "login": "Login",
     "register": "Register",
-    "morning": "Good morning",
-    "afternoon": "Good afternoon",
-    "evening": "Good evening",
+    "good_morning": "Good morning",
+    "good_afternoon": "Good afternoon",
+    "good_evening": "Good evening",
     "streak": "Streak",
     "day": "day",
     "days": "days",
@@ -149,5 +149,10 @@
     "unlock": "Unlock",
     "coming_soon_message": "Coming soon",
     "coming_soon_description": "This feature is not available yet. Stay tuned!",
-    "restart_habit_question": "Are you sure you want to restart this habit?"
+    "restart_habit_question": "Are you sure you want to restart this habit?",
+    "free_time": "Free time",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "add_habit": "Add a habit"
 }

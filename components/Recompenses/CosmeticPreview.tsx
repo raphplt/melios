@@ -1,7 +1,7 @@
-import { ThemeContext, useTheme } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { getAllCosmeticsIcons } from "@db/cosmetics";
 import { ProfileCosmetic } from "@type/cosmetics";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Iconify } from "react-native-iconify";
 import {
@@ -62,8 +62,12 @@ export default function CosmeticPreviewStacked() {
 					justifyContent: "center",
 					alignItems: "center",
 					borderRadius: 10,
+					width: "95%",
+					margin: "auto",
+					display: "flex",
+					flexDirection: "row",
+					height: 150,
 				}}
-				className="flex flex-row items-center justify-center w-[95%] h-40 mx-auto rounded-lg shadow-md"
 			>
 				<View className="flex items-center justify-center flex-row w-[65%]">
 					{cosmetics.slice(0, 3).map((cosmetic, index) => {

@@ -40,6 +40,7 @@ export default function Notifications({
 				style={{
 					overflow: "hidden",
 				}}
+				tint="light"
 			>
 				<View className="flex flex-row items-center px-2">
 					<Text

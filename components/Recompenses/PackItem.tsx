@@ -31,6 +31,10 @@ export default function PackItem({ pack }: { pack: Pack }) {
 				borderRadius: 10,
 				borderColor: pack.color,
 				borderWidth: 1,
+				width: "95%",
+				padding: 10,
+				marginVertical: 6,
+				margin: "auto",
 			}}
 			start={[0, 0]}
 			colors={[darkColor, lightColor]}
