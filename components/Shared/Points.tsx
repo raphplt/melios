@@ -62,7 +62,7 @@ export default function Points() {
 						}}
 						className="font-bold mr-1"
 					>
-						{points.rewards}
+						{points.rewards || "0"}
 					</Text>
 					<MoneyMelios />
 				</View>
