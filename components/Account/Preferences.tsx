@@ -17,6 +17,7 @@ import CustomPressable from "@components/Shared/CustomPressable";
 import ModalWrapper from "@components/Modals/ModalWrapper";
 import LanguageSelector from "./LanguageSelector";
 import ConfidentialitySelector from "./ConfidentialitySelector";
+import BottomSlideModal from "@components/Modals/ModalBottom";
 
 export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -149,7 +150,7 @@ export default function Preferences() {
 				}
 			/>
 
-			<ModalWrapper visible={modalVisible} setVisible={setModalVisible}>
+			<BottomSlideModal visible={modalVisible} setVisible={setModalVisible}>
 				<View>
 					<Text
 						style={{
@@ -163,11 +164,11 @@ export default function Preferences() {
 						style={{
 							color: theme.colors.textTertiary,
 						}}
-						className="text-[16px]  mb-2"
+						className="text-[16px] mb-6"
 					>
 						{t("confirm_logout")}
 					</Text>
-					<View className="flex flex-row justify-center items-center mx-auto w-11/12 mt-3">
+					<View className="flex flex-row justify-center items-center mx-auto w-11/12 my-3">
 						<CustomPressable
 							text={t("cancel")}
 							onPress={() => setModalVisible(!modalVisible)}
@@ -182,7 +183,7 @@ export default function Preferences() {
 						/>
 					</View>
 				</View>
-			</ModalWrapper>
+			</BottomSlideModal>
 		</AccountBlock>
 	);
 }

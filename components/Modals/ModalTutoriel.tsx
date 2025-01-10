@@ -1,7 +1,7 @@
 import CachedImage from "@components/Shared/CachedImage";
 import { useTheme } from "@context/ThemeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	Modal,
@@ -28,27 +28,27 @@ export default function ModalTutorial({
 }) {
 	const { theme } = useTheme();
 	const { member } = useData();
-
-	if (!member) return null;
-
 	const { t } = useTranslation();
 
 	const [isTutorialVisible, setTutorialVisible] = useState(false);
 
+	const fetchLocalNew = useCallback(async () => {
+		const alreadyView = await AsyncStorage.getItem(slug);
+		if (!alreadyView) {
+			setTutorialVisible(true);
+		}
+	}, [slug]);
+
 	useEffect(() => {
-		const fetchLocalNew = async () => {
-			const alreadyView = await AsyncStorage.getItem(slug);
-			if (!alreadyView) {
-				setTutorialVisible(true);
-			}
-		};
 		fetchLocalNew();
-	}, []);
+	}, [fetchLocalNew]);
 
 	const handleClose = async () => {
 		await AsyncStorage.setItem(slug, "true");
 		setTutorialVisible(false);
 	};
+
+	if (!member) return null;
 
 	return (
 		<Modal
@@ -66,7 +66,6 @@ export default function ModalTutorial({
 					alignItems: "center",
 				}}
 			>
-				{/* Flou d’arrière-plan (iOS) ou fallback (Android) */}
 				{Platform.OS === "ios" ? (
 					<BlurView
 						intensity={50}

@@ -9,7 +9,7 @@ export default function HabitsCount({
 }) {
 	return (
 		<View
-			className="flex flex-row items-center justify-center rounded-full p-1"
+			className="flex flex-row items-center justify-center rounded-full relative h-6 w-6"
 			style={{
 				backgroundColor: theme.colors.primary,
 			}}
