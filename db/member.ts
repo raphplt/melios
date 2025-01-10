@@ -24,59 +24,11 @@ import { Habit } from "@type/habit";
 
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
-//TODO OLD
-export const setMemberHabit = async (habit: Habit) => {
-	try {
-		const uid: any = auth.currentUser?.uid;
-
-		const membersCollectionRef = collection(db, "members");
-
-		const querySnapshot = await getDocs(
-			query(membersCollectionRef, where("uid", "==", uid))
-		);
-
-		if (!querySnapshot.empty) {
-			const memberDoc = querySnapshot.docs[0];
-
-			// Vérifier si l'habitude existe déjà
-			const existingHabit = memberDoc
-				.data()
-				.habits.find((h: UserHabit) => h.id === habit.id);
-
-			if (!existingHabit) {
-				const userHabit = {
-					// logs: [],
-					...habit,
-					id: habit.id,
-				};
-
-				await updateDoc(memberDoc.ref, {
-					habits: arrayUnion(userHabit),
-				});
-
-				console.log("Document membre mis à jour avec succès");
-			} else {
-				await updateDoc(memberDoc.ref, {
-					habits: arrayRemove(existingHabit),
-				});
-				console.log("L'habitude a été supprimée avec succès");
-			}
-		} else {
-			await setDoc(doc(membersCollectionRef, uid), {
-				uid: uid,
-				habits: [habit],
-			});
-			console.log("Document membre créé avec succès");
-		}
-	} catch (error) {
-		console.error(
-			"Erreur lors de l'ajout du document dans la collection 'members': ",
-			error
-		);
-		throw error;
-	}
-};
-
+/**
+ * Méthode pour récupérer les informations du membre
+ * @param options 
+ * @returns 
+ */
 export const getMemberInfos = async (
 	options: {
 		signal?: AbortSignal;
@@ -152,6 +104,12 @@ export const getMemberInfos = async (
 	}
 };
 
+/**
+ * Méthode pour récupérer les informations de l'utilisateur
+ * @param uid 
+ * @returns 
+ */
+
 export const getMemberProfileByUid = async (
 	uid: string
 ): Promise<Member | undefined> => {
@@ -189,6 +147,11 @@ export const getMemberProfileByUid = async (
 	}
 };
 
+/**
+ * 	Méthode pour mettre à jour les informations du membre
+ * @param name
+ * 
+**/
 export const updateMemberInfo = async (name: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
@@ -239,6 +202,10 @@ export const updateMemberField = async (field: keyof Member, value: any) => {
 	}
 };
 
+/**
+ * 	Méthode pour mettre à jour l'image de profil
+ * @param slug 
+ */
 export const updateProfilePicture = async (slug: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
@@ -284,7 +251,6 @@ export const getMembersPaginated = async (
 	filter: "all" | "friends" | "received" | "sent" = "all",
 	member?: Member
 ) => {
-	const uid = auth.currentUser?.uid;
 	try {
 		const membersCollectionRef = collection(db, "members");
 
@@ -557,3 +523,21 @@ export const declineFriendRequest = async (friendUid: string) => {
 		throw error;
 	}
 };
+
+/**
+ * Méthode pour vérifier si le nom d'utilisateur est déjà utilisé
+ */
+export const isUsernameAlreadyUsed = async (username: string) => {
+	try {
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("nom", "==", username))
+		);
+
+		return !querySnapshot.empty;
+	} catch (error) {
+		console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
+		throw error;
+	}
+}

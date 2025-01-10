@@ -9,6 +9,7 @@ import {
 	Text,
 	Image,
 	Pressable,
+	TouchableOpacity,
 } from "react-native";
 import {
 	useNavigation,
@@ -32,6 +33,7 @@ import HelpModal from "@components/Modals/HelpModal";
 import { useTheme } from "@context/ThemeContext";
 import { getCachedImage } from "@db/files";
 import { useHabits } from "@context/HabitsContext";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -42,6 +44,7 @@ export default function Login() {
 	const scrollViewRef = useRef<ScrollView>(null);
 	const passwordInputRef = useRef(null);
 	const isFocused = useIsFocused();
+	const { t } = useTranslation();
 
 	const { user, isLoading } = useSession();
 	const { refreshCategories, refreshHabits } = useHabits();
@@ -162,10 +165,11 @@ export default function Login() {
 				>
 					<BlurView
 						intensity={70}
-						className="w-11/12 mx-auto p-5 rounded-xl"
+						className="w-11/12 mx-auto p-6 rounded-xl"
 						style={{
 							overflow: "hidden",
 						}}
+						tint="default"
 					>
 						<View className="flex flex-col items-center w-full py-3 rounded-xl">
 							<Image
@@ -175,7 +179,7 @@ export default function Login() {
 							/>
 							<View className="flex flex-col justify-center items-center w-full">
 								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
-									Bon retour sur
+									{t("welcome_back_to")}
 								</Text>
 								<Text
 									style={{ color: "rgb(28, 28, 30)" }}
@@ -184,7 +188,7 @@ export default function Login() {
 									Melios
 								</Text>
 							</View>
-							<View className="flex flex-col justify-center items-center w-full mt-3">
+							<View className="flex flex-col justify-center items-start w-full mt-3">
 								<CustomTextInput
 									label="Votre email"
 									placeholder="melios@gmail.com"
@@ -216,6 +220,17 @@ export default function Login() {
 									onSubmitEditing={login}
 									returnKeyType="done"
 								/>
+								<TouchableOpacity>
+									<Text
+										style={{
+											color: theme.colors.primary,
+										}}
+										className="mt-1 ml-2"
+										onPress={() => navigation.navigate("resetPassword")}
+									>
+										{t("forget_password_question")}
+									</Text>
+								</TouchableOpacity>
 							</View>
 
 							<ButtonLogin login={login} isDisabled={isDisabled} />
@@ -241,20 +256,9 @@ export default function Login() {
 								</Text>
 							</View>
 						</View>
-						<Pressable>
-							<Text
-								style={{
-									color: theme.colors.primary,
-								}}
-								className="text-center mt-1"
-								onPress={() => navigation.navigate("resetPassword")}
-							>
-								Mot de passe oublié ?
-							</Text>
-						</Pressable>
 					</BlurView>
 					<ButtonNavigate
-						text="Je n'ai pas de compte"
+						text={t("no_account")}
 						onPress={() => navigation.navigate("register")}
 					/>
 				</ImageBackground>

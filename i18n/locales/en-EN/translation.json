@@ -160,5 +160,9 @@
     "received": "Received",
     "no_results": "No results",
     "search_friend": "Search a friend",
-    "is_friend": "Friend"
+    "is_friend": "Friend",
+    "welcome_back_to": "Welcome back to",
+    "forget_password_question": "Forgot your password ?",
+    "no_account": "No account ?",
+    "already_account": "Already have an account ?"
 }

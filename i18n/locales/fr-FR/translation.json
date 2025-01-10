@@ -162,5 +162,9 @@
     "no_friends": "Aucun ami",
     "no_results": "Aucun résultat",
     "search_friend": "Rechercher un ami",
-    "is_friend": "Ami"
+    "is_friend": "Ami",
+    "welcome_back_to": "Bon retour sur",
+    "forget_password_question": "Mot de passe oublié ?",
+    "no_account": "Pas de compte ?",
+    "already_account": "Déjà un compte ?"
 }

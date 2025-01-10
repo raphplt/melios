@@ -1,9 +1,12 @@
-import ButtonNext from "@components/LoginRegister/ButtonNext";
-import CustomTextInput from "@components/Shared/CustomTextInput";
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
+import CustomTextInput from "@components/Shared/CustomTextInput";
+import ButtonNext from "@components/LoginRegister/ButtonNext";
 import { Answer } from "../../constants/Slides";
 import { isValidEmail } from "@utils/dataValidation";
+import { isUsernameAlreadyUsed } from "@db/member";
+import { Iconify } from "react-native-iconify";
+import { useTheme } from "@context/ThemeContext";
 
 export default function InputText({
 	question,
@@ -18,12 +21,15 @@ export default function InputText({
 }) {
 	const [text, setText] = useState("");
 	const [showError, setShowError] = useState(false);
-	const [isDisabled, setIsDisabled] = useState(true);
+	const [usernameError, setUsernameError] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const { theme } = useTheme();
 
 	const resetText = () => {
 		setText("");
 		setShowError(false);
-		setIsDisabled(true);
+		setUsernameError(false);
+		setLoading(false);
 	};
 
 	useEffect(() => {
@@ -32,35 +38,45 @@ export default function InputText({
 
 	const handleTextChange = (inputText: string) => {
 		setText(inputText);
-		validateInput(inputText);
+		setShowError(false);
 	};
 
-	const isValidName = (name: string) => {
-		const nameRegex = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
-		return nameRegex.test(name);
-	};
+	const isValidName = (name: string) => /^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(name);
 
-	const validateInput = (inputText: string) => {
-		if (slug === "email") {
-			setIsDisabled(!isValidEmail(inputText));
-		} else if (slug === "name") {
-			setIsDisabled(!isValidName(inputText));
-		} else {
-			setIsDisabled(inputText.trim().length <= 2);
+	const goNext = async () => {
+		if (slug === "nom") {
+			setLoading(true);
+			try {
+				const trimmedText = text.trim();
+				const isUsed = await isUsernameAlreadyUsed(trimmedText);
+				setUsernameError(isUsed);
+
+				if (isUsed) {
+					setShowError(true);
+					setLoading(false);
+					return;
+				}
+
+				if (!isValidName(trimmedText)) {
+					setShowError(true);
+					setLoading(false);
+					return;
+				}
+			} catch (error) {
+				console.error("Erreur lors de la vérification :", error);
+				setShowError(true);
+				setLoading(false);
+				return;
+			}
 		}
-	};
 
-	const goNext = () => {
-		if (!isDisabled) {
-			const answer: Answer = {
-				answer: text,
-				value: 1,
-			};
-			goToNextQuestion(answer);
-			resetText();
-		} else {
-			setShowError(true);
-		}
+		const answer: Answer = {
+			answer: text.trim(),
+			value: 1,
+		};
+		goToNextQuestion(answer);
+		resetText();
+		setLoading(false);
 	};
 
 	return (
@@ -80,15 +96,30 @@ export default function InputText({
 			<ButtonNext
 				selectedAnswer={text}
 				goToNextQuestion={goNext}
-				isDisabled={isDisabled}
+				isDisabled={loading}
+				isSubmitting={loading}
 			/>
 			{showError && (
-				<Text style={{ color: "red", textAlign: "center" }}>
-					{error ||
-						(slug === "email"
+				<View
+					className="mx-auto rounded-2xl mt-1 mb-4 p-3 flex flex-row items-center w-full"
+					style={{
+						backgroundColor: theme.colors.redSecondary,
+						display: error === "" ? "none" : "flex",
+					}}
+				>
+					<Iconify
+						icon="material-symbols:error"
+						color={theme.colors.redPrimary}
+						size={20}
+					/>
+					<Text style={{ color: theme.colors.redPrimary }} className="ml-2">
+						{usernameError
+							? "Nom d'utilisateur déjà utilisé"
+							: slug === "email"
 							? "Veuillez entrer un email valide"
-							: "Veuillez renseigner ce champ")}
-				</Text>
+							: "Veuillez renseigner ce champ correctement"}
+					</Text>
+				</View>
 			)}
 		</View>
 	);
