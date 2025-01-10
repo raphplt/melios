@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, useEffect } from "react";
+import { useContext, useMemo, useState } from "react";
 import moment from "moment";
 import useIndex from "./useIndex";
 import { ThemeContext } from "@context/ThemeContext";
@@ -15,14 +15,19 @@ const useCompletedHabitPeriods = () => {
 	const completedHabitPeriods = useMemo(() => {
 		if (logs.length === 0) {
 			setLoading(false);
-			return {};
+			return { periods: {}, logsByDate: {} };
 		}
 
 		const completedDates = new Set<string>();
+		const logsByDate: Record<string, any[]> = {};
 
 		logs.forEach((logEntry) => {
 			logEntry.logs.forEach((date) => {
 				completedDates.add(date);
+				if (!logsByDate[date]) {
+					logsByDate[date] = [];
+				}
+				logsByDate[date].push(logEntry);
 			});
 		});
 
@@ -121,10 +126,14 @@ const useCompletedHabitPeriods = () => {
 		}
 
 		setLoading(false);
-		return periods;
+		return { periods, logsByDate };
 	}, [logs, theme.dark]);
 
-	return { completedHabitPeriods, loading };
+	return {
+		completedHabitPeriods: completedHabitPeriods.periods,
+		logsByDate: completedHabitPeriods.logsByDate,
+		loading,
+	};
 };
 
 export default useCompletedHabitPeriods;

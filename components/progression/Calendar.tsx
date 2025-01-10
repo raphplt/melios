@@ -2,17 +2,31 @@ import { Calendar } from "react-native-calendars";
 import useCompletedHabitPeriods from "@hooks/useCompletedHabitPeriods";
 import { useMemo, useState } from "react";
 import { useTheme } from "@context/ThemeContext";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View, Text } from "react-native";
 import SectionHeader from "./SectionHeader";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import BottomSlideModal from "@components/Modals/ModalBottom";
+import { useData } from "@context/DataContext";
+import { Iconify } from "react-native-iconify";
+
+type CalendarDate = {
+	dateString: string;
+	day: number;
+	month: number;
+	timestamp: number;
+	year: number;
+};
 
 const CalendarHabits = () => {
-	const { completedHabitPeriods, loading } = useCompletedHabitPeriods();
+	const { completedHabitPeriods, logsByDate, loading } =
+		useCompletedHabitPeriods();
+	const { habits } = useData();
 	const { t } = useTranslation();
 	const { theme } = useTheme();
-
+	const [showModalDay, setShowModalDay] = useState(false);
 	const [showCalendar, setShowCalendar] = useState(true);
+	const [selectedDay, setSelectedDay] = useState("");
 
 	const colors = useMemo(() => {
 		return theme.dark
@@ -66,9 +80,54 @@ const CalendarHabits = () => {
 						markedDates={completedHabitPeriods}
 						theme={colors}
 						style={[{ borderRadius: 10 }]}
+						onDayPress={({ dateString }: CalendarDate) => {
+							setSelectedDay(dateString);
+							setShowModalDay(true);
+						}}
 					/>
 				</View>
 			</SectionHeader>
+			<BottomSlideModal visible={showModalDay} setVisible={setShowModalDay}>
+				<View>
+					<Text
+						className="text-center text-xl font-bold mb-4"
+						style={{ color: theme.colors.text }}
+					>
+						{t("completions_for_the")} {selectedDay}
+					</Text>
+
+					<View className="mb-2">
+						{habits.map((habit) => {
+							const isCompleted = logsByDate[selectedDay]?.some(
+								(log) => log.habitId === habit.id
+							);
+							return (
+								<View
+									key={habit.id}
+									className="flex-row justify-between items-center my-2"
+								>
+									<Text style={{ fontWeight: "bold" }}>{habit.name}</Text>
+									<>
+										{isCompleted ? (
+											<Iconify
+												icon="mdi:check-circle"
+												color={theme.colors.primary}
+												size={18}
+											/>
+										) : (
+											<Iconify
+												icon="mdi:close-circle"
+												color={theme.colors.redPrimary}
+												size={18}
+											/>
+										)}
+									</>
+								</View>
+							);
+						}) || <Text>{t("no_logs_for_day")}</Text>}
+					</View>
+				</View>
+			</BottomSlideModal>
 		</>
 	);
 };

@@ -164,5 +164,7 @@
     "welcome_back_to": "Welcome back to",
     "forget_password_question": "Forgot your password ?",
     "no_account": "No account ?",
-    "already_account": "Already have an account ?"
+    "already_account": "Already have an account ?",
+    "invite_friends": "Invite friends",
+    "completions_for_the": "Completions for the"
 }

@@ -6,6 +6,7 @@ import {
 	TouchableWithoutFeedback,
 	Pressable,
 	StatusBar,
+	Platform,
 } from "react-native";
 import { Iconify } from "react-native-iconify";
 
@@ -22,10 +23,14 @@ export default function ModalWrapper({
 
 	useEffect(() => {
 		if (visible) {
-			StatusBar.setBackgroundColor("rgba(0,0,0,0.4)");
+			if (Platform.OS === "android") {
+				StatusBar.setBackgroundColor("rgba(0,0,0,0.4)");
+			}
 			StatusBar.setBarStyle("light-content");
 		} else {
-			StatusBar.setBackgroundColor("transparent");
+			if (Platform.OS === "android") {
+				StatusBar.setBackgroundColor("transparent");
+			}
 			StatusBar.setBarStyle(theme.dark ? "light-content" : "dark-content");
 		}
 	}, [visible, theme.dark]);
