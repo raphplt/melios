@@ -5,6 +5,7 @@ import { Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import SubSectionLink from "./SubSectionLink";
 import { useData } from "@context/DataContext";
+import ShareApp from "./ShareApp";
 
 const MainSubSections = () => {
 	const { theme } = useTheme();
@@ -46,6 +47,8 @@ const MainSubSections = () => {
 					</View>
 				)}
 			</SubSectionLink>
+
+			<ShareApp />
 		</View>
 	);
 };
