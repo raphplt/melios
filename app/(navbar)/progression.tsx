@@ -21,9 +21,6 @@ const Progression: React.FC = () => {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
-				<View className="h-20 w-full absolute top-0 bg-green-500">
-					<Text> </Text>
-				</View>
 				<Streak />
 				<GoalSection />
 				<Levels />

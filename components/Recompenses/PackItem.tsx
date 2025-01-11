@@ -1,15 +1,14 @@
-import { useState } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { Pack } from "@type/pack";
 import { View, Text, Pressable } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import { lightenColor } from "@utils/colors";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
+import CachedImage from "@components/Shared/CachedImage";
+import { BlurView } from "expo-blur";
 
 export default function PackItem({ pack }: { pack: Pack }) {
 	const { theme } = useTheme();
@@ -22,67 +21,74 @@ export default function PackItem({ pack }: { pack: Pack }) {
 		setSelectedPack(pack);
 	};
 
-	const darkColor = lightenColor(pack.color ?? theme.colors.background, 0.45);
-	const lightColor = lightenColor(pack.color ?? theme.colors.background, 0.1);
-
 	return (
-		<LinearGradient
-			style={{
-				borderRadius: 10,
-				borderColor: pack.color,
-				borderWidth: 1,
-				width: "95%",
-				padding: 10,
-				marginVertical: 6,
-				margin: "auto",
-			}}
-			start={[0, 0]}
-			colors={[darkColor, lightColor]}
-			className="mx-auto w-[95%] p-4 my-2"
-		>
-			<View className="flex flex-row items-center justify-between">
-				<Text
-					style={{
-						color: theme.colors.text,
-						fontFamily: "BaskervilleBold",
-					}}
-					className="text-[16px]"
-				>
-					{pack.name}
-				</Text>
-			</View>
-			<Text
-				style={{
-					color: theme.colors.textTertiary,
-				}}
-				className="py-2 text-sm"
+		<ZoomableView>
+			<Pressable
+				onPress={handlePress}
+				className="my-2 w-[95%] mx-auto h-36 relative flex flex-col items-center justify-start"
 			>
-				{pack.description}
-			</Text>
-
-			<ZoomableView>
-				<Pressable
+				<CachedImage
+					imagePath={"images/packs/" + pack.image}
+					blurRadius={5}
 					style={{
-						backgroundColor: theme.colors.primary,
+						width: "100%",
+						height: "100%",
+						borderRadius: 12,
+						position: "absolute",
+						top: 0,
+						left: 0,
+						right: 0,
+						zIndex: -1,
 					}}
-					className="rounded-2xl p-3 my-1 flex flex-row items-center justify-center"
-					onPress={handlePress}
+				/>
+
+				<BlurView
+					tint="extraLight"
+					intensity={70}
+					className="p-3 rounded-xl w-[95%] mt-3 flex flex-row items-center justify-start"
+					style={{
+						overflow: "hidden",
+					}}
+				>
+					<Iconify
+						icon="material-symbols:book-outline"
+						size={20}
+						color={theme.colors.text}
+					/>
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-[14px] text-center font-bold ml-2"
+					>
+						{pack.name}
+					</Text>
+				</BlurView>
+
+				<View
+					style={{
+						position: "absolute",
+						backgroundColor: theme.colors.primary,
+						bottom: 6,
+						right: 6,
+					}}
+					className="rounded-2xl px-4 py-2 my-1 w-fit flex flex-row items-center justify-center"
 				>
 					<Text
 						style={{
 							color: theme.colors.textSecondary,
 						}}
-						className="text-center font-semibold text-[16px] mx-2"
+						className="text-[12px] font-bold mr-2"
 					>
 						{t("discover")}
 					</Text>
 					<Iconify
 						icon="mdi:arrow-right"
-						size={24}
+						size={18}
 						color={theme.colors.textSecondary}
 					/>
-				</Pressable>
-			</ZoomableView>
-		</LinearGradient>
+				</View>
+			</Pressable>
+		</ZoomableView>
 	);
 }

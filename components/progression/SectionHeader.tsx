@@ -80,20 +80,21 @@ export default function SectionHeader({
 		<>
 			<ZoomableView>
 				<Pressable
-					className="flex flex-row w-[95%] rounded-xl px-2 py-2 mx-auto items-center justify-between mt-1"
+					className="flex flex-row w-[95%] rounded-xl px-2 py-3 mx-auto items-center justify-between my-1"
 					style={{
 						backgroundColor: theme.colors.background,
 						borderColor: theme.colors.primary,
-						borderWidth: 2,
+						borderWidth: 1,
 					}}
 					onPress={toggleShow}
 				>
 					<View className="flex flex-row items-center">
 						{renderIcon()}
 						<Text
-							className="text-[16px] mx-2 font-semibold"
+							className="text-[14px] mx-2"
 							style={{
-								color: theme.colors.text,
+								color: theme.colors.primary,
+								fontFamily: "BaskervilleBold",
 							}}
 						>
 							{title}

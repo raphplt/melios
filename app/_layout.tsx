@@ -132,7 +132,7 @@ function MainNavigator() {
 					/>
 					<Stack.Screen
 						name="pack"
-						options={{ title: "Pack", headerShadowVisible: false }}
+						options={{ title: "Pack", headerShown: false }}
 					/>
 					<Stack.Screen
 						name="cosmeticShop"

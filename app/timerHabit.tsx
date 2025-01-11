@@ -10,6 +10,8 @@ import useHabitTimer from "@hooks/useHabitTimer";
 import { useHabits } from "@context/HabitsContext";
 import { SoundProvider } from "@context/SoundContext";
 import React from "react";
+import { BlurView } from "expo-blur";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 export default function TimerHabit() {
 	const { currentHabit } = useHabits();
@@ -71,15 +73,38 @@ export default function TimerHabit() {
 						backgroundColor="transparent"
 						translucent={true}
 					/>
-					<Text
+					<BlurView
+						tint="default"
+						intensity={75}
+						className="p-4 rounded-lg flex flex-col items-center justify-center gap-y-2 w-10/12"
 						style={{
-							fontFamily: "BaskervilleBold",
-							color: "#f1f1f1",
+							overflow: "hidden",
 						}}
-						className="text-2xl text-center w-2/3 break-words"
 					>
-						{currentHabit.name}
-					</Text>
+						<FontAwesome6
+							name={currentHabit.icon}
+							size={24}
+							color={currentHabit.color}
+						/>
+						<Text
+							style={{
+								fontFamily: "BaskervilleBold",
+								color: "#f1f1f1",
+							}}
+							className="text-2xl text-center w-2/3"
+						>
+							{currentHabit.name}
+						</Text>
+						<Text
+							style={{
+								fontFamily: "BaskervilleBold",
+								color: "#d1d1d1",
+							}}
+							className="text-sm"
+						>
+							{currentHabit.description}
+						</Text>
+					</BlurView>
 					<ProgressBar />
 					<BottomContainer>
 						<BottomButtons />

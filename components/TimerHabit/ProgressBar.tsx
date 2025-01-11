@@ -1,17 +1,17 @@
 import { useHabits } from "@context/HabitsContext";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 import { useTimer } from "@context/TimerContext";
 import { formatTime } from "@utils/timeUtils";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { View, Dimensions, Animated } from "react-native";
 import * as Progress from "react-native-progress";
 
 export default function ProgressBar() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const { currentHabit } = useHabits();
 	const { timerSeconds, isTimerActive } = useTimer();
 	const { width } = Dimensions.get("window");
-	
+
 	if (!currentHabit) return null;
 
 	const totalSeconds = currentHabit.duration * 60;
@@ -54,7 +54,7 @@ export default function ProgressBar() {
 				progress={1 - timerSeconds / totalSeconds}
 				borderColor="transparent"
 				unfilledColor={theme.colors.border}
-				color={theme.colors.primary}
+				color={currentHabit.color ?? theme.colors.primary}
 				borderWidth={0}
 			/>
 			<Animated.Text

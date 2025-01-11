@@ -48,11 +48,11 @@ export default function ({ children }: { children: ReactNode }) {
 
 			<Pressable
 				onPress={handlePress}
-				className="flex justify-end w-11/12 items-end mx-auto p-4 z-10"
+				className="flex justify-start w-11/12 items-start mx-auto pt-2 z-10"
 			>
 				<Iconify
 					icon="material-symbols:close"
-					size={24}
+					size={28}
 					color={theme.colors.text}
 				/>
 			</Pressable>

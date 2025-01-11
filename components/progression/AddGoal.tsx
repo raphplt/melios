@@ -26,7 +26,7 @@ export default function AddGoal() {
 					borderStyle: "dashed",
 					borderRadius: 16,
 					borderWidth: 2,
-					borderColor: theme.colors.primary,
+					borderColor: theme.colors.border,
 					width: width * 0.95,
 				}}
 				onPress={() => setVisible(true)}
@@ -35,13 +35,13 @@ export default function AddGoal() {
 					style={{
 						color: theme.colors.primary,
 					}}
-					className="text-[16px] font-semibold mx-2"
+					className="text-[14px] font-semibold mx-2"
 				>
 					{t("define_goal")}
 				</Text>
 				<Iconify
-					icon="bi:arrow-right"
-					size={24}
+					icon="charm:arrow-right"
+					size={18}
 					color={theme.colors.primary}
 					style={{ marginLeft: "auto" }}
 				/>

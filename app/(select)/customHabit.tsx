@@ -118,7 +118,7 @@ export default function CustomHabit() {
 					}}
 				>
 					<LinearGradient
-						colors={gradientColors}
+						colors={gradientColors as any}
 						style={{
 							flex: 1,
 							...StyleSheet.absoluteFillObject,
@@ -173,7 +173,6 @@ export default function CustomHabit() {
 								<Text style={{ color: "red" }}>{errors.category.message}</Text>
 							)}
 						</View>
-						
 					</FormProvider>
 				</ScrollView>
 				<Pressable
@@ -181,7 +180,7 @@ export default function CustomHabit() {
 						backgroundColor: theme.colors.primary,
 					}}
 					onPress={handleSubmit(onSubmit)}
-					className="rounded-2xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4"
+					className="rounded-2xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4 mb-4"
 				>
 					{isSubmitting ? (
 						<ActivityIndicator size="small" color="white" />

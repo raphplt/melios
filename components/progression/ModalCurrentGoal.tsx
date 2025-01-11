@@ -14,6 +14,11 @@ import DeleteGoal from "@components/Modals/DeleteGoal";
 import { useTranslation } from "react-i18next";
 import { UserHabit } from "@type/userHabit";
 import ModalWrapper from "@components/Modals/ModalWrapper";
+import { FontAwesome6 } from "@expo/vector-icons";
+import BottomSlideModal from "@components/Modals/ModalBottom";
+import { useHabits } from "@context/HabitsContext";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 export default function ModalCurrentGoal({
 	visible,
@@ -35,11 +40,19 @@ export default function ModalCurrentGoal({
 	const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 	const { goals, setGoals } = useGoal();
 	const { addRewardPoints } = usePoints();
+	const { setCurrentHabit } = useHabits();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const block = "w-[95%] mx-auto py-2";
 
 	const showConfirmPopup = () => {
 		setIsConfirmVisible(true);
+	};
+
+	const goHabitDetail = () => {
+		setVisible(false);
+		setCurrentHabit(habit);
+		navigation.navigate("habitDetail");
 	};
 
 	const handleConfirmDelete = async () => {
@@ -71,18 +84,51 @@ export default function ModalCurrentGoal({
 	};
 
 	return (
-		<ModalWrapper visible={visible} setVisible={setVisible}>
-			<View className="flex flex-row mx-auto justify-between items-center px-2 py-3">
+		<BottomSlideModal visible={visible} setVisible={setVisible}>
+			<View className="flex flex-col mx-auto justify-between items-center">
 				<Text
 					style={{
 						color: theme.colors.text,
 						fontFamily: "BaskervilleBold",
 					}}
-					className="text-lg font-semibold text-center w-3/4"
+					className="text-xl font-semibold text-center w-10/12"
 					numberOfLines={1}
 					ellipsizeMode="tail"
 				>
 					{habit?.name}
+				</Text>
+				<View className="pt-3 pb-1">
+					<FontAwesome6
+						name={habit.icon}
+						size={28}
+						color={habit.color ?? theme.colors.primary}
+					/>
+				</View>
+			</View>
+
+			<View
+				className={block}
+				style={{
+					borderBottomColor: theme.colors.border,
+					borderBottomWidth: 1,
+				}}
+			>
+				<View className="flex flex-row justify-between items-center w-full">
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-[16px] font-semibold py-3"
+					>
+						{t("description")}
+					</Text>
+				</View>
+				<Text
+					style={{
+						color: theme.colors.textTertiary,
+					}}
+				>
+					{habit.description}
 				</Text>
 			</View>
 
@@ -95,7 +141,6 @@ export default function ModalCurrentGoal({
 			>
 				<View className="flex flex-row justify-between items-center w-full">
 					<View className="flex flex-row items-center">
-						<Iconify icon="mdi-currency-usd" size={24} color={theme.colors.primary} />
 						<Text
 							style={{
 								color: theme.colors.text,
@@ -112,44 +157,16 @@ export default function ModalCurrentGoal({
 							}}
 							className="mx-1 font-semibold text-[16px]"
 						>
-							{calcReward({ duration: goal.duration, habit: habit }) || 0}
+							{goal.duration - 2 || 0}
 						</Text>
-						<MoneyMelios />
+						<MoneyMelios width={20} />
 					</View>
 				</View>
-			</View>
-
-			<View
-				className={block}
-				style={{
-					borderBottomColor: theme.colors.border,
-					borderBottomWidth: 1,
-				}}
-			>
-				<View className="flex flex-row items-center justify-start">
-					<Iconify icon="mdi:text" size={24} color={theme.colors.primary} />
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="text-[16px] font-semibold py-3 mx-1"
-					>
-						{t("description")}
-					</Text>
-				</View>
-				<Text
-					style={{
-						color: theme.colors.textTertiary,
-					}}
-				>
-					{habit.description}
-				</Text>
 			</View>
 
 			<View className={block}>
 				<View className="flex flex-row justify-between items-center w-full">
 					<View className="flex flex-row items-center">
-						<Iconify icon="tabler:progress" size={24} color={theme.colors.primary} />
 						<Text
 							style={{
 								color: theme.colors.text,
@@ -159,7 +176,14 @@ export default function ModalCurrentGoal({
 							{t("progress")}
 						</Text>
 					</View>
-					<Text></Text>
+					<View className="flex flex-row items-center">
+						<Text
+							style={{ color: theme.colors.textTertiary }}
+							className="text-[14px] font-semibold"
+						>
+							{completedDays.length}/{goal.duration} {t("days")}
+						</Text>
+					</View>
 				</View>
 				<Progress.Bar
 					progress={completedDays.length / goal.duration}
@@ -172,12 +196,6 @@ export default function ModalCurrentGoal({
 					useNativeDriver={true}
 					borderWidth={0}
 				/>
-				<Text
-					style={{ color: theme.colors.textTertiary }}
-					className="text-[14px] font-semibold text-center py-2 w-full"
-				>
-					{completedDays.length}/{goal.duration} {t("days")}
-				</Text>
 			</View>
 
 			{completed ? (
@@ -193,17 +211,33 @@ export default function ModalCurrentGoal({
 					</Text>
 				</Pressable>
 			) : (
-				<Pressable
-					onPress={showConfirmPopup}
-					style={{
-						backgroundColor: theme.colors.redPrimary,
-					}}
-					className="px-5 py-2 rounded-xl mx-auto my-3 w-11/12 "
-				>
-					<Text className="font-semibold text-white text-center">
-						{t("delete_goal")}
-					</Text>
-				</Pressable>
+				<View className="w-11/12 mx-auto flex flex-row justify-between items-center py-4 mt-4">
+					<Pressable
+						onPress={goHabitDetail}
+						style={{
+							backgroundColor: theme.colors.primary,
+						}}
+						className="p-3 px-6 rounded-2xl flex flex-row items-center gap-2"
+					>
+						<Iconify
+							icon="mdi:information"
+							color={theme.colors.textSecondary}
+							size={20}
+						/>
+						<Text className="font-semibold text-white">{t("details")}</Text>
+					</Pressable>
+
+					<Pressable
+						onPress={showConfirmPopup}
+						style={{
+							backgroundColor: theme.colors.redPrimary,
+						}}
+						className="p-3 px-6 rounded-2xl flex flex-row items-center"
+					>
+						<Iconify icon="mdi-delete" size={20} color={theme.colors.background} />
+						<Text className="font-semibold text-white ml-2">{t("delete_goal")}</Text>
+					</Pressable>
+				</View>
 			)}
 
 			{isConfirmVisible && (
@@ -213,6 +247,6 @@ export default function ModalCurrentGoal({
 					onConfirm={handleConfirmDelete}
 				/>
 			)}
-		</ModalWrapper>
+		</BottomSlideModal>
 	);
 }

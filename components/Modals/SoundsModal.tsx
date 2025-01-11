@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useTranslation } from "react-i18next";
 import React from "react";
+import BottomSlideModal from "./ModalBottom";
 
 export default function SoundsModal({
 	visible,
@@ -62,115 +63,98 @@ export default function SoundsModal({
 	};
 
 	return (
-		<Modal
-			visible={visible}
-			transparent={true}
-			hardwareAccelerated={true}
-			onRequestClose={() => {
-				setVisible(false);
-			}}
-		>
-			<View
+		<BottomSlideModal visible={visible} setVisible={setVisible}>
+			<Text
 				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-					backgroundColor: "rgba(0,0,0,0.4)",
+					color: theme.colors.text,
+					fontFamily: "BaskervilleBold",
 				}}
+				className="text-xl leading-6 mb-4 font-semibold"
 			>
-				<View
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-						borderColor: theme.colors.border,
-						borderWidth: 1,
-						padding: 20,
-						borderRadius: 10,
-					}}
-					className="w-11/12"
-				>
-					<Text
-						style={{
-							color: theme.colors.text,
-							fontFamily: "BaskervilleBold",
-						}}
-						className="text-xl leading-6 mb-3 font-semibold"
-					>
-						{t("select_sound")}
-					</Text>
-					{loadingSounds ? (
-						<Text>{t("loading")}</Text>
-					) : (
-						<>
-							<Pressable
-								onPress={() =>
-									handleSoundPress({ file: "", displayName: "🔇 Aucun son" })
-								}
-								className="flex flex-row items-center py-2 rounded-xl px-2 my-1"
-							>
-								<Ionicons
-									name={currentSound === "" ? "radio-button-on" : "radio-button-off"}
-									size={24}
-									color={theme.colors.primary}
-								/>
-								<Text
-									style={{
-										color: theme.colors.textTertiary,
-									}}
-									className="text-[18px] ml-2"
-								>
-									🔇 {t("no_sound")}
-								</Text>
-							</Pressable>
-							{sounds.map((sound, index) => (
-								<Pressable
-									key={index}
-									onPress={() => handleSoundPress(sound)}
-									className="flex flex-row items-center py-2 rounded-xl px-2 my-1"
-									style={{
-										backgroundColor:
-											currentSound === sound.file
-												? theme.colors.backgroundTertiary
-												: theme.colors.cardBackground,
-									}}
-								>
-									<Ionicons
-										name={
-											sound.file === currentSound ? "radio-button-on" : "radio-button-off"
-										}
-										size={24}
-										color={theme.colors.primary}
-									/>
-									<Text
-										style={{
-											color: theme.colors.textTertiary,
-										}}
-										className="text-[18px] ml-2"
-									>
-										{sound.displayName}
-									</Text>
-								</Pressable>
-							))}
-						</>
-					)}
+				{t("select_sound")}
+			</Text>
+			{loadingSounds ? (
+				<Text>{t("loading")}</Text>
+			) : (
+				<>
 					<Pressable
-						onPress={() => setVisible(false)}
+						onPress={() =>
+							handleSoundPress({ file: "", displayName: "🔇 Aucun son" })
+						}
 						style={{
-							backgroundColor: theme.colors.primary,
+							borderColor: theme.colors.border,
+							borderWidth: 1,
+							backgroundColor:
+								currentSound === ""
+									? theme.colors.backgroundTertiary
+									: theme.colors.cardBackground,
 						}}
-						className="rounded-2xl mt-3 py-3 "
+						className="flex flex-row items-center py-2 rounded-xl px-2 my-1"
 					>
+						<Ionicons
+							name={currentSound === "" ? "radio-button-on" : "radio-button-off"}
+							size={24}
+							color={theme.colors.primary}
+						/>
 						<Text
 							style={{
-								color: theme.colors.background,
-								fontFamily: "BaskervilleBold",
+								color: theme.colors.text,
 							}}
-							className="text-lg text-center"
+							className="text-lg font-semibold ml-2"
 						>
-							{t("validate")}
+							🔇 {t("no_sound")}
 						</Text>
 					</Pressable>
-				</View>
-			</View>
-		</Modal>
+					{sounds.map((sound, index) => (
+						<Pressable
+							key={index}
+							onPress={() => handleSoundPress(sound)}
+							className="flex flex-row items-center py-2 rounded-xl px-2 my-1"
+							style={{
+								borderColor: theme.colors.border,
+								borderWidth: 1,
+								backgroundColor:
+									currentSound === sound.file
+										? theme.colors.backgroundTertiary
+										: theme.colors.cardBackground,
+							}}
+						>
+							<Ionicons
+								name={
+									sound.file === currentSound ? "radio-button-on" : "radio-button-off"
+								}
+								size={24}
+								color={theme.colors.primary}
+							/>
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="text-lg font-semibold ml-2"
+							>
+								{sound.displayName}
+							</Text>
+						</Pressable>
+					))}
+				</>
+			)}
+			<Pressable
+				onPress={() => setVisible(false)}
+				style={{
+					backgroundColor: theme.colors.primary,
+				}}
+				className="rounded-2xl my-3 py-3"
+			>
+				<Text
+					style={{
+						color: theme.colors.background,
+						fontFamily: "BaskervilleBold",
+					}}
+					className="text-lg text-center"
+				>
+					{t("validate")}
+				</Text>
+			</Pressable>
+		</BottomSlideModal>
 	);
 }

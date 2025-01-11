@@ -23,7 +23,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({ position, intensity, children }) => {
 			<BlurView
 				intensity={intensity ?? 75}
 				style={styles.blurView}
-				tint={isDayTime ? "light" : "dark"}
+				tint={isDayTime ? "extraLight" : "dark"}
 			/>
 			{children}
 		</View>

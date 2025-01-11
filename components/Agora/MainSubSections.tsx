@@ -6,6 +6,7 @@ import { Iconify } from "react-native-iconify";
 import SubSectionLink from "./SubSectionLink";
 import { useData } from "@context/DataContext";
 import ShareApp from "./ShareApp";
+import FriendPreview from "./FriendPreview";
 
 const MainSubSections = () => {
 	const { theme } = useTheme();
@@ -48,7 +49,7 @@ const MainSubSections = () => {
 				)}
 			</SubSectionLink>
 
-			<ShareApp />
+			<FriendPreview />
 		</View>
 	);
 };

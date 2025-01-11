@@ -541,3 +541,54 @@ export const isUsernameAlreadyUsed = async (username: string) => {
 		throw error;
 	}
 }
+/**
+ * Méthode pour récupérer les amis du membre
+ */
+export const getFriends = async (): Promise<Partial<Member>[]> => {
+	try {
+		const currentUid = auth.currentUser?.uid;
+		if (!currentUid) throw new Error("Utilisateur non authentifié");
+
+		const membersCollectionRef = collection(db, "members");
+
+		const currentMemberQuery = query(
+			membersCollectionRef,
+			where("uid", "==", currentUid)
+		);
+		const currentMemberSnapshot = await getDocs(currentMemberQuery);
+
+		if (currentMemberSnapshot.empty) {
+			throw new Error(`No document found for current user: ${currentUid}`);
+		}
+
+		const currentMemberDoc = currentMemberSnapshot.docs[0];
+		const currentMemberData = currentMemberDoc.data();
+
+		const friendsUids = currentMemberData.friends || [];
+		if (friendsUids.length === 0) {
+			return [];
+		}
+
+		const friendsQuery = query(
+			membersCollectionRef,
+			where("uid", "in", friendsUids)
+		);
+		const friendsSnapshot = await getDocs(friendsQuery);
+
+		const friends = friendsSnapshot.docs.map((doc) => {
+			const data = doc.data();
+			return {
+				id: doc.id,
+				uid: data.uid,
+				nom: data.nom,
+				profilePicture: data.profilePicture,
+			
+			} as Partial<Member>;
+		});
+
+		return friends;
+	} catch (error) {
+		console.error("Erreur lors de la récupération des amis :", error);
+		throw error;
+	}
+};

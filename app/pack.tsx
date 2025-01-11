@@ -1,3 +1,5 @@
+import ButtonBack from "@components/Shared/ButtonBack";
+import ButtonClose from "@components/Shared/ButtonClose";
 import CachedImage from "@components/Shared/CachedImage";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useData } from "@context/DataContext";
@@ -12,6 +14,8 @@ import {
 	Dimensions,
 	Pressable,
 	Alert,
+	Platform,
+	StatusBar,
 } from "react-native";
 
 const Pack = () => {
@@ -36,67 +40,73 @@ const Pack = () => {
 			style={{
 				width: Dimensions.get("window").width,
 				height: Dimensions.get("window").height,
+				flexGrow: 1,
+				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
 			<CachedImage
 				imagePath={"images/packs/" + selectedPack.image}
 				style={styles.image}
 			/>
+			<ButtonClose />
 			<View className="flex-1 flex items-center justify-center">
 				<BlurView
-					tint="dark"
+					tint="extraLight"
 					intensity={75}
-					className="p-4 rounded-lg"
-					style={{
-						overflow: "hidden",
-					}}
-				>
-					<Text className="text-2xl font-bold text-white">{selectedPack.name}</Text>
-				</BlurView>
-
-				<BlurView
-					tint="regular"
-					intensity={75}
-					className="p-4 rounded-t-xl w-full"
+					className="p-4 w-[95%] rounded-xl mt-3 flex flex-col items-start justify-start"
 					style={{
 						overflow: "hidden",
 						position: "absolute",
-						bottom: 0,
+						top: 0,
 					}}
 				>
-					<Text className="font-semibold text-white py-2">
-						{selectedPack.description}
-					</Text>
+					<Text className="text-2xl font-bold text-black">{selectedPack.name}</Text>
 
-					<Pressable
-						style={{
-							backgroundColor: theme.colors.primary,
-							opacity: 0.9,
-						}}
-						className={`p-3 rounded-xl mt-2 flex flex-row justify-center items-center my-2`}
-						onPress={showComingSoonAlert}
-					>
-						<Text
-							style={{
-								color: theme.colors.textSecondary,
-							}}
-							className="text-center text-lg font-semibold "
-						>
-							{t("unlock")}
+					<View className="flex flex-col items-start justify-start gap-y-2">
+						<Text className="font-semibold py-2 text-gray-700">
+							{selectedPack.description}
 						</Text>
-						<View className="flex items-center gap-1 flex-row mx-3">
-							<Text
-								className="text-xl font-bold"
-								style={{
-									color: theme.colors.yellowPrimary,
-								}}
-							>
-								{selectedPack.price}
+						<View className="flex flex-row items-center gap-2">
+							<Text className="font-semibold text-gray-900">
+								{t("price")}: {selectedPack.price}
 							</Text>
-							<MoneyMelios />
+							<MoneyMelios width={18} />
 						</View>
-					</Pressable>
+						<Text className="font-semibold text-gray-900">
+							{selectedPack.content.sections.length} {t("chapters")}
+						</Text>
+					</View>
 				</BlurView>
+				<Pressable
+					style={{
+						backgroundColor: theme.colors.primary,
+						opacity: 0.9,
+						position: "absolute",
+						bottom: 4,
+					}}
+					className="p-3 rounded-xl mt-2 flex flex-row justify-center items-center my-2 w-11/12 mb-6"
+					onPress={showComingSoonAlert}
+				>
+					<Text
+						style={{
+							color: theme.colors.textSecondary,
+						}}
+						className="text-center text-lg font-semibold "
+					>
+						{t("unlock")}
+					</Text>
+					<View className="flex items-center gap-1 flex-row mx-3">
+						<Text
+							className="text-xl font-bold"
+							style={{
+								color: theme.colors.yellowPrimary,
+							}}
+						>
+							{selectedPack.price}
+						</Text>
+						<MoneyMelios />
+					</View>
+				</Pressable>
 			</View>
 		</View>
 	);
