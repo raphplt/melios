@@ -13,7 +13,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Iconify } from "react-native-iconify";
 import ZoomableView from "@components/Shared/ZoomableView";
 
-// Activer LayoutAnimation pour Android
 if (
 	Platform.OS === "android" &&
 	UIManager.setLayoutAnimationEnabledExperimental
@@ -60,7 +59,6 @@ export default function SectionHeader({
 		setShow(!show);
 	};
 
-	// Rendu de l’icône
 	const renderIcon = () => {
 		switch (icon) {
 			case "calendar":

@@ -46,7 +46,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 						{level.name}
 					</Text>
 				</View>
-				<View className="flex flex-row items-center justify-between p-2">
+				<View className="flex flex-row items-center justify-between pb-2 pt-1">
 					<Text
 						style={{
 							color: theme.colors.text,
@@ -60,13 +60,13 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 							borderColor: level.color || theme.colors.primary,
 							borderWidth: 1,
 						}}
-						className="px-2 py-1 rounded-2xl"
+						className="px-2 py-[2px] rounded-2xl"
 					>
 						<Text
 							style={{
-								color: theme.colors.textTertiary,
+								color: level.color ?? theme.colors.textTertiary,
 							}}
-							className="text-[14px] font-semibold "
+							className="text-sm font-semibold "
 						>
 							{level.currentXp} / {level.nextLevelXp}
 						</Text>

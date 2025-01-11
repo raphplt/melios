@@ -31,7 +31,7 @@ const Progression: React.FC = () => {
 				<Chart />
 				<View
 					className="h-20 w-full"
-					style={{ backgroundColor: theme.colors.cardBackground }}
+					style={{ backgroundColor: theme.colors.background }}
 				></View>
 			</ScrollView>
 

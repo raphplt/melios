@@ -166,5 +166,7 @@
     "no_account": "No account ?",
     "already_account": "Already have an account ?",
     "invite_friends": "Invite friends",
-    "completions_for_the": "Completions for the"
+    "completions_for_the": "Completions for the",
+    "completed_habits": "Completed habits",
+    "not_completed_habits": "Not completed habits"
 }
