@@ -19,9 +19,9 @@ export default function General() {
 			<RowBlock
 				icon={
 					<Iconify
-						icon="icon-park-outline:list-add"
-						size={24}
-						color={theme.colors.text}
+						icon="icon-park-outline:list"
+						size={20}
+						color={theme.colors.primary}
 					/>
 				}
 				title={t("my_habits")}
@@ -33,7 +33,7 @@ export default function General() {
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 			<RowBlock
-				icon={<Iconify icon="ph:target" size={24} color={theme.colors.text} />}
+				icon={<Iconify icon="ph:target" size={20} color={theme.colors.primary} />}
 				title={t("my_objectives")}
 				rightContent={
 					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
@@ -46,8 +46,8 @@ export default function General() {
 				icon={
 					<Iconify
 						icon="fluent:person-feedback-16-regular"
-						size={24}
-						color={theme.colors.text}
+						size={20}
+						color={theme.colors.primary}
 					/>
 				}
 				title={t("feedback")}

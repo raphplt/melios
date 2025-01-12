@@ -1,6 +1,6 @@
 import { useTheme } from "@context/ThemeContext";
 import { Pack } from "@type/pack";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import ZoomableView from "@components/Shared/ZoomableView";
@@ -22,73 +22,71 @@ export default function PackItem({ pack }: { pack: Pack }) {
 	};
 
 	return (
-		<ZoomableView>
-			<Pressable
-				onPress={handlePress}
-				className="my-2 w-[95%] mx-auto h-36 relative flex flex-col items-center justify-start"
+		<TouchableOpacity
+			onPress={handlePress}
+			className="my-2 w-[95%] mx-auto h-36 relative flex flex-col items-center justify-start"
+		>
+			<CachedImage
+				imagePath={"images/packs/" + pack.image}
+				blurRadius={5}
+				style={{
+					width: "100%",
+					height: "100%",
+					borderRadius: 12,
+					position: "absolute",
+					top: 0,
+					left: 0,
+					right: 0,
+					zIndex: -1,
+				}}
+			/>
+
+			<BlurView
+				tint="extraLight"
+				intensity={70}
+				className="p-3 rounded-xl w-[95%] mt-3 flex flex-row items-center justify-start"
+				style={{
+					overflow: "hidden",
+				}}
 			>
-				<CachedImage
-					imagePath={"images/packs/" + pack.image}
-					blurRadius={5}
-					style={{
-						width: "100%",
-						height: "100%",
-						borderRadius: 12,
-						position: "absolute",
-						top: 0,
-						left: 0,
-						right: 0,
-						zIndex: -1,
-					}}
+				<Iconify
+					icon="material-symbols:book-outline"
+					size={20}
+					color={theme.colors.text}
 				/>
-
-				<BlurView
-					tint="extraLight"
-					intensity={70}
-					className="p-3 rounded-xl w-[95%] mt-3 flex flex-row items-center justify-start"
+				<Text
 					style={{
-						overflow: "hidden",
+						color: theme.colors.text,
 					}}
+					className="text-[14px] text-center font-bold ml-2"
 				>
-					<Iconify
-						icon="material-symbols:book-outline"
-						size={20}
-						color={theme.colors.text}
-					/>
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="text-[14px] text-center font-bold ml-2"
-					>
-						{pack.name}
-					</Text>
-				</BlurView>
+					{pack.name}
+				</Text>
+			</BlurView>
 
-				<View
+			<View
+				style={{
+					position: "absolute",
+					backgroundColor: theme.colors.primary,
+					bottom: 6,
+					right: 6,
+				}}
+				className="rounded-2xl px-4 py-2 my-1 w-fit flex flex-row items-center justify-center"
+			>
+				<Text
 					style={{
-						position: "absolute",
-						backgroundColor: theme.colors.primary,
-						bottom: 6,
-						right: 6,
+						color: theme.colors.textSecondary,
 					}}
-					className="rounded-2xl px-4 py-2 my-1 w-fit flex flex-row items-center justify-center"
+					className="text-[12px] font-bold mr-2"
 				>
-					<Text
-						style={{
-							color: theme.colors.textSecondary,
-						}}
-						className="text-[12px] font-bold mr-2"
-					>
-						{t("discover")}
-					</Text>
-					<Iconify
-						icon="mdi:arrow-right"
-						size={18}
-						color={theme.colors.textSecondary}
-					/>
-				</View>
-			</Pressable>
-		</ZoomableView>
+					{t("discover")}
+				</Text>
+				<Iconify
+					icon="mdi:arrow-right"
+					size={18}
+					color={theme.colors.textSecondary}
+				/>
+			</View>
+		</TouchableOpacity>
 	);
 }

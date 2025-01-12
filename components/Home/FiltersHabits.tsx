@@ -31,7 +31,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 					color={
 						filter === CategoryTypeSelect.positive
 							? theme.colors.primary
-							: theme.colors.textTertiary
+							: theme.colors.grayPrimary
 					}
 				/>
 				<Text
@@ -64,7 +64,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 					color={
 						filter === CategoryTypeSelect.negative
 							? theme.colors.redPrimary
-							: theme.colors.textTertiary
+							: theme.colors.grayPrimary
 					}
 				/>
 				<Text

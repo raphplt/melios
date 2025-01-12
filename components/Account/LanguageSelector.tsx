@@ -44,6 +44,10 @@ const LanguageSelector = () => {
 				containerStyle={{
 					borderRadius: 5,
 				}}
+				placeholderStyle={{
+					color: theme.colors.textTertiary,
+					fontSize: 14,
+				}}
 			/>
 		</View>
 	);

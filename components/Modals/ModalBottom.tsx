@@ -9,6 +9,7 @@ import {
 	Easing,
 	StatusBar,
 	Platform,
+	Text,
 } from "react-native";
 import { Iconify } from "react-native-iconify";
 
@@ -16,10 +17,12 @@ export default function BottomSlideModal({
 	visible = false,
 	setVisible,
 	children,
+	title,
 }: {
 	visible: boolean;
 	setVisible: (visible: boolean) => void;
 	children: React.ReactNode;
+	title?: string;
 }) {
 	const { theme } = useTheme();
 	const slideAnim = React.useRef(new Animated.Value(0)).current;
@@ -95,16 +98,35 @@ export default function BottomSlideModal({
 								elevation: 5,
 							}}
 						>
-							<Pressable
-								style={{ alignSelf: "flex-end", marginBottom: 10 }}
-								onPress={() => setVisible(false)}
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
 							>
-								<Iconify
-									icon="material-symbols:close"
-									color={theme.colors.textTertiary}
-									size={24}
-								/>
-							</Pressable>
+								{title && (
+									<Text
+										style={{
+											color: theme.colors.text,
+											fontSize: 18,
+											fontWeight: "bold",
+										}}
+									>
+										{title}
+									</Text>
+								)}
+								<Pressable
+									style={{ marginLeft: "auto" }}
+									onPress={() => setVisible(false)}
+								>
+									<Iconify
+										icon="material-symbols:close"
+										color={theme.colors.textTertiary}
+										size={24}
+									/>
+								</Pressable>
+							</View>
 
 							{children}
 						</Animated.View>

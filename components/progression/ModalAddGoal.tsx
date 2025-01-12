@@ -181,7 +181,7 @@ export default function ModalAddGoal({
 						}}
 						mode="modal"
 						placeholderStyle={{
-							color: theme.colors.border,
+							color: theme.colors.textTertiary,
 							fontSize: 14,
 						}}
 					/>
@@ -316,7 +316,7 @@ export default function ModalAddGoal({
 				>
 					<Text
 						style={{
-							color: theme.colors.background,
+							color: theme.colors.text,
 						}}
 						className="text-[16px] font-semibold"
 					>

@@ -62,7 +62,7 @@ const DarkTheme: Theme = {
 		blueTertiary: "#2a4365",
 		purplePrimary: "#955CD3",
 		purpleSecondary: "#F5EAFB",
-		grayPrimary: "#B0B0B0",
+		grayPrimary: "#808080",
 	},
 };
 
