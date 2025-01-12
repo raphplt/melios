@@ -15,6 +15,7 @@ import { LogItem } from "./LogItem";
 import Confidentiality from "@components/Modals/Confidentiality";
 import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
+import ConfidentialityFilter from "./ConfidentialityFilter";
 
 export type LogExtended = {
 	id: string;
@@ -85,73 +86,35 @@ const AllLogs = () => {
 			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
 				<View
-					className="flex flex-row items-center justify-between px-4 py-4 my-3 rounded-lg"
+					className="flex flex-row items-center justify-between px-6 py-3 my-4 rounded-xl"
 					style={{
-						backgroundColor: theme.colors.cardBackground,
+						backgroundColor: theme.colors.backgroundTertiary,
+
+						shadowColor: "#000",
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.1,
+						shadowRadius: 4,
 					}}
 				>
 					<View className="flex flex-row items-center justify-start">
-						<Iconify icon="tabler:activity" size={24} color={theme.colors.text} />
+						<Iconify icon="mdi:column" size={22} color={theme.colors.primary} />
 						<Text
-							className="text-[15px] mx-3"
+							className="text-[15px] font-semibold mx-3"
 							style={{
-								color: theme.colors.text,
-								fontFamily: "BaskervilleBold",
+								color: theme.colors.primary,
 							}}
 						>
 							{t("activity_users")}
 						</Text>
 					</View>
 
-					<View
-						className="flex flex-row items-center justify-start gap-2 rounded-2xl"
-						style={{
-							backgroundColor: theme.colors.background,
-						}}
-					>
-						<TouchableOpacity
-							onPress={() => setConfidentiality("public")}
-							style={{
-								backgroundColor:
-									confidentiality === "public"
-										? theme.colors.backgroundTertiary
-										: theme.colors.background,
-							}}
-							className="px-3 py-1 rounded-2xl"
-						>
-							<Iconify
-								icon="mynaui:globe"
-								size={24}
-								color={
-									confidentiality === "public"
-										? theme.colors.primary
-										: theme.colors.textTertiary
-								}
-							/>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() => setConfidentiality("friends")}
-							style={{
-								backgroundColor:
-									confidentiality === "friends"
-										? theme.colors.backgroundTertiary
-										: theme.colors.background,
-							}}
-							className="px-3 py-1 rounded-2xl"
-						>
-							<Iconify
-								icon="ion:people"
-								size={24}
-								color={
-									confidentiality === "friends"
-										? theme.colors.primary
-										: theme.colors.textTertiary
-								}
-							/>
-						</TouchableOpacity>
+					<View className="flex flex-row items-center space-x-4">
+						<ConfidentialityFilter
+							confidentiality={confidentiality}
+							setConfidentiality={setConfidentiality}
+						/>
+						<Confidentiality />
 					</View>
-					{/* Modale */}
-					<Confidentiality />
 				</View>
 			}
 			ListFooterComponent={

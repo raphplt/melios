@@ -36,11 +36,6 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 	const bgColor =
 		item.habit?.type === CategoryTypeSelect.negative ? lightColorRed : lightColor;
 
-	const borderColor =
-		item.habit?.type === CategoryTypeSelect.negative
-			? theme.colors.redPrimary
-			: item.habit?.color || theme.colors.border;
-	
 	if (!item.member || !item.habit) return;
 
 	return (
@@ -48,8 +43,10 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 			className="mb-3 px-3 py-2 rounded-xl"
 			style={{
 				backgroundColor: bgColor,
-				borderWidth: 2,
-				borderColor: borderColor,
+				shadowColor: "#000",
+				shadowOffset: { width: 0, height: 2 },
+				shadowOpacity: 0.1,
+				shadowRadius: 4,
 			}}
 		>
 			<View className="flex flex-row items-center mb-2">

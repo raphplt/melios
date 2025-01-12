@@ -20,16 +20,18 @@ const SubSectionLink = ({ href, children }: SubSectionLinkProps) => {
 	return (
 		<ZoomableView>
 			<Pressable
-				className="p-4 rounded-lg my-2 w-[95%] mx-auto flex flex-row items-center justify-between"
+				className="flex flex-row items-center justify-between px-6 py-3 my-2 rounded-xl w-[95%] mx-auto"
 				style={{
-					backgroundColor: theme.colors.cardBackground,
-					// borderColor: theme.colors.border,
-					// borderWidth: 1,
+					backgroundColor: theme.colors.backgroundTertiary,
+					shadowColor: "#000",
+					shadowOffset: { width: 0, height: 2 },
+					shadowOpacity: 0.1,
+					shadowRadius: 4,
 				}}
 				onPress={() => navigation.navigate(href)}
 			>
 				<View className="flex flex-row items-center">{children}</View>
-				<Iconify icon="mdi:chevron-right" size={28} color={theme.colors.text} />
+				<Iconify icon="mdi:chevron-right" size={28} color={theme.colors.primary} />
 			</Pressable>
 		</ZoomableView>
 	);
