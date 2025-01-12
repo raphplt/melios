@@ -80,7 +80,7 @@ export default function SectionHeader({
 		<>
 			<ZoomableView>
 				<Pressable
-					className="flex flex-row w-[95%] rounded-xl px-2 py-3 mx-auto items-center justify-between my-1"
+					className="flex flex-row w-[95%] rounded-xl px-2 py-2 mx-auto items-center justify-between my-1"
 					style={{
 						backgroundColor: theme.colors.background,
 						borderColor: theme.colors.primary,
@@ -102,7 +102,7 @@ export default function SectionHeader({
 					</View>
 
 					<Animated.View style={{ transform: [{ rotate: rotation }] }}>
-						<Ionicons name="chevron-down" size={24} color={theme.colors.primary} />
+						<Ionicons name="chevron-down" size={22} color={theme.colors.primary} />
 					</Animated.View>
 				</Pressable>
 			</ZoomableView>

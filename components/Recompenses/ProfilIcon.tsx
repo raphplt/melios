@@ -84,13 +84,13 @@ export default function ProfilIcon({
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 						borderColor: selected ? theme.colors.primary : theme.colors.grayPrimary,
-						borderWidth: 2,
+						borderWidth: 1,
 						borderRadius: 12,
 						opacity: isGrayedOut ? 0.5 : 1,
 					},
 					glowStyle,
 				]}
-				className=" items-center justify-center p-3"
+				className="items-center justify-center p-3"
 			>
 				{/* Name */}
 				<Text

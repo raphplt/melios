@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Share, Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { LinearGradient } from "expo-linear-gradient";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 const FriendPreview = () => {
 	const [friends, setFriends] = useState<Partial<Member>[]>([]);
@@ -45,64 +46,68 @@ const FriendPreview = () => {
 	return (
 		<ScrollView
 			showsHorizontalScrollIndicator={false}
-			className="w-full ml-2"
+			className="w-full ml-2 py-1"
 			horizontal
 		>
-			<Pressable onPress={inviteFriends}>
-				<LinearGradient
-					colors={[theme.colors.backgroundTertiary, theme.colors.purpleSecondary]}
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-						borderColor: theme.colors.primary,
-						borderWidth: 1,
-						width: 110,
-						height: 110,
-						borderRadius: 10,
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-						justifyContent: "center",
-						gap: 10,
-						marginHorizontal: 4,
-					}}
-				>
-					<Iconify icon="mdi:account-plus" size={30} color={theme.colors.primary} />
-					<Text
+			<ZoomableView>
+				<Pressable onPress={inviteFriends}>
+					<LinearGradient
+						colors={[theme.colors.backgroundTertiary, theme.colors.purpleSecondary]}
 						style={{
-							color: theme.colors.primary,
+							backgroundColor: theme.colors.cardBackground,
+							borderColor: theme.colors.primary,
+							borderWidth: 1,
+							width: 110,
+							height: 110,
+							borderRadius: 10,
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							justifyContent: "center",
+							gap: 10,
+							marginHorizontal: 4,
 						}}
-						className="text-[14px] font-semibold w-10/12 mx-auto text-center"
 					>
-						{t("invite_friends")}
-					</Text>
-				</LinearGradient>
-			</Pressable>
+						<Iconify icon="mdi:account-plus" size={30} color={theme.colors.primary} />
+						<Text
+							style={{
+								color: theme.colors.primary,
+							}}
+							className="text-[14px] font-semibold w-10/12 mx-auto text-center"
+						>
+							{t("invite_friends")}
+						</Text>
+					</LinearGradient>
+				</Pressable>
+			</ZoomableView>
+
 			{friends.map((friend) => (
-				<View
-					key={friend.uid}
-					className="flex flex-col items-center justify-center w-32 h-32 rounded-xl mx-1"
-					style={{
-						borderColor: theme.colors.primary,
-						borderWidth: 1,
-					}}
-				>
-					<CachedImage
-						imagePath={"images/cosmetics/" + friend.profilePicture + ".png" || "/"}
+				<ZoomableView key={friend.uid}>
+					<View
+						className="flex flex-col items-center justify-center w-32 h-32 rounded-xl mx-1"
 						style={{
-							width: 50,
-							height: 50,
-							borderRadius: 50,
+							borderColor: theme.colors.primary,
+							borderWidth: 1,
 						}}
-					/>
-					<Text
-						style={{
-							color: theme.colors.primary,
-						}}
-						className="mt-2 text-[14px] font-semibold"
 					>
-						{friend.nom}
-					</Text>
-				</View>
+						<CachedImage
+							imagePath={"images/cosmetics/" + friend.profilePicture + ".png" || "/"}
+							style={{
+								width: 50,
+								height: 50,
+								borderRadius: 50,
+							}}
+						/>
+						<Text
+							style={{
+								color: theme.colors.primary,
+							}}
+							className="mt-2 text-[14px] font-semibold"
+						>
+							{friend.nom}
+						</Text>
+					</View>
+				</ZoomableView>
 			))}
 		</ScrollView>
 	);
