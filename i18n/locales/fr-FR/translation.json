@@ -178,5 +178,6 @@
     "price": "Prix",
     "chapters": "Chapitres",
     "close": "Fermer",
-    "how_it_works": "Comment ça marche ?"
+    "how_it_works": "Comment ça marche ?",
+    "habits_limit": "Vous avez atteint la limite d'habitudes. Pour en ajouter une nouvelle, vous devez en supprimer une existante."
 }

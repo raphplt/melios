@@ -176,5 +176,6 @@
     "price": "Price",
     "chapters": "Chapters",
     "close": "Close",
-    "how_it_works": "How it works ?"
+    "how_it_works": "How it works ?",
+    "habits_limit": "You have reached the limit of habits. To add a new one, you must delete an existing one."
 }

@@ -1,4 +1,5 @@
 import { Answer } from "./answer";
+import { UserLevel } from "./levels";
 import { UserHabit } from "./userHabit";
 
 export interface Member {
@@ -13,4 +14,5 @@ export interface Member {
 	friendRequestsSent?: string[];
 	friendRequestsReceived?: string[];
 	activityConfidentiality?: "public" | "private" | "friends";
+	levels?: UserLevel[];
 }

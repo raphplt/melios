@@ -21,13 +21,15 @@ import { Member } from "../type/member";
 import { UserHabit } from "../type/userHabit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Habit } from "@type/habit";
+import { UserLevel } from "@type/levels";
+import { getUserLevelsByUserId } from "./levels";
 
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";
 
 /**
  * Méthode pour récupérer les informations du membre
- * @param options 
- * @returns 
+ * @param options
+ * @returns
  */
 export const getMemberInfos = async (
 	options: {
@@ -106,8 +108,8 @@ export const getMemberInfos = async (
 
 /**
  * Méthode pour récupérer les informations de l'utilisateur
- * @param uid 
- * @returns 
+ * @param uid
+ * @returns
  */
 
 export const getMemberProfileByUid = async (
@@ -150,8 +152,8 @@ export const getMemberProfileByUid = async (
 /**
  * 	Méthode pour mettre à jour les informations du membre
  * @param name
- * 
-**/
+ *
+ **/
 export const updateMemberInfo = async (name: string) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
@@ -204,7 +206,7 @@ export const updateMemberField = async (field: keyof Member, value: any) => {
 
 /**
  * 	Méthode pour mettre à jour l'image de profil
- * @param slug 
+ * @param slug
  */
 export const updateProfilePicture = async (slug: string) => {
 	try {
@@ -540,11 +542,14 @@ export const isUsernameAlreadyUsed = async (username: string) => {
 		console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
 		throw error;
 	}
-}
+};
 /**
  * Méthode pour récupérer les amis du membre
  */
-export const getFriends = async (): Promise<Partial<Member>[]> => {
+
+export const getFriends = async (): Promise<
+	(Partial<Member> & { levels?: UserLevel[] })[]
+> => {
 	try {
 		const currentUid = auth.currentUser?.uid;
 		if (!currentUid) throw new Error("Utilisateur non authentifié");
@@ -575,16 +580,19 @@ export const getFriends = async (): Promise<Partial<Member>[]> => {
 		);
 		const friendsSnapshot = await getDocs(friendsQuery);
 
-		const friends = friendsSnapshot.docs.map((doc) => {
-			const data = doc.data();
-			return {
-				id: doc.id,
-				uid: data.uid,
-				nom: data.nom,
-				profilePicture: data.profilePicture,
-			
-			} as Partial<Member>;
-		});
+		const friends = await Promise.all(
+			friendsSnapshot.docs.map(async (doc) => {
+				const data = doc.data();
+				const levels = await getUserLevelsByUserId(data.uid);
+				return {
+					id: doc.id,
+					uid: data.uid,
+					nom: data.nom,
+					profilePicture: data.profilePicture,
+					levels,
+				} as Partial<Member> & { levels?: UserLevel[] };
+			})
+		);
 
 		return friends;
 	} catch (error) {

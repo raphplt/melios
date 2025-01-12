@@ -8,9 +8,12 @@ import { Pressable, ScrollView, Share, Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { LinearGradient } from "expo-linear-gradient";
 import ZoomableView from "@components/Shared/ZoomableView";
+import { UserLevel } from "@type/levels";
 
 const FriendPreview = () => {
-	const [friends, setFriends] = useState<Partial<Member>[]>([]);
+	const [friends, setFriends] = useState<
+		(Partial<Member> & Partial<UserLevel>)[]
+	>([]);
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 
@@ -42,6 +45,8 @@ const FriendPreview = () => {
 			console.error("Erreur lors du partage :", error);
 		}
 	};
+
+	console.log(friends);
 
 	return (
 		<ScrollView
@@ -106,6 +111,7 @@ const FriendPreview = () => {
 						>
 							{friend.nom}
 						</Text>
+						<Text>{/* {friend.levels[P0gwsxEYNJATbmCoOd\hc]} */}</Text>
 					</View>
 				</ZoomableView>
 			))}
