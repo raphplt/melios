@@ -3,7 +3,6 @@ import { Pack } from "@type/pack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import ZoomableView from "@components/Shared/ZoomableView";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
