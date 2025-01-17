@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
 	View,
 	ScrollView,
@@ -8,7 +8,6 @@ import {
 	StatusBar,
 	Text,
 	Image,
-	Pressable,
 	TouchableOpacity,
 } from "react-native";
 import {
@@ -34,6 +33,10 @@ import { useTheme } from "@context/ThemeContext";
 import { getCachedImage } from "@db/files";
 import { useHabits } from "@context/HabitsContext";
 import { useTranslation } from "react-i18next";
+import {
+	GoogleSignin,
+	GoogleSigninButton,
+} from "@react-native-google-signin/google-signin";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -49,6 +52,32 @@ export default function Login() {
 	const { user, isLoading } = useSession();
 	const { refreshCategories, refreshHabits } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+	const [errorGoogle, setErrorGoogle] = useState("");
+	const [userInfo, setUserInfo] = useState<any>(null);
+
+	useEffect(() => {
+		GoogleSignin.configure();
+	}, []);
+
+	const signin = async () => {
+		try {
+			await GoogleSignin.hasPlayServices();
+			const user = await GoogleSignin.signIn();
+			setUserInfo(user);
+			setErrorGoogle("");
+		} catch (error: any) {
+			setErrorGoogle(error.message);
+		}
+	};
+
+	console.log(user);
+
+	const logout = () => {
+		setUserInfo(null);
+		GoogleSignin.revokeAccess();
+		GoogleSignin.signOut();
+	};
 
 	useEffect(() => {
 		return navigation.addListener("beforeRemove", (e: any) => {
@@ -234,6 +263,17 @@ export default function Login() {
 							</View>
 
 							<ButtonLogin login={login} isDisabled={isDisabled} />
+
+							<Text>{JSON.stringify(errorGoogle)}</Text>
+							{userInfo ? (
+								<>
+									<Text>{JSON.stringify(userInfo)}</Text>
+									<ButtonNavigate text={t("logout_google")} onPress={logout} />
+								</>
+							) : null}
+
+							<GoogleSigninButton onPress={signin} />
+
 							<View
 								className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
 								style={{
