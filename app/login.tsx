@@ -11,7 +11,6 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import {
-	useNavigation,
 	ParamListBase,
 	NavigationProp,
 	useIsFocused,
@@ -37,6 +36,7 @@ import {
 	GoogleSignin,
 	GoogleSigninButton,
 } from "@react-native-google-signin/google-signin";
+import { useNavigation } from "expo-router";
 
 export default function Login() {
 	const { theme } = useTheme();

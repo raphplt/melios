@@ -2,11 +2,7 @@ import React, { memo, useEffect, useState } from "react";
 import { View, Pressable } from "react-native";
 import { Text } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-import {
-	NavigationProp,
-	ParamListBase,
-	useNavigation,
-} from "@react-navigation/native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
@@ -30,6 +26,7 @@ import useAddXp from "@hooks/useAddXp";
 import { CategoryTypeSelect } from "@utils/category.type";
 import { incrementStreak } from "@db/streaks";
 import RestartHabit from "@components/Modals/RestartHabit";
+import { useNavigation } from "expo-router";
 
 function CardCheckHabit({
 	habit,
@@ -99,6 +96,7 @@ function CardCheckHabit({
 	// Fonctions
 	const goHabitDetail = () => {
 		setCurrentHabit(habit);
+		// if (navigation.isr)
 		navigation.navigate("habitDetail");
 	};
 

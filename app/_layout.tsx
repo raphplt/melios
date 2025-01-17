@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar, useColorScheme } from "react-native";
 import {
+	NavigationContainer,
 	NavigationProp,
 	ParamListBase,
 	ThemeProvider,
@@ -67,6 +68,7 @@ function MainNavigator() {
 					barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
 					backgroundColor={theme.colors.background}
 				/>
+				s{" "}
 				<Stack>
 					<Stack.Screen
 						name="(navbar)"
@@ -194,7 +196,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
 	return (
 		<SessionProvider>
-			<RootLayoutContent />
+			<NavigationContainer>
+				<RootLayoutContent />
+			</NavigationContainer>
 		</SessionProvider>
 	);
 }
