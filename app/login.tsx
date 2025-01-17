@@ -56,28 +56,31 @@ export default function Login() {
 	const [errorGoogle, setErrorGoogle] = useState("");
 	const [userInfo, setUserInfo] = useState<any>(null);
 
-	useEffect(() => {
-		GoogleSignin.configure();
-	}, []);
+	// useEffect(() => {
+	// 	GoogleSignin.configure({
+	// 		webClientId:
+	// 			"709212823740-ugukkejdgg0c6fpip87ee675nurc8tg7.apps.googleusercontent.com",
+	// 	});
+	// }, []);
 
-	const signin = async () => {
-		try {
-			await GoogleSignin.hasPlayServices();
-			const user = await GoogleSignin.signIn();
-			setUserInfo(user);
-			setErrorGoogle("");
-		} catch (error: any) {
-			setErrorGoogle(error.message);
-		}
-	};
+	// const signin = async () => {
+	// 	try {
+	// 		await GoogleSignin.hasPlayServices();
+	// 		const user = await GoogleSignin.signIn();
+	// 		setUserInfo(user);
+	// 		setErrorGoogle("");
+	// 	} catch (error: any) {
+	// 		setErrorGoogle(error.message);
+	// 	}
+	// };
 
-	console.log(user);
+	// console.log(user);
 
-	const logout = () => {
-		setUserInfo(null);
-		GoogleSignin.revokeAccess();
-		GoogleSignin.signOut();
-	};
+	// const logout = () => {
+	// 	setUserInfo(null);
+	// 	GoogleSignin.revokeAccess();
+	// 	GoogleSignin.signOut();
+	// };
 
 	useEffect(() => {
 		return navigation.addListener("beforeRemove", (e: any) => {
@@ -264,7 +267,7 @@ export default function Login() {
 
 							<ButtonLogin login={login} isDisabled={isDisabled} />
 
-							<Text>{JSON.stringify(errorGoogle)}</Text>
+							{/* <Text>{JSON.stringify(errorGoogle)}</Text>
 							{userInfo ? (
 								<>
 									<Text>{JSON.stringify(userInfo)}</Text>
@@ -272,7 +275,7 @@ export default function Login() {
 								</>
 							) : null}
 
-							<GoogleSigninButton onPress={signin} />
+							<GoogleSigninButton onPress={signin} /> */}
 
 							<View
 								className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"

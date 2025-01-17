@@ -139,7 +139,7 @@ function MainNavigator() {
 						options={{
 							title: "Boutique cosmétique",
 							headerShadowVisible: false,
-							headerBackTitleVisible: false,
+							// headerBackTitleVisible: false,
 							headerTitleStyle: {
 								fontFamily: "BaskervilleBold",
 								fontSize: 18,

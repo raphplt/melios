@@ -28,6 +28,7 @@ export default {
 				foregroundImage: "./assets/images/adaptive-icon.png",
 				backgroundColor: "#ffffff",
 			},
+			packageName: "com.raphplt.melios",
 			package: "com.raphplt.melios",
 			permissions: [
 				"NOTIFICATIONS",
@@ -35,6 +36,7 @@ export default {
 				"WRITE_EXTERNAL_STORAGE",
 				"INTERNET",
 			],
+			minSdkVersion: 24,
 		},
 		web: {
 			bundler: "metro",
@@ -61,6 +63,7 @@ export default {
 		experiments: {
 			typedRoutes: true,
 		},
+		newArchEnabled: false,
 		extra: {
 			googleWebClientId:
 				"709212823740-ugukkejdgg0c6fpip87ee675nurc8tg7.apps.googleusercontent.com",
