@@ -8,11 +8,12 @@ import ButtonNewHabit from "../Items/ButtonNewHabit";
 export default function HomeTop() {
 	const { theme } = useTheme();
 
+	console.log("StatusBar.currentHeight", StatusBar.currentHeight);
+
 	return (
 		<View
 			style={{
 				backgroundColor: theme.colors.background,
-				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
 			<ButtonClose />

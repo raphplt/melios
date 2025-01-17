@@ -36,7 +36,14 @@ const TabLayout: React.FC = () => {
 				barStyle={theme.dark ? "light-content" : "dark-content"}
 				backgroundColor={"transparent"}
 			/>
-			<Tabs tabBar={(props) => <CustomTabBar {...props} />}>
+			<Tabs
+				tabBar={(props) => <CustomTabBar {...props} />}
+				screenOptions={{
+					headerBackgroundContainerStyle: {
+						backgroundColor: theme.colors.background,
+					},
+				}}
+			>
 				<Tabs.Screen
 					name="index"
 					options={createTabOptions(

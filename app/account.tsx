@@ -22,7 +22,7 @@ export default function Account() {
 		<>
 			<ScrollView
 				showsVerticalScrollIndicator={false}
-				style={{ backgroundColor: theme.colors.background }}
+				style={{ backgroundColor: theme.colors.background, flex: 1 }}
 			>
 				<MemberInfos member={member} auth={auth} />
 				<General />

@@ -13,6 +13,9 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { useTranslation } from "react-i18next";
 import { incrementStreak } from "@db/streaks";
 import { CategoryTypeSelect } from "@utils/category.type";
+import useAddXp from "@hooks/useAddXp";
+import RestartHabit from "@components/Modals/RestartHabit";
+import { Iconify } from "react-native-iconify";
 
 export default function ButtonComplete() {
 	const { theme } = useTheme();
@@ -21,6 +24,8 @@ export default function ButtonComplete() {
 	const { currentHabit } = useHabits();
 	const { date, setCompletedHabitsToday, setStreak } = useData();
 	const { addOdysseePoints } = usePoints();
+	const addXp = useAddXp()?.addXp;
+	const [showModalNegative, setShowModalNegative] = useState(false);
 
 	const [loading, setLoading] = useState(false);
 
@@ -29,76 +34,95 @@ export default function ButtonComplete() {
 	const handlePress = async () => {
 		setLoading(true);
 		await setHabitLog(currentHabit.id, date);
-		addOdysseePoints(currentHabit.difficulty);
-		setRewards("odyssee", currentHabit.difficulty * 2);
+		if (currentHabit.type !== CategoryTypeSelect.negative) {
+			addXp && addXp(currentHabit, 10 * currentHabit.difficulty);
 
-		setCompletedHabitsToday((prev) => [...prev, currentHabit]);
+			addOdysseePoints(currentHabit.difficulty);
+			setRewards("odyssee", currentHabit.difficulty * 2);
 
-		const streak = await incrementStreak();
-		if (streak) {
-			setStreak(streak);
+			setCompletedHabitsToday((prev) => [...prev, currentHabit]);
+
+			const streak = await incrementStreak();
+			if (streak) {
+				setStreak(streak);
+			}
+
+			navigation.navigate("index");
+			setLoading(false);
+		} else {
+			setShowModalNegative(true);
+			setLoading(false);
 		}
-
-		navigation.navigate("index");
-		setLoading(false);
 	};
-	return (
-		<ZoomableView>
-			<Pressable
-				onPress={handlePress}
-				className="py-3 px-4 rounded-lg w-11/12 mx-auto justify-evenly flex flex-row items-center"
-				style={{
-					backgroundColor: theme.colors.backgroundSecondary,
-				}}
-			>
-				<View className="flex flex-row items-center">
-					{loading ? (
-						<ActivityIndicator size="small" color={theme.colors.primary} />
-					) : (
-						<>
-							<Text
-								className="font-semibold text-[16px] mx-1"
-								style={{
-									color: theme.colors.text,
-								}}
-							>
-								{currentHabit.type === CategoryTypeSelect.negative
-									? t("restart")
-									: t("complete")}
-							</Text>
 
-							{currentHabit.type !== CategoryTypeSelect.negative && (
-								<View className="flex flex-row items-center mx-1">
-									<View
-										style={{
-											width: 28,
-											height: 28,
-											justifyContent: "center",
-											alignItems: "center",
-										}}
-									>
-										<Image
-											source={require("@assets/images/badge.png")}
-											style={{ width: "100%", height: "100%", position: "absolute" }}
-										/>
-										<Text className="text-[12px] font-bold text-white text-center">
-											{10 * currentHabit.difficulty}
+	return (
+		<>
+			<ZoomableView>
+				<Pressable
+					onPress={handlePress}
+					className="py-3 px-4 rounded-lg w-11/12 mx-auto justify-evenly flex flex-row items-center"
+					style={{
+						backgroundColor: theme.colors.backgroundSecondary,
+					}}
+				>
+					<View className="flex flex-row items-center">
+						{loading ? (
+							<ActivityIndicator size="small" color={theme.colors.primary} />
+						) : (
+							<View className="flex flex-row items-center justify-center">
+								<Text
+									className="font-semibold text-[16px] mx-1"
+									style={{
+										color: theme.colors.text,
+									}}
+								>
+									{currentHabit.type === CategoryTypeSelect.negative
+										? t("restart")
+										: t("complete")}
+								</Text>
+
+								{currentHabit.type !== CategoryTypeSelect.negative ? (
+									<View className="flex flex-row items-center mx-1">
+										<View
+											style={{
+												width: 28,
+												height: 28,
+												justifyContent: "center",
+												alignItems: "center",
+											}}
+										>
+											<Image
+												source={require("@assets/images/badge.png")}
+												style={{ width: "100%", height: "100%", position: "absolute" }}
+											/>
+											<Text className="text-[12px] font-bold text-white text-center">
+												{10 * currentHabit.difficulty}
+											</Text>
+										</View>
+										<Text
+											style={{
+												color: theme.colors.primary,
+											}}
+											className="text-[12x] font-semibold px-1"
+										>
+											XP
 										</Text>
 									</View>
-									<Text
-										style={{
-											color: theme.colors.primary,
-										}}
-										className="text-[12x] font-semibold px-1"
-									>
-										XP
-									</Text>
-								</View>
-							)}
-						</>
-					)}
-				</View>
-			</Pressable>
-		</ZoomableView>
+								) : (
+									<View className="mx-2">
+										<Iconify icon="mdi:restart" size={20} color={theme.colors.text} />
+									</View>
+								)}
+							</View>
+						)}
+					</View>
+				</Pressable>
+			</ZoomableView>
+			<RestartHabit
+				visible={showModalNegative}
+				setVisible={setShowModalNegative}
+				habit={currentHabit}
+			/>
+		</>
 	);
 }

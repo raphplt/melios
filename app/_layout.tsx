@@ -68,7 +68,6 @@ function MainNavigator() {
 					barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
 					backgroundColor={theme.colors.background}
 				/>
-				s{" "}
 				<Stack>
 					<Stack.Screen
 						name="(navbar)"
@@ -141,7 +140,6 @@ function MainNavigator() {
 						options={{
 							title: "Boutique cosmétique",
 							headerShadowVisible: false,
-							// headerBackTitleVisible: false,
 							headerTitleStyle: {
 								fontFamily: "BaskervilleBold",
 								fontSize: 18,

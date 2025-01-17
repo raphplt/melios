@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TextInput, Alert, Pressable } from "react-native";
+import { View, Text, Alert, Pressable } from "react-native";
 import {
 	getAuth,
 	reauthenticateWithCredential,

@@ -3,22 +3,12 @@ import ButtonClose from "@components/Shared/ButtonClose";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import {
-	Dimensions,
-	Platform,
-	StatusBar,
-	Text,
-	View,
-	TouchableOpacity,
-	ScrollView,
-} from "react-native";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 const Pack = () => {
 	const { selectedPack } = useData();
 	const { theme } = useTheme();
-	const { t } = useTranslation();
 	const [unlocked, setUnlocked] = useState(false);
 	const [expandedSections, setExpandedSections] = useState<number[]>([]);
 
@@ -35,12 +25,8 @@ const Pack = () => {
 
 	return (
 		<View
-			className="flex-1 relative"
 			style={{
-				width: Dimensions.get("window").width,
-				height: Dimensions.get("window").height,
 				flexGrow: 1,
-				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
 			<ButtonClose />

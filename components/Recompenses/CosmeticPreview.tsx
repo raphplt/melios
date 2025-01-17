@@ -4,14 +4,11 @@ import { ProfileCosmetic } from "@type/cosmetics";
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Iconify } from "react-native-iconify";
-import {
-	NavigationProp,
-	ParamListBase,
-	useNavigation,
-} from "@react-navigation/native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import IconPreview from "./IconPreview";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTranslation } from "react-i18next";
+import { useNavigation } from "expo-router";
 
 export default function CosmeticPreviewStacked() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);

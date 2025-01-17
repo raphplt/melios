@@ -1,6 +1,6 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { Member } from "@type/member";
 import getIcon from "@utils/cosmeticsUtils";
 import ZoomableView from "@components/Shared/ZoomableView";
@@ -18,10 +18,10 @@ export default function MemberInfos({
 }) {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [profilePictureUri, setProfilePictureUri] = useState<string | null>(
 		null
 	);
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
 		const loadProfilePicture = () => {

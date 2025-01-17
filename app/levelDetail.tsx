@@ -17,8 +17,17 @@ const LevelDetail = () => {
 	if (!selectedLevel) return null;
 
 	return (
-		<View>
-			<View className="mt-12 mb-4 ml-5 z-10 flex flex-row items-center justify-between w-10/12 mx-auto">
+		<View
+			style={{
+				backgroundColor: theme.colors.background,
+				flexGrow: 1,
+			}}
+		>
+			<StatusBar
+				barStyle={theme.dark ? "light-content" : "dark-content"}
+				backgroundColor={"transparent"}
+			/>
+			<View className=" mb-4 ml-5 z-10 flex flex-row items-center justify-between w-10/12 mx-auto">
 				<ButtonClose />
 			</View>
 

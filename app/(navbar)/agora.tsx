@@ -3,6 +3,7 @@ import { FlatList, View } from "react-native";
 import AllLogs from "@components/Agora/AllLogs";
 import MainSubSections from "@components/Agora/MainSubSections";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
+import { useTheme } from "@context/ThemeContext";
 
 const data = [
 	{ key: "MainSubSections", component: <MainSubSections /> },
@@ -10,13 +11,14 @@ const data = [
 ];
 
 export default function Agora() {
+	const { theme } = useTheme();
 	return (
 		<>
 			<FlatList
 				data={data}
 				renderItem={({ item }) => <View>{item.component}</View>}
 				keyExtractor={(item) => item.key}
-				style={{ flex: 1 }}
+				style={{ flex: 1, backgroundColor: theme.colors.background }}
 				showsVerticalScrollIndicator={false}
 			/>
 			<ModalTutorial

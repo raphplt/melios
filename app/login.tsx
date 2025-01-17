@@ -9,6 +9,8 @@ import {
 	Text,
 	Image,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
+	Keyboard,
 } from "react-native";
 import {
 	ParamListBase,
@@ -56,32 +58,6 @@ export default function Login() {
 	const [errorGoogle, setErrorGoogle] = useState("");
 	const [userInfo, setUserInfo] = useState<any>(null);
 
-	// useEffect(() => {
-	// 	GoogleSignin.configure({
-	// 		webClientId:
-	// 			"709212823740-ugukkejdgg0c6fpip87ee675nurc8tg7.apps.googleusercontent.com",
-	// 	});
-	// }, []);
-
-	// const signin = async () => {
-	// 	try {
-	// 		await GoogleSignin.hasPlayServices();
-	// 		const user = await GoogleSignin.signIn();
-	// 		setUserInfo(user);
-	// 		setErrorGoogle("");
-	// 	} catch (error: any) {
-	// 		setErrorGoogle(error.message);
-	// 	}
-	// };
-
-	// console.log(user);
-
-	// const logout = () => {
-	// 	setUserInfo(null);
-	// 	GoogleSignin.revokeAccess();
-	// 	GoogleSignin.signOut();
-	// };
-
 	useEffect(() => {
 		return navigation.addListener("beforeRemove", (e: any) => {
 			if (!user) {
@@ -114,7 +90,7 @@ export default function Login() {
 			} else {
 				refreshCategories(true);
 				refreshHabits(true);
-				navigation.navigate("index");
+				navigation.navigate("(navbar)/index");
 			}
 		} catch (error) {
 			setError("Erreur lors de la connexion.");
@@ -169,143 +145,135 @@ export default function Login() {
 	}
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			style={{ flex: 1 }}
+		// <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+		// 	<KeyboardAvoidingView
+		// 		behavior={Platform.OS === "ios" ? "padding" : "height"}
+		// 		style={{ flex: 1 }}
+		// 	>
+		<ScrollView
+			ref={scrollViewRef}
+			style={{ backgroundColor: theme.colors.background }}
+			showsVerticalScrollIndicator={false}
+			contentContainerStyle={{
+				flexGrow: 1,
+			}}
+			keyboardShouldPersistTaps="handled"
 		>
 			<StatusBar
 				translucent
 				backgroundColor="transparent"
 				barStyle="light-content"
 			/>
-			<ScrollView
-				ref={scrollViewRef}
-				style={{ backgroundColor: theme.colors.background }}
-				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{
-					flexGrow: 1,
+			<ImageBackground
+				source={image ? { uri: image } : undefined}
+				resizeMode="cover"
+				style={{
+					flex: 1,
+					justifyContent: "center",
 				}}
-				keyboardShouldPersistTaps="handled"
 			>
-				<ImageBackground
-					source={image ? { uri: image } : undefined}
-					resizeMode="cover"
+				<BlurView
+					intensity={70}
+					className="w-11/12 mx-auto p-6 rounded-xl"
 					style={{
-						flex: 1,
-						justifyContent: "center",
+						overflow: "hidden",
 					}}
+					tint="default"
 				>
-					<BlurView
-						intensity={70}
-						className="w-11/12 mx-auto p-6 rounded-xl"
-						style={{
-							overflow: "hidden",
-						}}
-						tint="default"
-					>
-						<View className="flex flex-col items-center w-full py-3 rounded-xl">
-							<Image
-								source={require("../assets/images/icon.png")}
-								style={{ width: 100, height: 100 }}
-								className="mb-4"
-							/>
-							<View className="flex flex-col justify-center items-center w-full">
-								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
-									{t("welcome_back_to")}
-								</Text>
-								<Text
-									style={{ color: "rgb(28, 28, 30)" }}
-									className="text-3xl font-bold"
-								>
-									Melios
-								</Text>
-							</View>
-							<View className="flex flex-col justify-center items-start w-full mt-3">
-								<CustomTextInput
-									label="Votre email"
-									placeholder="melios@gmail.com"
-									value={email}
-									onChangeText={setEmail}
-									keyboardType="email-address"
-									autoCapitalize="none"
-									autoCorrect={false}
-									onFocus={() => {
-										scrollViewRef.current?.scrollToEnd({ animated: true });
-									}}
-									onSubmitEditing={() =>
-										passwordInputRef.current && (passwordInputRef.current as any).focus()
-									}
-									returnKeyType="next"
-								/>
-								<CustomPasswordInput
-									ref={passwordInputRef}
-									onChangeText={setPassword}
-									label="Votre mot de passe"
-									placeholder="********"
-									value={password}
-									showPassword={showPassword}
-									setShowPassword={setShowPassword}
-									secureTextEntry={!showPassword}
-									onFocus={() => {
-										scrollViewRef.current?.scrollToEnd({ animated: true });
-									}}
-									onSubmitEditing={login}
-									returnKeyType="done"
-								/>
-								<TouchableOpacity>
-									<Text
-										style={{
-											color: theme.colors.primary,
-										}}
-										className="mt-1 ml-2"
-										onPress={() => navigation.navigate("resetPassword")}
-									>
-										{t("forget_password_question")}
-									</Text>
-								</TouchableOpacity>
-							</View>
-
-							<ButtonLogin login={login} isDisabled={isDisabled} />
-
-							{/* <Text>{JSON.stringify(errorGoogle)}</Text>
-							{userInfo ? (
-								<>
-									<Text>{JSON.stringify(userInfo)}</Text>
-									<ButtonNavigate text={t("logout_google")} onPress={logout} />
-								</>
-							) : null}
-
-							<GoogleSigninButton onPress={signin} /> */}
-
-							<View
-								className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
-								style={{
-									backgroundColor: theme.colors.redSecondary,
-									display: error === "" ? "none" : "flex",
-								}}
+					<View className="flex flex-col items-center w-full py-3 rounded-xl">
+						<Image
+							source={require("../assets/images/icon.png")}
+							style={{ width: 100, height: 100 }}
+							className="mb-4"
+						/>
+						<View className="flex flex-col justify-center items-center w-full">
+							<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
+								{t("welcome_back_to")}
+							</Text>
+							<Text
+								style={{ color: "rgb(28, 28, 30)" }}
+								className="text-3xl font-bold"
 							>
-								<Iconify
-									icon="material-symbols:error"
-									color={theme.colors.redPrimary}
-									size={20}
-								/>
+								Melios
+							</Text>
+						</View>
+						<View className="flex flex-col justify-center items-start w-full mt-3">
+							<CustomTextInput
+								label="Votre email"
+								placeholder="melios@gmail.com"
+								value={email}
+								onChangeText={setEmail}
+								keyboardType="email-address"
+								autoCapitalize="none"
+								autoCorrect={false}
+								// onFocus={() => {
+								// 	scrollViewRef.current?.scrollToEnd({ animated: true });
+								// }}
+								onSubmitEditing={() =>
+									passwordInputRef.current && (passwordInputRef.current as any).focus()
+								}
+								returnKeyType="next"
+							/>
+							<CustomPasswordInput
+								ref={passwordInputRef}
+								onChangeText={setPassword}
+								label="Votre mot de passe"
+								placeholder="********"
+								value={password}
+								showPassword={showPassword}
+								setShowPassword={setShowPassword}
+								secureTextEntry={!showPassword}
+								// onFocus={() => {
+								// 	scrollViewRef.current?.scrollToEnd({ animated: true });
+								// }}
+								onSubmitEditing={login}
+								returnKeyType="done"
+							/>
+							<TouchableOpacity>
 								<Text
 									style={{
-										color: theme.colors.redPrimary,
+										color: theme.colors.primary,
 									}}
-									className="ml-2"
+									className="mt-1 ml-2"
+									onPress={() => navigation.navigate("resetPassword")}
 								>
-									{error}
+									{t("forget_password_question")}
 								</Text>
-							</View>
+							</TouchableOpacity>
 						</View>
-					</BlurView>
-					<ButtonNavigate
-						text={t("no_account")}
-						onPress={() => navigation.navigate("register")}
-					/>
-				</ImageBackground>
-			</ScrollView>
-		</KeyboardAvoidingView>
+
+						<ButtonLogin login={login} isDisabled={isDisabled} />
+
+						<View
+							className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
+							style={{
+								backgroundColor: theme.colors.redSecondary,
+								display: error === "" ? "none" : "flex",
+							}}
+						>
+							<Iconify
+								icon="material-symbols:error"
+								color={theme.colors.redPrimary}
+								size={20}
+							/>
+							<Text
+								style={{
+									color: theme.colors.redPrimary,
+								}}
+								className="ml-2"
+							>
+								{error}
+							</Text>
+						</View>
+					</View>
+				</BlurView>
+				<ButtonNavigate
+					text={t("no_account")}
+					onPress={() => navigation.navigate("register")}
+				/>
+			</ImageBackground>
+		</ScrollView>
+		// 	</KeyboardAvoidingView>
+		// </TouchableWithoutFeedback>
 	);
 }

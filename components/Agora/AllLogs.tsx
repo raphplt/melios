@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-	Text,
-	FlatList,
-	ActivityIndicator,
-	View,
-	TouchableOpacity,
-} from "react-native";
+import { Text, FlatList, ActivityIndicator, View, Button } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { getAllUsersLogsPaginated } from "../../db/logs";
@@ -58,7 +52,13 @@ const AllLogs = () => {
 				member?.friends
 			);
 
-			setLogs((prevLogs: any) => [...(isRefreshing ? [] : prevLogs), ...newLogs]);
+			setLogs((prevLogs: any) => {
+				const updatedLogs = [...(isRefreshing ? [] : prevLogs), ...newLogs];
+				const uniqueLogs = Array.from(
+					new Set(updatedLogs.map((log) => log.id))
+				).map((id) => updatedLogs.find((log) => log.id === id));
+				return uniqueLogs;
+			});
 			setLastVisible(newLastVisible);
 			setHasMore(moreLogs);
 		} catch (error) {
@@ -81,9 +81,7 @@ const AllLogs = () => {
 			data={logs}
 			renderItem={renderItem}
 			keyExtractor={(item) => item.id}
-			onEndReached={() => fetchLogs(false)}
 			className="w-[95%] mx-auto"
-			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
 				<View
 					className="flex flex-row items-center justify-between px-6 py-3 my-4 rounded-xl"
@@ -118,20 +116,28 @@ const AllLogs = () => {
 				</View>
 			}
 			ListFooterComponent={
-				loading ? (
-					<ActivityIndicator
-						size="large"
-						color={theme.colors.primary}
-						className="py-10"
-					/>
-				) : !hasMore ? (
-					<Text
-						className="text-center mt-4 mb-20"
-						style={{ color: theme.colors.textTertiary }}
-					>
-						{" "}
-					</Text>
-				) : null
+				<View>
+					{loading ? (
+						<ActivityIndicator
+							size="large"
+							color={theme.colors.primary}
+							className="py-10"
+						/>
+					) : !hasMore ? (
+						<Text
+							className="text-center mt-4 mb-20"
+							style={{ color: theme.colors.textTertiary }}
+						>
+							{t("no_more_logs")}
+						</Text>
+					) : (
+						<Button
+							title={t("see_more")}
+							onPress={() => fetchLogs(false)}
+							color={theme.colors.primary}
+						/>
+					)}
+				</View>
 			}
 			contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
 		/>

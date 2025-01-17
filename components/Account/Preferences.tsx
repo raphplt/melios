@@ -24,13 +24,7 @@ export default function Preferences() {
 	const { theme, toggleTheme } = useTheme();
 	const { t } = useTranslation();
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
-	const {
-		setHabits,
-		setPoints,
-		setNotificationToggle,
-		notificationToggle,
-		setMember,
-	} = useData();
+	const { setNotificationToggle, notificationToggle } = useData();
 
 	const { scheduleDailyNotification, cancelAllNotifications } =
 		useNotifications();
@@ -59,6 +53,7 @@ export default function Preferences() {
 
 	const confirmLogout = async () => {
 		await disconnectUser();
+		navigation.navigate("login");
 	};
 
 	const handleLogout = () => {
