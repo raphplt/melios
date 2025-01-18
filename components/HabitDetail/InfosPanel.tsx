@@ -48,7 +48,7 @@ export default function InfosPanel() {
 				style={{
 					color: textColor,
 				}}
-				className="text-[16px] text-pretty ml-4 py-2 w-11/12 mx-auto font-semibold"
+				className="text-[14px] text-pretty ml-4 py-2 w-11/12 mx-auto font-semibold"
 			>
 				{currentHabit.description}
 			</Text>

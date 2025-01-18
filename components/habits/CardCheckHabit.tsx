@@ -111,20 +111,18 @@ function CardCheckHabit({
 			setCompleted(true);
 			await setHabitLog(habit.id, date);
 
-			if (habit.type !== CategoryTypeSelect.negative) {
-				if (addXp) {
-					await addXp(habit, 10 * habit.difficulty);
-				}
+			if (addXp) {
+				await addXp(habit, 10 * habit.difficulty);
+			}
 
-				// set points
-				addOdysseePoints(habit.difficulty); // set local points
-				setRewards("odyssee", habit.difficulty * 2); // set database points
+			// set points
+			addOdysseePoints(habit.difficulty); // set local points
+			setRewards("odyssee", habit.difficulty * 2); // set database points
 
-				// set streak
-				const streak = await incrementStreak();
-				if (streak) {
-					setStreak(streak);
-				}
+			// set streak
+			const streak = await incrementStreak();
+			if (streak) {
+				setStreak(streak);
 			}
 			setCompletedHabitsToday((prev) => [...prev, habit]);
 		} catch (error) {
@@ -138,14 +136,6 @@ function CardCheckHabit({
 
 	const isNegative = habit.type === CategoryTypeSelect.negative;
 
-	const handlePress = () => {
-		if (isNegative) {
-			setShowModalNegative(true);
-		} else {
-			setHabitDone();
-		}
-	};
-
 	return (
 		<ZoomableView>
 			<Animated.View
@@ -153,7 +143,7 @@ function CardCheckHabit({
 				className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
 			>
 				<Pressable
-					onPress={handlePress}
+					onPress={setHabitDone}
 					className="flex items-center justify-center"
 					disabled={completed}
 					style={{ flexBasis: "12.5%" }}

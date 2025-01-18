@@ -96,7 +96,11 @@ export default function ButtonBack() {
 								setModalDeleteVisible(true);
 							}}
 						>
-							<Iconify icon="mdi:trash-can" size={24} color={textColor} />
+							<Iconify
+								icon="mdi:trash-can"
+								size={24}
+								color={theme.colors.redPrimary}
+							/>
 						</Pressable>
 					</Reanimated.View>
 				)}

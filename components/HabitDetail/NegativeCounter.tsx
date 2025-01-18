@@ -102,7 +102,7 @@ const NegativeCounter: React.FC = () => {
 	return (
 		<BlurView
 			intensity={70}
-			className="w-11/12 mx-auto p-4 rounded-xl my-2 overflow-hidden"
+			className="w-11/12 mx-auto p-2 rounded-xl my-1 overflow-hidden"
 			tint="extraLight"
 		>
 			<View className="p-4">
@@ -144,7 +144,7 @@ const NegativeCounter: React.FC = () => {
 type ProgressBarProps = {
 	label: string;
 	value: number;
-	style: ReturnType<typeof useAnimatedStyle>;
+	style: any;
 	theme: any;
 };
 
@@ -154,12 +154,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 	style,
 	theme,
 }) => (
-	<View className="mb-4">
+	<View className="mb-2">
 		<Text className="font-semibold pb-2" style={{ color: theme.colors.text }}>
 			{value} {label}
 		</Text>
 		<View
-			className="h-4 rounded-lg border"
+			className="h-4 rounded-lg"
 			style={{
 				backgroundColor: theme.colors.cardBackground,
 			}}
