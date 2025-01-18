@@ -91,7 +91,12 @@ const FriendList = () => {
 	const filterStyle = "px-4 py-2 rounded-lg mx-2";
 
 	return (
-		<View>
+		<View
+			style={{
+				flex: 1,
+				backgroundColor: theme.colors.background,
+			}}
+		>
 			<View className="flex flex-row items-center justify-center mb-4">
 				<Pressable
 					onPress={() => setFilter("all")}

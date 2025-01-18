@@ -43,7 +43,7 @@ export default function PackItem({ pack }: { pack: Pack }) {
 			<BlurView
 				tint="extraLight"
 				intensity={70}
-				className="p-3 rounded-xl w-[95%] mt-3 flex flex-row items-center justify-start"
+				className="p-2 rounded-xl w-[95%] mt-3 flex flex-row items-center justify-start"
 				style={{
 					overflow: "hidden",
 				}}
@@ -70,13 +70,13 @@ export default function PackItem({ pack }: { pack: Pack }) {
 					bottom: 6,
 					right: 6,
 				}}
-				className="rounded-2xl px-4 py-2 my-1 w-fit flex flex-row items-center justify-center"
+				className="rounded-2xl px-4 py-2 my-2 w-fit flex flex-row items-center justify-center"
 			>
 				<Text
 					style={{
 						color: theme.colors.textSecondary,
 					}}
-					className="text-[12px] font-bold mr-2"
+					className="text-[13px] font-bold mr-2"
 				>
 					{t("discover")}
 				</Text>

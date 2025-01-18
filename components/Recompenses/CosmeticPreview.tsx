@@ -95,10 +95,10 @@ export default function CosmeticPreviewStacked() {
 					/>
 					<Text
 						style={{
-							color: theme.colors.text,
+							color: theme.colors.primary,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="mt-3 text-center"
+						className="mt-2 text-center"
 					>
 						{t("access_shop")}
 					</Text>

@@ -53,7 +53,7 @@ export default function CardClassement({
 				borderColor:
 					member.uid === reward.uid ? theme.colors.primary : backgroundColor(rank),
 			}}
-			className="flex flex-row justify-between items-center w-11/12 rounded-xl px-2 py-2 my-1 mx-auto"
+			className="flex flex-row justify-between items-center w-[95%] rounded-xl px-2 py-2 my-1 mx-auto"
 		>
 			<View className="flex items-center flex-row justify-center gap-1">
 				<Text

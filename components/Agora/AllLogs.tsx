@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text, FlatList, ActivityIndicator, View, Button } from "react-native";
+import {
+	Text,
+	FlatList,
+	ActivityIndicator,
+	View,
+	Button,
+	RefreshControl,
+	Pressable,
+} from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { getAllUsersLogsPaginated } from "../../db/logs";
@@ -30,6 +38,7 @@ const AllLogs = () => {
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [confidentiality, setConfidentiality] = useState("public");
+	const [refreshing, setRefreshing] = useState(false); // État pour le rafraîchissement
 
 	const fetchLogs = async (isRefreshing = false) => {
 		if (loading || (!hasMore && !isRefreshing)) return;
@@ -59,12 +68,14 @@ const AllLogs = () => {
 				).map((id) => updatedLogs.find((log) => log.id === id));
 				return uniqueLogs;
 			});
+
 			setLastVisible(newLastVisible);
-			setHasMore(moreLogs);
+			setHasMore(newLogs.length > 0 && moreLogs);
 		} catch (error) {
 			console.error("Erreur lors de la récupération des logs :", error);
 		} finally {
 			setLoading(false);
+			if (isRefreshing) setRefreshing(false);
 		}
 	};
 
@@ -131,15 +142,34 @@ const AllLogs = () => {
 							{t("no_more_logs")}
 						</Text>
 					) : (
-						<Button
-							title={t("see_more")}
+						<Pressable
+							className="mt-2 mb-24 p-4 rounded-xl"
+							style={{
+								backgroundColor: theme.colors.primary,
+							}}
 							onPress={() => fetchLogs(false)}
-							color={theme.colors.primary}
-						/>
+						>
+							<Text
+								className="text-center"
+								style={{ color: theme.colors.textSecondary }}
+							>
+								{t("load_more")}
+							</Text>
+						</Pressable>
 					)}
 				</View>
 			}
 			contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+			refreshControl={
+				<RefreshControl
+					refreshing={refreshing}
+					onRefresh={() => {
+						setRefreshing(true);
+						fetchLogs(true);
+					}}
+					colors={[theme.colors.primary]}
+				/>
+			}
 		/>
 	);
 };

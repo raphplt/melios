@@ -101,7 +101,7 @@ const CalendarHabits = () => {
 								}}
 								className="text-sm font-normal w-10/12"
 							>
-								{t("reward_description")}
+								{t("calendar_description")}
 							</Text>
 							<Pressable onPress={closeTips}>
 								<Iconify icon="mdi-close" size={24} color={theme.colors.primary} />

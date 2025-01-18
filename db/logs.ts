@@ -158,7 +158,6 @@ export const getAllUsersLogsPaginated = async (
 		let logsQuery = query(
 			logsCollectionRef,
 			orderBy("mostRecentLog", "desc"),
-
 			limit(pageSize)
 		);
 
@@ -176,43 +175,25 @@ export const getAllUsersLogsPaginated = async (
 			querySnapshot.docs.map(async (doc) => {
 				const logData = doc.data();
 				const memberInfo = await getMemberProfileByUid(logData.uid);
+				const habitInfo: any = await getHabitById(logData.habitId);
 
-				const habitInfo: UserHabit = (await getHabitById(logData.habitId)) as any;
-
-				// Vérifier si habitInfo est null
-				if (!habitInfo) {
-					console.log(
-						`Aucun document trouvé pour l'ID d'habitude: ${logData.habitId}`
-					);
+				if (!habitInfo || habitInfo.type === CategoryTypeSelect.negative) {
 					return null;
 				}
 
-				// Si l'habitude est négative, on ne la retourne pas
-				if (habitInfo.type && habitInfo.type === CategoryTypeSelect.negative) {
+				if (!memberInfo || memberInfo.activityConfidentiality === "private") {
 					return null;
 				}
 
-				// Vérifier si memberInfo est null
-				if (!memberInfo) {
-					console.log(`Aucun document trouvé pour l'ID de membre: ${logData.uid}`);
+				if (
+					memberInfo.activityConfidentiality === "friends" &&
+					!friends.includes(memberInfo.uid)
+				) {
 					return null;
 				}
 
-				// Si l'activité est confidentielle, on ne la retourne pas
-				if (memberInfo.activityConfidentiality === "private") {
+				if (confidentiality === "friends" && !friends.includes(memberInfo.uid)) {
 					return null;
-				}
-
-				if (memberInfo.activityConfidentiality === "friends") {
-					if (!friends.includes(memberInfo.uid)) {
-						return null;
-					}
-				}
-
-				if (confidentiality === "friends") {
-					if (!friends.includes(memberInfo.uid)) {
-						return null;
-					}
 				}
 
 				return {
@@ -225,13 +206,13 @@ export const getAllUsersLogsPaginated = async (
 		);
 
 		const filteredLogs = logs.filter((log) => log !== null);
-
 		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
+		// Ajustez le calcul de hasMore
 		return {
 			logs: filteredLogs,
 			lastVisible,
-			hasMore: filteredLogs.length === pageSize,
+			hasMore: querySnapshot.size === pageSize, // Si on atteint le `pageSize`, il peut y avoir plus
 		};
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);
