@@ -14,7 +14,6 @@ import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
 import { disconnectUser } from "@db/users";
 import CustomPressable from "@components/Shared/CustomPressable";
-import ModalWrapper from "@components/Modals/ModalWrapper";
 import LanguageSelector from "./LanguageSelector";
 import ConfidentialitySelector from "./ConfidentialitySelector";
 import BottomSlideModal from "@components/Modals/ModalBottom";

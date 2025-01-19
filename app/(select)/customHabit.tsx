@@ -109,93 +109,90 @@ export default function CustomHabit() {
 	}, []);
 
 	return (
-		<>
-			<View style={{ flex: 1 }}>
-				<ScrollView
-					contentContainerStyle={{
-						flexGrow: 1,
-						paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
-					}}
-				>
-					<LinearGradient
-						colors={gradientColors as any}
-						style={{
-							flex: 1,
-							...StyleSheet.absoluteFillObject,
-							overflow: "hidden",
-						}}
-					/>
-					<ButtonClose />
-					<FormProvider {...methods}>
-						<View className="w-11/12 mx-auto pb-10">
-							{/* TITRE */}
-							<HabitTitle
-								register={register}
-								isEditingName={isEditingName}
-								setIsEditingName={setIsEditingName}
-								isEditingDescription={isEditingDescription}
-								setIsEditingDescription={setIsEditingDescription}
-								setFocus={setFocus}
-								setValue={setValue}
-								selectedColor={selectedColor}
-							/>
-							{errors.name && (
-								<Text style={{ color: "red" }}>{errors.name.message}</Text>
-							)}
-							{errors.description && (
-								<Text style={{ color: "red" }}>{errors.description.message}</Text>
-							)}
-
-							{/* INFORMATIONS */}
-							<HabitInfos habit={habit} register={register} setValue={setValue} />
-							{/* HEURE */}
-							<HabitMoment register={register} setValue={setValue} />
-							{errors.moment && (
-								<Text style={{ color: "red" }}>{errors.moment.message}</Text>
-							)}
-
-							{/* RÉPÉTER */}
-							<RepeatHabit
-								register={register}
-								setValue={setValue}
-								getValues={getValues}
-							/>
-							{errors.frequency && (
-								<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
-							)}
-
-							{/* NOTIFICATIONS */}
-							<Notifications register={register} setValue={setValue} />
-							{errors.reminderMoment && (
-								<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
-							)}
-							{errors.category && (
-								<Text style={{ color: "red" }}>{errors.category.message}</Text>
-							)}
-						</View>
-					</FormProvider>
-				</ScrollView>
-				<Pressable
+		<View style={{ flex: 1 }}>
+			<ScrollView
+				contentContainerStyle={{
+					flexGrow: 1,
+				}}
+			>
+				<LinearGradient
+					colors={gradientColors as any}
 					style={{
-						backgroundColor: theme.colors.primary,
+						flex: 1,
+						...StyleSheet.absoluteFillObject,
+						overflow: "hidden",
 					}}
-					onPress={handleSubmit(onSubmit)}
-					className="rounded-2xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4 mb-4"
-				>
-					{isSubmitting ? (
-						<ActivityIndicator size="small" color="white" />
-					) : (
-						<Text
-							style={{
-								color: "white",
-							}}
-							className="text-lg"
-						>
-							{t("save")}
-						</Text>
-					)}
-				</Pressable>
-			</View>
-		</>
+				/>
+				<ButtonClose />
+				<FormProvider {...methods}>
+					<View className="w-11/12 mx-auto pb-10">
+						{/* TITRE */}
+						<HabitTitle
+							register={register}
+							isEditingName={isEditingName}
+							setIsEditingName={setIsEditingName}
+							isEditingDescription={isEditingDescription}
+							setIsEditingDescription={setIsEditingDescription}
+							setFocus={setFocus}
+							setValue={setValue}
+							selectedColor={selectedColor}
+						/>
+						{errors.name && (
+							<Text style={{ color: "red" }}>{errors.name.message}</Text>
+						)}
+						{errors.description && (
+							<Text style={{ color: "red" }}>{errors.description.message}</Text>
+						)}
+
+						{/* INFORMATIONS */}
+						<HabitInfos habit={habit} register={register} setValue={setValue} />
+						{/* HEURE */}
+						<HabitMoment register={register} setValue={setValue} />
+						{errors.moment && (
+							<Text style={{ color: "red" }}>{errors.moment.message}</Text>
+						)}
+
+						{/* RÉPÉTER */}
+						<RepeatHabit
+							register={register}
+							setValue={setValue}
+							getValues={getValues}
+						/>
+						{errors.frequency && (
+							<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
+						)}
+
+						{/* NOTIFICATIONS */}
+						<Notifications register={register} setValue={setValue} />
+						{errors.reminderMoment && (
+							<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
+						)}
+						{errors.category && (
+							<Text style={{ color: "red" }}>{errors.category.message}</Text>
+						)}
+					</View>
+				</FormProvider>
+			</ScrollView>
+			<Pressable
+				style={{
+					backgroundColor: theme.colors.primary,
+				}}
+				onPress={handleSubmit(onSubmit)}
+				className="rounded-2xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4 mb-4"
+			>
+				{isSubmitting ? (
+					<ActivityIndicator size="small" color="white" />
+				) : (
+					<Text
+						style={{
+							color: "white",
+						}}
+						className="text-lg"
+					>
+						{t("save")}
+					</Text>
+				)}
+			</Pressable>
+		</View>
 	);
 }

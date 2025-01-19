@@ -1,14 +1,12 @@
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useTheme } from "@context/ThemeContext";
-import { View, StatusBar, Platform } from "react-native";
+import { View } from "react-native";
 import HabitsType from "./HabitsType";
 
 import ButtonNewHabit from "../Items/ButtonNewHabit";
 
 export default function HomeTop() {
 	const { theme } = useTheme();
-
-	console.log("StatusBar.currentHeight", StatusBar.currentHeight);
 
 	return (
 		<View
