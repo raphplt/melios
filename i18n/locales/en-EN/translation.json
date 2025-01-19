@@ -179,5 +179,6 @@
     "how_it_works": "How it works ?",
     "habits_limit": "You have reached the limit of habits. To add a new one, you must delete an existing one.",
     "load_more": "Load more",
-    "calendar_description": "Here you can see your habits and objectives for the current month. Click on a day to see the details."
+    "calendar_description": "Here you can see your habits and objectives for the current month. Click on a day to see the details.",
+    "choose_reaction": "Choose a reaction"
 }

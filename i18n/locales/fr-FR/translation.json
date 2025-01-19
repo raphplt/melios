@@ -181,5 +181,6 @@
     "how_it_works": "Comment ça marche ?",
     "habits_limit": "Vous avez atteint la limite d'habitudes. Pour en ajouter une nouvelle, vous devez en supprimer une existante.",
     "load_more": "Charger plus",
-    "calendar_description": "Ici, vous pouvez suivre votre progression au cours des derniers jours. Cliquez sur un jour pour en voir les détails"
+    "calendar_description": "Ici, vous pouvez suivre votre progression au cours des derniers jours. Cliquez sur un jour pour en voir les détails",
+    "choose_reaction": "Choisissez une réaction"
 }

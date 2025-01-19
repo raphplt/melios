@@ -5,16 +5,15 @@ import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
 import Agora from "../../components/Svg/Aroga";
 import { ThemeContext } from "@context/ThemeContext";
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import BlurGradientBackground from "./BlurGradientBackground";
 
-interface CustomTabBarProps extends BottomTabBarProps {}
+type Props = {
+	state: any;
+	descriptors: any;
+	navigation: any;
+};
 
-const CustomTabBar: React.FC<CustomTabBarProps> = ({
-	state,
-	descriptors,
-	navigation,
-}) => {
+const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
 	const { theme } = useContext(ThemeContext);
 	const [pressedIndex, setPressedIndex] = useState<number | null>(null);
 

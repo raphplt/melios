@@ -27,6 +27,7 @@ export type LogExtended = {
 	logs: string[];
 	uid: string;
 	createAt: Date;
+	reactions?: any[];
 };
 
 const AllLogs = () => {

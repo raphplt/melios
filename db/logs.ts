@@ -10,12 +10,15 @@ import {
 	limit,
 	orderBy,
 	startAfter,
+	arrayRemove,
+	arrayUnion,
 } from "firebase/firestore";
 import { db, auth } from ".";
-import { getMemberInfos, getMemberProfileByUid } from "./member";
+import { getMemberProfileByUid } from "./member";
 import { getHabitById } from "./userHabit";
-import { UserHabit } from "@type/userHabit";
 import { CategoryTypeSelect } from "@utils/category.type";
+
+export const REACTION_TYPES = ["flame", "heart", "like"];
 
 /**
  *  Ajoute un log pour une habitude donnée
@@ -201,6 +204,7 @@ export const getAllUsersLogsPaginated = async (
 					...logData,
 					member: memberInfo || null,
 					habit: habitInfo || null,
+					reactions: logData.reactions || [],
 				};
 			})
 		);
@@ -208,14 +212,50 @@ export const getAllUsersLogsPaginated = async (
 		const filteredLogs = logs.filter((log) => log !== null);
 		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-		// Ajustez le calcul de hasMore
 		return {
-			logs: filteredLogs,
+			logs: filteredLogs.map((log) => ({
+				...log,
+				reactions: log.reactions || [],
+			})),
 			lastVisible,
-			hasMore: querySnapshot.size === pageSize, // Si on atteint le `pageSize`, il peut y avoir plus
+			hasMore: querySnapshot.size === pageSize,
 		};
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs :", error);
 		throw error;
 	}
+};
+
+/**
+ * Ajoute une réaction à un log
+ * @param logId
+ * @param uid
+ * @param type
+ */
+export const addReactionToLog = async (
+	logId: string,
+	uid: string,
+	type: string
+) => {
+	const logRef = doc(db, "habitsLogs", logId);
+	await updateDoc(logRef, {
+		reactions: arrayUnion({ uid, type }),
+	});
+};
+
+/**
+ * Retire une réaction d'un log
+ * @param logId
+ * @param uid
+ * @param type
+ */
+export const removeReactionFromLog = async (
+	logId: string,
+	uid: string,
+	type: string
+) => {
+	const logRef = doc(db, "habitsLogs", logId);
+	await updateDoc(logRef, {
+		reactions: arrayRemove({ uid, type }),
+	});
 };

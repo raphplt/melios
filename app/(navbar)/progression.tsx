@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import Streak from "@components/Progression/Streak";
 import { useTheme } from "@context/ThemeContext";
 import GoalSection from "@components/Progression/GoalSection";
@@ -21,6 +21,7 @@ const Progression: React.FC = () => {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
+
 				<Streak />
 				<GoalSection />
 				<Levels />

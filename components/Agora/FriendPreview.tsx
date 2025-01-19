@@ -7,20 +7,28 @@ import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Share, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Iconify } from "react-native-iconify";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 
 const FriendPreview = () => {
 	const [friends, setFriends] = useState<
 		(Partial<Member> & { currentLevel?: string })[]
 	>([]);
 	const { theme } = useTheme();
+	const [loading, setLoading] = useState(true);
 	const { t } = useTranslation();
 
 	useEffect(() => {
-		const fetch = async () => {
-			const friends = await getFriends();
-			setFriends(friends);
-		};
-		fetch();
+		try {
+			const fetch = async () => {
+				const friends = await getFriends();
+				setFriends(friends);
+			};
+			fetch();
+		} catch (error) {
+			console.error("Erreur lors de la récupération des amis :", error);
+		} finally {
+			setLoading(false);
+		}
 	}, []);
 
 	const inviteFriends = async () => {
@@ -38,6 +46,17 @@ const FriendPreview = () => {
 			console.error("Erreur lors du partage :", error);
 		}
 	};
+
+	const Placeholder = () => (
+		<ShimmerPlaceholder
+			width={80}
+			height={80}
+			style={{
+				borderRadius: 40,
+				marginRight: 12,
+			}}
+		/>
+	);
 
 	return (
 		<ScrollView
@@ -62,7 +81,7 @@ const FriendPreview = () => {
 				<Text
 					style={{
 						color: theme.colors.text,
-						fontSize: 12,
+						fontSize: 13,
 						textAlign: "center",
 						marginTop: 4,
 					}}
@@ -71,43 +90,45 @@ const FriendPreview = () => {
 				</Text>
 			</Pressable>
 
-			{friends.map((friend, index) => (
-				<View key={index} style={{ alignItems: "center", marginRight: 12 }}>
-					<LinearGradient
-						colors={["#ff9a9e", "#fad0c4"]}
-						style={{
-							width: 80,
-							height: 80,
-							borderRadius: 40,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					>
-						<CachedImage
-							imagePath={`images/cosmetics/${friend.profilePicture}.png`}
-							style={{
-								width: 70,
-								height: 70,
-								borderRadius: 35,
-								borderWidth: 2,
-								borderColor: "white",
-							}}
-						/>
-					</LinearGradient>
-					<Text
-						style={{
-							color: theme.colors.text,
-							fontSize: 13,
-							marginTop: 4,
-							textAlign: "center",
-							maxWidth: 80,
-						}}
-						numberOfLines={1}
-					>
-						{friend.nom}
-					</Text>
-				</View>
-			))}
+			{loading
+				? Array.from(Array(5).keys()).map((index) => <Placeholder key={index} />)
+				: friends.map((friend, index) => (
+						<View key={index} style={{ alignItems: "center", marginRight: 12 }}>
+							<LinearGradient
+								colors={["#ff9a9e", "#fad0c4"]}
+								style={{
+									width: 80,
+									height: 80,
+									borderRadius: 40,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<CachedImage
+									imagePath={`images/cosmetics/${friend.profilePicture}.png`}
+									style={{
+										width: 70,
+										height: 70,
+										borderRadius: 35,
+										borderWidth: 2,
+										borderColor: "white",
+									}}
+								/>
+							</LinearGradient>
+							<Text
+								style={{
+									color: theme.colors.text,
+									fontSize: 13,
+									marginTop: 4,
+									textAlign: "center",
+									maxWidth: 80,
+								}}
+								numberOfLines={1}
+							>
+								{friend.nom}
+							</Text>
+						</View>
+				  ))}
 		</ScrollView>
 	);
 };
