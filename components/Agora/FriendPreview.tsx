@@ -8,7 +8,6 @@ import { Pressable, ScrollView, Share, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Iconify } from "react-native-iconify";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
-import { $ } from "@faker-js/faker/dist/airline-D6ksJFwG";
 
 const FriendPreview = () => {
 	const [friends, setFriends] = useState<
@@ -48,8 +47,6 @@ const FriendPreview = () => {
 			console.error("Erreur lors du partage :", error);
 		}
 	};
-
-	console.log("loading", loading);
 
 	const Placeholder = () => (
 		<ShimmerPlaceholder

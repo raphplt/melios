@@ -65,7 +65,9 @@ export default function HabitDetail() {
 
 	return (
 		<ScrollView
-			style={{ flex: 1 }}
+			style={{
+				flex: 1,
+			}}
 			contentContainerStyle={{
 				flexGrow: 1,
 			}}
@@ -77,7 +79,7 @@ export default function HabitDetail() {
 				style={StyleSheet.absoluteFill}
 			/>
 
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-4 mb-2">
+			<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-10 mb-2">
 				<ButtonBack handleQuit={() => navigation.goBack()} color={textColor} />
 				<SettingsButton />
 			</View>

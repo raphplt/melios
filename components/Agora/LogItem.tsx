@@ -30,7 +30,10 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 	);
 	const { member } = useData();
 
+	console.log("member", member?.uid);
+
 	useEffect(() => {
+		console.log("item", item.reactions);
 		const userReaction = item.reactions?.find(
 			(reaction) => reaction.uid === member?.uid
 		);
@@ -58,43 +61,45 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 		setReactionCounts(counts);
 	}, [item.reactions]);
 
-const handleReaction = async (type: string) => {
-	try {
-		if (userReaction === type) {
-			await removeReactionFromLog(item.id, item.uid, type);
-			setUserReaction(null);
-			setReactionCounts((prev) => {
-				const newCounts = { ...prev, [type]: (prev[type] || 1) - 1 };
-				if (newCounts[type] === 0) {
-					delete newCounts[type];
-				}
-				return newCounts;
-			});
-		} else {
-			if (userReaction) {
-				await removeReactionFromLog(item.id, item.uid, userReaction);
+	const handleReaction = async (type: string) => {
+		try {
+			const memberUid = member?.uid || "";
+
+			if (userReaction === type) {
+				await removeReactionFromLog(item.id, memberUid, type);
+				setUserReaction(null);
 				setReactionCounts((prev) => {
-					const newCounts = {
-						...prev,
-						[userReaction]: (prev[userReaction] || 1) - 1,
-					};
-					if (newCounts[userReaction] === 0) {
-						delete newCounts[userReaction];
+					const newCounts = { ...prev, [type]: (prev[type] || 1) - 1 };
+					if (newCounts[type] === 0) {
+						delete newCounts[type];
 					}
 					return newCounts;
 				});
+			} else {
+				if (userReaction) {
+					await removeReactionFromLog(item.id, memberUid, userReaction);
+					setReactionCounts((prev) => {
+						const newCounts = {
+							...prev,
+							[userReaction]: (prev[userReaction] || 1) - 1,
+						};
+						if (newCounts[userReaction] === 0) {
+							delete newCounts[userReaction];
+						}
+						return newCounts;
+					});
+				}
+				await addReactionToLog(item.id, memberUid, type);
+				setUserReaction(type);
+				setReactionCounts((prev) => ({
+					...prev,
+					[type]: (prev[type] || 0) + 1,
+				}));
 			}
-			await addReactionToLog(item.id, item.uid, type);
-			setUserReaction(type);
-			setReactionCounts((prev) => ({
-				...prev,
-				[type]: (prev[type] || 0) + 1,
-			}));
+		} catch (error) {
+			console.error("Erreur lors de la gestion de la réaction :", error);
 		}
-	} catch (error) {
-		console.error("Erreur lors de la gestion de la réaction :", error);
-	}
-};
+	};
 
 	const mostRecentDate: Date | undefined = item.logs
 		.map((logDate: string) => new Date(logDate))
@@ -106,14 +111,16 @@ const handleReaction = async (type: string) => {
 			? theme.colors.redPrimary
 			: lightColor;
 
-const getReactionIcons = () => {
-	return Object.keys(reactionCounts).map((reaction) => {
-		if (reactionCounts[reaction] > 0) {
-			return <View key={reaction}>{renderEmoji(reaction)}</View>;
-		}
-		return null;
-	});
-};
+	const getReactionIcons = () => {
+		return Object.keys(reactionCounts).map((reaction) => {
+			if (reactionCounts[reaction] > 0) {
+				return <View key={reaction}>{renderEmoji(reaction)}</View>;
+			}
+			return null;
+		});
+	};
+
+	console.log("userReaction", userReaction);
 	if (!item.member || !item.habit) return null;
 
 	const renderEmoji = (emoji: string) => {
@@ -142,7 +149,7 @@ const getReactionIcons = () => {
 				backgroundColor: bgColor,
 				shadowColor: "#000",
 				shadowOffset: { width: 0, height: 2 },
-				shadowOpacity: 0.3,
+				shadowOpacity: 0.1,
 				shadowRadius: 4,
 			}}
 		>
@@ -189,6 +196,7 @@ const getReactionIcons = () => {
 				<Pressable
 					onPress={() => setPopoverVisible(true)}
 					style={{ flexDirection: "row", alignItems: "center" }}
+					// className="px-1"
 				>
 					{Object.keys(reactionCounts).length > 0 ? (
 						<View
@@ -196,9 +204,9 @@ const getReactionIcons = () => {
 								flexDirection: "row",
 								alignItems: "center",
 								backgroundColor: theme.colors.background,
-								padding: 5,
 								borderRadius: 20,
 							}}
+							className="px-2 py-1"
 						>
 							{getReactionIcons()}
 							<Text style={{ color: theme.colors.text, marginLeft: 5 }}>

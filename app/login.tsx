@@ -54,6 +54,7 @@ export default function Login() {
 	const { user, isLoading } = useSession();
 	const { refreshCategories, refreshHabits } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const [loadingLogin, setLoadingLogin] = useState(false);
 
 	const [errorGoogle, setErrorGoogle] = useState("");
 	const [userInfo, setUserInfo] = useState<any>(null);
@@ -82,6 +83,7 @@ export default function Login() {
 
 	const login = async () => {
 		try {
+			setLoadingLogin(true);
 			const snapshot: User | { error: string } = await loginUser(email, password);
 
 			if ("error" in snapshot) {
@@ -90,11 +92,11 @@ export default function Login() {
 			} else {
 				refreshCategories(true);
 				refreshHabits(true);
-				navigation.navigate("(navbar)/index");
 			}
 		} catch (error) {
 			setError("Erreur lors de la connexion.");
-			console.log("Erreur lors de la création de l'utilisateur : ", error);
+		} finally {
+			setLoadingLogin(false);
 		}
 	};
 
@@ -145,11 +147,6 @@ export default function Login() {
 	}
 
 	return (
-		// <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-		// 	<KeyboardAvoidingView
-		// 		behavior={Platform.OS === "ios" ? "padding" : "height"}
-		// 		style={{ flex: 1 }}
-		// 	>
 		<ScrollView
 			ref={scrollViewRef}
 			style={{ backgroundColor: theme.colors.background }}
@@ -174,11 +171,11 @@ export default function Login() {
 			>
 				<BlurView
 					intensity={70}
-					className="w-11/12 mx-auto p-6 rounded-xl"
+					className="w-11/12 mx-auto p-6 rounded-xl py-8"
 					style={{
 						overflow: "hidden",
 					}}
-					tint="default"
+					tint="light"
 				>
 					<View className="flex flex-col items-center w-full py-3 rounded-xl">
 						<Image
@@ -242,7 +239,11 @@ export default function Login() {
 							</TouchableOpacity>
 						</View>
 
-						<ButtonLogin login={login} isDisabled={isDisabled} />
+						<ButtonLogin
+							login={login}
+							isDisabled={isDisabled}
+							isLoading={loadingLogin}
+						/>
 
 						<View
 							className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
@@ -273,7 +274,5 @@ export default function Login() {
 				/>
 			</ImageBackground>
 		</ScrollView>
-		// 	</KeyboardAvoidingView>
-		// </TouchableWithoutFeedback>
 	);
 }

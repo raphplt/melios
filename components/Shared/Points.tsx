@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, Pressable } from "react-native";
+import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";

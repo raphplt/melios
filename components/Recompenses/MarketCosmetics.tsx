@@ -2,20 +2,18 @@ import { useTheme } from "@context/ThemeContext";
 import { getAllCosmeticsIcons } from "@db/cosmetics";
 import { ProfileCosmetic } from "@type/cosmetics";
 import { useEffect, useState } from "react";
-import { View, Text, FlatList, Image } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import ProfilIcon from "./ProfilIcon";
 import LoaderScreen from "@components/Shared/LoaderScreen";
-import { Iconify } from "react-native-iconify";
 import * as Progress from "react-native-progress";
 import { useData } from "@context/DataContext";
-import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useTranslation } from "react-i18next";
 
 export default function MarketCosmetics() {
 	const [cosmetics, setCosmetics] = useState<ProfileCosmetic[]>([]);
 	const { theme } = useTheme();
 	const [loading, setLoading] = useState(true);
-	const { points } = useData();
+	const { points, usersLevels } = useData();
 	const { t } = useTranslation();
 
 	useEffect(() => {
@@ -30,6 +28,8 @@ export default function MarketCosmetics() {
 	const placeholders = Array.from({ length: 12 }, (_, index) => ({
 		id: index.toString(),
 	}));
+
+	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
 
 	return (
 		<View
@@ -49,7 +49,7 @@ export default function MarketCosmetics() {
 							}}
 							className="text-lg font-bold mr-3"
 						>
-							{t("my_points")}
+							{t("level_general")}
 						</Text>
 						<View className="flex flex-row items-center justify-start">
 							<Text
@@ -58,19 +58,21 @@ export default function MarketCosmetics() {
 								}}
 								className="text-[16px] font-bold mr-1"
 							>
-								{points.odyssee}
+								{globalLevel?.currentLevel || "1"}
 							</Text>
-							<MoneyOdyssee />
 						</View>
 					</View>
 
 					<Progress.Bar
-						progress={points.odyssee / 10000}
+						progress={
+							globalLevel ? globalLevel.currentXp / globalLevel.nextLevelXp : 0
+						}
 						width={null}
 						color={theme.colors.primary}
 						unfilledColor={theme.colors.border}
-						height={10}
+						height={12}
 						borderRadius={25}
+						borderWidth={0}
 					/>
 					{/* <Progress */}
 				</View>
@@ -79,8 +81,7 @@ export default function MarketCosmetics() {
 					style={{ color: theme.colors.textTertiary }}
 					className="text-[14px] w-11/12 font-semibold mt-3"
 				>
-					Utilisez vos points pour débloquer des avatars mythologiques uniques et
-					personnaliser votre profil !
+					{t("cosmetic_shop_description")}
 				</Text>
 			</View>
 

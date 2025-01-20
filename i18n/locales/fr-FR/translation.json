@@ -1,6 +1,7 @@
 {
     "welcome": "Bienvenue",
     "login": "Connexion",
+    "login_bis": "Se connecter",
     "register": "Inscription",
     "good_morning": " Bonjour",
     "good_afternoon": "Bon après-midi",
@@ -182,5 +183,7 @@
     "habits_limit": "Vous avez atteint la limite d'habitudes. Pour en ajouter une nouvelle, vous devez en supprimer une existante.",
     "load_more": "Charger plus",
     "calendar_description": "Ici, vous pouvez suivre votre progression au cours des derniers jours. Cliquez sur un jour pour en voir les détails",
-    "choose_reaction": "Choisissez une réaction"
+    "choose_reaction": "Choisissez une réaction",
+    "level_general": "Niveau général",
+    "cosmetic_shop_description": "Votre niveau général vous permet de débloquer des cosmétiques pour personnaliser votre profil."
 }

@@ -47,7 +47,7 @@ export default function ProfilIcon({
 	// Glow animation style (for selected avatars)
 	const glowStyle = useAnimatedStyle(() => ({
 		shadowOpacity: withTiming(selected ? 0.8 : 0),
-		shadowRadius: withTiming(selected ? 10 : 0),
+		shadowRadius: withTiming(selected ? 5 : 0),
 		shadowColor: theme.colors.primary,
 		style: { shadowOffset: { width: 0, height: 0 } },
 		transform: [{ scale: withTiming(scale.value, { duration: 150 }) }],
@@ -73,7 +73,7 @@ export default function ProfilIcon({
 		<TouchableOpacity
 			onPress={handlePress}
 			disabled={isGrayedOut}
-			className="flex flex-col items-center w-[31%] mx-auto my-1 py-2 rounded-xl"
+			className="flex flex-col items-center w-1/3 mx-auto my-1 py-2 rounded-xl"
 		>
 			<Animated.View
 				style={[
@@ -84,7 +84,7 @@ export default function ProfilIcon({
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 						borderColor: selected ? theme.colors.primary : theme.colors.grayPrimary,
-						borderWidth: 1,
+						// borderWidth: 1,
 						borderRadius: 12,
 						opacity: isGrayedOut ? 0.5 : 1,
 					},
@@ -100,7 +100,7 @@ export default function ProfilIcon({
 						fontFamily: "BaskervilleBold",
 					}}
 					ellipsizeMode="tail"
-					className="text-center font-semibold mb-1"
+					className="text-center font-semibold mb-1 w-28"
 				>
 					{cosmetic.name}
 				</Text>

@@ -19,17 +19,21 @@ export default function Account() {
 	if (isLoading) return <LoaderScreen />;
 
 	return (
-		<>
-			<ScrollView
-				showsVerticalScrollIndicator={false}
-				style={{ backgroundColor: theme.colors.background, flex: 1 }}
-			>
-				<MemberInfos member={member} auth={auth} />
-				<General />
-				<Preferences />
+		<ScrollView
+			showsVerticalScrollIndicator={false}
+			style={{
+				backgroundColor: theme.colors.background,
+				flex: 1,
+			}}
+			contentContainerStyle={{
+				flexGrow: 1,
+			}}
+		>
+			<MemberInfos member={member} auth={auth} />
+			<General />
+			<Preferences />
 
-				<Version />
-			</ScrollView>
-		</>
+			<Version />
+		</ScrollView>
 	);
 }

@@ -31,30 +31,23 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 				}}
 				className="py-2 px-2 my-1 rounded-xl"
 			>
-				<View className="flex flex-row items-center justify-start py-1 mx-1">
-					<FontAwesome6
-						name={level.icon || "question"}
-						size={20}
-						color={level.color || theme.colors.primary}
-					/>
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="text-[15px] ml-2 font-bold"
-					>
-						{level.name}
-					</Text>
-				</View>
-				<View className="flex flex-row items-center justify-between pb-2 pt-1">
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="text-[15px] font-semibold"
-					>
-						{t("lvl")} : {level.currentLevel}
-					</Text>
+				<View className="flex flex-row items-center justify-between py-1 mx-1">
+					<View className="flex flex-row items-center">
+						<FontAwesome6
+							name={level.icon || "question"}
+							size={18}
+							color={level.color || theme.colors.primary}
+						/>
+						<Text
+							style={{
+								color: theme.colors.text,
+							}}
+							className="text-[14px] ml-2 font-bold"
+						>
+							{level.name}
+						</Text>
+					</View>
+
 					<View
 						style={{
 							borderColor: level.color || theme.colors.primary,
@@ -72,17 +65,34 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 						</Text>
 					</View>
 				</View>
-				<Progress.Bar
-					progress={level.currentXp / level.nextLevelXp}
-					width={width * 0.9}
-					height={10}
-					color={level.color || theme.colors.primary}
-					borderRadius={15}
-					borderWidth={0}
-					style={{
-						backgroundColor: theme.colors.border,
-					}}
-				/>
+				<View className="flex flex-row items-center justify-between pt-1">
+					<View
+						className="p-1 rounded-full w-6 h-6 flex items-center justify-self-center"
+						style={{
+							backgroundColor: level.color || theme.colors.primary,
+						}}
+					>
+						<Text
+							style={{
+								color: "#fff",
+							}}
+							className="text-[12px] font-semibold"
+						>
+							{level.currentLevel}
+						</Text>
+					</View>
+					<Progress.Bar
+						progress={level.currentXp / level.nextLevelXp}
+						width={width * 0.85}
+						height={10}
+						color={level.color || theme.colors.primary}
+						borderRadius={15}
+						borderWidth={0}
+						style={{
+							backgroundColor: theme.colors.border,
+						}}
+					/>
+				</View>
 			</Pressable>
 		</ZoomableView>
 	);
