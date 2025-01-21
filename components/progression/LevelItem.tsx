@@ -66,21 +66,14 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 					</View>
 				</View>
 				<View className="flex flex-row items-center justify-between pt-1">
-					<View
-						className="p-1 rounded-full w-6 h-6 flex items-center justify-self-center"
+					<Text
 						style={{
-							backgroundColor: level.color || theme.colors.primary,
+							color: theme.colors.text,
 						}}
+						className="text-[14px] font-semibold ml-2"
 					>
-						<Text
-							style={{
-								color: "#fff",
-							}}
-							className="text-[12px] font-semibold"
-						>
-							{level.currentLevel}
-						</Text>
-					</View>
+						{level.currentLevel}
+					</Text>
 					<Progress.Bar
 						progress={level.currentXp / level.nextLevelXp}
 						width={width * 0.85}
