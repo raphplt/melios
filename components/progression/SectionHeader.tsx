@@ -73,6 +73,8 @@ export default function SectionHeader({
 				return (
 					<Iconify icon="mdi:progress-star" size={22} color={theme.colors.primary} />
 				);
+			case "diary":
+				return <Iconify icon="mdi:pen" size={22} color={theme.colors.primary} />;
 		}
 	};
 

@@ -8,6 +8,7 @@ import Chart from "@components/Progression/Chart";
 import Levels from "@components/Progression/Levels";
 import CalendarHabits from "@components/Progression/Calendar";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
+import Diary from "@components/Progression/Diary";
 
 const Progression: React.FC = () => {
 	const { theme } = useTheme();
@@ -21,9 +22,9 @@ const Progression: React.FC = () => {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
-
 				<Streak />
 				<GoalSection />
+				<Diary />
 				<Levels />
 				<CalendarHabits />
 				<Chart />

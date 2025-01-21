@@ -4,7 +4,6 @@ import {
 	FlatList,
 	ActivityIndicator,
 	View,
-	Button,
 	RefreshControl,
 	Pressable,
 } from "react-native";
