@@ -8,6 +8,7 @@ import InputPassword from "@components/LoginRegister/InputPassword";
 import InputText from "@components/LoginRegister/InputText";
 import { useData } from "@context/DataContext";
 import { Member } from "@type/member";
+import { sendEmailVerification } from "firebase/auth";
 
 export default function useFormHandler() {
 	const [form, setForm] = useState<Question[]>([]);
@@ -47,6 +48,7 @@ export default function useFormHandler() {
 				const updatedForm = [...form, updatedQuestion];
 
 				const { user, member } = await createUser(updatedForm);
+				sendEmailVerification(user);
 				if (user) {
 					setMember(member as Member);
 					navigation.navigate("(select)");

@@ -27,6 +27,7 @@ export default function HabitMoment({
 	const [selectedMoment, setSelectedMoment] = useState(habit?.moment || -1);
 	const [visible, setVisible] = useState(false);
 	const [customMoment, setCustomMoment] = useState<Date | null>(null);
+	const [isCustom, setIsCustom] = useState(false);
 
 	useEffect(() => {
 		setValue("moment", selectedMoment);
@@ -39,16 +40,20 @@ export default function HabitMoment({
 	const handleSelectMoment = (moment: number) => {
 		resetCustomMoment();
 		setSelectedMoment(moment);
+		setIsCustom(false);
 	};
 
 	const handleCustomMoment = (date: Date) => {
 		setCustomMoment(date);
 		setSelectedMoment(date.getHours());
 		setVisible(false);
+		setIsCustom(true);
 	};
 
 	const itemStyle =
 		"w-full flex flex-row items-center justify-between px-3 py-2";
+
+	console.log("selectedMoment", selectedMoment);
 
 	return (
 		<>
@@ -73,8 +78,7 @@ export default function HabitMoment({
 						<Text
 							className="py-2 text-[15px] mx-auto"
 							style={{
-								color:
-									selectedMoment === -2 ? theme.colors.background : theme.colors.text,
+								color: isCustom ? theme.colors.background : theme.colors.text,
 							}}
 						>
 							{(customMoment && moment(customMoment).format("HH:mm")) ||
@@ -83,9 +87,7 @@ export default function HabitMoment({
 						<Iconify
 							icon="fluent:chevron-right-24-filled"
 							size={20}
-							color={
-								selectedMoment === -2 ? theme.colors.background : theme.colors.text
-							}
+							color={isCustom ? theme.colors.background : theme.colors.text}
 						/>
 					</Pressable>
 				</BlurView>

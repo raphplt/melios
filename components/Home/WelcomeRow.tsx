@@ -29,9 +29,9 @@ export default function WelcomeRow() {
 			<Text
 				style={{
 					color: color,
-					fontFamily: "BaskervilleBold",
+					// fontFamily: "BaskervilleBold",
 				}}
-				className="text-[16px]"
+				className="text-[16px] font-semibold"
 			>
 				{message + (member?.nom ? ", " + member.nom : "")}
 			</Text>

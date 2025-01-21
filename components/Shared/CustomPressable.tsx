@@ -1,5 +1,5 @@
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useRef } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useRef } from "react";
 import { Animated, Pressable, Text } from "react-native";
 
 export default function CustomPressable({
@@ -13,7 +13,7 @@ export default function CustomPressable({
 	bgColor?: string;
 	textColor?: string;
 }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 	const scaleAnim = useRef(new Animated.Value(1)).current;
 
 	const handleTouchStart = () => {
@@ -37,7 +37,7 @@ export default function CustomPressable({
 			}}
 		>
 			<Pressable
-				className="rounded-3xl px-6 py-3 mx-3"
+				className="rounded-3xl px-10 py-3 mx-3"
 				onPress={onPress}
 				style={{
 					backgroundColor: bgColor || theme.colors.cardBackground,

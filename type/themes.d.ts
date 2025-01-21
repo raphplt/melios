@@ -2,6 +2,7 @@ export type Theme = {
 	dark: boolean;
 	colors: {
 		primary: string;
+		secondary: string;
 		primaryLight: string;
 		background: string;
 		card: string;
@@ -24,6 +25,7 @@ export type Theme = {
 		orangeSecondary: string;
 		bluePrimary: string;
 		blueSecondary: string;
+		blueTertiary: string;
 		purplePrimary: string;
 		purpleSecondary: string;
 		grayPrimary: string;

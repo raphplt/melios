@@ -9,14 +9,15 @@ import { useSound } from "@context/SoundContext";
 
 export default function BottomButtons() {
 	const { theme } = useTheme();
-	const [visible, setVisible] = useState(false);
+	const [visibleSound, setVisibleSound] = useState(false);
+	const [visibleReset, setVisibleReset] = useState(false);
 
-	const { pauseTimer } = useHabitTimer();
+	const { pauseTimer, resetTimer } = useHabitTimer();
 	const { isTimerActive } = useTimer();
 	const { currentSound } = useSound();
 
 	const openSoundsModal = () => {
-		setVisible(true);
+		setVisibleSound(true);
 	};
 
 	return (
@@ -25,7 +26,7 @@ export default function BottomButtons() {
 				onPress={pauseTimer}
 				className="py-2 rounded-full mx-auto flex flex-row items-center justify-center w-16 h-16"
 				style={{
-					backgroundColor: theme.colors.border,
+					backgroundColor: theme.colors.cardBackground,
 				}}
 			>
 				<Iconify icon="mdi:restart" size={28} color={theme.colors.primary} />
@@ -57,7 +58,7 @@ export default function BottomButtons() {
 				onPress={openSoundsModal}
 				className="py-2 rounded-full mx-auto flex flex-row items-center justify-center w-16 h-16"
 				style={{
-					backgroundColor: theme.colors.border,
+					backgroundColor: theme.colors.cardBackground,
 				}}
 			>
 				{currentSound ? (
@@ -74,7 +75,11 @@ export default function BottomButtons() {
 					/>
 				)}
 			</Pressable>
-			<SoundsModal visible={visible} setVisible={setVisible} onChange={() => {}} />
+			<SoundsModal
+				visible={visibleSound}
+				setVisible={setVisibleSound}
+				onChange={() => {}}
+			/>
 		</View>
 	);
 }

@@ -14,22 +14,16 @@ import useNotifications from "@hooks/useNotifications";
 import { useData } from "@context/DataContext";
 import { disconnectUser } from "@db/users";
 import CustomPressable from "@components/Shared/CustomPressable";
-import ModalWrapper from "@components/Modals/ModalWrapper";
 import LanguageSelector from "./LanguageSelector";
 import ConfidentialitySelector from "./ConfidentialitySelector";
+import BottomSlideModal from "@components/Modals/ModalBottom";
 
 export default function Preferences() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { theme, toggleTheme } = useTheme();
 	const { t } = useTranslation();
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
-	const {
-		setHabits,
-		setPoints,
-		setNotificationToggle,
-		notificationToggle,
-		setMember,
-	} = useData();
+	const { setNotificationToggle, notificationToggle } = useData();
 
 	const { scheduleDailyNotification, cancelAllNotifications } =
 		useNotifications();
@@ -58,6 +52,7 @@ export default function Preferences() {
 
 	const confirmLogout = async () => {
 		await disconnectUser();
+		navigation.navigate("login");
 	};
 
 	const handleLogout = () => {
@@ -78,7 +73,13 @@ export default function Preferences() {
 	return (
 		<AccountBlock title={t("preferences")}>
 			<RowBlock
-				icon={<Iconify icon="ph:moon" size={24} color={theme.colors.text} />}
+				icon={
+					<Iconify
+						icon="fluent:dark-theme-20-filled"
+						size={20}
+						color={theme.colors.primary}
+					/>
+				}
 				title={t("dark_mode")}
 				rightContent={
 					<ToggleButton onToggle={handleToggleTheme} value={isDarkTheme} />
@@ -88,7 +89,7 @@ export default function Preferences() {
 
 			<RowBlock
 				icon={
-					<Iconify icon="mdi:bell-outline" size={24} color={theme.colors.text} />
+					<Iconify icon="mdi:bell-outline" size={20} color={theme.colors.primary} />
 				}
 				title={t("notifications")}
 				rightContent={
@@ -102,7 +103,7 @@ export default function Preferences() {
 
 			<RowBlock
 				icon={
-					<Iconify icon="iconoir:community" size={24} color={theme.colors.text} />
+					<Iconify icon="iconoir:community" size={20} color={theme.colors.primary} />
 				}
 				title={t("confidentiality")}
 				rightContent={<ConfidentialitySelector />}
@@ -111,16 +112,22 @@ export default function Preferences() {
 
 			<RowBlock
 				title={t("language")}
-				icon={<Iconify icon="mdi:earth" size={24} color={theme.colors.text} />}
+				icon={<Iconify icon="mdi:earth" size={20} color={theme.colors.primary} />}
 				rightContent={<LanguageSelector />}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 
 			<RowBlock
 				title={t("help")}
-				icon={<Iconify icon="zondicons:buoy" size={22} color={theme.colors.text} />}
+				icon={
+					<Iconify icon="solar:help-linear" size={20} color={theme.colors.primary} />
+				}
 				rightContent={
-					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
+					<Iconify
+						icon="ion:chevron-forward"
+						size={20}
+						color={theme.colors.primary}
+					/>
 				}
 				onPress={goToHelp}
 			/>
@@ -130,10 +137,18 @@ export default function Preferences() {
 			<RowBlock
 				title={t("about")}
 				icon={
-					<Iconify icon="mdi:information" size={24} color={theme.colors.text} />
+					<Iconify
+						icon="material-symbols:info-outline"
+						size={20}
+						color={theme.colors.primary}
+					/>
 				}
 				rightContent={
-					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
+					<Iconify
+						icon="ion:chevron-forward"
+						size={20}
+						color={theme.colors.primary}
+					/>
 				}
 				onPress={goAbout}
 			/>
@@ -149,7 +164,7 @@ export default function Preferences() {
 				}
 			/>
 
-			<ModalWrapper visible={modalVisible} setVisible={setModalVisible}>
+			<BottomSlideModal visible={modalVisible} setVisible={setModalVisible}>
 				<View>
 					<Text
 						style={{
@@ -163,11 +178,11 @@ export default function Preferences() {
 						style={{
 							color: theme.colors.textTertiary,
 						}}
-						className="text-[16px]  mb-2"
+						className="text-[16px] mb-6"
 					>
 						{t("confirm_logout")}
 					</Text>
-					<View className="flex flex-row justify-center items-center mx-auto w-11/12 mt-3">
+					<View className="flex flex-row justify-center items-center mx-auto w-11/12 my-3">
 						<CustomPressable
 							text={t("cancel")}
 							onPress={() => setModalVisible(!modalVisible)}
@@ -182,7 +197,7 @@ export default function Preferences() {
 						/>
 					</View>
 				</View>
-			</ModalWrapper>
+			</BottomSlideModal>
 		</AccountBlock>
 	);
 }

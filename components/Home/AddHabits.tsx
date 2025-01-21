@@ -1,10 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import useIndex from "@hooks/useIndex";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 import { Animated, Pressable } from "react-native";
 
 export default function AddHabits() {
-	const { theme, handlePressIn, rotate, navigation, handlePressOut, isDayTime } =
-		useIndex();
+	const { theme, handlePressIn, rotate, handlePressOut, isDayTime } = useIndex();
+
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	return (
 		<Animated.View style={{ transform: [{ rotate }] }}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import Streak from "@components/Progression/Streak";
 import { useTheme } from "@context/ThemeContext";
 import GoalSection from "@components/Progression/GoalSection";
@@ -21,9 +21,7 @@ const Progression: React.FC = () => {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
-				<View className="h-20 w-full absolute top-0 bg-green-500">
-					<Text> </Text>
-				</View>
+
 				<Streak />
 				<GoalSection />
 				<Levels />
@@ -31,7 +29,7 @@ const Progression: React.FC = () => {
 				<Chart />
 				<View
 					className="h-20 w-full"
-					style={{ backgroundColor: theme.colors.cardBackground }}
+					style={{ backgroundColor: theme.colors.background }}
 				></View>
 			</ScrollView>
 

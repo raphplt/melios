@@ -52,7 +52,7 @@ export default function CustomTextInput({
 					color: theme.colors.text,
 					backgroundColor: theme.colors.cardBackground,
 				}}
-				className="px-5 py-3 w-full mx-auto rounded-2xl"
+				className="px-5 py-4 w-full mx-auto rounded-2xl"
 				placeholderTextColor={theme.colors.grayPrimary}
 				cursorColor={theme.colors.text}
 				{...props}

@@ -9,8 +9,10 @@ import { setMemberGoal } from "@db/goal";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useGoal } from "@context/GoalsContext";
 import { useTranslation } from "react-i18next";
-import ModalWrapper from "@components/Modals/ModalWrapper";
 import { UserHabit } from "@type/userHabit";
+import BottomSlideModal from "@components/Modals/ModalBottom";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function ModalAddGoal({
 	visible,
@@ -29,7 +31,9 @@ export default function ModalAddGoal({
 	const existingHabitIds = goals.map((goal) => goal.habitId);
 
 	const filteredHabits = habits.filter(
-		(habit) => !existingHabitIds.includes(habit.id)
+		(habit) =>
+			!existingHabitIds.includes(habit.id) &&
+			habit.type !== CategoryTypeSelect.negative
 	);
 
 	const habitOptions = filteredHabits.map((habit) => ({
@@ -73,47 +77,51 @@ export default function ModalAddGoal({
 		}
 	}, [selectedHabit, duration]);
 
-	const block = "w-[95%] mx-auto py-2";
+	const block = "w-full mx-auto py-2";
 	const windowWidth = Dimensions.get("window").width;
 
 	return (
-		<ModalWrapper visible={visible} setVisible={setVisible}>
-			<View
-				style={{
-					width: windowWidth * 0.85,
-				}}
-			>
-				<View className="flex flex-row w-full mx-auto justify-between items-center mb-2">
+		<BottomSlideModal visible={visible} setVisible={setVisible}>
+			<View className="flex flex-col items-center gap-y-2">
+				<View className="flex flex-row justify-start items-center mb-2 w-full gap-2">
+					<Iconify
+						icon="mingcute:target-line"
+						size={24}
+						color={theme.colors.primary}
+					/>
 					<Text
 						style={{
 							color: theme.colors.text,
 							fontFamily: "BaskervilleBold",
 						}}
-						className="text-lg font-semibold text-center "
+						className="text-xl font-semibold text-center "
 					>
 						{t("create_goal")}
 					</Text>
 				</View>
 
+				<Text
+					style={{
+						color: theme.colors.textTertiary,
+					}}
+					className="text-sm font-normal"
+				>
+					{t("create_goal_description")}
+				</Text>
+
 				<View className={block}>
-					<View className="flex flex-row items-center">
-						<Iconify
-							icon="mdi-bullseye"
-							size={24}
-							color={theme.dark ? "#f1f1f1" : theme.colors.primary}
-						/>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-[16px] font-semibold py-3 mx-2"
-						>
-							{t("habit")}
-						</Text>
-					</View>
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="text-[16px] font-semibold py-3 mx-2"
+					>
+						1. {t("choose_habit")}
+					</Text>
 					<Dropdown
 						labelField={"label"}
 						valueField={"value"}
+						placeholder={t("my_habits")}
 						value={selectedHabit ? selectedHabit.id : null}
 						onChange={(item) => {
 							const selected = habits.find((habit) => habit.id === item.value);
@@ -121,15 +129,60 @@ export default function ModalAddGoal({
 							setSelectedHabit(selected);
 							setError(null);
 						}}
+						renderItem={(item) => (
+							<View className="flex flex-row items-center py-2 px-2">
+								<View className="flex items-center justify-center w-6 h-6 rounded-full">
+									<FontAwesome6
+										name={
+											habits.find((habit) => habit.id === item.value)?.icon || "question"
+										}
+										size={14}
+										color={
+											habits.find((habit) => habit.id === item.value)?.color ||
+											theme.colors.primary
+										}
+									/>
+								</View>
+								<Text
+									style={{
+										color: theme.colors.text,
+									}}
+									className="text-[16px] ml-2"
+								>
+									{item.label}
+								</Text>
+
+								{selectedHabit?.id === item.value && (
+									<Iconify
+										icon="mdi-check"
+										size={20}
+										color={theme.colors.primary}
+										style={{ marginLeft: "auto" }}
+									/>
+								)}
+							</View>
+						)}
+						style={{
+							borderColor: theme.colors.grayPrimary,
+							borderWidth: 1,
+							paddingHorizontal: 10,
+							paddingVertical: 10,
+							borderRadius: 10,
+							width: "100%",
+						}}
 						data={habitOptions}
-						placeholder="Choisir une habitude"
+						backgroundColor="rgba(0, 0, 0, 0.4)"
 						containerStyle={{
 							borderWidth: 1,
 							borderColor: theme.colors.border,
 							borderRadius: 10,
+							paddingVertical: 10,
+							paddingHorizontal: 5,
 						}}
+						mode="modal"
 						placeholderStyle={{
-							color: theme.colors.text,
+							color: theme.colors.textTertiary,
+							fontSize: 14,
 						}}
 					/>
 				</View>
@@ -137,29 +190,33 @@ export default function ModalAddGoal({
 				<View className={block}>
 					<View className="flex flex-row justify-between items-center">
 						<View className="flex flex-row items-center">
-							<Iconify
-								icon="mdi-calendar"
-								size={24}
-								color={theme.dark ? "#f1f1f1" : theme.colors.primary}
-							/>
 							<Text
 								style={{
 									color: theme.colors.text,
 								}}
 								className="text-[16px] font-semibold py-3 mx-2"
 							>
-								{t("duration")}
+								2. {t("choose_duration")}
 							</Text>
 						</View>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-[16px] font-semibold py-3"
-						>
-							{duration} {t("day")}
-							{duration > 1 ? "s" : ""}
-						</Text>
+						{selectedHabit && (
+							<View
+								style={{
+									backgroundColor: theme.colors.backgroundTertiary,
+								}}
+								className="py-2 px-4 rounded-2xl w-24 flex flex-row items-center justify-center"
+							>
+								<Text
+									style={{
+										color: theme.colors.text,
+									}}
+									className="text-[15px]"
+								>
+									{duration} {t("day")}
+									{duration > 1 ? "s" : ""}
+								</Text>
+							</View>
+						)}
 					</View>
 
 					<Slider
@@ -167,7 +224,7 @@ export default function ModalAddGoal({
 						minimumValue={3}
 						maximumValue={30}
 						minimumTrackTintColor={theme.colors.primary}
-						maximumTrackTintColor={theme.colors.textTertiary}
+						maximumTrackTintColor={theme.colors.grayPrimary}
 						value={duration}
 						onValueChange={(value) => {
 							setDuration(value);
@@ -176,39 +233,61 @@ export default function ModalAddGoal({
 						step={1}
 						thumbTintColor={theme.colors.primary}
 						aria-label="Slider days"
+						disabled={!selectedHabit}
 					/>
 				</View>
 
-				{selectedHabit && (
-					<View className={block}>
-						<View className="flex flex-row justify-between items-center">
-							<View className="flex flex-row items-center">
-								<Iconify
-									icon="mdi-currency-usd"
-									size={24}
-									color={theme.dark ? "#f1f1f1" : theme.colors.primary}
-								/>
+				<View className={block}>
+					<View className="flex flex-row justify-between items-center">
+						<View className="flex flex-row items-center">
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="text-[16px] font-semibold py-3 "
+							>
+								3. {t("reward")}
+							</Text>
+						</View>
+						{selectedHabit && (
+							<View
+								style={{
+									borderColor: theme.colors.primary,
+									borderWidth: 1,
+								}}
+								className="py-[2px] px-4 rounded-2xl w-24 flex flex-row items-center justify-center gap-2"
+							>
 								<Text
 									style={{
-										color: theme.colors.text,
+										color: theme.colors.primary,
 									}}
-									className="text-[16px] font-semibold py-3 "
-								>
-									{t("reward")}
-								</Text>
-							</View>
-							<View className="flex flex-row items-center">
-								<Text
-									style={{
-										color: theme.colors.text,
-									}}
-									className="mx-1 font-semibold text-[16px]"
+									className="text-[15px] font-semibold"
 								>
 									{duration - 2 || 0}
 								</Text>
-								<MoneyMelios />
+								<MoneyMelios width={20} />
 							</View>
-						</View>
+						)}
+					</View>
+				</View>
+				{selectedHabit && (
+					<View
+						style={{
+							backgroundColor: theme.colors.cardBackground,
+							borderColor: theme.colors.border,
+							borderWidth: 1,
+						}}
+						className="w-full gap-2 mx-auto py-2 px-4 rounded-2xl flex flex-row items-center justify-start"
+					>
+						<Iconify icon="mdi-information" size={24} color={theme.colors.primary} />
+						<Text
+							style={{
+								color: theme.colors.textTertiary,
+							}}
+							className="text-sm font-normal"
+						>
+							{t("reward_description")}
+						</Text>
 					</View>
 				)}
 
@@ -225,19 +304,27 @@ export default function ModalAddGoal({
 					</View>
 				)}
 
-				<Pressable onPress={handleValidate} disabled={!canValidate}>
-					<View
+				<Pressable
+					onPress={handleValidate}
+					disabled={!canValidate}
+					style={{
+						backgroundColor: canValidate
+							? theme.colors.primary
+							: theme.colors.grayPrimary,
+					}}
+					className="rounded-2xl py-3 my-3 w-full flex flex-row items-center justify-center"
+				>
+					<Text
 						style={{
-							backgroundColor: canValidate
-								? theme.colors.primary
-								: theme.colors.grayPrimary,
+							color: theme.colors.text,
 						}}
-						className="w-11/12 mx-auto rounded-xl py-2 my-3 flex flex-row items-center justify-center"
+						className="text-[16px] font-semibold"
 					>
-						<Iconify icon="mdi-check" size={24} color="#f1f1f1" />
-					</View>
+						{t("validate")}
+					</Text>
+					<Iconify icon="mdi-check" size={24} color="#f1f1f1" />
 				</Pressable>
 			</View>
-		</ModalWrapper>
+		</BottomSlideModal>
 	);
 }

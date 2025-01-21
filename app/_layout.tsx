@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar, useColorScheme } from "react-native";
 import {
+	NavigationContainer,
 	NavigationProp,
 	ParamListBase,
 	ThemeProvider,
@@ -132,14 +133,13 @@ function MainNavigator() {
 					/>
 					<Stack.Screen
 						name="pack"
-						options={{ title: "Pack", headerShadowVisible: false }}
+						options={{ title: "Pack", headerShown: false }}
 					/>
 					<Stack.Screen
 						name="cosmeticShop"
 						options={{
 							title: "Boutique cosmétique",
 							headerShadowVisible: false,
-							headerBackTitleVisible: false,
 							headerTitleStyle: {
 								fontFamily: "BaskervilleBold",
 								fontSize: 18,
@@ -194,7 +194,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
 	return (
 		<SessionProvider>
-			<RootLayoutContent />
+			<NavigationContainer>
+				<RootLayoutContent />
+			</NavigationContainer>
 		</SessionProvider>
 	);
 }

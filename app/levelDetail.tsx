@@ -6,7 +6,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, Platform, StatusBar } from "react-native";
+import { Text, View, Platform, StatusBar, ScrollView } from "react-native";
 import * as Progress from "react-native-progress";
 
 const LevelDetail = () => {
@@ -17,8 +17,17 @@ const LevelDetail = () => {
 	if (!selectedLevel) return null;
 
 	return (
-		<View>
-			<View className="mt-12 mb-4 ml-5 z-10 flex flex-row items-center justify-between w-10/12 mx-auto">
+		<ScrollView
+			style={{
+				backgroundColor: theme.colors.background,
+				flexGrow: 1,
+			}}
+		>
+			<StatusBar
+				barStyle={theme.dark ? "light-content" : "dark-content"}
+				backgroundColor={"transparent"}
+			/>
+			<View className=" mb-4 ml-5 z-10 flex flex-row items-center justify-between w-10/12 mx-auto">
 				<ButtonClose />
 			</View>
 
@@ -110,7 +119,7 @@ const LevelDetail = () => {
 			</View>
 
 			<Tasks />
-		</View>
+		</ScrollView>
 	);
 };
 

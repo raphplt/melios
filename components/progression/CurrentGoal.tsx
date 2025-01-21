@@ -217,7 +217,7 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 						>
 							{goal.duration - 2 || 0}
 						</Text>
-						<MoneyMelios width={22} height={22} />
+						<MoneyMelios width={20} />
 					</View>
 				</View>
 			</Pressable>

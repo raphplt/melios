@@ -15,7 +15,7 @@ export default function Levels() {
 	const [hasRefetched, setHasRefetched] = useState(false);
 
 	useEffect(() => {
-		if (!member) return; // Si member est absent, on ne fait rien dans l'effet
+		if (!member) return;
 		const missingIcon = genericLevels.some((level) => !level.icon);
 		if (missingIcon && !hasRefetched) {
 			refreshGenericLevels(true);
@@ -24,8 +24,7 @@ export default function Levels() {
 		}
 	}, [genericLevels, hasRefetched, refreshGenericLevels, member]);
 
-	if (!member) return null; // La condition est déplacée après les hooks
-
+	if (!member) return null;
 	const combinedLevels: CombinedLevel[] = Object.entries(usersLevels)
 		.map(([levelId, userLevel]) => {
 			const genericLevel = genericLevels.find((level) => level.id === levelId);

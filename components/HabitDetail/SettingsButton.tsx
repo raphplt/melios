@@ -90,20 +90,17 @@ export default function ButtonBack() {
 						className="flex flex-row items-center justify-center w-fit mx-2"
 						style={[animatedStyle]}
 					>
-						{/* <Pressable
-							className={buttonStyle}
-							onPress={() => {
-							}}
-						>
-							<Iconify icon="mdi:pencil" size={24} color={textColor} />
-						</Pressable> */}
 						<Pressable
 							className={buttonStyle}
 							onPress={() => {
 								setModalDeleteVisible(true);
 							}}
 						>
-							<Iconify icon="mdi:trash-can" size={24} color={textColor} />
+							<Iconify
+								icon="mdi:trash-can"
+								size={24}
+								color={theme.colors.redPrimary}
+							/>
 						</Pressable>
 					</Reanimated.View>
 				)}

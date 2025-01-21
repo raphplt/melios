@@ -5,6 +5,7 @@ import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 import ButtonBackRegister from "@components/LoginRegister/ButtonBackRegister";
 import useFormHandler from "@hooks/useRegister";
 import { getCachedImage } from "@db/files";
+import { useTranslation } from "react-i18next";
 
 export default function Register() {
 	const {
@@ -17,6 +18,7 @@ export default function Register() {
 	} = useFormHandler();
 
 	const [image, setImage] = useState<string | null>("images/fallback.png");
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		let isMounted = true;
@@ -62,6 +64,7 @@ export default function Register() {
 					style={{
 						overflow: "hidden",
 					}}
+					tint="default"
 				>
 					<View className="flex flex-col items-center">
 						<Image
@@ -73,7 +76,7 @@ export default function Register() {
 					</View>
 				</BlurView>
 				<ButtonNavigate
-					text="J'ai déjà un compte"
+					text={t("already_account")}
 					color="white"
 					onPress={() => navigation.navigate("login")}
 				/>

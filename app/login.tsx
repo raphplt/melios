@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
 	View,
 	ScrollView,
@@ -8,10 +8,11 @@ import {
 	StatusBar,
 	Text,
 	Image,
-	Pressable,
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+	Keyboard,
 } from "react-native";
 import {
-	useNavigation,
 	ParamListBase,
 	NavigationProp,
 	useIsFocused,
@@ -32,6 +33,12 @@ import HelpModal from "@components/Modals/HelpModal";
 import { useTheme } from "@context/ThemeContext";
 import { getCachedImage } from "@db/files";
 import { useHabits } from "@context/HabitsContext";
+import { useTranslation } from "react-i18next";
+import {
+	GoogleSignin,
+	GoogleSigninButton,
+} from "@react-native-google-signin/google-signin";
+import { useNavigation } from "expo-router";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -42,10 +49,15 @@ export default function Login() {
 	const scrollViewRef = useRef<ScrollView>(null);
 	const passwordInputRef = useRef(null);
 	const isFocused = useIsFocused();
+	const { t } = useTranslation();
 
 	const { user, isLoading } = useSession();
 	const { refreshCategories, refreshHabits } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const [loadingLogin, setLoadingLogin] = useState(false);
+
+	const [errorGoogle, setErrorGoogle] = useState("");
+	const [userInfo, setUserInfo] = useState<any>(null);
 
 	useEffect(() => {
 		return navigation.addListener("beforeRemove", (e: any) => {
@@ -71,6 +83,7 @@ export default function Login() {
 
 	const login = async () => {
 		try {
+			setLoadingLogin(true);
 			const snapshot: User | { error: string } = await loginUser(email, password);
 
 			if ("error" in snapshot) {
@@ -79,11 +92,11 @@ export default function Login() {
 			} else {
 				refreshCategories(true);
 				refreshHabits(true);
-				navigation.navigate("index");
 			}
 		} catch (error) {
 			setError("Erreur lors de la connexion.");
-			console.log("Erreur lors de la création de l'utilisateur : ", error);
+		} finally {
+			setLoadingLogin(false);
 		}
 	};
 
@@ -134,131 +147,132 @@ export default function Login() {
 	}
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			style={{ flex: 1 }}
+		<ScrollView
+			ref={scrollViewRef}
+			style={{ backgroundColor: theme.colors.background }}
+			showsVerticalScrollIndicator={false}
+			contentContainerStyle={{
+				flexGrow: 1,
+			}}
+			keyboardShouldPersistTaps="handled"
 		>
 			<StatusBar
 				translucent
 				backgroundColor="transparent"
 				barStyle="light-content"
 			/>
-			<ScrollView
-				ref={scrollViewRef}
-				style={{ backgroundColor: theme.colors.background }}
-				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{
-					flexGrow: 1,
+			<ImageBackground
+				source={image ? { uri: image } : undefined}
+				resizeMode="cover"
+				style={{
+					flex: 1,
+					justifyContent: "center",
 				}}
-				keyboardShouldPersistTaps="handled"
 			>
-				<ImageBackground
-					source={image ? { uri: image } : undefined}
-					resizeMode="cover"
+				<BlurView
+					intensity={70}
+					className="w-11/12 mx-auto p-6 rounded-xl py-8"
 					style={{
-						flex: 1,
-						justifyContent: "center",
+						overflow: "hidden",
 					}}
+					tint="light"
 				>
-					<BlurView
-						intensity={70}
-						className="w-11/12 mx-auto p-5 rounded-xl"
-						style={{
-							overflow: "hidden",
-						}}
-					>
-						<View className="flex flex-col items-center w-full py-3 rounded-xl">
-							<Image
-								source={require("../assets/images/icon.png")}
-								style={{ width: 100, height: 100 }}
-								className="mb-4"
-							/>
-							<View className="flex flex-col justify-center items-center w-full">
-								<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
-									Bon retour sur
-								</Text>
-								<Text
-									style={{ color: "rgb(28, 28, 30)" }}
-									className="text-3xl font-bold"
-								>
-									Melios
-								</Text>
-							</View>
-							<View className="flex flex-col justify-center items-center w-full mt-3">
-								<CustomTextInput
-									label="Votre email"
-									placeholder="melios@gmail.com"
-									value={email}
-									onChangeText={setEmail}
-									keyboardType="email-address"
-									autoCapitalize="none"
-									autoCorrect={false}
-									onFocus={() => {
-										scrollViewRef.current?.scrollToEnd({ animated: true });
-									}}
-									onSubmitEditing={() =>
-										passwordInputRef.current && (passwordInputRef.current as any).focus()
-									}
-									returnKeyType="next"
-								/>
-								<CustomPasswordInput
-									ref={passwordInputRef}
-									onChangeText={setPassword}
-									label="Votre mot de passe"
-									placeholder="********"
-									value={password}
-									showPassword={showPassword}
-									setShowPassword={setShowPassword}
-									secureTextEntry={!showPassword}
-									onFocus={() => {
-										scrollViewRef.current?.scrollToEnd({ animated: true });
-									}}
-									onSubmitEditing={login}
-									returnKeyType="done"
-								/>
-							</View>
-
-							<ButtonLogin login={login} isDisabled={isDisabled} />
-							<View
-								className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
-								style={{
-									backgroundColor: theme.colors.redSecondary,
-									display: error === "" ? "none" : "flex",
-								}}
+					<View className="flex flex-col items-center w-full py-3 rounded-xl">
+						<Image
+							source={require("../assets/images/icon.png")}
+							style={{ width: 100, height: 100 }}
+							className="mb-4"
+						/>
+						<View className="flex flex-col justify-center items-center w-full">
+							<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
+								{t("welcome_back_to")}
+							</Text>
+							<Text
+								style={{ color: "rgb(28, 28, 30)" }}
+								className="text-3xl font-bold"
 							>
-								<Iconify
-									icon="material-symbols:error"
-									color={theme.colors.redPrimary}
-									size={20}
-								/>
+								Melios
+							</Text>
+						</View>
+						<View className="flex flex-col justify-center items-start w-full mt-3">
+							<CustomTextInput
+								label="Votre email"
+								placeholder="melios@gmail.com"
+								value={email}
+								onChangeText={setEmail}
+								keyboardType="email-address"
+								autoCapitalize="none"
+								autoCorrect={false}
+								// onFocus={() => {
+								// 	scrollViewRef.current?.scrollToEnd({ animated: true });
+								// }}
+								onSubmitEditing={() =>
+									passwordInputRef.current && (passwordInputRef.current as any).focus()
+								}
+								returnKeyType="next"
+							/>
+							<CustomPasswordInput
+								ref={passwordInputRef}
+								onChangeText={setPassword}
+								label="Votre mot de passe"
+								placeholder="********"
+								value={password}
+								showPassword={showPassword}
+								setShowPassword={setShowPassword}
+								secureTextEntry={!showPassword}
+								// onFocus={() => {
+								// 	scrollViewRef.current?.scrollToEnd({ animated: true });
+								// }}
+								onSubmitEditing={login}
+								returnKeyType="done"
+							/>
+							<TouchableOpacity>
 								<Text
 									style={{
-										color: theme.colors.redPrimary,
+										color: theme.colors.primary,
 									}}
-									className="ml-2"
+									className="mt-1 ml-2"
+									onPress={() => navigation.navigate("resetPassword")}
 								>
-									{error}
+									{t("forget_password_question")}
 								</Text>
-							</View>
+							</TouchableOpacity>
 						</View>
-						<Pressable>
+
+						<ButtonLogin
+							login={login}
+							isDisabled={isDisabled}
+							isLoading={loadingLogin}
+						/>
+
+						<View
+							className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
+							style={{
+								backgroundColor: theme.colors.redSecondary,
+								display: error === "" ? "none" : "flex",
+							}}
+						>
+							<Iconify
+								icon="material-symbols:error"
+								color={theme.colors.redPrimary}
+								size={20}
+							/>
 							<Text
 								style={{
-									color: theme.colors.primary,
+									color: theme.colors.redPrimary,
 								}}
-								className="text-center mt-1"
-								onPress={() => navigation.navigate("resetPassword")}
+								className="ml-2"
 							>
-								Mot de passe oublié ?
+								{error}
 							</Text>
-						</Pressable>
-					</BlurView>
-					<ButtonNavigate
-						text="Je n'ai pas de compte"
-						onPress={() => navigation.navigate("register")}
-					/>
-				</ImageBackground>
-			</ScrollView>
-		</KeyboardAvoidingView>
+						</View>
+					</View>
+				</BlurView>
+				<ButtonNavigate
+					text={t("no_account")}
+					onPress={() => navigation.navigate("register")}
+				/>
+			</ImageBackground>
+		</ScrollView>
 	);
 }

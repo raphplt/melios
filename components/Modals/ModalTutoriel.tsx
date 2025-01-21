@@ -1,19 +1,11 @@
-import CachedImage from "@components/Shared/CachedImage";
 import { useTheme } from "@context/ThemeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import {
-	Modal,
-	View,
-	Pressable,
-	Text,
-	ScrollView,
-	Platform,
-} from "react-native";
-import { BlurView } from "expo-blur";
+import { View, Pressable, Text, ScrollView } from "react-native";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { useData } from "@context/DataContext";
+import BottomSlideModal from "./ModalBottom";
 
 export default function ModalTutorial({
 	title = "Tutoriel",
@@ -28,157 +20,84 @@ export default function ModalTutorial({
 }) {
 	const { theme } = useTheme();
 	const { member } = useData();
-
-	if (!member) return null;
-
 	const { t } = useTranslation();
 
 	const [isTutorialVisible, setTutorialVisible] = useState(false);
 
+	const fetchLocalNew = useCallback(async () => {
+		const alreadyView = await AsyncStorage.getItem(slug);
+		if (!alreadyView) {
+			setTutorialVisible(true);
+		}
+	}, [slug]);
+
 	useEffect(() => {
-		const fetchLocalNew = async () => {
-			const alreadyView = await AsyncStorage.getItem(slug);
-			if (!alreadyView) {
-				setTutorialVisible(true);
-			}
-		};
 		fetchLocalNew();
-	}, []);
+	}, [fetchLocalNew]);
 
 	const handleClose = async () => {
 		await AsyncStorage.setItem(slug, "true");
 		setTutorialVisible(false);
 	};
 
+	if (!member) return null;
+
 	return (
-		<Modal
+		<BottomSlideModal
 			visible={isTutorialVisible}
-			transparent={true}
-			hardwareAccelerated={true}
-			onRequestClose={() => {
-				setTutorialVisible(false);
-			}}
+			setVisible={setTutorialVisible}
+			title={title}
 		>
 			<View
 				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
+					backgroundColor: theme.colors.cardBackground,
 				}}
+				className="w-full py-3"
 			>
-				{/* Flou d’arrière-plan (iOS) ou fallback (Android) */}
-				{Platform.OS === "ios" ? (
-					<BlurView
-						intensity={50}
-						style={{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							bottom: 0,
-						}}
-						tint="dark"
-					/>
-				) : (
-					<View
-						style={{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							bottom: 0,
-							backgroundColor: "rgba(0,0,0,0.6)",
-						}}
-					/>
-				)}
-
-				{/* Illustration */}
-				<CachedImage imagePath={imagePath} style={{ width: 150, height: 250 }} />
-
-				{/* Background click to close */}
-				<Pressable
-					onPress={() => setTutorialVisible(false)}
-					style={{
-						position: "absolute",
-						top: 0,
-						left: 0,
-						width: "100%",
-						height: "100%",
-					}}
-				/>
-
-				{/* Dialog content */}
-				<View
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-						padding: 20,
-						borderRadius: 10,
-						width: "85%",
-						maxHeight: "70%",
-					}}
-				>
-					{/* Title */}
-					<Text
-						style={{
-							color: theme.colors.text,
-							fontSize: 18,
-							fontWeight: "bold",
-							marginBottom: 10,
-						}}
-					>
-						{title}
-					</Text>
-
-					{/* Paragraphs */}
-					<ScrollView>
-						{paragraphs.map((paragraph, index) => (
-							<View
-								key={index}
-								style={{
-									marginBottom: 10,
-									backgroundColor: theme.colors.background,
-									padding: 10,
-									borderRadius: 8,
-								}}
-							>
-								<Text
-									style={{
-										color: theme.colors.text,
-										fontSize: 14,
-										lineHeight: 20,
-									}}
-								>
-									{paragraph}
-								</Text>
-							</View>
-						))}
-					</ScrollView>
-
-					{/* Button to close */}
-					<ZoomableView>
-						<Pressable
+				{/* Paragraphs */}
+				<ScrollView className="w-full mt-4">
+					{paragraphs.map((paragraph, index) => (
+						<View
+							key={index}
 							style={{
-								backgroundColor: theme.colors.primary,
-								borderRadius: 8,
-								marginTop: 10,
-								paddingVertical: 10,
+								backgroundColor: theme.colors.background,
 							}}
-							onPress={() => handleClose()}
+							className="mb-3 p-3 rounded-lg"
 						>
 							<Text
 								style={{
-									color: theme.colors.textSecondary,
-									textAlign: "center",
-									fontSize: 16,
-									fontWeight: "bold",
+									color: theme.colors.textTertiary,
 								}}
+								className="leading-5"
 							>
-								{t("understood")}
+								{paragraph}
 							</Text>
-						</Pressable>
-					</ZoomableView>
-				</View>
+						</View>
+					))}
+				</ScrollView>
+
+				{/* Button to close */}
+				<ZoomableView>
+					<Pressable
+						style={{
+							backgroundColor: theme.colors.primary,
+						}}
+						className="flex items-center justify-center py-3 px-5 rounded-xl mt-3"
+						onPress={() => handleClose()}
+					>
+						<Text
+							style={{
+								color: theme.colors.textSecondary,
+								textAlign: "center",
+								fontSize: 16,
+								fontWeight: "bold",
+							}}
+						>
+							{t("understood")}
+						</Text>
+					</Pressable>
+				</ZoomableView>
 			</View>
-		</Modal>
+		</BottomSlideModal>
 	);
 }

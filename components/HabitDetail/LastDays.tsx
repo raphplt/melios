@@ -103,7 +103,7 @@ export default function LastDays() {
 				style={{
 					overflow: "hidden",
 				}}
-				tint="light"
+				tint="extraLight"
 			>
 				<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 pb-1">
 					<View className="flex flex-row items-center">

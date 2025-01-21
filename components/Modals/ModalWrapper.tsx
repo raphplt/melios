@@ -1,5 +1,13 @@
 import { useTheme } from "@context/ThemeContext";
-import { Modal, View, TouchableWithoutFeedback, Pressable } from "react-native";
+import React, { useEffect } from "react";
+import {
+	Modal,
+	View,
+	TouchableWithoutFeedback,
+	Pressable,
+	StatusBar,
+	Platform,
+} from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function ModalWrapper({
@@ -12,6 +20,21 @@ export default function ModalWrapper({
 	children: React.ReactNode;
 }) {
 	const { theme } = useTheme();
+
+	useEffect(() => {
+		if (visible) {
+			if (Platform.OS === "android") {
+				StatusBar.setBackgroundColor("rgba(0,0,0,0.4)");
+			}
+			StatusBar.setBarStyle("light-content");
+		} else {
+			if (Platform.OS === "android") {
+				StatusBar.setBackgroundColor("transparent");
+			}
+			StatusBar.setBarStyle(theme.dark ? "light-content" : "dark-content");
+		}
+	}, [visible, theme.dark]);
+
 	return (
 		<Modal
 			visible={visible}

@@ -1,11 +1,7 @@
 import React from "react";
-import { Tabs, useNavigation } from "expo-router";
+import { Tabs } from "expo-router";
 import { StatusBar, Text, View } from "react-native";
-import { useEffect } from "react";
-import LoaderScreen from "@components/Shared/LoaderScreen";
 import CustomTabBar from "@components/Shared/CustomTabBar";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { useSession } from "@context/UserContext";
 import { useTheme } from "@context/ThemeContext";
 import Melios from "@components/Svg/Melios";
 import LayoutTopRight from "@components/Shared/LayoutTopRight";
@@ -40,7 +36,14 @@ const TabLayout: React.FC = () => {
 				barStyle={theme.dark ? "light-content" : "dark-content"}
 				backgroundColor={"transparent"}
 			/>
-			<Tabs tabBar={(props) => <CustomTabBar {...props} />}>
+			<Tabs
+				tabBar={(props) => <CustomTabBar {...props} />}
+				screenOptions={{
+					headerBackgroundContainerStyle: {
+						backgroundColor: theme.colors.background,
+					},
+				}}
+			>
 				<Tabs.Screen
 					name="index"
 					options={createTabOptions(

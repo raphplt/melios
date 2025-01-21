@@ -13,7 +13,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Iconify } from "react-native-iconify";
 import ZoomableView from "@components/Shared/ZoomableView";
 
-// Activer LayoutAnimation pour Android
 if (
 	Platform.OS === "android" &&
 	UIManager.setLayoutAnimationEnabledExperimental
@@ -60,7 +59,6 @@ export default function SectionHeader({
 		setShow(!show);
 	};
 
-	// Rendu de l’icône
 	const renderIcon = () => {
 		switch (icon) {
 			case "calendar":
@@ -82,20 +80,21 @@ export default function SectionHeader({
 		<>
 			<ZoomableView>
 				<Pressable
-					className="flex flex-row w-[95%] rounded-xl px-2 py-2 mx-auto items-center justify-between mt-1"
+					className="flex flex-row w-[95%] rounded-xl px-2 py-2 mx-auto items-center justify-between my-1"
 					style={{
 						backgroundColor: theme.colors.background,
 						borderColor: theme.colors.primary,
-						borderWidth: 2,
+						borderWidth: 1,
 					}}
 					onPress={toggleShow}
 				>
 					<View className="flex flex-row items-center">
 						{renderIcon()}
 						<Text
-							className="text-[16px] mx-2 font-semibold"
+							className="text-[14px] mx-2"
 							style={{
-								color: theme.colors.text,
+								color: theme.colors.primary,
+								fontFamily: "BaskervilleBold",
 							}}
 						>
 							{title}
@@ -103,7 +102,7 @@ export default function SectionHeader({
 					</View>
 
 					<Animated.View style={{ transform: [{ rotate: rotation }] }}>
-						<Ionicons name="chevron-down" size={24} color={theme.colors.primary} />
+						<Ionicons name="chevron-down" size={22} color={theme.colors.primary} />
 					</Animated.View>
 				</Pressable>
 			</ZoomableView>

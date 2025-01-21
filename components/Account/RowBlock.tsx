@@ -37,7 +37,16 @@ export default function RowBlock({
 			}}
 		>
 			<View className="flex flex-row items-center">
-				{icon}
+				<View
+					className="rounded-full p-2"
+					style={{
+						backgroundColor: theme.colors.background,
+						borderColor: color || theme.colors.primary,
+						borderWidth: 1,
+					}}
+				>
+					{icon}
+				</View>
 				<Text
 					className="text-[16px] ml-2 mr-2"
 					style={{

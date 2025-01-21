@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { LinearGradient } from "expo-linear-gradient";
 import maj from "@utils/textUtils";
+import React from "react";
 
 export default function Classement() {
 	const [usersRewards, setUsersRewards]: any = useState([]);
@@ -70,61 +71,10 @@ export default function Classement() {
 		<View
 			className="flex-1"
 			style={{
-				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
+				backgroundColor: theme.colors.background,
 			}}
 		>
 			<ButtonClose />
-			<View
-				className="my-3 pt-2 flex items-center justify-center flex-row gap-2 w-11/12 mx-auto p-2 rounded-xl"
-				style={{
-					backgroundColor: theme.colors.cardBackground,
-					borderColor: theme.colors.border,
-					borderWidth: 1,
-				}}
-			>
-				<Iconify icon="mdi:trophy" size={20} color={theme.colors.text} />
-				<Text
-					className="text-xl text-center font-semibold"
-					style={{
-						color: theme.colors.text,
-						fontFamily: "Baskerville",
-					}}
-				>
-					{t("general_classification")}
-				</Text>
-			</View>
-
-			<LinearGradient
-				colors={[theme.colors.redSecondary, theme.colors.blueSecondary]}
-				style={{
-					borderRadius: 10,
-					padding: 5,
-					width: "92%",
-					marginTop: 10,
-					marginBottom: 10,
-					paddingTop: 20,
-					paddingBottom: 20,
-					margin: "auto",
-				}}
-				start={[0, 0]}
-			>
-				<View className="flex flex-row items-center justify-center ">
-					<Iconify
-						icon="mingcute:snow-fill"
-						size={24}
-						color={theme.colors.bluePrimary}
-					/>
-					<Text style={{}} className="text-center text-lg font-semibold mx-3">
-						{t("current_season")} : {maj(currentMonth)}
-					</Text>
-					<Iconify
-						icon="mingcute:snow-fill"
-						size={24}
-						color={theme.colors.bluePrimary}
-					/>
-				</View>
-			</LinearGradient>
-
 			<FlatList
 				data={usersRewards}
 				keyExtractor={(item) => item.id}
@@ -133,8 +83,62 @@ export default function Classement() {
 				)}
 				onEndReached={loadMoreRewards}
 				onEndReachedThreshold={0.5}
+				showsVerticalScrollIndicator={false}
 				ListFooterComponent={
 					hasMoreRewards ? <ActivityIndicator size="large" color="#0000ff" /> : null
+				}
+				ListHeaderComponent={
+					<>
+						<View
+							className="my-3 flex items-center justify-center flex-row gap-2 w-[95%] mx-auto p-2 rounded-xl"
+							style={{
+								borderColor: theme.colors.primary,
+								borderWidth: 2,
+							}}
+						>
+							<Iconify icon="mdi:trophy" size={20} color={theme.colors.primary} />
+							<Text
+								className="text-xl text-center font-semibold"
+								style={{
+									color: theme.colors.primary,
+									fontFamily: "Baskerville",
+								}}
+							>
+								{t("general_classification")}
+							</Text>
+						</View>
+
+						<LinearGradient
+							colors={[theme.colors.redSecondary, theme.colors.blueSecondary]}
+							style={{
+								borderRadius: 10,
+								padding: 5,
+								width: "95%",
+								marginTop: 10,
+								marginBottom: 10,
+								paddingTop: 15,
+								paddingBottom: 15,
+								margin: "auto",
+							}}
+							start={[0, 0]}
+						>
+							<View className="flex flex-row items-center justify-center">
+								<Iconify
+									icon="mingcute:snow-fill"
+									size={24}
+									color={theme.colors.bluePrimary}
+								/>
+								<Text style={{}} className="text-center text-lg font-semibold mx-3">
+									{t("current_season")} : {maj(currentMonth)}
+								</Text>
+								<Iconify
+									icon="mingcute:snow-fill"
+									size={24}
+									color={theme.colors.bluePrimary}
+								/>
+							</View>
+						</LinearGradient>
+					</>
 				}
 			/>
 		</View>

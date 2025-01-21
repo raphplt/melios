@@ -8,7 +8,7 @@ export default function Version() {
 
 	return (
 		<View
-			className="w-full mx-auto"
+			className="w-full mx-auto py-10"
 			style={{ backgroundColor: theme.colors.background }}
 		>
 			<Text className=" text-center text-sm" style={{ color: theme.colors.text }}>

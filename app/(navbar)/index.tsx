@@ -12,10 +12,12 @@ import ActivitiesContainer from "@components/Home/ActivitiesContainer";
 import ViewHelp from "@components/Home/ViewHelp";
 import NextLevelHandler from "@components/Progression/NextLevelHandler";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
+import { useTheme } from "@context/ThemeContext";
 
 export default function Index() {
 	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
 	const { t } = useTranslation();
+	const { theme } = useTheme();
 
 	if (loading || !userHabits || isLoading) {
 		return <LoaderScreen text={t("loading")} />;

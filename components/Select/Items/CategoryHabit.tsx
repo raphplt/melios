@@ -5,7 +5,9 @@ import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { Habit } from "@type/habit";
 import { useNavigation } from "expo-router";
-import { View, Text, Pressable } from "react-native";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { View, Text, Pressable, Alert } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function CategoryHabit({ item }: { item: Habit }) {
@@ -14,8 +16,10 @@ export default function CategoryHabit({ item }: { item: Habit }) {
 	const { theme } = useTheme();
 	const { setHabit } = useSelect();
 	const { habits } = useData();
+	const { t } = useTranslation();
 
 	const handlePress = () => {
+		if (habits.length > 20) return Alert.alert(t("habits_limit")); //TODO : constante ?
 		setHabit(item);
 		navigation.navigate("customHabit");
 	};

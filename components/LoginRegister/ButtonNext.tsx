@@ -6,9 +6,9 @@ import { Answer } from "../../constants/Slides";
 export default function ButtonNext({
 	selectedAnswer,
 	goToNextQuestion,
-	isDisabled,
+	isDisabled = false,
 	label,
-	isSubmitting,
+	isSubmitting = false,
 }: {
 	selectedAnswer: any;
 	goToNextQuestion: (selectedAnswer: Answer) => void;
@@ -42,27 +42,22 @@ export default function ButtonNext({
 			<Pressable
 				className="text-white font-bold py-3 px-4 rounded-2xl my-3 mt-6 w-full mx-auto"
 				style={{
-					backgroundColor:
-						isDisabled || !selectedAnswer
-							? theme.colors.grayPrimary
-							: theme.colors.primary,
+					backgroundColor: isDisabled
+						? theme.colors.grayPrimary
+						: theme.colors.primary,
 				}}
 				onPress={() => {
-					if (selectedAnswer) {
+					if (!isDisabled) {
 						goToNextQuestion(selectedAnswer);
 					}
 				}}
-				disabled={isDisabled || !selectedAnswer}
+				disabled={isDisabled}
 				onTouchStart={handleTouchStart}
 				onTouchEnd={handleTouchEnd}
 				onTouchCancel={handleTouchEnd}
 			>
 				{isSubmitting ? (
-					<ActivityIndicator
-						color={"white"}
-						size="small"
-						style={{ marginRight: 10 }}
-					/>
+					<ActivityIndicator color={"white"} size="small" />
 				) : (
 					<Text
 						style={{ color: theme.colors.textSecondary }}

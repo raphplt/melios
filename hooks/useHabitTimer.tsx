@@ -77,6 +77,16 @@ const useHabitTimer = () => {
 		}
 	};
 
+	const resetTimer = () => {
+		if (timerRef.current) {
+			clearInterval(timerRef.current);
+			timerRef.current = null;
+		}
+		setIsTimerActive(false);
+		setIsTimerVisible(false);
+	};
+
+
 	const onTimerEnd = async (habit: UserHabit) => {
 		try {
 			if (!habit) {
@@ -112,6 +122,7 @@ const useHabitTimer = () => {
 		startTimer,
 		pauseTimer,
 		stopTimer,
+		resetTimer,
 	};
 };
 

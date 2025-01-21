@@ -7,7 +7,6 @@ import { useContext, useRef, useState } from "react";
 import {
 	View,
 	Text,
-	Image,
 	Pressable,
 	KeyboardAvoidingView,
 	Platform,

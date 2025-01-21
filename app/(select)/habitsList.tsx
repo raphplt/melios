@@ -51,7 +51,6 @@ export default function CategoryList() {
 		>
 			<View
 				style={{
-					paddingTop: StatusBar.currentHeight || 30,
 					backgroundColor: lightColor || theme.colors.cardBackground,
 				}}
 				className="rounded-b-3xl"

@@ -64,9 +64,10 @@ const useNotifications = () => {
 							sound: true,
 						},
 						trigger: {
+							type: Notifications.SchedulableTriggerInputTypes.DAILY,
 							hour: adjustedTriggerHour,
 							minute: adjustedTriggerMinute,
-							repeats: true,
+							
 						},
 					});
 				} else {
@@ -77,9 +78,10 @@ const useNotifications = () => {
 							sound: true,
 						},
 						trigger: {
+							type: Notifications.SchedulableTriggerInputTypes.DAILY,
+
 							hour: triggerHour,
 							minute: triggerMinute,
-							repeats: true,
 						},
 					});
 				}
@@ -98,6 +100,7 @@ const useNotifications = () => {
 			},
 			trigger: {
 				seconds: hours * 3600,
+				type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL
 			},
 		});
 	};
@@ -127,7 +130,7 @@ const useNotifications = () => {
 	}, []);
 
 	useEffect(() => {
-		if (streak > 3 && expoPushToken) {
+		if (streak?.value && streak.value > 3 && expoPushToken) {
 			sendStreakReminderNotification(expoPushToken);
 		}
 	}, [streak, expoPushToken]);

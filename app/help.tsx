@@ -7,6 +7,7 @@ import {
 	Animated,
 	StyleSheet,
 } from "react-native";
+import { Iconify } from "react-native-iconify";
 
 const FAQItem = ({
 	question,
@@ -50,6 +51,7 @@ const FAQItem = ({
 					>
 						{question}
 					</Text>
+
 				</View>
 			</TouchableOpacity>
 			<Animated.View style={{ height, overflow: "hidden" }}>

@@ -108,6 +108,10 @@ const ConfidentialitySelector = () => {
 					borderRadius: 5,
 				}}
 				iconColor={theme.colors.textTertiary}
+				placeholderStyle={{
+					color: theme.colors.textTertiary,
+					fontSize: 14,
+				}}
 			/>
 		</View>
 	);

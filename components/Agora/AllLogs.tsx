@@ -4,7 +4,9 @@ import {
 	FlatList,
 	ActivityIndicator,
 	View,
-	TouchableOpacity,
+	Button,
+	RefreshControl,
+	Pressable,
 } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
@@ -15,6 +17,7 @@ import { LogItem } from "./LogItem";
 import Confidentiality from "@components/Modals/Confidentiality";
 import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
+import ConfidentialityFilter from "./ConfidentialityFilter";
 
 export type LogExtended = {
 	id: string;
@@ -24,6 +27,7 @@ export type LogExtended = {
 	logs: string[];
 	uid: string;
 	createAt: Date;
+	reactions?: any[];
 };
 
 const AllLogs = () => {
@@ -35,6 +39,7 @@ const AllLogs = () => {
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [confidentiality, setConfidentiality] = useState("public");
+	const [refreshing, setRefreshing] = useState(false); // État pour le rafraîchissement
 
 	const fetchLogs = async (isRefreshing = false) => {
 		if (loading || (!hasMore && !isRefreshing)) return;
@@ -57,13 +62,21 @@ const AllLogs = () => {
 				member?.friends
 			);
 
-			setLogs((prevLogs: any) => [...(isRefreshing ? [] : prevLogs), ...newLogs]);
+			setLogs((prevLogs: any) => {
+				const updatedLogs = [...(isRefreshing ? [] : prevLogs), ...newLogs];
+				const uniqueLogs = Array.from(
+					new Set(updatedLogs.map((log) => log.id))
+				).map((id) => updatedLogs.find((log) => log.id === id));
+				return uniqueLogs;
+			});
+
 			setLastVisible(newLastVisible);
-			setHasMore(moreLogs);
+			setHasMore(newLogs.length > 0 && moreLogs);
 		} catch (error) {
 			console.error("Erreur lors de la récupération des logs :", error);
 		} finally {
 			setLoading(false);
+			if (isRefreshing) setRefreshing(false);
 		}
 	};
 
@@ -80,97 +93,84 @@ const AllLogs = () => {
 			data={logs}
 			renderItem={renderItem}
 			keyExtractor={(item) => item.id}
-			onEndReached={() => fetchLogs(false)}
 			className="w-[95%] mx-auto"
-			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
 				<View
-					className="flex flex-row items-center justify-between px-4 py-4 my-3 rounded-lg"
+					className="flex flex-row items-center justify-between px-6 py-3 my-4 rounded-xl"
 					style={{
-						backgroundColor: theme.colors.cardBackground,
+						backgroundColor: theme.colors.backgroundTertiary,
+
+						shadowColor: "#000",
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.1,
+						shadowRadius: 4,
 					}}
 				>
 					<View className="flex flex-row items-center justify-start">
-						<Iconify icon="tabler:activity" size={24} color={theme.colors.text} />
+						<Iconify icon="mdi:column" size={22} color={theme.colors.primary} />
 						<Text
-							className="text-[15px] mx-3"
+							className="text-[15px] font-semibold mx-3"
 							style={{
-								color: theme.colors.text,
-								fontFamily: "BaskervilleBold",
+								color: theme.colors.primary,
 							}}
 						>
 							{t("activity_users")}
 						</Text>
 					</View>
 
-					<View
-						className="flex flex-row items-center justify-start gap-2 rounded-2xl"
-						style={{
-							backgroundColor: theme.colors.background,
-						}}
-					>
-						<TouchableOpacity
-							onPress={() => setConfidentiality("public")}
-							style={{
-								backgroundColor:
-									confidentiality === "public"
-										? theme.colors.backgroundTertiary
-										: theme.colors.background,
-							}}
-							className="px-3 py-1 rounded-2xl"
-						>
-							<Iconify
-								icon="mynaui:globe"
-								size={24}
-								color={
-									confidentiality === "public"
-										? theme.colors.primary
-										: theme.colors.textTertiary
-								}
-							/>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={() => setConfidentiality("friends")}
-							style={{
-								backgroundColor:
-									confidentiality === "friends"
-										? theme.colors.backgroundTertiary
-										: theme.colors.background,
-							}}
-							className="px-3 py-1 rounded-2xl"
-						>
-							<Iconify
-								icon="ion:people"
-								size={24}
-								color={
-									confidentiality === "friends"
-										? theme.colors.primary
-										: theme.colors.textTertiary
-								}
-							/>
-						</TouchableOpacity>
+					<View className="flex flex-row items-center space-x-4">
+						<ConfidentialityFilter
+							confidentiality={confidentiality}
+							setConfidentiality={setConfidentiality}
+						/>
+						<Confidentiality />
 					</View>
-					{/* Modale */}
-					<Confidentiality />
 				</View>
 			}
 			ListFooterComponent={
-				loading ? (
-					<ActivityIndicator
-						size="large"
-						color={theme.colors.primary}
-						className="py-10"
-					/>
-				) : !hasMore ? (
-					<Text
-						className="text-center mt-4 mb-20"
-						style={{ color: theme.colors.textTertiary }}
-					>
-						{" "}
-					</Text>
-				) : null
+				<View>
+					{loading ? (
+						<ActivityIndicator
+							size="large"
+							color={theme.colors.primary}
+							className="py-10"
+						/>
+					) : !hasMore ? (
+						<Text
+							className="text-center mt-4 mb-20"
+							style={{ color: theme.colors.textTertiary }}
+						>
+							{t("no_more_logs")}
+						</Text>
+					) : (
+						<Pressable
+							className="mt-2 mb-24 p-4 rounded-xl"
+							style={{
+								backgroundColor: theme.colors.primary,
+							}}
+							onPress={() => fetchLogs(false)}
+						>
+							<Text
+								className="text-center"
+								style={{ color: theme.colors.textSecondary }}
+							>
+								{t("load_more")}
+							</Text>
+						</Pressable>
+					)}
+				</View>
 			}
 			contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+			refreshControl={
+				<RefreshControl
+					refreshing={refreshing}
+					onRefresh={() => {
+						setRefreshing(true);
+						fetchLogs(true);
+					}}
+					colors={[theme.colors.primary]}
+				/>
+			}
 		/>
 	);
 };

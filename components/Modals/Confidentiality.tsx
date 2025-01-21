@@ -58,6 +58,7 @@ const Confidentiality = () => {
 			<Text
 				style={{
 					color: theme.colors.text,
+					fontFamily: "BaskervilleBold",
 				}}
 				className="text-lg font-bold"
 			>
