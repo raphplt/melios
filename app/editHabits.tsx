@@ -2,7 +2,7 @@ import EditHabitCard from "@components/EditHabits/EditHabitCard";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useState } from "react";
-import { FlatList, TextInput, View } from "react-native";
+import { FlatList, View, TextInput } from "react-native";
 import { Iconify } from "react-native-iconify";
 import NumberSelected from "@components/Select/Old/NumberSelected";
 import { UserHabit } from "@type/userHabit";
@@ -21,37 +21,38 @@ export default function EditHabits() {
 		);
 
 	return (
-		<View style={{ backgroundColor: theme.colors.background }} className="flex-1">
-			<View className="w-[95%] flex flex-row items-center mx-auto">
-				<View
-					className="flex flex-row items-center w-10/12 my-6 py-2 px-4 rounded-3xl"
-					style={{
-						backgroundColor: theme.colors.background,
-						borderColor: theme.colors.primary,
-						borderWidth: 1,
-					}}
-				>
-					<Iconify icon="mdi:magnify" size={20} color={theme.colors.text} />
-					<TextInput
-						placeholder={t("search_habit")}
-						placeholderTextColor={theme.colors.text}
-						className="ml-1"
-						value={searchText}
+		<FlatList
+			style={{ backgroundColor: theme.colors.background }}
+			contentContainerStyle={{ flexGrow: 1 }}
+			ListHeaderComponent={
+				<View className="w-[95%] flex flex-row items-center mx-auto">
+					<View
+						className="flex flex-row items-center w-[80%] my-6 py-1 px-4 rounded-3xl"
 						style={{
-							color: theme.colors.text,
+							backgroundColor: theme.colors.background,
+							borderColor: theme.colors.primary,
+							borderWidth: 1,
 						}}
-						onChangeText={setSearchText}
-					/>
+					>
+						<Iconify icon="mdi:magnify" size={20} color={theme.colors.text} />
+						<TextInput
+							placeholder={t("search_habit")}
+							placeholderTextColor={theme.colors.text}
+							className="ml-1"
+							value={searchText}
+							style={{
+								color: theme.colors.text,
+							}}
+							onChangeText={setSearchText}
+						/>
+					</View>
+					<NumberSelected number={habits.length} />
 				</View>
-				<NumberSelected number={habits.length} />
-			</View>
-
-			<FlatList
-				data={filteredHabits}
-				keyExtractor={(item: UserHabit) => item.id.toString()}
-				renderItem={({ item }) => <EditHabitCard habit={item} />}
-				showsVerticalScrollIndicator={false}
-			/>
-		</View>
+			}
+			data={filteredHabits}
+			keyExtractor={(item: UserHabit) => item.id.toString()}
+			renderItem={({ item }) => <EditHabitCard habit={item} />}
+			showsVerticalScrollIndicator={false}
+		/>
 	);
 }

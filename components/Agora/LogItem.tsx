@@ -30,10 +30,8 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 	);
 	const { member } = useData();
 
-	console.log("member", member?.uid);
 
 	useEffect(() => {
-		console.log("item", item.reactions);
 		const userReaction = item.reactions?.find(
 			(reaction) => reaction.uid === member?.uid
 		);
@@ -120,7 +118,6 @@ export const LogItem = ({ item }: { item: LogExtended }) => {
 		});
 	};
 
-	console.log("userReaction", userReaction);
 	if (!item.member || !item.habit) return null;
 
 	const renderEmoji = (emoji: string) => {

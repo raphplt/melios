@@ -68,8 +68,6 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 				mostRecentLog,
 				updatedAt: serverTimestamp(),
 			});
-
-			console.log("Log mis à jour avec succès.");
 		}
 	} catch (error) {
 		console.error("Erreur lors de l'ajout ou de la mise à jour du log :", error);

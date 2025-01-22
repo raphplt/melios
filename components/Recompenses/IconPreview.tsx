@@ -5,6 +5,7 @@ import { ProfileCosmetic } from "@type/cosmetics";
 import getIcon from "@utils/cosmeticsUtils";
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 
 export default function IconPreview({
 	cosmetic,
@@ -13,14 +14,18 @@ export default function IconPreview({
 }) {
 	const { theme } = useTheme();
 	const [iconPath, setIconPath] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		const fetchIcon = async () => {
+			setLoading(true);
 			try {
 				const path = getIcon(cosmetic.slug);
 				setIconPath(path);
 			} catch (error) {
 				console.error("Failed to fetch icon:", error);
+			} finally {
+				setLoading(false);
 			}
 		};
 
@@ -49,7 +54,17 @@ export default function IconPreview({
 			>
 				{cosmetic.name}
 			</Text>
-			{<CachedImage imagePath={iconPath} className="w-24 h-24" />}
+			{loading ? (
+				<ShimmerPlaceholder
+					style={{
+						width: 80,
+						height: 80,
+						borderRadius: 40,
+					}}
+				/>
+			) : (
+				<CachedImage imagePath={iconPath} className="w-24 h-24" />
+			)}
 
 			<View className="flex flex-row items-center justify-center py-2">
 				<Text

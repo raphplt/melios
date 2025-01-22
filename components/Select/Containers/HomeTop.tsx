@@ -12,6 +12,7 @@ export default function HomeTop() {
 		<View
 			style={{
 				backgroundColor: theme.colors.background,
+				paddingTop: 40,
 			}}
 		>
 			<ButtonClose />

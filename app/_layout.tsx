@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import {
 	NavigationContainer,
 	NavigationProp,
@@ -20,6 +20,7 @@ import { DataProvider } from "@context/DataContext";
 import "../i18n";
 import "../global.css";
 import { useTranslation } from "react-i18next";
+import { StatusBar } from "expo-status-bar";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -65,8 +66,8 @@ function MainNavigator() {
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
 			<ThemeProvider value={theme}>
 				<StatusBar
-					barStyle={theme === DarkTheme ? "light-content" : "dark-content"}
-					backgroundColor={theme.colors.background}
+					style={theme.dark ? "light" : "dark"}
+					backgroundColor={"transparent"}
 				/>
 				<Stack>
 					<Stack.Screen
@@ -75,10 +76,7 @@ function MainNavigator() {
 					/>
 					<Stack.Screen name="(select)" options={{ headerShown: false }} />
 					<Stack.Screen name="habitDetail" options={{ headerShown: false }} />
-					<Stack.Screen
-						name="account"
-						options={{ headerShadowVisible: false, title: "Mon compte" }}
-					/>
+					<Stack.Screen name="account" options={{ headerShown: false }} />
 					<Stack.Screen
 						name="editProfil"
 						options={{ headerShadowVisible: false, title: "Éditer le profil" }}

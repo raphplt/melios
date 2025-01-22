@@ -32,7 +32,7 @@ export default function CosmeticPreviewStacked() {
 			}}
 			onPress={() => navigation.navigate("cosmeticShop")}
 		>
-			<View className="w-11/12 mx-auto py-5">
+			<View className="w-11/12 mx-auto py-4">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
 					<Iconify
 						icon="lucide:shopping-basket"

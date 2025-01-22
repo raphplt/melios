@@ -36,7 +36,7 @@ export default function MemberInfos({
 	return (
 		<View style={{ backgroundColor: theme.colors.background }} className="mb-5">
 			<View
-				className="mx-auto flex flex-col pt-6 justify-center w-11/12 items-center"
+				className="mx-auto flex flex-col pt-2 justify-center w-11/12 items-center"
 				style={{ backgroundColor: theme.colors.background }}
 			>
 				<ZoomableView>

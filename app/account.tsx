@@ -9,12 +9,17 @@ import General from "@components/Account/General";
 import Preferences from "@components/Account/Preferences";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import ButtonBack from "@components/Shared/ButtonBack";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import ButtonClose from "@components/Shared/ButtonClose";
 
 export default function Account() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 
 	const { member, isLoading } = useData();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	if (isLoading) return <LoaderScreen />;
 
@@ -24,11 +29,10 @@ export default function Account() {
 			style={{
 				backgroundColor: theme.colors.background,
 				flex: 1,
-			}}
-			contentContainerStyle={{
-				flexGrow: 1,
+				paddingTop: 40,
 			}}
 		>
+			<ButtonClose />
 			<MemberInfos member={member} auth={auth} />
 			<General />
 			<Preferences />

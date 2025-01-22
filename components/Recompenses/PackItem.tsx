@@ -1,6 +1,6 @@
 import { useTheme } from "@context/ThemeContext";
 import { Pack } from "@type/pack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";

@@ -36,7 +36,6 @@ export default function FeedbackForm() {
 		try {
 			// Envoyer les données à Firestore
 			await addDoc(collection(db, "feedbacks"), data);
-			console.log("Feedback soumis :", data);
 			reset(); // Réinitialise le formulaire après soumission
 			setSubmitSuccess(true);
 		} catch (error) {

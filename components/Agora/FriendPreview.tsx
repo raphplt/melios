@@ -36,7 +36,7 @@ const FriendPreview = () => {
 		try {
 			const result = await Share.share({
 				message:
-					"Rejoins-moi sur cette super application ! Télécharge-la ici : https://example.com/download",
+					"Rejoins-moi sur Melios ! Télécharge l'application ici : https://linktr.ee/Melios_app",
 			});
 			if (result.action === Share.sharedAction) {
 				console.log("Partage réussi");

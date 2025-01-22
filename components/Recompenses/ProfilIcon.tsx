@@ -12,6 +12,7 @@ import Animated, {
 import { getMemberInfos, updateProfilePicture } from "@db/member";
 import { Iconify } from "react-native-iconify";
 import CachedImage from "@components/Shared/CachedImage";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 
 export default function ProfilIcon({
 	cosmetic,
@@ -19,12 +20,15 @@ export default function ProfilIcon({
 	cosmetic: ProfileCosmetic;
 }) {
 	const { theme } = useTheme();
-	const { points, setMember, member } = useData();
+	const { usersLevels } = useData();
 
-	const isGrayedOut = cosmetic.price > points.odyssee;
+	const { setMember, member } = useData();
+
+	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
+
+	const isGrayedOut = cosmetic.level > globalLevel.currentLevel;
 	const selected = member?.profilePicture === cosmetic.slug;
 
-	// State to store the resolved image path
 	const [iconPath, setIconPath] = useState<string>("");
 
 	useEffect(() => {
@@ -40,11 +44,9 @@ export default function ProfilIcon({
 		fetchIcon();
 	}, [cosmetic.slug]);
 
-	// Shared values for animations
 	const scale = useSharedValue(1);
 	const fogTranslation = useSharedValue(0);
 
-	// Glow animation style (for selected avatars)
 	const glowStyle = useAnimatedStyle(() => ({
 		shadowOpacity: withTiming(selected ? 0.8 : 0),
 		shadowRadius: withTiming(selected ? 5 : 0),
@@ -84,7 +86,6 @@ export default function ProfilIcon({
 							? theme.colors.backgroundTertiary
 							: theme.colors.cardBackground,
 						borderColor: selected ? theme.colors.primary : theme.colors.grayPrimary,
-						// borderWidth: 1,
 						borderRadius: 12,
 						opacity: isGrayedOut ? 0.5 : 1,
 					},
@@ -106,7 +107,18 @@ export default function ProfilIcon({
 				</Text>
 
 				{/* Icon */}
-				{<CachedImage imagePath={iconPath} className="w-24 h-24" />}
+				{iconPath ? (
+					<CachedImage imagePath={iconPath} className="w-24 h-24" />
+				) : (
+					<ShimmerPlaceholder
+						width={80}
+						height={80}
+						style={{
+							borderRadius: 40,
+							marginRight: 12,
+						}}
+					/>
+				)}
 				{/* Price & Icons */}
 				<View className="flex flex-row items-center justify-center py-2">
 					<Text
@@ -119,7 +131,7 @@ export default function ProfilIcon({
 								: theme.colors.yellowPrimary,
 						}}
 					>
-						{cosmetic.price}
+						{cosmetic.level}
 					</Text>
 					{isGrayedOut ? (
 						<Iconify

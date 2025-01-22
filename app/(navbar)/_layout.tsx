@@ -1,11 +1,12 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { StatusBar, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import CustomTabBar from "@components/Shared/CustomTabBar";
 import { useTheme } from "@context/ThemeContext";
 import Melios from "@components/Svg/Melios";
 import LayoutTopRight from "@components/Shared/LayoutTopRight";
 import { useTranslation } from "react-i18next";
+import { StatusBar } from "expo-status-bar";
 
 const createHeaderStyle = (backgroundColor: string) => ({
 	backgroundColor,
@@ -32,10 +33,6 @@ const TabLayout: React.FC = () => {
 
 	return (
 		<>
-			<StatusBar
-				barStyle={theme.dark ? "light-content" : "dark-content"}
-				backgroundColor={"transparent"}
-			/>
 			<Tabs
 				tabBar={(props) => <CustomTabBar {...props} />}
 				screenOptions={{

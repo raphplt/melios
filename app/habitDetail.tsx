@@ -37,7 +37,6 @@ export default function HabitDetail() {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
-	const appState = useRef(AppState.currentState);
 	const { categories } = useHabits();
 
 	if (!currentHabit) return <LoaderScreen text={t("loading")} />;

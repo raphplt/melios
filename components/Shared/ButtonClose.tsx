@@ -4,7 +4,7 @@ import { useNavigation } from "expo-router";
 import { Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
 
-export default function ButtonClose() {
+export default function ButtonClose({ color }: { color?: string }) {
 	const { theme } = useTheme();
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -14,8 +14,12 @@ export default function ButtonClose() {
 	};
 
 	return (
-		<Pressable onPress={handleQuit} className="p-4 z-10">
-			<Iconify icon="material-symbols:close" size={28} color={theme.colors.text} />
+		<Pressable onPress={handleQuit} className="p-4 z-10 relative block">
+			<Iconify
+				icon="material-symbols:close"
+				size={28}
+				color={color ?? theme.colors.text}
+			/>
 		</Pressable>
 	);
 }

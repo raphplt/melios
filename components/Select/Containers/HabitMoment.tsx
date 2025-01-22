@@ -53,8 +53,6 @@ export default function HabitMoment({
 	const itemStyle =
 		"w-full flex flex-row items-center justify-between px-3 py-2";
 
-	console.log("selectedMoment", selectedMoment);
-
 	return (
 		<>
 			<RowTitleCustom title="MOMENT" />

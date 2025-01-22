@@ -3,4 +3,5 @@ export type ProfileCosmetic = {
 	name: string;
 	price: number;
 	slug: string;
+	level: number;
 };

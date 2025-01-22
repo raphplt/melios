@@ -185,5 +185,6 @@
     "calendar_description": "Ici, vous pouvez suivre votre progression au cours des derniers jours. Cliquez sur un jour pour en voir les détails",
     "choose_reaction": "Choisissez une réaction",
     "level_general": "Niveau général",
-    "cosmetic_shop_description": "Votre niveau général vous permet de débloquer des cosmétiques pour personnaliser votre profil."
+    "cosmetic_shop_description": "Votre niveau général vous permet de débloquer des cosmétiques pour personnaliser votre profil.",
+    "create": "Créer"
 }

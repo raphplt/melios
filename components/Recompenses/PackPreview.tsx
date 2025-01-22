@@ -14,8 +14,8 @@ import {
 	Dimensions,
 	Pressable,
 	Alert,
-	Platform,
 	StatusBar,
+	ScrollView,
 } from "react-native";
 
 type Props = {
@@ -40,59 +40,94 @@ const PackPreview = ({ unlocked, setUnlocked }: Props) => {
 	};
 
 	return (
-		<View
+		<ScrollView
+			showsVerticalScrollIndicator={false}
 			className="flex-1 relative"
 			style={{
-				width: Dimensions.get("window").width,
-				height: Dimensions.get("window").height,
+				backgroundColor: theme.colors.background,
+				flex: 1,
+			}}
+			contentContainerStyle={{
 				flexGrow: 1,
-				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 40,
 			}}
 		>
-			<CachedImage
-				imagePath={"images/packs/" + selectedPack.image}
-				style={styles.image}
+			<View
+				style={{
+					paddingTop: StatusBar.currentHeight ?? 50,
+				}}
 			/>
-			<ButtonClose />
-			<View className="flex-1 flex items-center justify-center">
-				<BlurView
-					tint="extraLight"
-					intensity={75}
-					className="p-4 w-[95%] rounded-xl mt-3 flex flex-col items-start justify-start"
-					style={{
-						overflow: "hidden",
-						position: "absolute",
-						top: 0,
-					}}
-				>
-					<Text className="text-2xl font-bold text-black">{selectedPack.name}</Text>
+			<View
+				style={{
+					height: 250,
+				}}
+				className="relative block "
+			>
+				<BlurView intensity={100} tint="light" className="rounded-lg p-2">
+					<ButtonClose color="white" />
+				</BlurView>
+				<CachedImage
+					imagePath={"images/packs/" + selectedPack.image}
+					className="w-full h-full object-cover absolute"
+				/>
+			</View>
+			<View className="flex items-center justify-between relative">
+				<View className="p-4 w-[95%] rounded-xl mt-2 flex flex-col items-start justify-start">
+					<Text
+						className="text-2xl font-bold"
+						style={{
+							color: theme.colors.text,
+						}}
+					>
+						{selectedPack.name}
+					</Text>
 
 					<View className="flex flex-col items-start justify-start gap-y-2">
-						<Text className="font-semibold py-2 text-gray-700">
+						<Text
+							className="font-semibold py-2"
+							style={{
+								color: theme.colors.textTertiary,
+							}}
+						>
 							{selectedPack.description}
 						</Text>
-						<View className="flex flex-row items-center gap-2">
-							<Text className="font-semibold text-gray-900">
-								{t("price")}: {selectedPack.price}
-							</Text>
-							<MoneyMelios width={18} />
-						</View>
-						<Text className="font-semibold text-gray-900">
+
+						<Text
+							className="font-semibold text-lg"
+							style={{ color: theme.colors.text }}
+						>
 							{selectedPack.content.sections.length} {t("chapters")}
 						</Text>
 					</View>
-				</BlurView>
+
+					<View className="flex flex-col items-start justify-start gap-y-1 mt-2 w-full mx-auto">
+						{selectedPack.content.sections.map((section, index) => (
+							<View
+								key={index}
+								className="flex flex-row items-center rounded-lg gap-2 p-2 w-full my-1"
+								style={{
+									backgroundColor: theme.colors.cardBackground,
+								}}
+							>
+								<Text
+									className="font-semibold"
+									style={{
+										color: theme.colors.textTertiary,
+									}}
+								>
+									{index + 1}. {section.title}
+								</Text>
+							</View>
+						))}
+					</View>
+				</View>
+
 				<Pressable
 					style={{
 						backgroundColor: theme.colors.primary,
 						opacity: 0.9,
-						position: "absolute",
-						bottom: 4,
 					}}
-					className="p-3 rounded-xl mt-2 flex flex-row justify-center items-center my-2 w-11/12 mb-6"
-					onPress={() => {
-						setUnlocked(true);
-					}}
+					className="p-3 rounded-xl mt-2 flex flex-row justify-center items-center my-2 w-11/12 mb-6 "
+					onPress={showComingSoonAlert}
 				>
 					<Text
 						style={{
@@ -115,17 +150,8 @@ const PackPreview = ({ unlocked, setUnlocked }: Props) => {
 					</View>
 				</Pressable>
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
-
-const styles = StyleSheet.create({
-	image: {
-		position: "absolute",
-		width: Dimensions.get("window").width,
-		height: Dimensions.get("window").height,
-		resizeMode: "cover",
-	},
-});
 
 export default PackPreview;

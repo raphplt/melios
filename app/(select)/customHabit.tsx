@@ -113,6 +113,7 @@ export default function CustomHabit() {
 			<ScrollView
 				contentContainerStyle={{
 					flexGrow: 1,
+					paddingTop: 40,
 				}}
 			>
 				<LinearGradient

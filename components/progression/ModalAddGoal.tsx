@@ -227,7 +227,7 @@ export default function ModalAddGoal({
 						maximumTrackTintColor={theme.colors.grayPrimary}
 						value={duration}
 						onValueChange={(value) => {
-							setDuration(value);
+							setDuration(Math.floor(value));
 							setError(null);
 						}}
 						step={1}
@@ -316,13 +316,13 @@ export default function ModalAddGoal({
 				>
 					<Text
 						style={{
-							color: theme.colors.text,
+							color: canValidate ? "#fff" : "#fff",
 						}}
-						className="text-[16px] font-semibold"
+						className="text-[16px] font-semibold mx-2"
 					>
-						{t("validate")}
+						{t("create")}
 					</Text>
-					<Iconify icon="mdi-check" size={24} color="#f1f1f1" />
+					<Iconify icon="mdi-plus" size={24} color="#f1f1f1" />
 				</Pressable>
 			</View>
 		</BottomSlideModal>

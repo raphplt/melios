@@ -24,9 +24,9 @@ const Pack = () => {
 		return <PackPreview unlocked={unlocked} setUnlocked={setUnlocked} />;
 
 	return (
-		<View
+		<ScrollView
 			style={{
-				flexGrow: 1,
+				flex: 1,
 			}}
 		>
 			<ButtonClose />
@@ -77,7 +77,7 @@ const Pack = () => {
 					</View>
 				))}
 			</ScrollView>
-		</View>
+		</ScrollView>
 	);
 };
 

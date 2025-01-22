@@ -37,7 +37,7 @@ export default function CategoryList() {
 	}, [category, habitsData, refreshHabits, hasRefreshed]);
 
 	if (!category) {
-		return null;
+		return null; 
 	}
 
 	const lightColor = lightenColor(category.color, 0.2);
@@ -52,6 +52,7 @@ export default function CategoryList() {
 			<View
 				style={{
 					backgroundColor: lightColor || theme.colors.cardBackground,
+					paddingTop: 40,
 				}}
 				className="rounded-b-3xl"
 			>

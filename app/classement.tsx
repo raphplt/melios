@@ -72,6 +72,7 @@ export default function Classement() {
 			className="flex-1"
 			style={{
 				backgroundColor: theme.colors.background,
+				paddingTop: 40,
 			}}
 		>
 			<ButtonClose />
