@@ -1,15 +1,15 @@
-// Type représentant les logs d'une habitude
 export type Log = {
 	id: string;
 	habitId: string;
-	logs: DailyLog[];
-	mostRecentLog?: Date; // ex: pour stocker la plus récente date complétée
 	uid: string; // id utilisateur
 	createdAt?: Date;
 	updatedAt?: Date;
+	logs?: DailyLog[]; // sous collection
 };
 
 export type DailyLog = {
+	id: string;
+	logDocId: string;
 	date: Date;
 	reactions?: Reaction[];
 };

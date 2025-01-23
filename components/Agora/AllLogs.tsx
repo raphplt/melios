@@ -17,6 +17,7 @@ import ConfidentialityFilter from "./ConfidentialityFilter";
 import { DailyLogExtended, getAllDailyLogsPaginated } from "@db/logs";
 import { DailyLogItem } from "./DailyLogItem";
 
+
 const AllLogs = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
@@ -50,19 +51,9 @@ const AllLogs = () => {
 				member?.friends || []
 			);
 
-			setDailyLogs((prev) => {
-				const merged = [...(isRefreshing ? [] : prev), ...newDailyLogs];
-				const unique = Array.from(
-					new Set(merged.map((d) => d.logDocId + d.date?.toISOString() + d.habitId))
-				).map(
-					(id) =>
-						merged.find((d) => d.logDocId + d.date?.toISOString() + d.habitId === id)!
-				);
-				return unique;
-			});
-
+			setDailyLogs((prev) => [...(isRefreshing ? [] : prev), ...newDailyLogs]);
 			setLastVisible(newLastVisible);
-			setHasMore(newDailyLogs.length > 0 && moreLogs);
+			setHasMore(moreLogs);
 		} catch (error) {
 			console.error("Erreur lors de la récupération des dailyLogs :", error);
 		} finally {
@@ -84,7 +75,11 @@ const AllLogs = () => {
 			data={dailyLogs}
 			renderItem={renderItem}
 			keyExtractor={(item, index) =>
-				`${item.logDocId}-${item.date?.toISOString()}-${index}`
+				`${item.logDocId}-${
+					item.date && !isNaN(new Date(item.date).getTime())
+						? item.date.toISOString()
+						: "invalid-date"
+				}-${index}`
 			}
 			className="w-[95%] mx-auto"
 			ListHeaderComponent={

@@ -1,12 +1,10 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import moment from "moment";
-import useIndex from "./useIndex";
 import { ThemeContext } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
-import { Log } from "@type/log";
+import { Log, DailyLog } from "@type/log";
 
 const useCompletedHabitPeriods = () => {
-	// const { userHabits: habits } = useIndex();
 	const { logs } = useData();
 	const { theme } = useContext(ThemeContext);
 	const [loading, setLoading] = useState(true);
@@ -14,104 +12,52 @@ const useCompletedHabitPeriods = () => {
 	const bgColor = theme.colors.primary;
 
 	const completedHabitPeriods = useMemo(() => {
-		if (logs.length === 0) {
-			setLoading(false);
+		if (!logs || logs.length === 0) {
 			return { periods: {}, logsByDate: {} };
 		}
 
 		const completedDates = new Set<string>();
-		const logsByDate: Record<string, Log[]> = {};
+		const logsByDate: Record<string, DailyLog[]> = {};
 
 		logs.forEach((logEntry: Log) => {
-			logEntry.logs.forEach((dailyLog) => {
-				const date = moment(dailyLog.date).format("YYYY-MM-DD");
-				completedDates.add(date);
-				if (!logsByDate[date]) {
-					logsByDate[date] = [];
+			logEntry.logs?.forEach((dailyLog: DailyLog) => {
+				let logDate: string;
+
+				if (dailyLog.date instanceof Date) {
+					logDate = moment(dailyLog.date).format("YYYY-MM-DD");
+				} else {
+					logDate = moment(dailyLog.date).format("YYYY-MM-DD");
 				}
-				logsByDate[date].push(logEntry);
+
+				completedDates.add(logDate);
+				if (!logsByDate[logDate]) {
+					logsByDate[logDate] = [];
+				}
+				logsByDate[logDate].push(dailyLog);
 			});
 		});
 
 		const sortedDates = Array.from(completedDates).sort();
-		const periods: Record<string, any> = {};
 
+		const periods: Record<string, any> = {};
 		let start = sortedDates[0];
 		let end = start;
 
-		for (let i = 1; i < sortedDates.length; i++) {
-			const currentDate = sortedDates[i];
-			const previousDate = moment(sortedDates[i - 1]);
+		sortedDates.forEach((currentDate, index) => {
+			if (index === 0) return;
 
+			const previousDate = moment(sortedDates[index - 1]);
 			if (moment(currentDate).diff(previousDate, "days") === 1) {
 				end = currentDate;
 			} else {
-				if (start === end) {
-					periods[start] = {
-						startingDay: true,
-						endingDay: true,
-						color: bgColor,
-						textColor: "white",
-					};
-				} else {
-					periods[start] = {
-						startingDay: true,
-						color: bgColor,
-						textColor: "white",
-					};
-					periods[end] = {
-						endingDay: true,
-						color: bgColor,
-						textColor: "white",
-					};
-
-					for (
-						let j = moment(start).add(1, "days");
-						j.isBefore(end);
-						j.add(1, "days")
-					) {
-						periods[j.format("YYYY-MM-DD")] = {
-							color: bgColor,
-							textColor: "white",
-						};
-					}
-				}
+				// Ajouter la période précédente
+				addPeriod(start, end, periods, bgColor);
 				start = currentDate;
 				end = start;
 			}
-		}
+		});
 
-		// Gère la dernière période
-		if (start === end) {
-			periods[start] = {
-				startingDay: true,
-				endingDay: true,
-				color: bgColor,
-				textColor: "white",
-			};
-		} else {
-			periods[start] = {
-				startingDay: true,
-				color: bgColor,
-				textColor: "white",
-			};
-			periods[end] = {
-				endingDay: true,
-				color: bgColor,
-				textColor: "white",
-			};
-
-			for (
-				let j = moment(start).add(1, "days");
-				j.isBefore(end);
-				j.add(1, "days")
-			) {
-				periods[j.format("YYYY-MM-DD")] = {
-					color: bgColor,
-					textColor: "white",
-				};
-			}
-		}
+		addPeriod(start, end, periods, bgColor);
 
 		const today = moment().format("YYYY-MM-DD");
 		const highlightColor = theme.dark ? "#ffcc00" : "#C95355";
@@ -127,15 +73,59 @@ const useCompletedHabitPeriods = () => {
 			};
 		}
 
-		setLoading(false);
 		return { periods, logsByDate };
-	}, [logs, theme.dark]);
+	}, [logs, theme.dark, bgColor]);
+
+	useEffect(() => {
+		if (logs) setLoading(false);
+	}, [logs]);
 
 	return {
 		completedHabitPeriods: completedHabitPeriods.periods,
 		logsByDate: completedHabitPeriods.logsByDate,
 		loading,
 	};
+};
+
+/**
+ * Ajoute une période au tableau des périodes
+ */
+const addPeriod = (
+	start: string,
+	end: string,
+	periods: Record<string, any>,
+	bgColor: string
+) => {
+	if (start === end) {
+		periods[start] = {
+			startingDay: true,
+			endingDay: true,
+			color: bgColor,
+			textColor: "white",
+		};
+	} else {
+		periods[start] = {
+			startingDay: true,
+			color: bgColor,
+			textColor: "white",
+		};
+		periods[end] = {
+			endingDay: true,
+			color: bgColor,
+			textColor: "white",
+		};
+
+		for (
+			let day = moment(start).add(1, "days");
+			day.isBefore(end);
+			day.add(1, "days")
+		) {
+			periods[day.format("YYYY-MM-DD")] = {
+				color: bgColor,
+				textColor: "white",
+			};
+		}
+	}
 };
 
 export default useCompletedHabitPeriods;

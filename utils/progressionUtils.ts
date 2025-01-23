@@ -1,6 +1,6 @@
 import { DayOfWeek } from "@type/days";
 import { GenericLevel } from "@type/levels";
-import { Log } from "@type/log";
+import { DailyLog } from "@type/log";
 import { UserHabit } from "@type/userHabit";
 import moment from "moment";
 import { CategoryTypeSelect } from "./category.type";
@@ -10,29 +10,27 @@ import { CategoryTypeSelect } from "./category.type";
  * @param logs
  * @returns
  */
-export const calculateStreak = (logs: Log[]): number => {
+export const calculateStreak = (logs: DailyLog[]): number => {
 	const today = moment().format("YYYY-MM-DD");
 	let maxStreak = 0;
-	if (logs.length === 0 || logs[0].logs.length === 0) {
+	if (logs.length === 0) {
 		return 0;
 	}
 
-	logs.forEach((log) => {
-		const sortedLogs = log.logs.sort((a, b) => moment(b).diff(moment(a)));
-		let currentStreak = 0;
-		let expectedDate = moment(today);
+	const sortedLogs = logs.sort((a, b) => moment(b.date).diff(moment(a.date)));
+	let currentStreak = 0;
+	let expectedDate = moment(today);
 
-		for (const logDate of sortedLogs) {
-			if (logDate === expectedDate.format("YYYY-MM-DD")) {
-				currentStreak++;
-				expectedDate.subtract(1, "days");
-			} else {
-				break;
-			}
+	for (const log of sortedLogs) {
+		const logDate = moment(log.date).format("YYYY-MM-DD");
+		if (logDate === expectedDate.format("YYYY-MM-DD")) {
+			currentStreak++;
+			expectedDate.subtract(1, "days");
+		} else {
+			break;
 		}
-
 		maxStreak = Math.max(maxStreak, currentStreak);
-	});
+	}
 
 	return maxStreak;
 };
@@ -42,7 +40,7 @@ export const calculateStreak = (logs: Log[]): number => {
  * @param logs
  * @returns
  */
-export const calculateWeeklyStreak = (logs: Log[]): number => {
+export const calculateWeeklyStreak = (logs: DailyLog[]): number => {
 	if (logs.length === 0) {
 		return 0;
 	}
@@ -51,24 +49,22 @@ export const calculateWeeklyStreak = (logs: Log[]): number => {
 	const sevenDaysAgo = moment().subtract(7, "days").format("YYYY-MM-DD");
 	let maxStreak = 0;
 
-	logs.forEach((log) => {
-		const sortedLogs = log.logs.sort((a, b) => moment(b).diff(moment(a)));
-		let currentStreak = 0;
-		let expectedDate = moment(today);
+	const sortedLogs = logs.sort((a, b) => moment(b.date).diff(moment(a.date)));
+	let currentStreak = 0;
+	let expectedDate = moment(today);
 
-		for (const logDate of sortedLogs) {
-			if (logDate >= sevenDaysAgo && logDate <= today) {
-				if (logDate === expectedDate.format("YYYY-MM-DD")) {
-					currentStreak++;
-					expectedDate.subtract(1, "days");
-				} else {
-					break;
-				}
+	for (const log of sortedLogs) {
+		const logDate = moment(log.date).format("YYYY-MM-DD");
+		if (logDate >= sevenDaysAgo && logDate <= today) {
+			if (logDate === expectedDate.format("YYYY-MM-DD")) {
+				currentStreak++;
+				expectedDate.subtract(1, "days");
+			} else {
+				break;
 			}
 		}
-
 		maxStreak = Math.max(maxStreak, currentStreak);
-	});
+	}
 
 	return maxStreak;
 };

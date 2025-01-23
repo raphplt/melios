@@ -18,13 +18,6 @@ import { CategoryTypeSelect } from "@utils/category.type";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Timestamp } from "firebase/firestore";
 
-/**
- * Affiche un dailyLog "aplati" :
- *   - item.habit (nom, icon, color, etc.)
- *   - item.user (nom, photo, etc.)
- *   - item.date
- *   - item.reactions
- */
 export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
