@@ -61,7 +61,7 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 						/>
 					</View>
 					<Text
-						className="ml-2 w-2/3 font-semibold overflow-clip"
+						className="ml-2 w-10/12 font-semibold overflow-clip"
 						style={{
 							color: theme.colors.text,
 						}}

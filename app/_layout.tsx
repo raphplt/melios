@@ -76,7 +76,13 @@ function MainNavigator() {
 					/>
 					<Stack.Screen name="(select)" options={{ headerShown: false }} />
 					<Stack.Screen name="habitDetail" options={{ headerShown: false }} />
-					<Stack.Screen name="account" options={{ headerShown: false }} />
+					<Stack.Screen
+						name="account"
+						options={{
+							headerShown: false,
+							title: "Compte",
+						}}
+					/>
 					<Stack.Screen
 						name="editProfil"
 						options={{ headerShadowVisible: false, title: "Éditer le profil" }}
@@ -99,7 +105,7 @@ function MainNavigator() {
 					/>
 					<Stack.Screen
 						name="resetPassword"
-						options={{ title: "Réinitialisation du mot de passe" }}
+						options={{ title: "Réinitialiser le mot de passe" }}
 					/>
 					<Stack.Screen
 						name="editHabits"

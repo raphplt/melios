@@ -27,7 +27,7 @@ export default function EditHabits() {
 			ListHeaderComponent={
 				<View className="w-[95%] flex flex-row items-center mx-auto">
 					<View
-						className="flex flex-row items-center w-[80%] my-6 py-1 px-4 rounded-3xl"
+						className="flex flex-row items-center w-[80%] my-3 py-3 px-4 rounded-3xl"
 						style={{
 							backgroundColor: theme.colors.background,
 							borderColor: theme.colors.primary,

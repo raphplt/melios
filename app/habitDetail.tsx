@@ -41,8 +41,6 @@ export default function HabitDetail() {
 
 	if (!currentHabit) return <LoaderScreen text={t("loading")} />;
 
-	const screenHeight = Dimensions.get("window").height;
-
 	const habitCategory = categories.find(
 		(c) => c.category === currentHabit.category
 	);
@@ -78,7 +76,7 @@ export default function HabitDetail() {
 				style={StyleSheet.absoluteFill}
 			/>
 
-			<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-10 mb-2">
+			<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-12 mb-2">
 				<ButtonBack handleQuit={() => navigation.goBack()} color={textColor} />
 				<SettingsButton />
 			</View>

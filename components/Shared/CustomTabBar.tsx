@@ -45,7 +45,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
 			<BlurGradientBackground />
 			<View
 				style={{
-					backgroundColor: theme.colors.primary,
+					backgroundColor: theme.colors.backgroundTertiary,
 				}}
 				className="w-[95%] mx-auto flex flex-row justify-between items-center rounded-[30px] py-3 px-4 mb-5 mt-4"
 			>
@@ -53,7 +53,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
 					const isFocused = state.index === index;
 					const isPressed = pressedIndex === index;
 					const iconColor =
-						isFocused || isPressed ? theme.colors.primary : theme.colors.border;
+						isFocused || isPressed ? theme.colors.primary : theme.colors.textTertiary;
 					const backgroundColor =
 						isFocused || isPressed ? theme.colors.background : "transparent";
 

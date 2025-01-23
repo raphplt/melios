@@ -18,7 +18,7 @@ const BlurGradientBackground: React.FC<BlurGradientBackgroundProps> = ({
 }) => {
 	const { theme } = useTheme();
 	const colorTop = theme.dark ? "transparent" : "rgba(0, 0, 0, 0)";
-	const colors = gradientColors || ["rgba(8, 32, 159, 0.8)", colorTop];
+	const colors = gradientColors || ["rgb(78, 78, 80)", colorTop];
 
 	return (
 		<View style={[styles.container, style]}>

@@ -7,7 +7,7 @@ export default function NumberSelected({ number }: { number: number }) {
 	return (
 		<View
 			style={{ backgroundColor: theme.colors.primary }}
-			className="px-3 rounded-2xl flex flex-row items-center py-4 mx-2"
+			className="px-3 rounded-3xl flex flex-row items-center py-3 mx-2"
 		>
 			<Text className="w-fit font-semibold text-white">{number}/20</Text>
 		</View>
