@@ -1,5 +1,3 @@
-// AllLogs.tsx
-
 import React, { useState, useEffect } from "react";
 import {
 	Text,
@@ -41,7 +39,6 @@ const AllLogs = () => {
 				setDailyLogs([]);
 			}
 
-			// Appel de la nouvelle fonction qui renvoie un tableau aplati
 			const {
 				dailyLogs: newDailyLogs,
 				lastVisible: newLastVisible,
@@ -55,7 +52,6 @@ const AllLogs = () => {
 
 			setDailyLogs((prev) => {
 				const merged = [...(isRefreshing ? [] : prev), ...newDailyLogs];
-				// Pour éviter d’éventuels doublons
 				const unique = Array.from(
 					new Set(merged.map((d) => d.logDocId + d.date?.toISOString() + d.habitId))
 				).map(
@@ -75,7 +71,6 @@ const AllLogs = () => {
 		}
 	};
 
-	// Quand on change la confidentialité, on refresh
 	useEffect(() => {
 		fetchDailyLogs(true);
 	}, [confidentiality]);

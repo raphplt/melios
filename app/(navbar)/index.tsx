@@ -3,7 +3,6 @@ import { RefreshControl } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
-import Background from "@components/Svg/Background";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import useIndex from "@hooks/useIndex";
 import DailyQuote from "@components/Home/DailyQuote";
