@@ -59,37 +59,42 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 		? theme.colors.redPrimary
 		: lightenColor(item.habit?.color || theme.colors.border, 0.1);
 
-	const handleReaction = async (type: string) => {
-		if (!member?.uid) return;
-		try {
-			const logDateISO = safeDate.toISOString();
+const handleReaction = async (type: string) => {
+	if (!member?.uid) return;
 
-			if (userReaction === type) {
-				await removeReactionFromLog(item.logDocId, member.uid, type, logDateISO);
-				setReactions((prev) =>
-					prev.filter((r) => !(r.uid === member.uid && r.type === type))
-				);
-			} else {
-				if (userReaction) {
-					await removeReactionFromLog(
-						item.logDocId,
-						member.uid,
-						userReaction,
-						logDateISO
-					);
-					setReactions((prev) =>
-						prev.filter((r) => !(r.uid === member.uid && r.type === userReaction))
-					);
-				}
-				await addReactionToLog(item.logDocId, member.uid, type, logDateISO);
-				setReactions((prev) => [...prev, { uid: member.uid, type }]);
-			}
-		} catch (err) {
-			console.error("Erreur reaction:", err);
-		} finally {
-			setPopoverVisible(false);
+	try {
+		const logId = item.id;
+		if (!logId) {
+			throw new Error("logId est manquant ou invalide");
 		}
-	};
+
+		const logDateISO = safeDate.toISOString();
+
+		console.log("logId utilisé :", logId);
+		console.log("logDateISO :", logDateISO);
+
+		if (userReaction === type) {
+			await removeReactionFromLog(logId, member.uid, type, logDateISO);
+			setReactions((prev) =>
+				prev.filter((r) => !(r.uid === member.uid && r.type === type))
+			);
+		} else {
+			if (userReaction) {
+				await removeReactionFromLog(logId, member.uid, userReaction, logDateISO);
+				setReactions((prev) =>
+					prev.filter((r) => !(r.uid === member.uid && r.type === userReaction))
+				);
+			}
+			await addReactionToLog(logId, member.uid, type, logDateISO);
+			setReactions((prev) => [...prev, { uid: member.uid, type }]);
+		}
+	} catch (err) {
+		console.error("Erreur reaction:", err);
+	} finally {
+		setPopoverVisible(false);
+	}
+};
+
 
 	const renderEmoji = (type: string) => {
 		switch (type) {

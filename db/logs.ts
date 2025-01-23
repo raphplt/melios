@@ -332,6 +332,7 @@ export async function removeReactionFromLog(
 }
 
 export type DailyLogExtended = {
+	id: string;
 	logDocId: string;
 	habitId: string;
 	habit: any;
@@ -383,7 +384,8 @@ export const getAllDailyLogsPaginated = async (
 			const habitInfo: any = await getHabitById(logData.habitId);
 
 			if (!habitInfo || habitInfo.type === CategoryTypeSelect.negative) continue;
-			if (!memberInfo || memberInfo.activityConfidentiality === "private") continue;
+			if (!memberInfo || memberInfo.activityConfidentiality === "private")
+				continue;
 			if (
 				memberInfo.activityConfidentiality === "friends" &&
 				!friends.includes(memberInfo.uid)
@@ -411,6 +413,7 @@ export const getAllDailyLogsPaginated = async (
 
 			const dailyLogs = dailyLogsSnapshot.docs.map((docSnap) => {
 				const dailyLogData = docSnap.data();
+
 				let date: Date;
 				if (dailyLogData.date instanceof Timestamp) {
 					date = dailyLogData.date.toDate();
@@ -419,10 +422,12 @@ export const getAllDailyLogsPaginated = async (
 				} else if (typeof dailyLogData.date === "string") {
 					date = new Date(dailyLogData.date);
 				} else {
+					console.warn("Date inconnue ou invalide :", dailyLogData.date);
 					date = new Date(NaN);
 				}
 
 				return {
+					id: docSnap.id, // L'ID du document dailyLogs
 					logDocId: logDocSnap.id,
 					habitId: logData.habitId,
 					habit: habitInfo,
