@@ -52,13 +52,9 @@ const NegativeCounter: React.FC = () => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
 
-	if (!currentHabit || currentHabit.type !== CategoryTypeSelect.negative) {
-		return null;
-	}
-
-	const date = currentHabit.resetAt
+	const date = currentHabit?.resetAt
 		? currentHabit.resetAt
-		: currentHabit.createAt
+		: currentHabit?.createAt
 		? currentHabit.createAt
 		: new Date();
 
@@ -84,7 +80,7 @@ const NegativeCounter: React.FC = () => {
 		}, 1000);
 
 		return () => clearInterval(interval);
-	}, [currentHabit.createAt]);
+	}, [date]);
 
 	const createProgressStyle = (
 		progressValue: Animated.SharedValue<number>,
@@ -98,6 +94,10 @@ const NegativeCounter: React.FC = () => {
 	const minuteStyle = createProgressStyle(minuteProgress, 60);
 	const dayStyle = createProgressStyle(dayProgress, 30);
 	const monthStyle = createProgressStyle(monthProgress, 12);
+
+	if (!currentHabit || currentHabit.type !== CategoryTypeSelect.negative) {
+		return null;
+	}
 
 	return (
 		<BlurView

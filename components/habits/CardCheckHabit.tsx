@@ -162,7 +162,7 @@ function CardCheckHabit({
 						backgroundColor: completed
 							? isNegative
 								? theme.colors.redSecondary
-								: lightenColor(habit.color, 0.2)
+								: lightenColor(habit.color, 0.15)
 							: theme.colors.cardBackground,
 						borderColor: completed
 							? habit.color

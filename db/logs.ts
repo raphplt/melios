@@ -81,9 +81,9 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 			const existingLogs: DailyLog[] = logDoc.data().logs || [];
 			const updatedLogs = [...existingLogs, newDailyLog];
 			const mostRecentLog = updatedLogs
-				.filter((log) => log.date)
-				.sort((a, b) => b.date.getTime() - a.date.getTime())[0]
-				.date.toISOString();
+				.filter((log) => log?.date)
+				.sort((a, b) => b.date?.getTime() - a.date?.getTime())[0]
+				.date?.toISOString();
 			await updateDoc(logDocRef, {
 				logs: updatedLogs,
 				mostRecentLog,
@@ -126,7 +126,10 @@ export const getHabitLogs = async (habitId: string) => {
 
 		return habitLogs;
 	} catch (error) {
-		console.error("Erreur lors de la récupération des logs :", error);
+		console.error(
+			"Erreur lors de la récupération des logs in getHabitsLogs :",
+			error
+		);
 		throw error;
 	}
 };
@@ -164,16 +167,16 @@ export const getAllHabitLogs = async ({
 			const data = doc.data();
 			const logs: DailyLog[] = (data.logs || []).map((log: any) => {
 				const date =
-					log.date instanceof Timestamp ? log.date.toDate() : new Date(log.date);
+					log?.date instanceof Timestamp ? log.date?.toDate() : new Date(log?.date);
 				return {
 					date,
-					reactions: log.reactions || [],
+					reactions: log?.reactions || [],
 				};
 			});
 			const mostRecentLog =
 				data.mostRecentLog instanceof Timestamp
-					? data.mostRecentLog.toDate()
-					: new Date(data.mostRecentLog);
+					? data.mostRecentLog?.toDate()
+					: new Date(data?.mostRecentLog);
 
 			return {
 				habitId: data.habitId,
@@ -183,20 +186,23 @@ export const getAllHabitLogs = async ({
 				uid: data.uid,
 				createdAt: data.createdAt
 					? data.createdAt instanceof Timestamp
-						? data.createdAt.toDate()
-						: new Date(data.createdAt)
+						? data.createdAt?.toDate()
+						: new Date(data?.createdAt)
 					: undefined,
 				updatedAt: data.updatedAt
 					? data.updatedAt instanceof Timestamp
-						? data.updatedAt.toDate()
-						: new Date(data.updatedAt)
+						? data.updatedAt?.toDate()
+						: new Date(data?.updatedAt)
 					: undefined,
 			};
 		});
 
 		return allLogs;
 	} catch (error) {
-		console.error("Erreur lors de la récupération des logs :", error);
+		console.error(
+			"Erreur lors de la récupération des logs in getAllHabitsLogs :",
+			error
+		);
 		throw error;
 	}
 };
@@ -313,7 +319,10 @@ export const getAllUsersLogsPaginated = async (
 			hasMore: querySnapshot.size === pageSize,
 		};
 	} catch (error) {
-		console.error("Erreur lors de la récupération des logs :", error);
+		console.error(
+			"Erreur lors de la récupération des logs in getAllUsersLogsPaginated :",
+			error
+		);
 		throw error;
 	}
 };
@@ -327,8 +336,6 @@ export async function addReactionToLog(
 	type: string,
 	logDateISO: string
 ) {
-	console.log("addReactionToLog called with:", { logId, uid, type, logDateISO });
-
 	const logRef = doc(db, "habitsLogs", logId);
 	const logDoc = await getDoc(logRef);
 	if (!logDoc.exists()) {
@@ -337,47 +344,56 @@ export async function addReactionToLog(
 	}
 
 	const logData = logDoc.data() as Log;
-	console.log("logData:", logData);
 
-	// Convertir la date ISO en objet Date
+	// Convertir la date ISO reçue en objet Date
 	const targetDate = new Date(logDateISO);
 	if (isNaN(targetDate.getTime())) {
 		throw new Error("Invalid date provided");
 	}
 
-	// On filtre les logs invalides et on reconstruit les logs valides
+	// On mappe sur les logs et on ajoute la réaction au log correspondant
 	const updatedLogs = (logData.logs || []).map((dailyLog) => {
-		// Vérifier si le log est au bon format
-		if (!dailyLog || !(dailyLog.date instanceof Date)) {
-			return null; // Marquer le log comme ignoré
+		if (!dailyLog) return null;
+
+		// S'assurer que dailyLog.date est bien un objet Date
+		let dateAsDate: Date;
+		if (dailyLog.date instanceof Timestamp) {
+			dateAsDate = dailyLog.date.toDate();
+		} else if (dailyLog.date instanceof Date) {
+			dateAsDate = dailyLog.date;
+		} else {
+			// Si c'est un string ou autre, on tente de le convertir
+			dateAsDate = new Date(dailyLog.date);
 		}
 
-		const currentDate = dailyLog.date;
-		const currentReactions = dailyLog.reactions || [];
-
-		// Comparer la date courante avec la date cible
-		if (dayjs(currentDate).isSame(dayjs(targetDate), "second")) {
-			// Ajouter la nouvelle réaction si la date correspond
-			return {
-				...dailyLog,
-				reactions: [...currentReactions, { uid, type }],
-			};
+		// Vérifier que la conversion est réussie
+		if (isNaN(dateAsDate.getTime())) {
+			return null;
 		}
 
-		// Retourner le dailyLog inchangé
+		// Comparer avec la date cible (à la journée)
+		if (dayjs(dateAsDate).isSame(dayjs(targetDate), "day")) {
+			const currentReactions = dailyLog.reactions || [];
+			// Vérifier si la réaction existe déjà
+			const existingReaction = currentReactions.find(
+				(reaction) => reaction.uid === uid && reaction.type === type
+			);
+
+			if (!existingReaction) {
+				return {
+					...dailyLog,
+					reactions: [...currentReactions, { uid, type }],
+				};
+			}
+		}
+		// Si aucune modification, on retourne le dailyLog inchangé
 		return dailyLog;
 	});
 
-	// Supprimer les logs invalides (nulls) du tableau final
-	const filteredLogs = updatedLogs.filter(
-		(log): log is DailyLog => log !== null
-	);
-
-	console.log("filteredLogs:", filteredLogs);
-
-	// Mettre à jour Firestore avec les logs filtrés et mis à jour
+	// Filtrer les éventuels `null`
+	const filteredLogs = updatedLogs.filter((log) => log !== null);
+	// Mettre à jour le document Firestore
 	await updateDoc(logRef, { logs: filteredLogs });
-	console.log("updateDoc completed");
 }
 
 /**
@@ -387,34 +403,60 @@ export async function removeReactionFromLog(
 	logId: string,
 	uid: string,
 	type: string,
-	logDate: string
+	logDateISO: string
 ) {
 	const logRef = doc(db, "habitsLogs", logId);
 	const logDoc = await getDoc(logRef);
-	if (!logDoc.exists()) throw new Error("Log not found");
+	if (!logDoc.exists()) {
+		console.error("Log not found");
+		throw new Error("Log not found");
+	}
 
 	const logData = logDoc.data() as Log;
 
-	// Même logique : convertir d'abord en Date
-	const updatedLogs = (logData.logs || []).map((dailyLog) => {
-		const dateAsDate = ensureDate(dailyLog.date);
+	// Convertir la date ISO en Date
+	const targetDate = new Date(logDateISO);
+	if (isNaN(targetDate.getTime())) {
+		throw new Error("Invalid date provided");
+	}
 
-		if (dayjs(dateAsDate).toISOString() === logDate) {
-			const updatedReactions = dailyLog.reactions?.filter(
-				(reaction) => !(reaction.uid === uid && reaction.type === type)
+	// Parcourir les logs et supprimer la réaction au bon jour
+	const updatedLogs = (logData?.logs || []).map((dailyLog) => {
+		if (!dailyLog) return null;
+
+		let dateAsDate: Date;
+		if (dailyLog?.date instanceof Timestamp) {
+			dateAsDate = dailyLog?.date?.toDate();
+		} else if (dailyLog?.date instanceof Date) {
+			dateAsDate = dailyLog?.date;
+		} else {
+			dateAsDate = new Date(dailyLog?.date);
+		}
+
+		if (isNaN(dateAsDate?.getTime())) {
+			console.warn("Invalid dailyLog date, ignoring:", dailyLog);
+			return null;
+		}
+
+		// Comparer avec la date cible (ici aussi à la journée)
+		if (dayjs(dateAsDate).isSame(dayjs(targetDate), "day")) {
+			const currentReactions = dailyLog?.reactions || [];
+			// On retire la réaction correspondante
+			const updatedReactions = currentReactions.filter(
+				(reaction) => !(reaction?.uid === uid && reaction?.type === type)
 			);
+			if (updatedReactions.length !== currentReactions.length) {
+			}
 			return {
 				...dailyLog,
-				date: dateAsDate,
 				reactions: updatedReactions,
 			};
 		}
-		return {
-			...dailyLog,
-			date: dateAsDate,
-		};
+
+		return dailyLog;
 	});
 
+	// Mettre à jour Firestore
 	await updateDoc(logRef, { logs: updatedLogs });
 }
 
@@ -487,20 +529,20 @@ export const getAllDailyLogsPaginated = async (
 				}
 
 				const dailyLogs: DailyLog[] = (logData.logs || [])
-					.filter((dl: any) => dl.date && typeof dl === "object")
+					.filter((dl: any) => dl?.date && typeof dl === "object")
 					.map((dl: any) => {
 						let dateAsDate: Date;
-						if (dl.date instanceof Timestamp) {
-							dateAsDate = dl.date.toDate();
-						} else if (dl.date instanceof Date) {
-							dateAsDate = dl.date;
+						if (dl?.date instanceof Timestamp) {
+							dateAsDate = dl.date?.toDate();
+						} else if (dl?.date instanceof Date) {
+							dateAsDate = dl?.date;
 						} else {
-							dateAsDate = new Date(dl.date);
+							dateAsDate = new Date(dl?.date);
 						}
 						return {
 							...dl,
 							date: dateAsDate,
-							reactions: dl.reactions || [],
+							reactions: dl?.reactions || [],
 						};
 					});
 
@@ -524,7 +566,7 @@ export const getAllDailyLogsPaginated = async (
 			}
 		}
 
-		allDailyLogs.sort((a, b) => b.date.getTime() - a.date.getTime());
+		allDailyLogs.sort((a, b) => b.date?.getTime() - a.date?.getTime());
 
 		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 

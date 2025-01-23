@@ -34,6 +34,7 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 		null
 	);
 	const [popoverVisible, setPopoverVisible] = useState(false);
+	const [reactions, setReactions] = useState(item.reactions);
 
 	const safeDate = useMemo(() => {
 		if (item.date instanceof Date) return item.date;
@@ -50,15 +51,15 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 	}, [item.user]);
 
 	const userReaction = useMemo(() => {
-		return item.reactions.find((r) => r.uid === member?.uid)?.type || null;
-	}, [item.reactions, member?.uid]);
+		return reactions.find((r) => r.uid === member?.uid)?.type || null;
+	}, [reactions, member?.uid]);
 
 	const reactionCounts = useMemo(() => {
-		return item.reactions.reduce((acc: Record<string, number>, r) => {
+		return reactions.reduce((acc: Record<string, number>, r) => {
 			acc[r.type] = (acc[r.type] || 0) + 1;
 			return acc;
 		}, {});
-	}, [item.reactions]);
+	}, [reactions]);
 
 	const isNegative = item.habit?.type === CategoryTypeSelect.negative;
 	const bgColor = isNegative
@@ -72,6 +73,9 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 
 			if (userReaction === type) {
 				await removeReactionFromLog(item.logDocId, member.uid, type, logDateISO);
+				setReactions((prev) =>
+					prev.filter((r) => !(r.uid === member.uid && r.type === type))
+				);
 			} else {
 				if (userReaction) {
 					await removeReactionFromLog(
@@ -80,8 +84,12 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 						userReaction,
 						logDateISO
 					);
+					setReactions((prev) =>
+						prev.filter((r) => !(r.uid === member.uid && r.type === userReaction))
+					);
 				}
 				await addReactionToLog(item.logDocId, member.uid, type, logDateISO);
+				setReactions((prev) => [...prev, { uid: member.uid, type }]);
 			}
 		} catch (err) {
 			console.error("Erreur reaction:", err);

@@ -57,10 +57,10 @@ const AllLogs = () => {
 				const merged = [...(isRefreshing ? [] : prev), ...newDailyLogs];
 				// Pour éviter d’éventuels doublons
 				const unique = Array.from(
-					new Set(merged.map((d) => d.logDocId + d.date.toISOString() + d.habitId))
+					new Set(merged.map((d) => d.logDocId + d.date?.toISOString() + d.habitId))
 				).map(
 					(id) =>
-						merged.find((d) => d.logDocId + d.date.toISOString() + d.habitId === id)!
+						merged.find((d) => d.logDocId + d.date?.toISOString() + d.habitId === id)!
 				);
 				return unique;
 			});
@@ -89,7 +89,7 @@ const AllLogs = () => {
 			data={dailyLogs}
 			renderItem={renderItem}
 			keyExtractor={(item, index) =>
-				`${item.logDocId}-${item.date.toISOString()}-${index}`
+				`${item.logDocId}-${item.date?.toISOString()}-${index}`
 			}
 			className="w-[95%] mx-auto"
 			ListHeaderComponent={
@@ -134,7 +134,7 @@ const AllLogs = () => {
 						/>
 					) : !hasMore ? (
 						<Text
-							className="text-center mt-4 mb-20"
+							className="text-center mt-4 mb-24"
 							style={{ color: theme.colors.textTertiary }}
 						>
 							{t("no_more_logs")}

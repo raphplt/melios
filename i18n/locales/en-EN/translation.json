@@ -184,5 +184,6 @@
     "choose_reaction": "Choose a reaction",
     "level_general": "General level",
     "cosmetic_shop_description": "Your general level allows you to unlock cosmetics to customize your profile.",
-    "create": "Create"
+    "create": "Create",
+    "no_more_logs": "No more activities"
 }

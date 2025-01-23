@@ -83,7 +83,10 @@ export default function CurrentGoal({ goal }: { goal: Goal }) {
 					setIsGoalMissed(goalMissed);
 					setCompletedDays(completedDays);
 				} catch (error) {
-					console.error("Erreur lors de la récupération des logs :", error);
+					console.error(
+						"Erreur lors de la récupération des logs in currents goals :",
+						error
+					);
 				}
 			};
 
