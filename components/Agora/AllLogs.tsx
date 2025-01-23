@@ -1,6 +1,6 @@
 // AllLogs.tsx
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Text,
 	FlatList,
@@ -11,95 +11,86 @@ import {
 } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import { getAllUsersLogsPaginated } from "../../db/logs";
-import { Member } from "@type/member";
-import { Habit } from "@type/habit";
-import { LogItem } from "./LogItem";
-import Confidentiality from "@components/Modals/Confidentiality";
-import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
+import { Iconify } from "react-native-iconify";
+import Confidentiality from "@components/Modals/Confidentiality";
 import ConfidentialityFilter from "./ConfidentialityFilter";
 
-export type LogExtended = {
-	id: string;
-	habitId: string;
-	member: Member | null;
-	habit: Habit | null;
-	logs: {
-		date: Date;
-		reactions?: { uid: string; type: string }[];
-	}[];
-	uid: string;
-	mostRecentLog?: Date;
-};
+import { DailyLogExtended, getAllDailyLogsPaginated } from "@db/logs";
+import { DailyLogItem } from "./DailyLogItem";
 
 const AllLogs = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const { member } = useData();
 
-	const [logs, setLogs] = useState<LogExtended[]>([]);
+	const [dailyLogs, setDailyLogs] = useState<DailyLogExtended[]>([]);
 	const [lastVisible, setLastVisible] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [confidentiality, setConfidentiality] = useState("public");
 	const [refreshing, setRefreshing] = useState(false);
 
-	const fetchLogs = async (isRefreshing = false) => {
+	const fetchDailyLogs = async (isRefreshing = false) => {
 		if (loading || (!hasMore && !isRefreshing)) return;
 		setLoading(true);
 
 		try {
 			if (isRefreshing) {
 				setLastVisible(null);
-				setLogs([]);
+				setDailyLogs([]);
 			}
 
+			// Appel de la nouvelle fonction qui renvoie un tableau aplati
 			const {
-				logs: newLogs,
+				dailyLogs: newDailyLogs,
 				lastVisible: newLastVisible,
 				hasMore: moreLogs,
-			} = await getAllUsersLogsPaginated(
-				20,
+			} = await getAllDailyLogsPaginated(
+				10,
 				isRefreshing ? null : lastVisible,
 				confidentiality,
-				member?.friends
+				member?.friends || []
 			);
 
-			setLogs((prevLogs) => {
-				const merged = [...(isRefreshing ? [] : prevLogs), ...newLogs];
-				// Élimine d’éventuels doublons (au cas où)
-				const unique = Array.from(new Set(merged.map((l) => l.id))).map(
-					(id) => merged.find((l) => l?.id === id)!
+			setDailyLogs((prev) => {
+				const merged = [...(isRefreshing ? [] : prev), ...newDailyLogs];
+				// Pour éviter d’éventuels doublons
+				const unique = Array.from(
+					new Set(merged.map((d) => d.logDocId + d.date.toISOString() + d.habitId))
+				).map(
+					(id) =>
+						merged.find((d) => d.logDocId + d.date.toISOString() + d.habitId === id)!
 				);
 				return unique;
 			});
 
 			setLastVisible(newLastVisible);
-			setHasMore(newLogs.length > 0 && moreLogs);
+			setHasMore(newDailyLogs.length > 0 && moreLogs);
 		} catch (error) {
-			console.error("Erreur lors de la récupération des logs :", error);
+			console.error("Erreur lors de la récupération des dailyLogs :", error);
 		} finally {
 			setLoading(false);
 			if (isRefreshing) setRefreshing(false);
 		}
 	};
 
+	// Quand on change la confidentialité, on refresh
 	useEffect(() => {
-		fetchLogs(true);
+		fetchDailyLogs(true);
 	}, [confidentiality]);
 
-	const renderItem = ({ item }: { item: LogExtended }) => (
-		<LogItem item={item} />
+	const renderItem = ({ item }: { item: DailyLogExtended }) => (
+		<DailyLogItem item={item} />
 	);
-
-	// console.log("logs", logs);
 
 	return (
 		<FlatList
-			data={logs}
+			data={dailyLogs}
 			renderItem={renderItem}
-			keyExtractor={(item) => item.id}
+			keyExtractor={(item, index) =>
+				`${item.logDocId}-${item.date.toISOString()}-${index}`
+			}
 			className="w-[95%] mx-auto"
 			ListHeaderComponent={
 				<View
@@ -154,7 +145,7 @@ const AllLogs = () => {
 							style={{
 								backgroundColor: theme.colors.primary,
 							}}
-							onPress={() => fetchLogs(false)}
+							onPress={() => fetchDailyLogs(false)}
 						>
 							<Text
 								className="text-center"
@@ -172,7 +163,7 @@ const AllLogs = () => {
 					refreshing={refreshing}
 					onRefresh={() => {
 						setRefreshing(true);
-						fetchLogs(true);
+						fetchDailyLogs(true);
 					}}
 					colors={[theme.colors.primary]}
 				/>

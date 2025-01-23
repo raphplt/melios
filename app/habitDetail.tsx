@@ -1,19 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import {
-	View,
-	AppState,
-	StatusBar,
-	Platform,
-	StyleSheet,
-	ScrollView,
-	Dimensions,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { useNavigation } from "expo-router";
 
 // Customs imports
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
-import { lightenColor } from "@utils/colors";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import { useHabits } from "@context/HabitsContext";
@@ -77,7 +68,10 @@ export default function HabitDetail() {
 			/>
 
 			<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-12 mb-2">
-				<ButtonBack handleQuit={() => navigation.goBack()} color={textColor} />
+				<ButtonBack
+					handleQuit={() => navigation.navigate("(navbar)")}
+					color={textColor}
+				/>
 				<SettingsButton />
 			</View>
 			<View

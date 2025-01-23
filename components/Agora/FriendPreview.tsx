@@ -27,7 +27,6 @@ const FriendPreview = () => {
 		} catch (error) {
 			console.error("Erreur lors de la récupération des amis :", error);
 		} finally {
-			console.log("Amis récupérés");
 			setLoading(false);
 		}
 	}, []);

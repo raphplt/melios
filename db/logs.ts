@@ -20,8 +20,23 @@ import { getMemberProfileByUid } from "./member";
 import { getHabitById } from "./userHabit";
 import { CategoryTypeSelect } from "@utils/category.type";
 import { DailyLog, Log } from "@type/log";
+import dayjs from "dayjs";
 
 export const REACTION_TYPES = ["flame", "heart", "like"];
+
+// Simple fonction utilitaire pour convertir un champ qui peut être
+// soit un Firestore Timestamp soit déjà un Date / string
+export function ensureDate(d: any): Date {
+	if (!d) return new Date(); // fallback
+	// Si c'est déjà un Date
+	if (d instanceof Date) return d;
+	// Si c'est un Firestore Timestamp
+	if (d.toDate && typeof d.toDate === "function") {
+		return d.toDate();
+	}
+	// Sinon, on essaie new Date(d) (au cas où c'est un string)
+	return new Date(d);
+}
 
 /**
  *  Ajoute un log pour une habitude donnée
@@ -304,65 +319,222 @@ export const getAllUsersLogsPaginated = async (
 };
 
 /**
- * Ajoute une réaction (inchangé, sauf que maintenant on sait
- * qu'on a bien un dailyLog { date, reactions })
+ * Ajoute une réaction (type) au dailyLog qui correspond à logDateISO.
  */
-export const addReactionToLog = async (
+export async function addReactionToLog(
 	logId: string,
 	uid: string,
 	type: string,
-	logDate: string
-) => {
+	logDateISO: string
+) {
+	console.log("addReactionToLog called with:", { logId, uid, type, logDateISO });
+
 	const logRef = doc(db, "habitsLogs", logId);
 	const logDoc = await getDoc(logRef);
-	if (!logDoc.exists()) throw new Error("Log not found");
+	if (!logDoc.exists()) {
+		console.error("Log not found");
+		throw new Error("Log not found");
+	}
 
 	const logData = logDoc.data() as Log;
+	console.log("logData:", logData);
 
+	// Convertir la date ISO en objet Date
+	const targetDate = new Date(logDateISO);
+	if (isNaN(targetDate.getTime())) {
+		throw new Error("Invalid date provided");
+	}
+
+	// On filtre les logs invalides et on reconstruit les logs valides
 	const updatedLogs = (logData.logs || []).map((dailyLog) => {
-		// Convert date en Date
-		const dateAsDate =
-			dailyLog.date instanceof Date ? dailyLog.date : new Date(dailyLog.date);
-
-		if (dateAsDate.toISOString() === logDate) {
-			const updatedReactions = dailyLog.reactions
-				? [...dailyLog.reactions, { uid, type }]
-				: [{ uid, type }];
-			return { ...dailyLog, reactions: updatedReactions };
+		// Vérifier si le log est au bon format
+		if (!dailyLog || !(dailyLog.date instanceof Date)) {
+			return null; // Marquer le log comme ignoré
 		}
+
+		const currentDate = dailyLog.date;
+		const currentReactions = dailyLog.reactions || [];
+
+		// Comparer la date courante avec la date cible
+		if (dayjs(currentDate).isSame(dayjs(targetDate), "second")) {
+			// Ajouter la nouvelle réaction si la date correspond
+			return {
+				...dailyLog,
+				reactions: [...currentReactions, { uid, type }],
+			};
+		}
+
+		// Retourner le dailyLog inchangé
 		return dailyLog;
 	});
 
-	await updateDoc(logRef, { logs: updatedLogs });
-};
+	// Supprimer les logs invalides (nulls) du tableau final
+	const filteredLogs = updatedLogs.filter(
+		(log): log is DailyLog => log !== null
+	);
+
+	console.log("filteredLogs:", filteredLogs);
+
+	// Mettre à jour Firestore avec les logs filtrés et mis à jour
+	await updateDoc(logRef, { logs: filteredLogs });
+	console.log("updateDoc completed");
+}
 
 /**
- * Retire une réaction (idem)
+ * Retire une réaction
  */
-export const removeReactionFromLog = async (
+export async function removeReactionFromLog(
 	logId: string,
 	uid: string,
 	type: string,
 	logDate: string
-) => {
+) {
 	const logRef = doc(db, "habitsLogs", logId);
 	const logDoc = await getDoc(logRef);
 	if (!logDoc.exists()) throw new Error("Log not found");
 
 	const logData = logDoc.data() as Log;
 
+	// Même logique : convertir d'abord en Date
 	const updatedLogs = (logData.logs || []).map((dailyLog) => {
-		const dateAsDate =
-			dailyLog.date instanceof Date ? dailyLog.date : new Date(dailyLog.date);
+		const dateAsDate = ensureDate(dailyLog.date);
 
-		if (dateAsDate.toISOString() === logDate) {
+		if (dayjs(dateAsDate).toISOString() === logDate) {
 			const updatedReactions = dailyLog.reactions?.filter(
 				(reaction) => !(reaction.uid === uid && reaction.type === type)
 			);
-			return { ...dailyLog, reactions: updatedReactions };
+			return {
+				...dailyLog,
+				date: dateAsDate,
+				reactions: updatedReactions,
+			};
 		}
-		return dailyLog;
+		return {
+			...dailyLog,
+			date: dateAsDate,
+		};
 	});
 
 	await updateDoc(logRef, { logs: updatedLogs });
+}
+
+/**
+ * Type "aplati" : représente une seule complétion quotidienne,
+ * tout en incluant les infos de l'utilisateur, de l'habitude, etc.
+ */
+export type DailyLogExtended = {
+	logDocId: string; // id du document "habitsLogs"
+	habitId: string;
+	habit: any; // ou ton type Habit
+	user: any; // ou ton type Member
+	uid: string; // ID utilisateur
+	date: Date;
+	reactions: { uid: string; type: string }[];
+};
+
+/**
+ * Récupère les docs "habitsLogs" par ordre de mostRecentLog (desc),
+ * puis aplatit tous les dailyLogs dans un grand tableau trié par date.
+ */
+export const getAllDailyLogsPaginated = async (
+	pageSize = 10,
+	lastVisibleDoc: any = null,
+	confidentiality: string = "public",
+	friends: string[] = []
+) => {
+	try {
+		const logsCollectionRef = collection(db, "habitsLogs");
+
+		let logsQuery = query(
+			logsCollectionRef,
+			orderBy("mostRecentLog", "desc"),
+			limit(pageSize)
+		);
+
+		if (lastVisibleDoc) {
+			logsQuery = query(logsQuery, startAfter(lastVisibleDoc));
+		}
+
+		const querySnapshot = await getDocs(logsQuery);
+
+		if (querySnapshot.empty) {
+			return { dailyLogs: [], lastVisible: null, hasMore: false };
+		}
+
+		let allDailyLogs: DailyLogExtended[] = [];
+
+		const docs = await Promise.all(
+			querySnapshot.docs.map(async (docSnap) => {
+				const logData = docSnap.data();
+				if (!logData) return null;
+
+				const memberInfo = await getMemberProfileByUid(logData.uid);
+				const habitInfo: any = await getHabitById(logData.habitId);
+				if (!habitInfo || habitInfo.type === CategoryTypeSelect.negative) {
+					return null;
+				}
+				if (!memberInfo || memberInfo.activityConfidentiality === "private") {
+					return null;
+				}
+				if (
+					memberInfo.activityConfidentiality === "friends" &&
+					!friends.includes(memberInfo.uid)
+				) {
+					return null;
+				}
+				if (confidentiality === "friends" && !friends.includes(memberInfo.uid)) {
+					return null;
+				}
+
+				const dailyLogs: DailyLog[] = (logData.logs || [])
+					.filter((dl: any) => dl.date && typeof dl === "object")
+					.map((dl: any) => {
+						let dateAsDate: Date;
+						if (dl.date instanceof Timestamp) {
+							dateAsDate = dl.date.toDate();
+						} else if (dl.date instanceof Date) {
+							dateAsDate = dl.date;
+						} else {
+							dateAsDate = new Date(dl.date);
+						}
+						return {
+							...dl,
+							date: dateAsDate,
+							reactions: dl.reactions || [],
+						};
+					});
+
+				const flattened = dailyLogs.map((dl) => ({
+					logDocId: docSnap.id,
+					habitId: logData.habitId,
+					habit: habitInfo,
+					user: memberInfo,
+					uid: logData.uid,
+					date: dl.date,
+					reactions: dl.reactions || [],
+				}));
+
+				return flattened;
+			})
+		);
+
+		for (const arr of docs) {
+			if (arr && Array.isArray(arr)) {
+				allDailyLogs = allDailyLogs.concat(arr);
+			}
+		}
+
+		allDailyLogs.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+		return {
+			dailyLogs: allDailyLogs,
+			lastVisible,
+			hasMore: querySnapshot.size === pageSize,
+		};
+	} catch (error) {
+		console.error("Erreur lors de la récupération des logs aplanis :", error);
+		throw error;
+	}
 };

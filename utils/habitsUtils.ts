@@ -14,8 +14,6 @@ export const calculateCompletedHabits = (habits: UserHabit[], logs: Log[]) => {
 
 	const completedHabits = habits.filter((habit) => {
 		const habitLogs = logs.find((log) => log.habitId === habit.id);
-		console.log("habitLogs", habitLogs);
-
 		return habitLogs?.logs.some((log) => {
 			const logDate = new Date(log.date);
 			logDate.setHours(0, 0, 0, 0);
