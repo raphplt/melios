@@ -6,11 +6,21 @@ import { UserHabit } from "@type/userHabit";
  *
  */
 export const calculateCompletedHabits = (habits: UserHabit[], logs: Log[]) => {
-	const today = new Date().toISOString().split("T")[0];
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+
+	// console.log("habits", habits);
+	// console.log("logs", logs);
+
 	const completedHabits = habits.filter((habit) => {
 		const habitLogs = logs.find((log) => log.habitId === habit.id);
-		if (!habitLogs) return false;
-		return habitLogs.logs.includes(today);
+		console.log("habitLogs", habitLogs);
+
+		return habitLogs?.logs.some((log) => {
+			const logDate = new Date(log.date);
+			logDate.setHours(0, 0, 0, 0);
+			return logDate.getTime() === today.getTime();
+		});
 	});
 	return completedHabits;
 };

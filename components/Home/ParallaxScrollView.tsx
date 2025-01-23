@@ -126,13 +126,14 @@ export default function ParallaxScrollView({
 					{imageTemple ? (
 						<Image
 							source={{ uri: imageTemple }}
-							style={{ width: "100%", height: 250, resizeMode: "cover" }}
+							style={{ width: "100%", height: 220, resizeMode: "cover" }}
+							className="rounded-b-xl"
 						/>
 					) : (
 						<View
 							style={{
 								width: "100%",
-								height: 250,
+								height: 220,
 								backgroundColor: theme.colors.backgroundSecondary,
 								justifyContent: "center",
 								alignItems: "center",

@@ -3,6 +3,7 @@ import moment from "moment";
 import useIndex from "./useIndex";
 import { ThemeContext } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
+import { Log } from "@type/log";
 
 const useCompletedHabitPeriods = () => {
 	// const { userHabits: habits } = useIndex();
@@ -19,10 +20,11 @@ const useCompletedHabitPeriods = () => {
 		}
 
 		const completedDates = new Set<string>();
-		const logsByDate: Record<string, any[]> = {};
+		const logsByDate: Record<string, Log[]> = {};
 
-		logs.forEach((logEntry) => {
-			logEntry.logs.forEach((date) => {
+		logs.forEach((logEntry: Log) => {
+			logEntry.logs.forEach((dailyLog) => {
+				const date = moment(dailyLog.date).format("YYYY-MM-DD");
 				completedDates.add(date);
 				if (!logsByDate[date]) {
 					logsByDate[date] = [];

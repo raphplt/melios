@@ -1,30 +1,44 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { ActivityIndicator, Text, View, Pressable } from "react-native";
+import { Iconify } from "react-native-iconify";
+import * as Progress from "react-native-progress";
 import BottomSlideModal from "@components/Modals/ModalBottom";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
 import useCompletedHabitPeriods from "@hooks/useCompletedHabitPeriods";
-import { CategoryTypeSelect } from "@utils/category.type";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Text, View } from "react-native";
-import { Iconify } from "react-native-iconify";
-import * as Progress from "react-native-progress";
+import dayjs from "dayjs";
 
 type Props = {
 	showModalDay: boolean;
 	setShowModalDay: (value: boolean) => void;
 	selectedDay: string;
+	setSelectedDay: (value: string) => void;
 };
 
 const CalendarDetail = ({
 	showModalDay,
 	setShowModalDay,
 	selectedDay,
+	setSelectedDay,
 }: Props) => {
 	const { theme } = useTheme();
 	const { habits } = useData();
 	const { t } = useTranslation();
 	const { logsByDate, loading } = useCompletedHabitPeriods();
+
+	const handlePreviousDay = () => {
+		const previousDay = dayjs(selectedDay)
+			.subtract(1, "day")
+			.format("YYYY-MM-DD");
+		setSelectedDay(previousDay);
+	};
+
+	const handleNextDay = () => {
+		const nextDay = dayjs(selectedDay).add(1, "day").format("YYYY-MM-DD");
+		setSelectedDay(nextDay);
+	};
 
 	if (loading) {
 		return (
@@ -35,17 +49,11 @@ const CalendarDetail = ({
 	}
 
 	const completedHabits = habits.filter((habit) => {
-		const hasLog = logsByDate[selectedDay]?.some(
-			(log) => log.habitId === habit.id
-		);
-		return habit.type === CategoryTypeSelect.negative ? !hasLog : hasLog;
+		return logsByDate[selectedDay]?.some((log) => log.habitId === habit.id);
 	});
 
 	const notCompletedHabits = habits.filter((habit) => {
-		const hasLog = logsByDate[selectedDay]?.some(
-			(log) => log.habitId === habit.id
-		);
-		return habit.type === CategoryTypeSelect.negative ? hasLog : !hasLog;
+		return !logsByDate[selectedDay]?.some((log) => log.habitId === habit.id);
 	});
 
 	const completionPercentage = (
@@ -55,12 +63,24 @@ const CalendarDetail = ({
 	return (
 		<BottomSlideModal visible={showModalDay} setVisible={setShowModalDay}>
 			<View>
-				<Text
-					className="text-center text-xl font-bold"
-					style={{ color: theme.colors.text }}
-				>
-					{t("completions_for_the")} {selectedDay}
-				</Text>
+				<View className="flex-row justify-between items-center mt-1">
+					<Pressable onPress={handlePreviousDay}>
+						<Iconify icon="mdi-chevron-left" size={24} color={theme.colors.primary} />
+					</Pressable>
+					<Text
+						className="text-center text-xl font-bold"
+						style={{ color: theme.colors.text }}
+					>
+						{t("completions_for_the")} {selectedDay}
+					</Text>
+					<Pressable onPress={handleNextDay}>
+						<Iconify
+							icon="mdi-chevron-right"
+							size={24}
+							color={theme.colors.primary}
+						/>
+					</Pressable>
+				</View>
 				<View className="flex-row justify-center gap-2 items-center my-4">
 					<Text className="text-center text-lg" style={{ color: theme.colors.text }}>
 						{t("completion")} : {completionPercentage}%

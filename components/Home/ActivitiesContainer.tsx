@@ -4,6 +4,7 @@ import { useTheme } from "@context/ThemeContext";
 
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function ActivitiesContainer() {
 	const { habits } = useData();
@@ -13,6 +14,12 @@ export default function ActivitiesContainer() {
 	if (!habits || habits.length === 0) {
 		return null;
 	}
+
+	// Filter positives habits only
+	const filteredHabits = habits.filter(
+		(habit) => habit.type !== CategoryTypeSelect.negative
+	);
+
 	return (
 		<View
 			className="mt-8 py-4 mb-5 pb-10 rounded-xl ml-3 z-[1000]"
@@ -31,7 +38,7 @@ export default function ActivitiesContainer() {
 			</Text>
 			<FlatList
 				horizontal={true}
-				data={habits}
+				data={filteredHabits}
 				renderItem={({ item }) => <Activity habit={item} />}
 				keyExtractor={(item, index) => index.toString()}
 				contentContainerStyle={{ paddingLeft: 8 }}

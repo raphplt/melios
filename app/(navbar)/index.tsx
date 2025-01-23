@@ -28,7 +28,7 @@ export default function Index() {
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
 		>
-			<Background />
+			{/* <Background /> */}
 			<HabitsSection />
 			<ActivitiesContainer />
 			<ViewHelp />

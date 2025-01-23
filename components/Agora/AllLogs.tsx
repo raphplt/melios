@@ -1,10 +1,11 @@
+// AllLogs.tsx
+
 import React, { useEffect, useState } from "react";
 import {
 	Text,
 	FlatList,
 	ActivityIndicator,
 	View,
-	Button,
 	RefreshControl,
 	Pressable,
 } from "react-native";
@@ -24,22 +25,25 @@ export type LogExtended = {
 	habitId: string;
 	member: Member | null;
 	habit: Habit | null;
-	logs: string[];
+	logs: {
+		date: Date;
+		reactions?: { uid: string; type: string }[];
+	}[];
 	uid: string;
-	createAt: Date;
-	reactions?: any[];
+	mostRecentLog?: Date;
 };
 
 const AllLogs = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const { member } = useData();
-	const [logs, setLogs] = useState<LogExtended[] | null>([]);
+
+	const [logs, setLogs] = useState<LogExtended[]>([]);
 	const [lastVisible, setLastVisible] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [confidentiality, setConfidentiality] = useState("public");
-	const [refreshing, setRefreshing] = useState(false); // État pour le rafraîchissement
+	const [refreshing, setRefreshing] = useState(false);
 
 	const fetchLogs = async (isRefreshing = false) => {
 		if (loading || (!hasMore && !isRefreshing)) return;
@@ -56,18 +60,19 @@ const AllLogs = () => {
 				lastVisible: newLastVisible,
 				hasMore: moreLogs,
 			} = await getAllUsersLogsPaginated(
-				10,
+				20,
 				isRefreshing ? null : lastVisible,
 				confidentiality,
 				member?.friends
 			);
 
-			setLogs((prevLogs: any) => {
-				const updatedLogs = [...(isRefreshing ? [] : prevLogs), ...newLogs];
-				const uniqueLogs = Array.from(
-					new Set(updatedLogs.map((log) => log.id))
-				).map((id) => updatedLogs.find((log) => log.id === id));
-				return uniqueLogs;
+			setLogs((prevLogs) => {
+				const merged = [...(isRefreshing ? [] : prevLogs), ...newLogs];
+				// Élimine d’éventuels doublons (au cas où)
+				const unique = Array.from(new Set(merged.map((l) => l.id))).map(
+					(id) => merged.find((l) => l?.id === id)!
+				);
+				return unique;
 			});
 
 			setLastVisible(newLastVisible);
@@ -88,6 +93,8 @@ const AllLogs = () => {
 		<LogItem item={item} />
 	);
 
+	// console.log("logs", logs);
+
 	return (
 		<FlatList
 			data={logs}
@@ -99,7 +106,6 @@ const AllLogs = () => {
 					className="flex flex-row items-center justify-between px-6 py-3 my-4 rounded-xl"
 					style={{
 						backgroundColor: theme.colors.backgroundTertiary,
-
 						shadowColor: "#000",
 						shadowOffset: { width: 0, height: 2 },
 						shadowOpacity: 0.1,

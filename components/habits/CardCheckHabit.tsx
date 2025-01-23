@@ -27,6 +27,7 @@ import { CategoryTypeSelect } from "@utils/category.type";
 import { incrementStreak } from "@db/streaks";
 import RestartHabit from "@components/Modals/RestartHabit";
 import { useNavigation } from "expo-router";
+import { lightenColor } from "@utils/colors";
 
 function CardCheckHabit({
 	habit,
@@ -96,7 +97,6 @@ function CardCheckHabit({
 	// Fonctions
 	const goHabitDetail = () => {
 		setCurrentHabit(habit);
-		// if (navigation.isr)
 		navigation.navigate("habitDetail");
 	};
 
@@ -162,14 +162,17 @@ function CardCheckHabit({
 						backgroundColor: completed
 							? isNegative
 								? theme.colors.redSecondary
-								: theme.colors.backgroundTertiary
+								: lightenColor(habit.color, 0.2)
 							: theme.colors.cardBackground,
-						borderColor: isNegative
+						borderColor: completed
+							? habit.color
+							: isNegative
 							? theme.colors.redPrimary
-							: theme.colors.cardBackground,
-						borderWidth: 2,
+							: theme.colors.border,
+
+						// borderWidth: 1,
 					}}
-					className="flex-1 flex flex-col rounded-xl"
+					className="flex-1 flex flex-col rounded-xl z-10"
 				>
 					<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
 						<View className="flex flex-row items-center justify-start">
@@ -194,9 +197,17 @@ function CardCheckHabit({
 							className="flex items-center justify-center relative"
 						>
 							{showDetails ? (
-								<Iconify icon="mdi:chevron-up" color={theme.colors.text} size={24} />
+								<Iconify
+									icon="mdi:chevron-up"
+									color={theme.colors.textTertiary}
+									size={24}
+								/>
 							) : (
-								<Iconify icon="mdi:chevron-down" color={theme.colors.text} size={24} />
+								<Iconify
+									icon="mdi:chevron-down"
+									color={theme.colors.textTertiary}
+									size={24}
+								/>
 							)}
 						</Pressable>
 					</View>

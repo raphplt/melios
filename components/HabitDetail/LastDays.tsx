@@ -12,6 +12,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHabits } from "@context/HabitsContext";
 import { CategoryTypeSelect } from "@utils/category.type";
+import { DailyLog } from "@type/log";
 
 export default function LastDays() {
 	const { theme } = useTheme();
@@ -35,14 +36,13 @@ export default function LastDays() {
 	useEffect(() => {
 		const fetchHabitLogs = async () => {
 			try {
-				const logs = await getHabitLogs(currentHabit.id);
+				const logs: DailyLog[] = await getHabitLogs(currentHabit.id);
 				const lastDaySnapshot: DayStatus[] = [];
-				for (let i = 365; i >= 1; i--) {
+				for (let i = 364; i >= 0; i--) {
 					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-					let done = logs ? logs.includes(day) : false;
-					// if (habit.type === CategoryTypeSelect.negative) {
-					// 	done = !done;
-					// }
+					let done = logs
+						? logs.some((log) => moment(log.date).format("YYYY-MM-DD") === day)
+						: false;
 					lastDaySnapshot.push({
 						date: day,
 						done,

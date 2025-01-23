@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 import CalendarDetail from "./CalendarDetail";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import dayjs from "dayjs";
 
 type CalendarDate = {
 	dateString: string;
@@ -54,11 +55,7 @@ const CalendarHabits = () => {
 	useEffect(() => {
 		const fetchShowTips = async () => {
 			const value = await AsyncStorage.getItem("showTips");
-			if (value === "false") {
-				setShowTips(false);
-			} else {
-				setShowTips(true);
-			}
+			setShowTips(value !== "false");
 		};
 		fetchShowTips();
 	}, [logsByDate]);
@@ -67,6 +64,17 @@ const CalendarHabits = () => {
 		setShowTips(false);
 		await AsyncStorage.setItem("showTips", "false");
 	};
+
+	const formattedCompletedHabitPeriods = useMemo(() => {
+		const formatted: { [key: string]: any } = {};
+		for (const [key, value] of Object.entries(completedHabitPeriods)) {
+			const isValid = dayjs(key, "YYYY-MM-DD", true).isValid();
+			if (isValid) {
+				formatted[key] = value;
+			}
+		}
+		return formatted;
+	}, [completedHabitPeriods]);
 
 	if (loading) {
 		return (
@@ -120,7 +128,7 @@ const CalendarHabits = () => {
 					<Calendar
 						key={calendarKey}
 						markingType={"period"}
-						markedDates={completedHabitPeriods}
+						markedDates={formattedCompletedHabitPeriods}
 						theme={colors}
 						style={[{ borderRadius: 10 }]}
 						onDayPress={({ dateString }: CalendarDate) => {
@@ -134,6 +142,7 @@ const CalendarHabits = () => {
 				showModalDay={showModalDay}
 				setShowModalDay={setShowModalDay}
 				selectedDay={selectedDay}
+				setSelectedDay={setSelectedDay}
 			/>
 		</>
 	);
