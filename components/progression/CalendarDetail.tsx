@@ -24,8 +24,8 @@ const CalendarDetail = ({
 	setSelectedDay,
 }: Props) => {
 	const { theme } = useTheme();
-	const { habits } = useData();
 	const { t } = useTranslation();
+	const { habits, logs } = useData(); // On récupère aussi les logs parent
 	const { logsByDate, loading } = useCompletedHabitPeriods();
 
 	const handlePreviousDay = () => {
@@ -48,13 +48,26 @@ const CalendarDetail = ({
 		);
 	}
 
-	const completedHabits = habits.filter((habit) => {
-		return logsByDate[selectedDay]?.some((log) => log.habitId === habit.id);
-	});
+	/**
+	 *  Récupération des habitudes complétées le jour "selectedDay"
+	 *  en vérifiant pour chaque dailyLog parentLog.habitId === habit.id
+	 */
+	const completedHabits = habits.filter((habit) =>
+		logsByDate[selectedDay]?.some((dailyLog) => {
+			// On retrouve le "Log" parent (document de la collection habitsLogs)
+			const parentLog = logs.find((l) => l.id === dailyLog.logDocId);
+			// On vérifie si c'est l'habidId voulu
+			return parentLog?.habitId === habit.id;
+		})
+	);
 
-	const notCompletedHabits = habits.filter((habit) => {
-		return !logsByDate[selectedDay]?.some((log) => log.habitId === habit.id);
-	});
+	const notCompletedHabits = habits.filter(
+		(habit) =>
+			!logsByDate[selectedDay]?.some((dailyLog) => {
+				const parentLog = logs.find((l) => l.id === dailyLog.logDocId);
+				return parentLog?.habitId === habit.id;
+			})
+	);
 
 	const completionPercentage = (
 		habits.length > 0 ? (completedHabits.length / habits.length) * 100 : 0
@@ -63,6 +76,7 @@ const CalendarDetail = ({
 	return (
 		<BottomSlideModal visible={showModalDay} setVisible={setShowModalDay}>
 			<View>
+				{/* Header + Navigation (jour précédent/suivant) */}
 				<View className="flex-row justify-between items-center mt-1">
 					<Pressable onPress={handlePreviousDay}>
 						<Iconify icon="mdi-chevron-left" size={24} color={theme.colors.primary} />
@@ -81,6 +95,8 @@ const CalendarDetail = ({
 						/>
 					</Pressable>
 				</View>
+
+				{/* Pourcentage d'accomplissement */}
 				<View className="flex-row justify-center gap-2 items-center my-4">
 					<Text className="text-center text-lg" style={{ color: theme.colors.text }}>
 						{t("completion")} : {completionPercentage}%
@@ -94,8 +110,12 @@ const CalendarDetail = ({
 						thickness={4}
 					/>
 				</View>
+
+				{/* Liste des habitudes complétées / non complétées */}
 				<View className="mb-2">
-					<Text style={{ fontWeight: "bold", marginBottom: 10 }}>
+					<Text
+						style={{ fontWeight: "bold", marginBottom: 10, color: theme.colors.text }}
+					>
 						{t("completed_habits")}
 					</Text>
 					{completedHabits.map((habit) => (
@@ -111,13 +131,7 @@ const CalendarDetail = ({
 										color={habit.color ?? theme.colors.primary}
 									/>
 								</View>
-								<Text
-									style={{
-										color: theme.colors.text,
-									}}
-								>
-									{habit.name}
-								</Text>
+								<Text style={{ color: theme.colors.text }}>{habit.name}</Text>
 							</View>
 							<Iconify
 								icon="mdi:check-circle"
@@ -127,7 +141,13 @@ const CalendarDetail = ({
 						</View>
 					))}
 
-					<Text style={{ fontWeight: "bold", marginVertical: 10 }}>
+					<Text
+						style={{
+							fontWeight: "bold",
+							marginVertical: 10,
+							color: theme.colors.text,
+						}}
+					>
 						{t("not_completed_habits")}
 					</Text>
 					{notCompletedHabits.map((habit) => (
@@ -141,13 +161,7 @@ const CalendarDetail = ({
 									size={18}
 									color={habit.color ?? theme.colors.primary}
 								/>
-								<Text
-									style={{
-										color: theme.colors.text,
-									}}
-								>
-									{habit.name}
-								</Text>
+								<Text style={{ color: theme.colors.text }}>{habit.name}</Text>
 							</View>
 							<Iconify
 								icon="mdi:close-circle"

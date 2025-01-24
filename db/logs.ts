@@ -143,18 +143,18 @@ export const getHabitLogs = async (habitId: string) => {
 	}
 };
 
+interface GetAllHabitLogsParams {
+	signal?: AbortSignal;
+	forceRefresh?: boolean;
+}
+
 /**
  *  Fonction pour récupérer l'ensemble des logs de l'utilisateur
- * @param param0
- * @returns
  */
 export const getAllHabitLogs = async ({
 	signal,
 	forceRefresh,
-}: {
-	signal?: AbortSignal;
-	forceRefresh?: boolean;
-}) => {
+}: GetAllHabitLogsParams): Promise<Log[]> => {
 	try {
 		if (signal?.aborted) {
 			throw new Error("Requête annulée");
@@ -164,44 +164,63 @@ export const getAllHabitLogs = async ({
 		if (!uid) throw new Error("Utilisateur non authentifié");
 
 		const logsCollectionRef = collection(db, "habitsLogs");
-
 		const q = query(logsCollectionRef, where("uid", "==", uid));
-
 		const querySnapshot = await getDocs(q);
 
 		if (querySnapshot.empty) {
 			return [];
 		}
 
+		// On parcourt tous les docs de la collection "habitsLogs"
 		const allLogs = await Promise.all(
-			querySnapshot.docs.map(async (doc) => {
-				const dailyLogsCollectionRef = collection(doc.ref, "dailyLogs");
+			querySnapshot.docs.map(async (habitDoc) => {
+				const habitData = habitDoc.data();
+
+				// On récupère la sous-collection "dailyLogs"
+				const dailyLogsCollectionRef = collection(habitDoc.ref, "dailyLogs");
 				const dailyLogsSnapshot = await getDocs(dailyLogsCollectionRef);
 
-				const dailyLogs = dailyLogsSnapshot.docs.map((doc) => doc.data());
+				// Conversion des Timestamps en Dates pour chaque dailyLog
+				const dailyLogs: DailyLog[] = dailyLogsSnapshot.docs.map((dailyDoc) => {
+					const dData = dailyDoc.data();
 
-				// console.log("dailyLogs", dailyLogs);
+					return {
+						// Champs du type DailyLog
+						id: dailyDoc.id, // ID du doc de la sous-collection
+						logDocId: habitDoc.id, // on associe le doc parent si nécessaire
+						// Si 'date' est un Timestamp, on le convertit en Date
+						date: dData.date?.toDate ? dData.date.toDate() : dData.date,
+						reactions: dData.reactions || [],
+					};
+				});
 
+				// On retourne l'objet Log complet
 				return {
-					habitId: doc.data().habitId,
+					id: habitDoc.id,
+					habitId: habitData.habitId,
+					uid: habitData.uid,
+					// Si createdAt/updatedAt sont des Timestamps, on les convertit
+					createdAt: habitData.createdAt?.toDate
+						? habitData.createdAt.toDate()
+						: null,
+					updatedAt: habitData.updatedAt?.toDate
+						? habitData.updatedAt.toDate()
+						: null,
 					logs: dailyLogs,
-					id: doc.id,
-					uid: doc.data().uid,
-					createdAt: doc.data().createdAt,
-					updatedAt: doc.data().updatedAt,
-				};
+				} as Log;
 			})
 		);
 
 		return allLogs;
 	} catch (error) {
 		console.error(
-			"Erreur lors de la récupération des logs in getAllHabitsLogs :",
+			"Erreur lors de la récupération des logs in getAllHabitLogs :",
 			error
 		);
 		throw error;
 	}
 };
+
 
 /**
  * Récupère, par pagination, la liste des logs (habitsLogs),

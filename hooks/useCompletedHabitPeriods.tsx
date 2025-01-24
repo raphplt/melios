@@ -19,17 +19,16 @@ const useCompletedHabitPeriods = () => {
 		const completedDates = new Set<string>();
 		const logsByDate: Record<string, DailyLog[]> = {};
 
+		// On parcourt tous les logs et sous-logs
 		logs.forEach((logEntry: Log) => {
 			logEntry.logs?.forEach((dailyLog: DailyLog) => {
-				let logDate: string;
+				if (!dailyLog.date) return; // sécurité
 
-				if (dailyLog.date instanceof Date) {
-					logDate = moment(dailyLog.date).format("YYYY-MM-DD");
-				} else {
-					logDate = moment(dailyLog.date).format("YYYY-MM-DD");
-				}
+				// dailyLog.date est maintenant une Date JavaScript
+				const logDate = moment(dailyLog.date).format("YYYY-MM-DD");
 
 				completedDates.add(logDate);
+
 				if (!logsByDate[logDate]) {
 					logsByDate[logDate] = [];
 				}
@@ -37,9 +36,15 @@ const useCompletedHabitPeriods = () => {
 			});
 		});
 
+		// On trie toutes les dates complétées
 		const sortedDates = Array.from(completedDates).sort();
 
+		// Construction des périodes pour le calendrier
 		const periods: Record<string, any> = {};
+		if (sortedDates.length === 0) {
+			return { periods, logsByDate };
+		}
+
 		let start = sortedDates[0];
 		let end = start;
 
@@ -50,15 +55,16 @@ const useCompletedHabitPeriods = () => {
 			if (moment(currentDate).diff(previousDate, "days") === 1) {
 				end = currentDate;
 			} else {
-				// Ajouter la période précédente
 				addPeriod(start, end, periods, bgColor);
 				start = currentDate;
 				end = start;
 			}
 		});
 
+		// Dernière période
 		addPeriod(start, end, periods, bgColor);
 
+		// Mise en surbrillance du jour en cours
 		const today = moment().format("YYYY-MM-DD");
 		const highlightColor = theme.dark ? "#ffcc00" : "#C95355";
 		if (periods[today]) {
@@ -115,6 +121,7 @@ const addPeriod = (
 			textColor: "white",
 		};
 
+		// On marque toutes les dates intermédiaires
 		for (
 			let day = moment(start).add(1, "days");
 			day.isBefore(end);

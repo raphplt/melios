@@ -1,10 +1,9 @@
+import React, { useEffect, useMemo, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import useCompletedHabitPeriods from "@hooks/useCompletedHabitPeriods";
-import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { ActivityIndicator, View, Text, Pressable } from "react-native";
 import SectionHeader from "./SectionHeader";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 import CalendarDetail from "./CalendarDetail";
@@ -24,6 +23,7 @@ const CalendarHabits = () => {
 		useCompletedHabitPeriods();
 	const { t } = useTranslation();
 	const { theme } = useTheme();
+
 	const [showModalDay, setShowModalDay] = useState(false);
 	const [showCalendar, setShowCalendar] = useState(true);
 	const [selectedDay, setSelectedDay] = useState("");
@@ -65,6 +65,8 @@ const CalendarHabits = () => {
 		await AsyncStorage.setItem("showTips", "false");
 	};
 
+	// On s'assure que les clés des dates sont valides au format YYYY-MM-DD
+	// Cela évite des bugs si jamais dayjs échoue à parser une date invalide.
 	const formattedCompletedHabitPeriods = useMemo(() => {
 		const formatted: { [key: string]: any } = {};
 		for (const [key, value] of Object.entries(completedHabitPeriods)) {
@@ -118,26 +120,29 @@ const CalendarHabits = () => {
 					</View>
 				)}
 
-				<View
-					className="w-[95%] mx-auto rounded-xl my-2"
-					style={{
-						borderColor: theme.colors.border,
-						borderWidth: 2,
-					}}
-				>
-					<Calendar
-						key={calendarKey}
-						markingType={"period"}
-						markedDates={formattedCompletedHabitPeriods}
-						theme={colors}
-						style={[{ borderRadius: 10 }]}
-						onDayPress={({ dateString }: CalendarDate) => {
-							setSelectedDay(dateString);
-							setShowModalDay(true);
+				{showCalendar && (
+					<View
+						className="w-[95%] mx-auto rounded-xl my-2"
+						style={{
+							borderColor: theme.colors.border,
+							borderWidth: 2,
 						}}
-					/>
-				</View>
+					>
+						<Calendar
+							key={calendarKey}
+							markingType={"period"}
+							markedDates={formattedCompletedHabitPeriods}
+							theme={colors}
+							style={[{ borderRadius: 10 }]}
+							onDayPress={({ dateString }: CalendarDate) => {
+								setSelectedDay(dateString);
+								setShowModalDay(true);
+							}}
+						/>
+					</View>
+				)}
 			</SectionHeader>
+
 			<CalendarDetail
 				showModalDay={showModalDay}
 				setShowModalDay={setShowModalDay}
