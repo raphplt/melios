@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, RefreshControl } from "react-native";
+import { RefreshControl } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";

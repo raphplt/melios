@@ -13,6 +13,7 @@ import {
 	LOCAL_STORAGE_MEMBER_HABITS_KEY,
 } from "@db/userHabit";
 import ZoomableView from "@components/Shared/ZoomableView";
+import { deleteLogsByHabitId } from "@db/logs";
 
 export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 	const { theme } = useContext(ThemeContext);
@@ -22,7 +23,10 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 
 	const deleteHabit = async (habit: UserHabit) => {
 		const habitId = habit.id;
-		if (habitId) deleteHabitById(habitId);
+		if (habitId) {
+			deleteHabitById(habitId);
+			deleteLogsByHabitId(habitId);
+		}
 
 		setHabits((prev: UserHabit[]) =>
 			prev.filter((h: UserHabit) => h.id !== habit.id)

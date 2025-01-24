@@ -13,14 +13,16 @@ import {
 	getDoc,
 	Timestamp,
 	addDoc,
-	writeBatch,
+	deleteDoc,
+	collectionGroup,
+	DocumentData,
+	QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db, auth } from ".";
 import { getMemberProfileByUid } from "./member";
 import { getHabitById } from "./userHabit";
 import { CategoryTypeSelect } from "@utils/category.type";
 import { DailyLog, Log } from "@type/log";
-import dayjs from "dayjs";
 
 export const REACTION_TYPES = ["flame", "heart", "like"];
 
@@ -42,7 +44,7 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 	try {
 		const uid = auth.currentUser?.uid;
 		if (!uid) throw new Error("Utilisateur non authentifié");
-		if (!habitId) throw new Error("[SET] - Identifiant de l'hab itude manquant");
+		if (!habitId) throw new Error("[SET] - Identifiant de l'habitude manquant");
 
 		const logsCollectionRef = collection(db, "habitsLogs");
 
@@ -177,6 +179,8 @@ export const getAllHabitLogs = async ({
 				const dailyLogsSnapshot = await getDocs(dailyLogsCollectionRef);
 
 				const dailyLogs = dailyLogsSnapshot.docs.map((doc) => doc.data());
+
+				// console.log("dailyLogs", dailyLogs);
 
 				return {
 					habitId: doc.data().habitId,
@@ -343,114 +347,194 @@ export type DailyLogExtended = {
 };
 
 /**
- * Récupère les docs "habitsLogs" par ordre de mostRecentLog (desc),
- * puis aplatit tous les dailyLogs dans un grand tableau trié par date.
+ * Récupère les dailyLogs directement via une collectionGroup query,
+ * en se basant sur le champ "date" (desc), et applique ensuite en local
+ * les règles de confidentialité.
+ *
+ * @param pageSize        Nombre de logs à récupérer par page
+ * @param lastVisibleDoc  Dernier document de la page précédente (pour startAfter)
+ * @param confidentiality Filtrage global ("public" ou "friends")
+ * @param friends         Tableau d'UID des amis de l'utilisateur courant
  */
-
 export const getAllDailyLogsPaginated = async (
 	pageSize = 10,
-	lastVisible: any = null,
+	lastVisibleDoc: QueryDocumentSnapshot<DocumentData> | null = null,
 	confidentiality: string = "public",
 	friends: string[] = []
-) => {
+): Promise<{
+	dailyLogs: DailyLogExtended[];
+	lastVisible: QueryDocumentSnapshot<DocumentData> | null;
+	hasMore: boolean;
+}> => {
 	try {
-		const logsCollectionRef = collection(db, "habitsLogs");
-
-		let logsQuery = query(
-			logsCollectionRef,
-			orderBy("mostRecentLog", "desc"),
+		// Construire la requête de base
+		let baseQuery = query(
+			collectionGroup(db, "dailyLogs"),
+			orderBy("date", "desc"),
 			limit(pageSize)
 		);
 
-		if (lastVisible) {
-			logsQuery = query(logsQuery, startAfter(lastVisible));
+		// Si on a un doc de référence pour la pagination
+		if (lastVisibleDoc) {
+			baseQuery = query(baseQuery, startAfter(lastVisibleDoc));
 		}
 
-		const habitsLogsSnapshot = await getDocs(logsQuery);
-		if (habitsLogsSnapshot.empty) {
-			return { dailyLogs: [], lastVisible: null, hasMore: false };
+		// Récupérer les logs (max pageSize) en partant de lastVisibleDoc (ou du début)
+		const snapshot = await getDocs(baseQuery);
+
+		if (snapshot.empty) {
+			return {
+				dailyLogs: [],
+				lastVisible: null,
+				hasMore: false,
+			};
 		}
 
-		let allDailyLogs: DailyLogExtended[] = [];
-		let newLastVisible = null;
+		const dailyLogs: DailyLogExtended[] = [];
 
-		// Parcourir chaque habitsLog
-		for (const logDocSnap of habitsLogsSnapshot.docs) {
-			const logData = logDocSnap.data();
+		// Pour chaque dailyLog, on va chercher son parent "habitsLogs/{logDocId}"
+		// afin de récupérer l'UID du user, habitId, etc. puis on filtre localement.
+		for (const docSnap of snapshot.docs) {
+			const dailyLogData = docSnap.data();
+			// docSnap.ref.parent => "dailyLogs"
+			// docSnap.ref.parent.parent => le doc "habitsLogs/{logDocId}"
+			const parentLogDocRef = docSnap.ref.parent.parent;
+			if (!parentLogDocRef) continue; // cas improbable
+
+			// On récupère les infos du document parent (habitId, uid, etc.)
+			const parentLogSnap = await getDoc(parentLogDocRef);
+			if (!parentLogSnap.exists()) continue;
+
+			const logData = parentLogSnap.data();
 			if (!logData) continue;
 
-			// Filtrer par confidentialité et amis
-			const memberInfo = await getMemberProfileByUid(logData.uid);
-			const habitInfo: any = await getHabitById(logData.habitId);
+			// -- Récupération du profil user
+			const memberInfo = await getMemberProfileByUid(logData.uid).catch((err) => {
+				console.error("Erreur getMemberProfileByUid:", err);
+				return null;
+			});
 
+			// -- Récupération de l'info habit
+			const habitInfo: any = await getHabitById(logData.habitId).catch((err) => {
+				console.error("Erreur getHabitById:", err);
+				return null;
+			});
+
+			// -- Filtrage de base (exclure négatif, privé, etc.)
 			if (!habitInfo || habitInfo.type === CategoryTypeSelect.negative) continue;
 			if (!memberInfo || memberInfo.activityConfidentiality === "private")
 				continue;
+
+			// Filtre si la confidentialité de l'user est "friends" mais qu'on n'est pas dans sa liste
 			if (
 				memberInfo.activityConfidentiality === "friends" &&
 				!friends.includes(memberInfo.uid)
 			) {
 				continue;
 			}
+
+			// Filtre global si on est en mode "friends" côté UI
 			if (confidentiality === "friends" && !friends.includes(memberInfo.uid)) {
 				continue;
 			}
 
-			// Récupérer les dailyLogs paginés
-			const dailyLogsCollectionRef = collection(logDocSnap.ref, "dailyLogs");
-			let dailyLogsQuery = query(
-				dailyLogsCollectionRef,
-				orderBy("date", "desc"),
-				limit(pageSize)
-			);
-
-			if (lastVisible) {
-				dailyLogsQuery = query(dailyLogsQuery, startAfter(lastVisible));
+			// Gestion du champ date (Timestamp -> Date)
+			let date: Date;
+			const rawDate = dailyLogData.date;
+			if (rawDate instanceof Timestamp) {
+				date = rawDate.toDate();
+			} else if (rawDate instanceof Date) {
+				date = rawDate;
+			} else if (typeof rawDate === "string") {
+				date = new Date(rawDate);
+			} else {
+				console.warn("Date inconnue ou invalide :", rawDate);
+				date = new Date(NaN);
 			}
 
-			const dailyLogsSnapshot = await getDocs(dailyLogsQuery);
-			newLastVisible = dailyLogsSnapshot.docs[dailyLogsSnapshot.docs.length - 1];
-
-			const dailyLogs = dailyLogsSnapshot.docs.map((docSnap) => {
-				const dailyLogData = docSnap.data();
-
-				let date: Date;
-				if (dailyLogData.date instanceof Timestamp) {
-					date = dailyLogData.date.toDate();
-				} else if (dailyLogData.date instanceof Date) {
-					date = dailyLogData.date;
-				} else if (typeof dailyLogData.date === "string") {
-					date = new Date(dailyLogData.date);
-				} else {
-					console.warn("Date inconnue ou invalide :", dailyLogData.date);
-					date = new Date(NaN);
-				}
-
-				return {
-					id: docSnap.id, // L'ID du document dailyLogs
-					logDocId: logDocSnap.id,
-					habitId: logData.habitId,
-					habit: habitInfo,
-					user: memberInfo,
-					uid: logData.uid,
-					date,
-					reactions: dailyLogData.reactions || [],
-				};
+			// Construit l'élément final DailyLogExtended
+			dailyLogs.push({
+				id: docSnap.id,
+				logDocId: parentLogSnap.id,
+				habitId: logData.habitId,
+				habit: habitInfo,
+				user: memberInfo,
+				uid: logData.uid,
+				date,
+				reactions: dailyLogData.reactions || [],
 			});
-
-			allDailyLogs = allDailyLogs.concat(dailyLogs);
 		}
 
-		// Trier tous les logs globalement par date
-		allDailyLogs.sort((a, b) => b.date.getTime() - a.date.getTime());
+		// Note : on a récupéré "pageSize" documents bruts,
+		// mais le filtrage local peut réduire le nombre de logs finaux.
+		// Pour la pagination "infinie" stricte (toujours 10 logs valides),
+		// il faudrait éventuellement boucler jusqu'à récupérer 10 logs valides
+		// ou épuiser Firestore. Ici on renvoie simplement ce qu'on a filtré.
+
+		// Indique s'il reste potentiellement plus de logs à charger
+		// (si Firestore a renvoyé pageSize docs, on suppose qu'il en reste)
+		const hasMore = snapshot.size === pageSize;
+
+		// Dernier doc pour startAfter() dans le prochain appel
+		const newLastVisible =
+			snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null;
 
 		return {
-			dailyLogs: allDailyLogs.slice(0, pageSize),
-			lastVisible: newLastVisible,
-			hasMore: allDailyLogs.length >= pageSize,
+			dailyLogs,
+			lastVisible: hasMore ? newLastVisible : null,
+			hasMore,
 		};
 	} catch (error) {
 		console.error("Erreur lors de la récupération des logs paginés :", error);
+		throw error;
+	}
+};
+
+export const deleteLogsByHabitId = async (habitId: string) => {
+	try {
+		const uid = auth.currentUser?.uid;
+		if (!uid) throw new Error("Utilisateur non authentifié");
+		if (!habitId) throw new Error("Identifiant de l'habitude manquant");
+
+		// Vérifier si l'habitude existe
+		const habit = await getHabitById(habitId).catch(() => null);
+		if (habit) {
+			console.log(`L'habitude ${habitId} existe, aucun log ne sera supprimé.`);
+			return;
+		}
+
+		// Rechercher le document habitsLog correspondant
+		const logsCollectionRef = collection(db, "habitsLogs");
+		const q = query(
+			logsCollectionRef,
+			where("uid", "==", uid),
+			where("habitId", "==", habitId)
+		);
+
+		const querySnapshot = await getDocs(q);
+
+		if (querySnapshot.empty) {
+			console.warn(`Aucun log trouvé pour l'habitude ${habitId}`);
+			return;
+		}
+
+		// Supprimer les logs associés
+		const logDoc = querySnapshot.docs[0];
+		const dailyLogsCollectionRef = collection(logDoc.ref, "dailyLogs");
+		const dailyLogsSnapshot = await getDocs(dailyLogsCollectionRef);
+
+		await Promise.all(
+			dailyLogsSnapshot.docs.map(async (docSnap) => {
+				await deleteDoc(docSnap.ref);
+			})
+		);
+
+		// Supprimer le document habitsLog
+		await deleteDoc(logDoc.ref);
+
+		console.log(`Tous les logs pour l'habitude ${habitId} ont été supprimés.`);
+	} catch (error) {
+		console.error("Erreur lors de la suppression des logs :", error);
 		throw error;
 	}
 };

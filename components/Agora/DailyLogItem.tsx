@@ -117,6 +117,8 @@ const handleReaction = async (type: string) => {
 
 	const dateString = safeDate.toLocaleDateString("fr-FR");
 
+	console.log("item", item.logDocId);
+
 	return (
 		<View
 			className="mb-3 px-3 py-2 rounded-xl"

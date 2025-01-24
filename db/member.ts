@@ -118,6 +118,10 @@ export const getMemberProfileByUid = async (
 	try {
 		const membersCollectionRef = collection(db, "members");
 
+		if (!uid) {
+			throw new Error("UID is required to get member profile");
+		}
+
 		const querySnapshot = await getDocs(
 			query(membersCollectionRef, where("uid", "==", uid))
 		);

@@ -40,6 +40,7 @@ const AllLogs = () => {
 				setDailyLogs([]);
 			}
 
+			console.log("Fetching daily logs with lastVisible", lastVisible);
 			const {
 				dailyLogs: newDailyLogs,
 				lastVisible: newLastVisible,
