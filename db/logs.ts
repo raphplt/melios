@@ -289,13 +289,16 @@ export const getAllUsersLogsPaginated = async (
 };
 
 export async function addReactionToLog(
-	logId: string,
+	habitLogId: string, // l'id du doc parent dans habitsLogs
+	dailyLogId: string, // l'id du doc dans la sous-collection dailyLogs
 	uid: string,
 	type: string,
 	logDateISO: string
 ) {
-	const logRef = doc(db, "dailyLogs", logId);
+	// On pointe sur habitsLogs/habitLogId/dailyLogs/dailyLogId
+	const logRef = doc(db, "habitsLogs", habitLogId, "dailyLogs", dailyLogId);
 	const logDoc = await getDoc(logRef);
+
 	if (!logDoc.exists()) {
 		console.error("Log not found");
 		throw new Error("Log not found");
@@ -309,18 +312,19 @@ export async function addReactionToLog(
 	}
 
 	const updatedReactions = [...(logData.reactions || []), { uid, type }];
-
 	await updateDoc(logRef, { reactions: updatedReactions });
 }
 
 export async function removeReactionFromLog(
-	logId: string,
+	habitLogId: string,
+	dailyLogId: string,
 	uid: string,
 	type: string,
 	logDateISO: string
 ) {
-	const logRef = doc(db, "dailyLogs", logId);
+	const logRef = doc(db, "habitsLogs", habitLogId, "dailyLogs", dailyLogId);
 	const logDoc = await getDoc(logRef);
+
 	if (!logDoc.exists()) {
 		console.error("Log not found");
 		throw new Error("Log not found");
@@ -334,6 +338,7 @@ export async function removeReactionFromLog(
 
 	await updateDoc(logRef, { reactions: updatedReactions });
 }
+
 
 export type DailyLogExtended = {
 	id: string;

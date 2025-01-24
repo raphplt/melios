@@ -63,29 +63,39 @@ const handleReaction = async (type: string) => {
 	if (!member?.uid) return;
 
 	try {
-		const logId = item.id;
-		if (!logId) {
-			throw new Error("logId est manquant ou invalide");
-		}
+		const habitLogId = item.logDocId; // le doc "habitsLogs/habitLogId"
+		const dailyLogId = item.id; // le doc "habitsLogs/habitLogId/dailyLogs/dailyLogId"
 
 		const logDateISO = safeDate.toISOString();
 
-		console.log("logId utilisé :", logId);
-		console.log("logDateISO :", logDateISO);
-
 		if (userReaction === type) {
-			await removeReactionFromLog(logId, member.uid, type, logDateISO);
+			// retirer la même réaction
+			await removeReactionFromLog(
+				habitLogId,
+				dailyLogId,
+				member.uid,
+				type,
+				logDateISO
+			);
 			setReactions((prev) =>
 				prev.filter((r) => !(r.uid === member.uid && r.type === type))
 			);
 		} else {
+			// retirer l'ancienne si elle existe
 			if (userReaction) {
-				await removeReactionFromLog(logId, member.uid, userReaction, logDateISO);
+				await removeReactionFromLog(
+					habitLogId,
+					dailyLogId,
+					member.uid,
+					userReaction,
+					logDateISO
+				);
 				setReactions((prev) =>
 					prev.filter((r) => !(r.uid === member.uid && r.type === userReaction))
 				);
 			}
-			await addReactionToLog(logId, member.uid, type, logDateISO);
+			// ajouter la nouvelle
+			await addReactionToLog(habitLogId, dailyLogId, member.uid, type, logDateISO);
 			setReactions((prev) => [...prev, { uid: member.uid, type }]);
 		}
 	} catch (err) {
@@ -95,29 +105,26 @@ const handleReaction = async (type: string) => {
 	}
 };
 
+const renderEmoji = (type: string) => {
+	switch (type) {
+		case "flame":
+			return (
+				<Iconify icon="mdi-fire" size={20} color={theme.colors.orangePrimary} />
+			);
+		case "heart":
+			return (
+				<Iconify icon="mdi-heart" size={20} color={theme.colors.redPrimary} />
+			);
+		case "like":
+			return (
+				<Iconify icon="mdi-thumb-up" size={20} color={theme.colors.primary} />
+			);
+		default:
+			return <Iconify icon="mdi-help" size={20} color="gray" />;
+	}
+};
 
-	const renderEmoji = (type: string) => {
-		switch (type) {
-			case "flame":
-				return (
-					<Iconify icon="mdi-fire" size={20} color={theme.colors.orangePrimary} />
-				);
-			case "heart":
-				return (
-					<Iconify icon="mdi-heart" size={20} color={theme.colors.redPrimary} />
-				);
-			case "like":
-				return (
-					<Iconify icon="mdi-thumb-up" size={20} color={theme.colors.primary} />
-				);
-			default:
-				return <Iconify icon="mdi-help" size={20} color="gray" />;
-		}
-	};
-
-	const dateString = safeDate.toLocaleDateString("fr-FR");
-
-	console.log("item", item.logDocId);
+const dateString = safeDate.toLocaleDateString("fr-FR");
 
 	return (
 		<View
