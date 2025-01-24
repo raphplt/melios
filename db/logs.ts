@@ -27,7 +27,7 @@ import { DailyLog, Log } from "@type/log";
 export const REACTION_TYPES = ["flame", "heart", "like"];
 
 export function ensureDate(d: any): Date {
-	if (!d) return new Date(); // fallback
+	if (!d) return new Date();
 	if (d instanceof Date) return d;
 	if (d.toDate && typeof d.toDate === "function") {
 		return d.toDate();
@@ -171,35 +171,28 @@ export const getAllHabitLogs = async ({
 			return [];
 		}
 
-		// On parcourt tous les docs de la collection "habitsLogs"
 		const allLogs = await Promise.all(
 			querySnapshot.docs.map(async (habitDoc) => {
 				const habitData = habitDoc.data();
 
-				// On récupère la sous-collection "dailyLogs"
 				const dailyLogsCollectionRef = collection(habitDoc.ref, "dailyLogs");
 				const dailyLogsSnapshot = await getDocs(dailyLogsCollectionRef);
 
-				// Conversion des Timestamps en Dates pour chaque dailyLog
 				const dailyLogs: DailyLog[] = dailyLogsSnapshot.docs.map((dailyDoc) => {
 					const dData = dailyDoc.data();
 
 					return {
-						// Champs du type DailyLog
-						id: dailyDoc.id, // ID du doc de la sous-collection
-						logDocId: habitDoc.id, // on associe le doc parent si nécessaire
-						// Si 'date' est un Timestamp, on le convertit en Date
+						id: dailyDoc.id,
+						logDocId: habitDoc.id,
 						date: dData.date?.toDate ? dData.date.toDate() : dData.date,
 						reactions: dData.reactions || [],
 					};
 				});
 
-				// On retourne l'objet Log complet
 				return {
 					id: habitDoc.id,
 					habitId: habitData.habitId,
 					uid: habitData.uid,
-					// Si createdAt/updatedAt sont des Timestamps, on les convertit
 					createdAt: habitData.createdAt?.toDate
 						? habitData.createdAt.toDate()
 						: null,
@@ -220,7 +213,6 @@ export const getAllHabitLogs = async ({
 		throw error;
 	}
 };
-
 
 /**
  * Récupère, par pagination, la liste des logs (habitsLogs),
@@ -308,13 +300,12 @@ export const getAllUsersLogsPaginated = async (
 };
 
 export async function addReactionToLog(
-	habitLogId: string, // l'id du doc parent dans habitsLogs
-	dailyLogId: string, // l'id du doc dans la sous-collection dailyLogs
+	habitLogId: string,
+	dailyLogId: string,
 	uid: string,
 	type: string,
 	logDateISO: string
 ) {
-	// On pointe sur habitsLogs/habitLogId/dailyLogs/dailyLogId
 	const logRef = doc(db, "habitsLogs", habitLogId, "dailyLogs", dailyLogId);
 	const logDoc = await getDoc(logRef);
 
@@ -358,7 +349,6 @@ export async function removeReactionFromLog(
 	await updateDoc(logRef, { reactions: updatedReactions });
 }
 
-
 export type DailyLogExtended = {
 	id: string;
 	logDocId: string;
@@ -391,19 +381,16 @@ export const getAllDailyLogsPaginated = async (
 	hasMore: boolean;
 }> => {
 	try {
-		// Construire la requête de base
 		let baseQuery = query(
 			collectionGroup(db, "dailyLogs"),
 			orderBy("date", "desc"),
 			limit(pageSize)
 		);
 
-		// Si on a un doc de référence pour la pagination
 		if (lastVisibleDoc) {
 			baseQuery = query(baseQuery, startAfter(lastVisibleDoc));
 		}
 
-		// Récupérer les logs (max pageSize) en partant de lastVisibleDoc (ou du début)
 		const snapshot = await getDocs(baseQuery);
 
 		if (snapshot.empty) {
@@ -416,16 +403,11 @@ export const getAllDailyLogsPaginated = async (
 
 		const dailyLogs: DailyLogExtended[] = [];
 
-		// Pour chaque dailyLog, on va chercher son parent "habitsLogs/{logDocId}"
-		// afin de récupérer l'UID du user, habitId, etc. puis on filtre localement.
 		for (const docSnap of snapshot.docs) {
 			const dailyLogData = docSnap.data();
-			// docSnap.ref.parent => "dailyLogs"
-			// docSnap.ref.parent.parent => le doc "habitsLogs/{logDocId}"
 			const parentLogDocRef = docSnap.ref.parent.parent;
 			if (!parentLogDocRef) continue; // cas improbable
 
-			// On récupère les infos du document parent (habitId, uid, etc.)
 			const parentLogSnap = await getDoc(parentLogDocRef);
 			if (!parentLogSnap.exists()) continue;
 
@@ -476,7 +458,6 @@ export const getAllDailyLogsPaginated = async (
 				date = new Date(NaN);
 			}
 
-			// Construit l'élément final DailyLogExtended
 			dailyLogs.push({
 				id: docSnap.id,
 				logDocId: parentLogSnap.id,
@@ -489,17 +470,8 @@ export const getAllDailyLogsPaginated = async (
 			});
 		}
 
-		// Note : on a récupéré "pageSize" documents bruts,
-		// mais le filtrage local peut réduire le nombre de logs finaux.
-		// Pour la pagination "infinie" stricte (toujours 10 logs valides),
-		// il faudrait éventuellement boucler jusqu'à récupérer 10 logs valides
-		// ou épuiser Firestore. Ici on renvoie simplement ce qu'on a filtré.
-
-		// Indique s'il reste potentiellement plus de logs à charger
-		// (si Firestore a renvoyé pageSize docs, on suppose qu'il en reste)
 		const hasMore = snapshot.size === pageSize;
 
-		// Dernier doc pour startAfter() dans le prochain appel
 		const newLastVisible =
 			snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null;
 
@@ -520,14 +492,12 @@ export const deleteLogsByHabitId = async (habitId: string) => {
 		if (!uid) throw new Error("Utilisateur non authentifié");
 		if (!habitId) throw new Error("Identifiant de l'habitude manquant");
 
-		// Vérifier si l'habitude existe
 		const habit = await getHabitById(habitId).catch(() => null);
 		if (habit) {
 			console.log(`L'habitude ${habitId} existe, aucun log ne sera supprimé.`);
 			return;
 		}
 
-		// Rechercher le document habitsLog correspondant
 		const logsCollectionRef = collection(db, "habitsLogs");
 		const q = query(
 			logsCollectionRef,
@@ -542,7 +512,6 @@ export const deleteLogsByHabitId = async (habitId: string) => {
 			return;
 		}
 
-		// Supprimer les logs associés
 		const logDoc = querySnapshot.docs[0];
 		const dailyLogsCollectionRef = collection(logDoc.ref, "dailyLogs");
 		const dailyLogsSnapshot = await getDocs(dailyLogsCollectionRef);
@@ -553,7 +522,6 @@ export const deleteLogsByHabitId = async (habitId: string) => {
 			})
 		);
 
-		// Supprimer le document habitsLog
 		await deleteDoc(logDoc.ref);
 
 		console.log(`Tous les logs pour l'habitude ${habitId} ont été supprimés.`);
