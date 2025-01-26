@@ -1,11 +1,8 @@
 import {
 	View,
 	Text,
-	StatusBar,
 	Pressable,
-	StyleSheet,
 	ScrollView,
-	Platform,
 	ActivityIndicator,
 } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,10 +31,9 @@ import { setMemberHabit } from "@db/userHabit";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { UserHabit } from "@type/userHabit";
-import { LinearGradient } from "expo-linear-gradient";
-import { lightenColor } from "@utils/colors";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import ConfidentialitySelectorHabit from "@components/Select/Items/Confidentiality";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -65,6 +61,7 @@ export default function CustomHabit() {
 			memberId: member?.uid || null,
 			habitId: habit?.id || "0",
 			reminderMoment: habit?.reminderMoment || 5,
+			confidentiality: habit?.confidentiality || "private",
 			createAt: new Date(),
 		},
 	});
@@ -73,10 +70,8 @@ export default function CustomHabit() {
 		handleSubmit,
 		register,
 		formState: { errors },
-		watch,
 		setFocus,
 		setValue,
-		getValues,
 	} = methods;
 
 	const [isEditingName, setIsEditingName] = useState(false);
@@ -95,12 +90,6 @@ export default function CustomHabit() {
 		}
 	};
 
-	// Selected color
-	const selectedColor = watch("color");
-	const gradientColors = habit
-		? [lightenColor(selectedColor, 0.8), lightenColor(selectedColor, 0.6)]
-		: [lightenColor("#08209F", 0.4), theme.colors.cardBackground];
-
 	// Remove habit on back
 	useEffect(() => {
 		return () => {
@@ -116,14 +105,6 @@ export default function CustomHabit() {
 					paddingTop: 40,
 				}}
 			>
-				{/* <LinearGradient
-					colors={gradientColors as any}
-					style={{
-						flex: 1,
-						...StyleSheet.absoluteFillObject,
-						overflow: "hidden",
-					}}
-				/> */}
 				<ButtonClose />
 				<FormProvider {...methods}>
 					<View className="w-11/12 mx-auto pb-10">
@@ -136,7 +117,6 @@ export default function CustomHabit() {
 							setIsEditingDescription={setIsEditingDescription}
 							setFocus={setFocus}
 							setValue={setValue}
-							selectedColor={selectedColor}
 						/>
 						{errors.name && (
 							<Text style={{ color: "red" }}>{errors.name.message}</Text>
@@ -146,7 +126,7 @@ export default function CustomHabit() {
 						)}
 
 						{/* INFORMATIONS */}
-						<HabitInfos habit={habit} register={register} setValue={setValue} />
+						<HabitInfos habit={habit} setValue={setValue} />
 						{/* HEURE */}
 						<HabitMoment register={register} setValue={setValue} />
 						{errors.moment && (
@@ -154,23 +134,25 @@ export default function CustomHabit() {
 						)}
 
 						{/* RÉPÉTER */}
-						<RepeatHabit
-							register={register}
-							setValue={setValue}
-							getValues={getValues}
-						/>
+						<RepeatHabit register={register} setValue={setValue} />
 						{errors.frequency && (
 							<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
 						)}
 
 						{/* NOTIFICATIONS */}
-						<Notifications register={register} setValue={setValue} />
+						<Notifications setValue={setValue} />
 						{errors.reminderMoment && (
 							<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
 						)}
 						{errors.category && (
 							<Text style={{ color: "red" }}>{errors.category.message}</Text>
 						)}
+
+						{/* CONFIDENTIALITÉ */}
+						<ConfidentialitySelectorHabit
+							value={methods.watch("confidentiality")}
+							onChange={(value) => setValue("confidentiality", value)}
+						/>
 					</View>
 				</FormProvider>
 			</ScrollView>
@@ -179,7 +161,7 @@ export default function CustomHabit() {
 					backgroundColor: theme.colors.primary,
 				}}
 				onPress={handleSubmit(onSubmit)}
-				className="rounded-2xl flex flex-row items-center justify-center absolute bottom-5 left-5 right-5 p-4 mb-4"
+				className="rounded-2xl flex flex-row items-center justify-center absolute bottom-4 left-5 right-5 p-4 mb-2"
 			>
 				{isSubmitting ? (
 					<ActivityIndicator size="small" color="white" />

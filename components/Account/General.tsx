@@ -32,7 +32,7 @@ export default function General() {
 				onPress={() => navigation.navigate("editHabits")}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
-			<RowBlock
+			{/* <RowBlock
 				icon={<Iconify icon="ph:target" size={20} color={theme.colors.primary} />}
 				title={t("my_objectives")}
 				rightContent={
@@ -40,7 +40,7 @@ export default function General() {
 				}
 				onPress={() => navigation.navigate("editGoals")}
 			/>
-			<View className="w-full h-[1px] bg-gray-300"></View>
+			<View className="w-full h-[1px] bg-gray-300"></View> */}
 
 			<RowBlock
 				icon={

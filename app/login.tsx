@@ -59,6 +59,7 @@ export default function Login() {
 	const [loadingLogin, setLoadingLogin] = useState(false);
 
 	useEffect(() => {
+		console.log("Login screen mounted", process.env.EXPO_PUBLIC_WEB_CLIENT_ID);
 		GoogleSignin.configure({
 			webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
 		});
@@ -125,7 +126,7 @@ export default function Login() {
 				refreshHabits(true);
 			}
 		} catch (error) {
-			setError("Erreur lors de la connexion.");
+			setError("Erreur lors d e la connexion.");
 		} finally {
 			setLoadingLogin(false);
 		}
@@ -302,7 +303,7 @@ export default function Login() {
 					<GoogleSigninButton
 						style={{
 							width: 200,
-							height: 48,
+							height: 54,
 							alignSelf: "center",
 							marginTop: 20,
 						}}

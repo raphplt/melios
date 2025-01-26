@@ -5,18 +5,15 @@ import {
 	daysList,
 	frequencyDefaultValues,
 } from "@utils/schemas/createHabit.schema";
-import { BlurView } from "expo-blur";
 import RowTitleCustom from "./RowTitleCustom";
 import React from "react";
 
 export default function RepeatHabit({
 	register,
 	setValue,
-	getValues,
 }: {
 	register: any;
 	setValue: any;
-	getValues: any;
 }) {
 	const { theme } = useTheme();
 	const [selectedDays, setSelectedDays]: any = useState(frequencyDefaultValues);

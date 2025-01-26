@@ -2,8 +2,6 @@ import EditButton from "@components/Shared/EditButton";
 import { View, TextInput, Pressable, Keyboard } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useSelect } from "@context/SelectContext";
-import { BlurView } from "expo-blur";
-import { Iconify } from "react-native-iconify";
 import React from "react";
 
 export default function HabitTitle({
@@ -14,7 +12,6 @@ export default function HabitTitle({
 	setIsEditingDescription,
 	setFocus,
 	setValue,
-	selectedColor,
 }: {
 	register: any;
 	isEditingName: boolean;
@@ -23,7 +20,6 @@ export default function HabitTitle({
 	setIsEditingDescription: (value: boolean) => void;
 	setFocus: any;
 	setValue: any;
-	selectedColor: string;
 }) {
 	const { theme } = useTheme();
 	const { habit } = useSelect();
@@ -90,7 +86,7 @@ export default function HabitTitle({
 					placeholderTextColor={theme.colors.textTertiary}
 					defaultValue={habit?.description}
 					multiline={true}
-					numberOfLines={3}
+					numberOfLines={2}
 					cursorColor={theme.colors.textTertiary}
 				/>
 				<Pressable

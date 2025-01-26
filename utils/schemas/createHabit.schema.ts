@@ -57,6 +57,7 @@ export const createHabitSchema = z.object({
 		.int({ message: "Le moment de rappel doit être un nombre entier." })
 		.min(0, { message: "Le moment de rappel doit être au moins 0." })
 		.max(24, { message: "Le moment de rappel ne doit pas dépasser 24." }),
+	confidentiality: z.string().optional().nullable(),
 	memberId: z.string({ message: "L'ID du membre est requis." }),
 	habitId: z.string().optional().nullable(),
 	createAt: z.date().optional(),

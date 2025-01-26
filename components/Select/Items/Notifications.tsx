@@ -2,19 +2,12 @@ import { useTheme } from "@context/ThemeContext";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import ToggleButton from "@components/Account/Switch";
-import { BlurView } from "expo-blur";
 import RowTitleCustom from "./RowTitleCustom";
 import ModalReminder from "../Modals/ModalReminder";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-export default function Notifications({
-	register,
-	setValue,
-}: {
-	register: any;
-	setValue: any;
-}) {
+export default function Notifications({ setValue }: { setValue: any }) {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const [visible, setVisible] = useState(false);

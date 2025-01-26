@@ -22,6 +22,7 @@ export type UserHabit = {
 		saturday?: boolean;
 		sunday?: boolean;
 	};
+	confidentiality: "public" | "private" | "friends";
 	createAt?: Date;
 	resetAt?: Date;
 };

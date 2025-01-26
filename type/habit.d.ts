@@ -12,6 +12,7 @@ export type Habit = {
 	moment: number;
 	category: Category;
 	reminderMoment: number;
+	confidentiality: "public" | "private" | "friends";
 	recommended: boolean;
 };
 

@@ -1,7 +1,6 @@
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { BlurView } from "expo-blur";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { View, Text, Pressable } from "react-native";
@@ -78,7 +77,7 @@ export default function HabitMoment({
 						onPress={() => setVisible(true)}
 					>
 						<Text
-							className="py-2 text-[15px] mx-auto"
+							className="py-2 text-[14px] mx-auto"
 							style={{
 								color: isCustom ? theme.colors.background : theme.colors.text,
 							}}
@@ -117,7 +116,7 @@ export default function HabitMoment({
 						{...register("moment")}
 					>
 						<Text
-							className="py-2 text-[15px]"
+							className="py-2 text-[14px]"
 							style={{
 								color:
 									selectedMoment === -1 && !customMoment
@@ -166,7 +165,7 @@ export default function HabitMoment({
 						{...register("moment")}
 					>
 						<Text
-							className="py-2 text-[15px]"
+							className="py-2 text-[14px]"
 							style={{
 								color:
 									selectedMoment >= 6 && selectedMoment < 12 && !customMoment
@@ -211,7 +210,7 @@ export default function HabitMoment({
 						{...register("moment")}
 					>
 						<Text
-							className="py-2 text-[15px]"
+							className="py-2 text-[14px]"
 							style={{
 								color:
 									selectedMoment >= 12 && selectedMoment < 18 && !customMoment
@@ -257,7 +256,7 @@ export default function HabitMoment({
 						{...register("moment")}
 					>
 						<Text
-							className="py-2 text-[15px]"
+							className="py-2 text-[14px]"
 							style={{
 								color:
 									selectedMoment >= 18 && selectedMoment < 24 && !customMoment

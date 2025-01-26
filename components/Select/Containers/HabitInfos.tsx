@@ -7,30 +7,25 @@ import { HabitInfoSection } from "../Items/HabitInfoSection";
 import { useSelect } from "@context/SelectContext";
 import ModalDuration from "../Modals/ModalDuration";
 import SelectColor from "@components/Modals/SelectColor";
-import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
 
 export default function HabitInfos({
 	habit,
-	register,
 	setValue,
 }: {
 	habit: Habit | null;
-	register: any;
 	setValue: any;
 }) {
 	const { theme } = useTheme();
 	const { customHabit } = useSelect();
 	const { t } = useTranslation();
 
-	// States
 	const [showModalColor, setShowModalColor] = useState(false);
 	const [showModalDuration, setShowModalDuration] = useState(false);
 	const [selectedCategory, setSelectedCategory] = useState(habit?.category);
 	const [selectedColor, setSelectedColor] = useState(habit?.color);
 	const [selectedDuration, setSelectedDuration] = useState(habit?.duration || 0);
 
-	// Elements dynamiques si c'est une habitude personnalisé
 	const color = customHabit
 		? theme.colors.textTertiary
 		: theme.colors.textTertiary;
@@ -47,7 +42,7 @@ export default function HabitInfos({
 	return (
 		<>
 			<View
-				className="rounded-xl px-1 py-4 mt-6 flex flex-row items-center justify-between h-fit"
+				className="rounded-xl px-1 py-4 mt-3 flex flex-row items-center justify-between h-fit"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 
