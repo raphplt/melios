@@ -2,15 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import {
 	View,
 	ScrollView,
-	KeyboardAvoidingView,
-	Platform,
 	ImageBackground,
 	StatusBar,
 	Text,
 	Image,
 	TouchableOpacity,
-	TouchableWithoutFeedback,
-	Keyboard,
 } from "react-native";
 import {
 	ParamListBase,
@@ -38,7 +34,13 @@ import {
 	GoogleSignin,
 	GoogleSigninButton,
 } from "@react-native-google-signin/google-signin";
+import {
+	getAuth,
+	signInWithCredential,
+	GoogleAuthProvider,
+} from "firebase/auth";
 import { useNavigation } from "expo-router";
+import { loginOrCreateGoogleUser } from "@db/googleLogin";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -56,8 +58,37 @@ export default function Login() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [loadingLogin, setLoadingLogin] = useState(false);
 
-	const [errorGoogle, setErrorGoogle] = useState("");
-	const [userInfo, setUserInfo] = useState<any>(null);
+	useEffect(() => {
+		GoogleSignin.configure({
+			webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
+		});
+	}, []);
+
+	const signInWithGoogle = async () => {
+		try {
+			// Vérifiez si les Play Services sont disponibles (Android)
+			await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+
+			// Demandez à l'utilisateur de se connecter à Google
+			await GoogleSignin.signIn();
+
+			// Récupérez les tokens après la connexion
+			const { idToken } = await GoogleSignin.getTokens();
+
+			// Créez une credential Firebase avec l'idToken
+			const googleCredential = GoogleAuthProvider.credential(idToken);
+
+			// Connexion à Firebase
+			const auth = getAuth();
+			const userCredential = await signInWithCredential(auth, googleCredential);
+
+			// Redirection ou rafraîchissement
+			navigation.navigate("(navbar)");
+		} catch (error) {
+			console.error("Erreur Google Signin:", error);
+			setError("Erreur Google Signin");
+		}
+	};
 
 	useEffect(() => {
 		return navigation.addListener("beforeRemove", (e: any) => {
@@ -267,6 +298,18 @@ export default function Login() {
 							</Text>
 						</View>
 					</View>
+
+					<GoogleSigninButton
+						style={{
+							width: 200,
+							height: 48,
+							alignSelf: "center",
+							marginTop: 20,
+						}}
+						size={GoogleSigninButton.Size.Wide}
+						color={GoogleSigninButton.Color.Dark}
+						onPress={signInWithGoogle}
+					/>
 				</BlurView>
 				<ButtonNavigate
 					text={t("no_account")}

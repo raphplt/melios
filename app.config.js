@@ -48,6 +48,13 @@ export default {
 			"expo-router",
 			"expo-secure-store",
 			[
+				"@evennit/notifee-expo-plugin",
+				{
+					iosDeploymentTarget: "13.4",
+					apsEnvMode: "development",
+				},
+			],
+			[
 				"expo-notifications",
 				{
 					icon: "./assets/images/icons/meliosIcon.png",

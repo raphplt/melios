@@ -8,6 +8,7 @@ import { useTimer } from "@context/TimerContext";
 import { getHabitPoints } from "@utils/pointsUtils";
 import useAddXp from "./useAddXp";
 import { setHabitLog } from "@db/logs";
+import notifee, { AndroidColor } from "@notifee/react-native";
 
 const useHabitTimer = () => {
 	const date = moment().format("YYYY-MM-DD");
@@ -24,7 +25,7 @@ const useHabitTimer = () => {
 	const addXp = useAddXp()?.addXp;
 	const { points, setPoints, setCompletedHabitsToday } = useData();
 
-	const startTimer = (habit: UserHabit) => {
+	const startTimer = async (habit: UserHabit) => {
 		if (!isTimerActive) {
 			if (!habit.duration) throw new Error("Habit has no duration");
 			const durationSeconds = Math.round(habit.duration * 60);
@@ -32,6 +33,19 @@ const useHabitTimer = () => {
 			setShowHabitDetail(false);
 			setIsTimerActive(true);
 			setIsTimerVisible(true);
+
+			await notifee.displayNotification({
+				title: habit.name,
+				body: "Le timer est en cours...",
+				android: {
+					channelId: "foreground_service",
+					asForegroundService: true,
+					color: AndroidColor.GREEN,
+				},
+			});
+
+			console.log("startTimer");
+
 			timerRef.current = setInterval(() => {
 				setTimerSeconds((prevSeconds) => {
 					if (prevSeconds <= 1) {
@@ -47,11 +61,14 @@ const useHabitTimer = () => {
 		}
 	};
 
-	const stopTimer = () => {
+	const stopTimer = async () => {
 		if (timerRef.current) {
 			clearInterval(timerRef.current);
 			timerRef.current = null;
 		}
+
+		await notifee.stopForegroundService();
+
 		setIsTimerActive(false);
 		setIsTimerVisible(false);
 		setShowHabitDetail(true);
@@ -85,7 +102,6 @@ const useHabitTimer = () => {
 		setIsTimerActive(false);
 		setIsTimerVisible(false);
 	};
-
 
 	const onTimerEnd = async (habit: UserHabit) => {
 		try {

@@ -21,6 +21,8 @@ import "../i18n";
 import "../global.css";
 import { useTranslation } from "react-i18next";
 import { StatusBar } from "expo-status-bar";
+import notifee, { AndroidColor } from "@notifee/react-native";
+import { useNotificationConfig } from "@hooks/useNotifee";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -61,6 +63,14 @@ function MainNavigator() {
 			return newTheme;
 		});
 	};
+
+	notifee.registerForegroundService(() => {
+		return new Promise(() => {
+			// Ajouter des tâches spécifiques si nécessaire
+		});
+	});
+
+	useNotificationConfig();
 
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>

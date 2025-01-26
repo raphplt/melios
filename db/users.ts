@@ -13,6 +13,7 @@ import { collection, addDoc, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { db } from ".";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LAST_FETCH_KEY } from "./category";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export const createUser = async (form: any) => {
 	try {
@@ -128,12 +129,16 @@ export const disconnectUser = async () => {
 		await AsyncStorage.removeItem("isAuthenticated");
 		await AsyncStorage.removeItem("habitsData");
 		await AsyncStorage.removeItem("habits");
-		await getAuth().signOut();
+
+		const auth = getAuth();
+		await auth.signOut();
+
+		await GoogleSignin.signOut();
+		await GoogleSignin.revokeAccess();
 	} catch (error) {
 		console.error("Erreur lors de la déconnexion : ", error);
 	}
 };
-
 export const loginUser = async (email: string, password: string) => {
 	try {
 		const userCredential = await signInWithEmailAndPassword(

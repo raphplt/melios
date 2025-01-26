@@ -5,13 +5,14 @@ import ProgressBar from "@components/TimerHabit/ProgressBar";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useEffect, useState, useRef } from "react";
-import { StatusBar, Alert, Text } from "react-native";
+import { StatusBar, Alert, Text, AppState } from "react-native";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { useHabits } from "@context/HabitsContext";
 import { SoundProvider } from "@context/SoundContext";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { FontAwesome6 } from "@expo/vector-icons";
+import notifee, { AndroidColor } from "@notifee/react-native";
 
 export default function TimerHabit() {
 	const { currentHabit } = useHabits();
@@ -63,6 +64,24 @@ export default function TimerHabit() {
 
 		return unsubscribe;
 	}, [navigation, quitHabit]);
+
+	useEffect(() => {
+		const subscription = AppState.addEventListener("change", async (state) => {
+			if (state === "background" && currentHabit) {
+				await notifee.displayNotification({
+					title: currentHabit.name,
+					body: "Le timer est toujours actif.",
+					android: {
+						channelId: "foreground_service",
+						asForegroundService: true,
+						color: AndroidColor.RED,
+					},
+				});
+			}
+		});
+
+		return () => subscription.remove();
+	}, [currentHabit]);
 
 	return (
 		<SoundProvider>
