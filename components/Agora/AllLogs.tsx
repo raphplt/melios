@@ -16,7 +16,7 @@ import ConfidentialityFilter from "./ConfidentialityFilter";
 
 import { DailyLogExtended, getAllDailyLogsPaginated } from "@db/logs";
 import { DailyLogItem } from "./DailyLogItem";
-
+import PlaceHolderLog from "./PlaceHolderLog";
 
 const AllLogs = () => {
 	const { theme } = useTheme();
@@ -118,11 +118,7 @@ const AllLogs = () => {
 			ListFooterComponent={
 				<View>
 					{loading ? (
-						<ActivityIndicator
-							size="large"
-							color={theme.colors.primary}
-							className="py-10"
-						/>
+						[...Array(5)].map((_, index) => <PlaceHolderLog key={index} />)
 					) : !hasMore ? (
 						<Text
 							className="text-center mt-4 mb-24"

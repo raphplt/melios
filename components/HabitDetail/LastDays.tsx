@@ -4,7 +4,7 @@ import { Iconify } from "react-native-iconify";
 import { useState, useEffect } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { DayStatus } from "../../app/habitDetail";
-import { getHabitLogs } from "@db/logs";
+import { getHabitLogs } from "@db/logs"; // Assurez-vous que cette fonction récupère correctement les logs avec la nouvelle structure
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
@@ -15,88 +15,89 @@ import { CategoryTypeSelect } from "@utils/category.type";
 import { DailyLog } from "@type/log";
 
 export default function LastDays() {
-const { theme } = useTheme();
-const { currentHabit } = useHabits();
-const { t } = useTranslation();
-const [lastDays, setLastDays] = useState<DayStatus[]>([]);
-const [loading, setLoading] = useState(true);
-const [currentStreak, setCurrentStreak] = useState(0);
+	const { theme } = useTheme();
+	const { currentHabit } = useHabits();
+	const { t } = useTranslation();
+	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [currentStreak, setCurrentStreak] = useState(0);
 
-if (!currentHabit) return null;
+	if (!currentHabit) return null;
 
-if (currentHabit.type === CategoryTypeSelect.negative) {
-	return null;
-}
+	if (currentHabit.type === CategoryTypeSelect.negative) {
+		return null;
+	}
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-const dark = theme.dark;
-const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
+	const dark = theme.dark;
+	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
-useEffect(() => {
-	const fetchHabitLogs = async () => {
-		try {
-			const logs: DailyLog[] = await getHabitLogs(currentHabit.id);
-			const lastDaySnapshot: DayStatus[] = [];
-			for (let i = 365; i >= 0; i--) {
-				const day = moment().subtract(i, "days").format("YYYY-MM-DD");
-				let done = logs
-					? logs.some((log) => moment(log.date).format("YYYY-MM-DD") === day)
-					: false;
-				lastDaySnapshot.push({
-					date: day,
-					done,
-				});
+	useEffect(() => {
+		const fetchHabitLogs = async () => {
+			try {
+				// Récupération des logs pour l'habitude courante
+				const logs: any = await getHabitLogs(currentHabit.id); //TODO type
+
+				const lastDaySnapshot: DayStatus[] = [];
+				for (let i = 365; i >= 0; i--) {
+					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+
+					// Vérifie si le jour est complété
+					const done = logs?.some((log) => {
+						const logDate = moment(log.date).format("YYYY-MM-DD");
+						return logDate === day;
+					});
+
+					lastDaySnapshot.push({
+						date: day,
+						done,
+					});
+				}
+
+				const filteredDays = lastDaySnapshot.reverse();
+				setLastDays(filteredDays);
+				calculateCurrentStreak(filteredDays);
+				setLoading(false);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des logs :", error);
 			}
+		};
 
-			const filteredDays = lastDaySnapshot.reverse();
-			setLastDays(filteredDays);
-			setLoading(false);
-			calculateCurrentStreak(filteredDays);
-		} catch (error) {
-			console.error("Erreur lors de la récupération des logs :", error);
+		fetchHabitLogs();
+	}, [currentHabit.id]);
+
+	const calculateCurrentStreak = (days: DayStatus[]) => {
+		let streak = 0;
+
+		for (let i = 0; i < days.length; i++) {
+			if (days[i].done) {
+				streak++;
+			} else {
+				break;
+			}
 		}
+
+		setCurrentStreak(streak);
 	};
 
-	fetchHabitLogs();
-}, [currentHabit.id]);
+	const CardPlaceHolder = () => {
+		return (
+			<ShimmerPlaceholder
+				width={60}
+				height={60}
+				style={{
+					borderRadius: 10,
+					marginLeft: 10,
+					marginRight: 10,
+				}}
+			/>
+		);
+	};
 
-const calculateCurrentStreak = (days: DayStatus[]) => {
-	let streak = 0;
-	if (days.length === 0) {
-		setCurrentStreak(streak);
-		return;
-	}
+	const placeholders = Array(5).fill(null);
 
-	for (let i = 0; i < days.length; i++) {
-		if (days[i].done) {
-			streak++;
-		} else {
-			break;
-		}
-	}
-
-	setCurrentStreak(streak);
-};
-
-const CardPlaceHolder = () => {
 	return (
-		<ShimmerPlaceholder
-			width={60}
-			height={60}
-			style={{
-				borderRadius: 10,
-				marginLeft: 10,
-				marginRight: 10,
-			}}
-		/>
-	);
-};
-
-const placeholders = Array(5).fill(null);
-
-return (
-	<>
 		<BlurView
 			intensity={70}
 			className="py-2 px-3 rounded-xl w-11/12 mx-auto flex items-center flex-col justify-center"
@@ -116,7 +117,7 @@ return (
 					</Text>
 				</View>
 				<View
-					className="flex flex-row items-center justify-start px-3 py-1 "
+					className="flex flex-row items-center justify-start px-3 py-1"
 					style={{
 						backgroundColor: theme.colors.backgroundSecondary,
 						borderRadius: 10,
@@ -125,7 +126,7 @@ return (
 					<Iconify icon="mdi:fire" size={20} color={theme.colors.redPrimary} />
 					<Text
 						style={{ color: theme.colors.text }}
-						className="text-[14px] font-semibold italic "
+						className="text-[14px] font-semibold italic"
 					>
 						{t("streak")}: {currentStreak}
 					</Text>
@@ -170,6 +171,5 @@ return (
 				)}
 			</ScrollView>
 		</BlurView>
-	</>
-);
+	);
 }

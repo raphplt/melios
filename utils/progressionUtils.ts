@@ -87,13 +87,6 @@ export const getLevelByCategoryId = (
 		level.associatedCategoryIds.map(Number).includes(idCategoryNumber)
 	);
 
-	if (!level) {
-		console.log(
-			`No level found for idCategory: ${idCategory}, genericLevels:`,
-			genericLevels
-		);
-	}
-
 	return level;
 };
 

@@ -123,6 +123,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				if (snapshotStreak) {
 					setStreak(snapshotStreak);
 				} else {
+					console.log("Streak not found, initializing streak...");
 					const streak = await initializeStreak();
 					if (streak) setStreak(streak);
 				}

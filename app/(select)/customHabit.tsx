@@ -116,14 +116,14 @@ export default function CustomHabit() {
 					paddingTop: 40,
 				}}
 			>
-				<LinearGradient
+				{/* <LinearGradient
 					colors={gradientColors as any}
 					style={{
 						flex: 1,
 						...StyleSheet.absoluteFillObject,
 						overflow: "hidden",
 					}}
-				/>
+				/> */}
 				<ButtonClose />
 				<FormProvider {...methods}>
 					<View className="w-11/12 mx-auto pb-10">
