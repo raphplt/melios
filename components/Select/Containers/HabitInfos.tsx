@@ -46,13 +46,17 @@ export default function HabitInfos({
 
 	return (
 		<>
-			<BlurView
-				intensity={90}
-				className="rounded-xl px-1 py-4 mt-4 flex flex-row items-center justify-between h-fit"
+			<View
+				className="rounded-xl px-1 py-4 mt-6 flex flex-row items-center justify-between h-fit"
 				style={{
-					overflow: "hidden",
+					backgroundColor: theme.colors.cardBackground,
+
+					shadowColor: theme.colors.textTertiary,
+					shadowOffset: { width: 0, height: 2 },
+					shadowOpacity: 0.25,
+					shadowRadius: 4,
+					elevation: 3,
 				}}
-				tint="light"
 			>
 				{/* Durée */}
 				<HabitInfoSection
@@ -99,7 +103,7 @@ export default function HabitInfos({
 						{t("color")}
 					</Text>
 				</Pressable>
-			</BlurView>
+			</View>
 
 			<ModalDuration
 				visible={showModalDuration}

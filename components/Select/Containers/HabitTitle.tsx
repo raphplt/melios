@@ -65,13 +65,17 @@ export default function HabitTitle({
 				</Pressable>
 			</View>
 
-			<BlurView
-				intensity={90}
-				className="rounded-xl px-4 py-2 pb-3 mt-3 flex flex-row items-center justify-between"
+			<View
+				className="rounded-xl px-4 py-2 pb-3 mt-5 flex flex-row items-center justify-between"
 				style={{
-					overflow: "hidden",
+					backgroundColor: theme.colors.cardBackground,
+
+					shadowColor: theme.colors.textTertiary,
+					shadowOffset: { width: 0, height: 2 },
+					shadowOpacity: 0.25,
+					shadowRadius: 4,
+					elevation: 3,
 				}}
-				tint="light"
 			>
 				<TextInput
 					style={{
@@ -94,7 +98,7 @@ export default function HabitTitle({
 						toggleFocus("description", isEditingDescription, setIsEditingDescription)
 					}
 				></Pressable>
-			</BlurView>
+			</View>
 		</>
 	);
 }

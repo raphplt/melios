@@ -51,20 +51,24 @@ export default function HabitMoment({
 	};
 
 	const itemStyle =
-		"w-full flex flex-row items-center justify-between px-3 py-2";
+		"w-full flex flex-row items-center justify-between px-3 py-2 rounded-2xl";
 
 	return (
 		<>
 			<RowTitleCustom title="MOMENT" />
 			{/* Elements du haut */}
 			<View className="flex flex-row items-center justify-between pb-2">
-				<BlurView
-					intensity={90}
+				<View
 					className={blockStyle}
 					style={{
-						overflow: "hidden",
+						backgroundColor: theme.colors.cardBackground,
+
+						shadowColor: theme.colors.textTertiary,
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.25,
+						shadowRadius: 4,
+						elevation: 3,
 					}}
-					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -88,14 +92,18 @@ export default function HabitMoment({
 							color={isCustom ? theme.colors.background : theme.colors.text}
 						/>
 					</Pressable>
-				</BlurView>
-				<BlurView
-					intensity={90}
+				</View>
+				<View
 					className={blockStyle}
 					style={{
-						overflow: "hidden",
+						backgroundColor: theme.colors.cardBackground,
+
+						shadowColor: theme.colors.textTertiary,
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.25,
+						shadowRadius: 4,
+						elevation: 3,
 					}}
-					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -129,18 +137,22 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</BlurView>
+				</View>
 			</View>
 
 			{/* Elements du bas */}
 			<View className="flex flex-row items-center justify-between py-2">
-				<BlurView
-					intensity={90}
+				<View
 					className={blockStyle}
 					style={{
-						overflow: "hidden",
+						backgroundColor: theme.colors.cardBackground,
+
+						shadowColor: theme.colors.textTertiary,
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.25,
+						shadowRadius: 4,
+						elevation: 3,
 					}}
-					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -174,14 +186,18 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</BlurView>
-				<BlurView
-					intensity={90}
+				</View>
+				<View
 					className={blockStyle}
 					style={{
-						overflow: "hidden",
+						backgroundColor: theme.colors.cardBackground,
+
+						shadowColor: theme.colors.textTertiary,
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.25,
+						shadowRadius: 4,
+						elevation: 3,
 					}}
-					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -215,15 +231,19 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</BlurView>
+				</View>
 
-				<BlurView
-					intensity={90}
+				<View
 					className={blockStyle}
 					style={{
-						overflow: "hidden",
+						backgroundColor: theme.colors.cardBackground,
+
+						shadowColor: theme.colors.textTertiary,
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.25,
+						shadowRadius: 4,
+						elevation: 3,
 					}}
-					tint="light"
 				>
 					<Pressable
 						className={itemStyle}
@@ -257,7 +277,7 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</BlurView>
+				</View>
 			</View>
 
 			{/* Affichage du sélecteur de date pour l'heure personnalisée */}

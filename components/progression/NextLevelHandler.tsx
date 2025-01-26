@@ -7,7 +7,7 @@ import { useHabits } from "@context/HabitsContext";
 const NextLevelHandler = () => {
 	const { usersLevels } = useData();
 	const { genericLevels } = useHabits();
-	const [showNextLevelModal, setShowNextLevelModal] = useState(false);
+	const [showNextLevelModal, setShowNextLevelModal] = useState(true);
 	const [nextLevelData, setNextLevelData] = useState<CombinedLevel | null>(null);
 	const [previousLevels, setPreviousLevels] = useState(usersLevels);
 
