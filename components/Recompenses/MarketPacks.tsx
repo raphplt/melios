@@ -28,25 +28,17 @@ export default function MarketPacks() {
 		fetchPacks();
 	}, []);
 
-	if (loading) {
-		return (
-			<View className="py-10">
-				<ActivityIndicator size="large" color={theme.colors.primary} />
-			</View>
-		);
-	}
-
 	return (
 		<View
 			style={{
 				backgroundColor: theme.colors.background,
 				flex: 1,
 			}}
-			className="mb-24"
+			className="mb-20"
 		>
 			<View className="w-11/12 mx-auto py-1 mt-5">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
-					<Iconify icon="mdi:gift-outline" size={24} color={theme.colors.text} />
+					<Iconify icon="ri:walk-fill" size={24} color={theme.colors.text} />
 					<Text
 						style={{
 							color: theme.colors.text,
@@ -54,7 +46,7 @@ export default function MarketPacks() {
 						}}
 						className="mx-2 text-[16px] font-semibold"
 					>
-						{t("rewards_packs")}
+						{t("the_companions_of_travel")}
 					</Text>
 				</View>
 			</View>
