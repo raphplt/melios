@@ -2,7 +2,7 @@ export default {
 	expo: {
 		name: "Melios",
 		slug: "melios",
-		version: "1.1.22",
+		version: "1.1.23",
 		orientation: "portrait",
 		icon: "./assets/images/icon.png",
 		platforms: ["ios", "android", "web"],
