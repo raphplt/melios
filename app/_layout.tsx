@@ -21,7 +21,7 @@ import "../i18n";
 import "../global.css";
 import { useTranslation } from "react-i18next";
 import { StatusBar } from "expo-status-bar";
-import notifee, { AndroidColor } from "@notifee/react-native";
+import notifee from "@notifee/react-native";
 import { useNotificationConfig } from "@hooks/useNotifee";
 
 export { ErrorBoundary } from "expo-router";
@@ -93,10 +93,10 @@ function MainNavigator() {
 							title: "Compte",
 						}}
 					/>
-					<Stack.Screen
+					{/* <Stack.Screen
 						name="rewards"
 						options={{ headerShown: false, title: "Récompenses" }}
-					/>
+					/> */}
 					<Stack.Screen
 						name="editProfil"
 						options={{ headerShadowVisible: false, title: "Éditer le profil" }}
