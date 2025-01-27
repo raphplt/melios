@@ -63,13 +63,12 @@ const handleReaction = async (type: string) => {
 	if (!member?.uid) return;
 
 	try {
-		const habitLogId = item.logDocId; // le doc "habitsLogs/habitLogId"
-		const dailyLogId = item.id; // le doc "habitsLogs/habitLogId/dailyLogs/dailyLogId"
+		const habitLogId = item.logDocId;
+		const dailyLogId = item.id;
 
 		const logDateISO = safeDate.toISOString();
 
 		if (userReaction === type) {
-			// retirer la même réaction
 			await removeReactionFromLog(
 				habitLogId,
 				dailyLogId,
@@ -81,7 +80,6 @@ const handleReaction = async (type: string) => {
 				prev.filter((r) => !(r.uid === member.uid && r.type === type))
 			);
 		} else {
-			// retirer l'ancienne si elle existe
 			if (userReaction) {
 				await removeReactionFromLog(
 					habitLogId,
@@ -94,7 +92,6 @@ const handleReaction = async (type: string) => {
 					prev.filter((r) => !(r.uid === member.uid && r.type === userReaction))
 				);
 			}
-			// ajouter la nouvelle
 			await addReactionToLog(habitLogId, dailyLogId, member.uid, type, logDateISO);
 			setReactions((prev) => [...prev, { uid: member.uid, type }]);
 		}

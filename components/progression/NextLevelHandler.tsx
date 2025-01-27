@@ -7,12 +7,11 @@ import { useHabits } from "@context/HabitsContext";
 const NextLevelHandler = () => {
 	const { usersLevels } = useData();
 	const { genericLevels } = useHabits();
-	const [showNextLevelModal, setShowNextLevelModal] = useState(true);
+	const [showNextLevelModal, setShowNextLevelModal] = useState(false);
 	const [nextLevelData, setNextLevelData] = useState<CombinedLevel | null>(null);
 	const [previousLevels, setPreviousLevels] = useState(usersLevels);
 
 	useEffect(() => {
-		// On regarde si le niveau a augmenté
 		Object.entries(usersLevels).forEach(([levelId, userLevel]: any) => {
 			const previousLevel = previousLevels[levelId];
 			if (previousLevel && userLevel.currentLevel > previousLevel.currentLevel) {

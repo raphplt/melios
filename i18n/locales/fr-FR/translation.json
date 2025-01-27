@@ -187,5 +187,15 @@
     "level_general": "Niveau général",
     "cosmetic_shop_description": "Votre niveau général vous permet de débloquer des cosmétiques pour personnaliser votre profil.",
     "create": "Créer",
-    "no_more_logs": "Aucune activité supplémentaire"
+    "no_more_logs": "Aucune activité supplémentaire",
+    "days_short_monday": "Lun",
+    "days_short_tuesday": "Mar",
+    "days_short_wednesday": "Mer",
+    "days_short_thursday": "Jeu",
+    "days_short_friday": "Ven",
+    "days_short_saturday": "Sam",
+    "days_short_sunday": "Dim",
+    "minutes_before": "minutes avant",
+    "o_clock": "heure",
+    "at": "à"
 }

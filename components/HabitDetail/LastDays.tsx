@@ -4,7 +4,7 @@ import { Iconify } from "react-native-iconify";
 import { useState, useEffect } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { DayStatus } from "../../app/habitDetail";
-import { getHabitLogs } from "@db/logs"; // Assurez-vous que cette fonction récupère correctement les logs avec la nouvelle structure
+import { getHabitLogs } from "@db/logs";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
@@ -12,7 +12,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHabits } from "@context/HabitsContext";
 import { CategoryTypeSelect } from "@utils/category.type";
-import { DailyLog } from "@type/log";
 
 export default function LastDays() {
 	const { theme } = useTheme();
@@ -36,16 +35,16 @@ export default function LastDays() {
 	useEffect(() => {
 		const fetchHabitLogs = async () => {
 			try {
-				// Récupération des logs pour l'habitude courante
-				const logs: any = await getHabitLogs(currentHabit.id); //TODO type
+				const logs: any[] = (await getHabitLogs(currentHabit.id)) || [];
 
 				const lastDaySnapshot: DayStatus[] = [];
 				for (let i = 365; i >= 0; i--) {
 					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
 
-					// Vérifie si le jour est complété
 					const done = logs?.some((log) => {
-						const logDate = moment(log.date).format("YYYY-MM-DD");
+						const logDateObj = log.date?.toDate ? log.date.toDate() : log.date;
+
+						const logDate = moment(logDateObj).format("YYYY-MM-DD");
 						return logDate === day;
 					});
 
@@ -56,6 +55,7 @@ export default function LastDays() {
 				}
 
 				const filteredDays = lastDaySnapshot.reverse();
+
 				setLastDays(filteredDays);
 				calculateCurrentStreak(filteredDays);
 				setLoading(false);
@@ -100,12 +100,13 @@ export default function LastDays() {
 	return (
 		<BlurView
 			intensity={70}
-			className="py-2 px-3 rounded-xl w-11/12 mx-auto flex items-center flex-col justify-center"
+			className="py-2 px-3 rounded-xl w-[95%] mx-auto flex items-center flex-col justify-center"
 			style={{
 				overflow: "hidden",
 			}}
 			tint="extraLight"
 		>
+			{/* En-tête avec icône + STREAK */}
 			<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 pb-1">
 				<View className="flex flex-row items-center">
 					<Iconify icon="ph:calendar-check-fill" size={20} color={textColor} />
@@ -132,6 +133,8 @@ export default function LastDays() {
 					</Text>
 				</View>
 			</View>
+
+			{/* Scroll horizontal avec l’historique des derniers jours */}
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
@@ -144,18 +147,18 @@ export default function LastDays() {
 							key={index}
 							style={{
 								backgroundColor: day.done
-									? theme.colors.greenPrimary
+									? theme.colors.backgroundTertiary
 									: theme.colors.backgroundSecondary,
 							}}
 							className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
 						>
 							{day.done ? (
-								<Iconify size={24} color={"#f1F1F1"} icon="mdi:check" />
+								<Iconify size={24} color={theme.colors.text} icon="mdi:check" />
 							) : (
 								<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
 							)}
 							<Text
-								style={{ color: day.done ? "#f1F1F1" : theme.colors.text }}
+								style={{ color: theme.colors.text }}
 								className="font-semibold mt-1"
 							>
 								{moment(day.date, "YYYY-MM-DD").format("DD/MM")}

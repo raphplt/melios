@@ -19,7 +19,7 @@ export default function HabitDone() {
 				shadowRadius: 3.84,
 				elevation: 5,
 			}}
-			className="mx-auto w-11/12 py-6 px-10 rounded-xl flex flex-col items-center justify-center"
+			className="mx-auto w-[95%] py-6 px-10 rounded-xl flex flex-col items-center justify-center"
 		>
 			<Iconify
 				icon="gravity-ui:seal-check"

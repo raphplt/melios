@@ -94,7 +94,7 @@ export default function MarketCosmetics() {
 				{loading
 					? placeholders.map((item) => <LoaderScreen key={item.id} />)
 					: cosmetics
-							.sort((a, b) => a.price - b.price)
+							.sort((a, b) => a.level - b.level)
 							.map((cosmetic) => <ProfilIcon key={cosmetic.id} cosmetic={cosmetic} />)}
 			</View>
 		</ScrollView>

@@ -1,7 +1,5 @@
 import { Text, View, StyleSheet } from "react-native";
 import { Iconify } from "react-native-iconify";
-
-import { UserHabit } from "@type/userHabit";
 import { useTheme } from "@context/ThemeContext";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
@@ -38,7 +36,7 @@ export default function InfosPanel() {
 	return (
 		<BlurView
 			intensity={70}
-			className="w-11/12 mx-auto p-4 rounded-xl my-4"
+			className="w-[95%] mx-auto p-4 rounded-xl my-4"
 			style={{
 				overflow: "hidden",
 			}}
@@ -99,8 +97,9 @@ export default function InfosPanel() {
 				</View>
 
 				<Text style={{ color: textColor }}>
-					à {currentHabit.moment !== -1 ? currentHabit.moment : currentHabit.moment}{" "}
-					heure
+					{t("at")}{" "}
+					{currentHabit.moment !== -1 ? currentHabit.moment : currentHabit.moment}{" "}
+					{t("o_clock")}
 				</Text>
 			</View>
 
@@ -119,7 +118,7 @@ export default function InfosPanel() {
 						{t("frequency")}
 					</Text>
 				</View>
-				<View className="flex flex-row items-center justify-center w-full mt-2">
+				<View className="flex flex-row items-center justify-between w-full mt-2">
 					{Object.entries(currentHabit.frequency as any).map(([day, isActive]) => (
 						<View
 							key={day}
@@ -128,7 +127,7 @@ export default function InfosPanel() {
 									? currentHabit.color || theme.colors.primary
 									: theme.colors.background,
 							}}
-							className="rounded-full p-2 mx-1 w-11"
+							className="rounded-2xl p-2 mx-1"
 						>
 							<Text
 								style={{
@@ -136,19 +135,30 @@ export default function InfosPanel() {
 								}}
 								className="text-center"
 							>
-								{day.charAt(0).toUpperCase() + day.slice(1, 2)}
+								{t(`days_short_${day}`)}
 							</Text>
 						</View>
 					))}
 				</View>
 			</View>
+
+			<Separator />
+
+			{/* Notifications */}
+			<View className={rowStyle}>
+				<View className={rowBox}>
+					<Iconify size={24} color={textColor} icon="mdi:bell" />
+					<Text style={{ color: textColor }} className="font-semibold">
+						{t("notifications")}
+					</Text>
+				</View>
+				<Text style={{ color: textColor }}>
+					{currentHabit.reminderMoment !== -1
+						? currentHabit.reminderMoment
+						: currentHabit.reminderMoment}{" "}
+					{t("minutes_before")}
+				</Text>
+			</View>
 		</BlurView>
 	);
 }
-
-const styles = StyleSheet.create({
-	blurView: {
-		...StyleSheet.absoluteFillObject,
-		borderRadius: 10,
-	},
-});

@@ -185,5 +185,15 @@
     "level_general": "General level",
     "cosmetic_shop_description": "Your general level allows you to unlock cosmetics to customize your profile.",
     "create": "Create",
-    "no_more_logs": "No more activities"
+    "no_more_logs": "No more activities",
+    "days_short_monday": "Mon",
+    "days_short_tuesday": "Tue",
+    "days_short_wednesday": "Wed",
+    "days_short_thursday": "Thu",
+    "days_short_friday": "Fri",
+    "days_short_saturday": "Sat",
+    "days_short_sunday": "Sun",
+    "minutes_before": "minutes before",
+    "o_clock": "o'clock",
+    "at": "at"
 }

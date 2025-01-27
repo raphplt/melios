@@ -13,7 +13,6 @@ export default function Points() {
 	const { t } = useTranslation();
 	const { points, usersLevels } = useData();
 	const [helpVisible, setHelpVisible] = useState(false);
-	const [showModal, setShowModal] = useState(false);
 
 	const toggleHelp = () => {
 		setHelpVisible(!helpVisible);
@@ -26,7 +25,7 @@ export default function Points() {
 		: 0;
 
 	return (
-		<View className="relative">
+		<>
 			<TouchableOpacity
 				onPress={toggleHelp}
 				className="flex items-center flex-row rounded-full"
@@ -71,17 +70,12 @@ export default function Points() {
 				</View>
 			</TouchableOpacity>
 
-			<BottomSlideModal visible={helpVisible} setVisible={setHelpVisible}>
+			<BottomSlideModal
+				visible={helpVisible}
+				setVisible={setHelpVisible}
+				title={t("how_it_works")}
+			>
 				<View className="py-4">
-					<Text
-						style={{
-							color: theme.colors.text,
-							fontFamily: "BaskervilleBold",
-						}}
-						className="text-lg mb-4"
-					>
-						{t("how_it_works")}
-					</Text>
 					<View>
 						<View className="flex items-center justify-center py-2">
 							<Progress.Circle
@@ -103,7 +97,7 @@ export default function Points() {
 							</Text>
 						</View>
 
-						<Text style={{ color: theme.colors.textTertiary }}>
+						<Text style={{ color: theme.colors.textTertiary }} className="my-1">
 							{t("explain_levels")}
 						</Text>
 					</View>
@@ -114,7 +108,7 @@ export default function Points() {
 							</Text>
 							<MoneyMelios width={20} />
 						</View>
-						<Text style={{ color: theme.colors.textTertiary }}>
+						<Text style={{ color: theme.colors.textTertiary }} className="my-1">
 							{t("explain_melios")}
 						</Text>
 					</View>
@@ -133,6 +127,6 @@ export default function Points() {
 					</Pressable>
 				</ZoomableView>
 			</BottomSlideModal>
-		</View>
+		</>
 	);
 }

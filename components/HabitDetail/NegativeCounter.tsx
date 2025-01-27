@@ -72,7 +72,6 @@ const NegativeCounter: React.FC = () => {
 			const newTime = calculateTimeDifferences(date);
 			setTime(newTime);
 
-			// Update animations
 			secondProgress.value = withTiming(newTime.seconds);
 			minuteProgress.value = withTiming(newTime.minutes);
 			dayProgress.value = withTiming(newTime.days);
@@ -102,7 +101,7 @@ const NegativeCounter: React.FC = () => {
 	return (
 		<BlurView
 			intensity={70}
-			className="w-11/12 mx-auto p-2 rounded-xl my-1 overflow-hidden"
+			className="w-[95%] mx-auto p-2 rounded-xl my-1 overflow-hidden"
 			tint="extraLight"
 		>
 			<View className="p-4">

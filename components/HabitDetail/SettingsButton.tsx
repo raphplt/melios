@@ -96,6 +96,14 @@ export default function ButtonBack() {
 								setModalDeleteVisible(true);
 							}}
 						>
+							<Iconify icon="mdi:pencil" size={24} color={theme.colors.text} />
+						</Pressable>
+						<Pressable
+							className={buttonStyle}
+							onPress={() => {
+								setModalDeleteVisible(true);
+							}}
+						>
 							<Iconify
 								icon="mdi:trash-can"
 								size={24}
