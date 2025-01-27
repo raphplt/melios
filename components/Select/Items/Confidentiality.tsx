@@ -3,6 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import RowTitleCustom from "./RowTitleCustom";
+import { Iconify } from "react-native-iconify";
 
 type ConfidentialitySelectorProps = {
 	value: "public" | "private" | "friends";
@@ -21,6 +22,31 @@ const ConfidentialitySelectorHabit: React.FC<ConfidentialitySelectorProps> = ({
 		{ label: t("private"), value: "private" },
 		{ label: t("friends"), value: "friends" },
 	];
+
+	const renderIcon = (name: string) => {
+		switch (name) {
+			case "public":
+				return (
+					<Iconify
+						icon="mynaui:globe"
+						size={18}
+						color={theme.colors.textSecondary}
+					/>
+				);
+			case "private":
+				return (
+					<Iconify
+						icon="material-symbols:lock"
+						size={18}
+						color={theme.colors.textSecondary}
+					/>
+				);
+			case "friends":
+				return (
+					<Iconify icon="ion:people" size={18} color={theme.colors.textSecondary} />
+				);
+		}
+	};
 
 	return (
 		<>
@@ -46,9 +72,10 @@ const ConfidentialitySelectorHabit: React.FC<ConfidentialitySelectorProps> = ({
 									? theme.colors.primary
 									: theme.colors.grayPrimary,
 						}}
-						className="rounded-xl py-2 px-4 mx-1"
+						className="rounded-xl py-2 px-4 mx-1 flex flex-row items-center gap-2"
 						onPress={() => onChange(option.value as "public" | "private" | "friends")}
 					>
+						{renderIcon(option.value)}
 						<Text
 							style={{
 								color: "white",
