@@ -94,7 +94,7 @@ const useNotifications = () => {
 	const scheduleInactivityNotification = async (hours: number) => {
 		await Notifications.scheduleNotificationAsync({
 			content: {
-				title: "Nous vous manquons !",
+				title: "Vous nous manquez !",
 				body: "Revenez sur Melios pour continuer vos habitudes !",
 				sound: true,
 			},
