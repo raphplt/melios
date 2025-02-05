@@ -200,5 +200,13 @@
     "create_routine": "Create a routine",
     "routine": "Routine",
     "create_routine_description": "Create a routine to organize your habits and objectives.",
-    "create_routine_time": "It takes about 5 minutes to create a routine."
+    "create_routine_time": "It takes about 5 minutes to create a routine.",
+    "habits_recommended": "Habits recommended",
+    "create_routine_loader": "Creating routine...",
+    "add_habits": "Add habits",
+    "routine_result_description": "Following your answers, here is the routine that we propose to you. You can modify it as you wish.",
+    "skip": "Skip",
+    "selected_habits": "Selected habits",
+    "select_all": "Select all",
+    "unselect_all": "Unselect all"
 }

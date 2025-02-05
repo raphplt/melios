@@ -95,7 +95,7 @@ export default function CategoriesList() {
 
 					<Pressable
 						onPress={() => {
-							navigation.navigate("customHabit");
+							navigation.navigate("customRoutine");
 						}}
 						style={{
 							backgroundColor: theme.colors.primary,

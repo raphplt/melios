@@ -202,5 +202,13 @@
     "create_routine": "Créer une routine",
     "routine": "Routine",
     "create_routine_description": "Créez une routine pour organiser vos habitudes et objectifs.",
-    "create_routine_time": "Il faut environ 5 minutes pour créer une routine."
+    "create_routine_time": "Il faut environ 5 minutes pour créer une routine.",
+    "habits_recommended": "Habitudes recommandées",
+    "create_routine_loader": "Création de la routine...",
+    "add_habits": "Ajouter les habitudes",
+    "routine_result_description": "Selon tes réponses, voici les habitudes recommandées pour ta routine. Tu peux les modifier à ta guise.",
+    "skip": "Passer",
+    "selected_habits": "Habitudes sélectionnées",
+    "select_all": "Tout sélectionner",
+    "unselect_all": "Tout désélectionner"
 }

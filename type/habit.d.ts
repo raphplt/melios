@@ -14,6 +14,7 @@ export type Habit = {
 	reminderMoment: number;
 	confidentiality: "public" | "private" | "friends";
 	recommended: boolean;
+	keywords?: string[];
 };
 
 export type HabitType = "Positif" | "Négatif" | "Personnalisé" | "Routine";
