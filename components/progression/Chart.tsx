@@ -57,8 +57,6 @@ export default function Chart() {
 				className=" py-3 mx-auto w-[95%] my-3 rounded-xl"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
-					borderColor: theme.colors.border,
-					borderWidth: 1,
 				}}
 			>
 				<View style={{ flexDirection: "row", justifyContent: "center" }}>

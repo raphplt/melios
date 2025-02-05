@@ -196,5 +196,9 @@
     "minutes_before": "minutes before",
     "o_clock": "o'clock",
     "at": "at",
-    "the_companions_of_travel": "The Companions of Travel"
+    "the_companions_of_travel": "The Companions of Travel",
+    "create_routine": "Create a routine",
+    "routine": "Routine",
+    "create_routine_description": "Create a routine to organize your habits and objectives.",
+    "create_routine_time": "It takes about 5 minutes to create a routine."
 }

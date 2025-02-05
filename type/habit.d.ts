@@ -16,4 +16,4 @@ export type Habit = {
 	recommended: boolean;
 };
 
-export type HabitType = "Positif" | "Négatif" | "Personnalisé";
+export type HabitType = "Positif" | "Négatif" | "Personnalisé" | "Routine";

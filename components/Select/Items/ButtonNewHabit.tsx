@@ -5,9 +5,10 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useSelect } from "@context/SelectContext";
 import useIndex from "@hooks/useIndex";
+import { CategoryTypeSelect } from "@utils/category.type";
 
 export default function ButtonNewHabit() {
-	const { setCustomHabit } = useSelect();
+	const { setCustomHabit, type } = useSelect();
 	const { rotate, handlePressIn, handlePressOut } = useIndex();
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -17,8 +18,10 @@ export default function ButtonNewHabit() {
 		navigation.navigate("customHabit");
 	};
 
+	if (type === CategoryTypeSelect.routine) return null;
+
 	return (
-		<View className="flex flex-row items-center my-2">
+		<View className="flex flex-row items-center mt-4 mb-2">
 			<View
 				className="w-1/3 mx-auto my-4"
 				style={{

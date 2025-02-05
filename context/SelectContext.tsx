@@ -1,5 +1,6 @@
 import { Category } from "@type/category";
 import { Habit, HabitType } from "@type/habit";
+import { CategoryTypeSelect } from "@utils/category.type";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 export type SelectContextProps = {
@@ -14,7 +15,7 @@ export type SelectContextProps = {
 };
 
 export const SelectContext = createContext<SelectContextProps>({
-	type: "Positif",
+	type: CategoryTypeSelect.positive,
 	setType: () => {},
 	category: null,
 	setCategory: () => {},

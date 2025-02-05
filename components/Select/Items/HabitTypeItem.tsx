@@ -85,10 +85,7 @@ export default function HabitTypeBox({
 	};
 
 	return (
-		<Animated.View
-			style={[animatedStyle, { borderWidth: 2 }]}
-			className="w-[45%] rounded-xl mx-2"
-		>
+		<Animated.View style={[animatedStyle]} className="w-[30%] rounded-xl">
 			{/* Temp */}
 			{!haveSeenNegative && typeHabit === CategoryTypeSelect.negative && (
 				<View

@@ -7,4 +7,5 @@ export enum CategoryTypeSelect {
 	"positive" = "Positif",
 	"negative" = "Négatif",
 	"personalized" = "Personnalisé",
+	"routine" = "Routine",
 }

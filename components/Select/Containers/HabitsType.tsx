@@ -20,11 +20,11 @@ export default function HabitsType() {
 					color: theme.colors.text,
 					fontFamily: "BaskervilleBold",
 				}}
-				className="text-2xl mt-1 w-11/12 mx-auto"
+				className="text-xl mt-1 w-[95%] mx-auto"
 			>
 				{t("create_habit")}
 			</Text>
-			<View className="flex flex-row items-center justify-evenly w-11/12 mx-auto pt-4">
+			<View className="flex flex-row items-center justify-evenly w-full mx-auto pt-4">
 				<HabitTypeItem
 					icon={
 						<Iconify
@@ -43,7 +43,7 @@ export default function HabitsType() {
 					icon={
 						<Iconify
 							size={24}
-							icon="ic:round-back-hand"
+							icon="ant-design:stop-outlined"
 							color={type === CategoryTypeSelect.negative ? "#fff" : theme.colors.text}
 						/>
 					}
@@ -53,9 +53,23 @@ export default function HabitsType() {
 					onPress={() => setType(CategoryTypeSelect.negative)}
 					typeHabit={CategoryTypeSelect.negative}
 				/>
+				<HabitTypeItem
+					icon={
+						<Iconify
+							size={24}
+							icon="mdi:repeat"
+							color={type === CategoryTypeSelect.routine ? "#fff" : theme.colors.text}
+						/>
+					}
+					name={t("routine")}
+					bgColor={theme.colors.blueSecondary}
+					bgColorSelected={theme.colors.bluePrimary}
+					onPress={() => setType(CategoryTypeSelect.routine)}
+					typeHabit={CategoryTypeSelect.routine}
+				/>
 			</View>
 			<View
-				className="w-11/12 mx-auto mt-4 px-4 py-2 rounded-xl flex flex-col"
+				className="w-[95%] mx-auto mt-4 px-4 py-2 rounded-xl flex flex-col"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 				}}

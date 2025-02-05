@@ -24,9 +24,13 @@ export default function CategoryItem({ category }: { category: Category }) {
 		<Pressable
 			onPress={handlePress}
 			style={{ backgroundColor: lightColor || theme.colors.cardBackground }}
-			className="w-[46%] rounded-lg flex flex-row items-center justify-between py-6 px-2 my-2 mx-auto"
+			className="w-[47%] rounded-lg flex flex-row items-center justify-between py-6 px-2 my-2 mx-auto"
 		>
-			<Text style={{ color: theme.colors.text }} className=" font-bold">
+			<Text
+				style={{ color: theme.colors.text }}
+				className="font-bold w-3/4"
+				numberOfLines={1}
+			>
 				{category.category}
 			</Text>
 			<FontAwesome6
