@@ -2,6 +2,7 @@ import { ThemeContext } from "@context/ThemeContext";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useContext, useRef, forwardRef } from "react";
 import { View, Text, TextInput, Pressable, TextInputProps } from "react-native";
+import { Iconify } from "react-native-iconify";
 
 interface CustomPasswordInputProps extends TextInputProps {
 	label: string;
@@ -37,16 +38,17 @@ const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
 		return (
 			<View className="flex flex-col justify-center mt-4 mx-auto">
 				<Text
-					style={{ color: textColor || "rgb(28, 28, 30)" }}
-					className="mb-2 ml-2 font-semibold text-[15px]"
+					style={{ color: textColor || theme.colors.textTertiary }}
+					className="mb-2 ml-2"
 				>
 					{label}
 				</Text>
 				<View
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-					}}
 					className="flex flex-row items-center justify-between px-5 w-full mx-auto rounded-2xl"
+					style={{
+						borderColor: theme.colors.border,
+						borderWidth: 1,
+					}}
 				>
 					<TextInput
 						ref={ref || textInputRef}
@@ -55,14 +57,13 @@ const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
 						placeholder={placeholder}
 						secureTextEntry={!showPassword}
 						autoCapitalize="none"
-						className="w-10/12 py-4"
+						className=" py-4 mx-auto rounded-2xl w-10/12"
 						placeholderTextColor={theme.colors.grayPrimary}
 						cursorColor={theme.colors.text}
 						returnKeyType={returnKeyType}
 						{...props}
 						style={{
 							color: theme.colors.text,
-							backgroundColor: theme.colors.cardBackground,
 						}}
 					/>
 					<Pressable
@@ -72,11 +73,19 @@ const CustomPasswordInput = forwardRef<TextInput, CustomPasswordInputProps>(
 						}}
 						className="py-2 px-2"
 					>
-						<FontAwesome5
-							name={showPassword ? "eye-slash" : "eye"}
-							size={20}
-							color={theme.colors.text}
-						/>
+						{showPassword ? (
+							<Iconify
+								icon="mdi:eye-off-outline"
+								color={theme.colors.textTertiary}
+								size={24}
+							/>
+						) : (
+							<Iconify
+								icon="mdi:eye-outline"
+								color={theme.colors.textTertiary}
+								size={24}
+							/>
+						)}
 					</Pressable>
 				</View>
 			</View>

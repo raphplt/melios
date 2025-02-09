@@ -15,20 +15,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LAST_FETCH_KEY } from "./category";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
-export const createUser = async (form: any) => {
+export const createUser = async (
+	nom: string,
+	email: string,
+	password: string
+) => {
 	try {
-		const emailQuestion = form.find((item: any) => item.slug === "email");
-		const passwordQuestion = form.find((item: any) => item.slug === "password");
-
-		if (!emailQuestion || !passwordQuestion) {
+		if (!password || !email) {
 			throw new Error("Email or password question is missing in the form.");
-		}
-
-		const email = emailQuestion.answers[0]?.answer || "";
-		const password = passwordQuestion.answers[0]?.answer || "";
-
-		if (!email || !password) {
-			throw new Error("Email or password is empty.");
 		}
 
 		let userCredential;
@@ -52,31 +46,11 @@ export const createUser = async (form: any) => {
 
 		const membersCollectionRef = collection(db, "members");
 
-		const objectifs =
-			form
-				.find((item: any) => item.slug === "objectifs")
-				?.answers.flatMap((a: any) => a.map((ans: any) => ans.answer)) || [];
-		const aspects =
-			form
-				.find((item: any) => item.slug === "aspects")
-				?.answers.flatMap((a: any) => a.map((ans: any) => ans.answer)) || [];
-		const motivation =
-			form.find((item: any) => item.slug === "motivation")?.answers[0]?.answer ||
-			"";
-		const temps =
-			form.find((item: any) => item.slug === "temps")?.answers[0]?.answer || "";
-		const nom =
-			form.find((item: any) => item.slug === "nom")?.answers[0]?.answer || "";
-
 		let memberDocRef;
 		try {
 			memberDocRef = await addDoc(membersCollectionRef, {
 				uid: user.uid,
 				habits: [],
-				objectifs: objectifs,
-				aspects: aspects,
-				motivation: motivation,
-				temps: temps,
 				nom: nom,
 			});
 		} catch (error: any) {
@@ -131,14 +105,35 @@ export const disconnectUser = async () => {
 		await AsyncStorage.removeItem("habits");
 
 		const auth = getAuth();
+
+		const currentUser = auth.currentUser;
+		let isGoogleUser = false;
+		if (currentUser && currentUser.providerData) {
+			isGoogleUser = currentUser.providerData.some(
+				(provider) => provider.providerId === "google.com"
+			);
+		}
+
 		await auth.signOut();
 
-		await GoogleSignin.signOut();
-		await GoogleSignin.revokeAccess();
+		if (isGoogleUser) {
+			const googleUser = GoogleSignin.getCurrentUser();
+			if (googleUser) {
+				try {
+					await GoogleSignin.signOut();
+					await GoogleSignin.revokeAccess();
+				} catch (error) {
+					if (error instanceof Error) {
+						throw error;
+					}
+				}
+			}
+		}
 	} catch (error) {
 		console.error("Erreur lors de la déconnexion : ", error);
 	}
 };
+
 export const loginUser = async (email: string, password: string) => {
 	try {
 		const userCredential = await signInWithEmailAndPassword(

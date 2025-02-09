@@ -6,17 +6,19 @@ import {
 	Pressable,
 	ScrollView,
 	Animated,
-	TouchableOpacity,
+	StatusBar,
+	Image,
 } from "react-native";
-import { Iconify } from "react-native-iconify";
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CachedImage from "@components/Shared/CachedImage";
-import { getCachedImage } from "@db/files";
 import { useTranslation } from "react-i18next";
+import onboarding1 from "@assets/images/onboarding/onboarding1.png";
+import onboarding2 from "@assets/images/onboarding/onboarding2.png";
+import onboarding3 from "@assets/images/onboarding/onboarding3.png";
+import onboarding4 from "@assets/images/onboarding/onboarding4.png";
 
 export default function HelpModal({
 	visible,
@@ -34,26 +36,8 @@ export default function HelpModal({
 	const scrollViewRef = useRef<ScrollView>(null);
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-	const imagePaths = [
-		"images/onboarding/1.png",
-		"images/onboarding/2.png",
-		"images/onboarding/3.png",
-		"images/onboarding/4.png",
-		"images/onboarding/5.png",
-	];
-
-	const [imageUris, setImageUris] = useState<string[]>([]);
-
-	useEffect(() => {
-		const loadImages = async () => {
-			const uris = await Promise.all(
-				imagePaths.map((path) => getCachedImage(path))
-			);
-			setImageUris(uris);
-		};
-
-		loadImages();
-	}, []);
+	// Use the imported images
+	const imagePaths = [onboarding1, onboarding2, onboarding3, onboarding4];
 
 	const handleScroll = Animated.event(
 		[{ nativeEvent: { contentOffset: { x: scrollX } } }],
@@ -66,38 +50,114 @@ export default function HelpModal({
 		AsyncStorage.setItem("firstTime", "false");
 	};
 
+	const texts = [
+		{
+			title: t("habit_onboarding"),
+			description: t("habit_onboarding_description"),
+		},
+		{
+			title: t("progress_onboarding"),
+			description: t("progress_onboarding_description"),
+		},
+		{
+			title: t("reward_onboarding"),
+			description: t("reward_onboarding_description"),
+		},
+		{
+			title: t("agora_onboarding"),
+			description: t("agora_onboarding_description"),
+		},
+	];
+
 	const renderImages = () => {
-		return imageUris.map((uri, index) => (
+		return imagePaths.map((uri, index) => (
 			<View
 				key={index}
 				style={{ width, height: height - 100 }}
-				className="mx-auto flex items-center justify-center"
+				className="mx-auto flex items-center justify-evenly"
 			>
-				<CachedImage
-					imagePath={imagePaths[index]}
+				<StatusBar
+					barStyle={"light-content"}
+					backgroundColor="transparent"
+					translucent={true}
+				/>
+				<Image
+					source={uri}
+					width={500}
+					height={600}
 					style={{
-						width: width - 30,
-						height: height - 100,
+						width: width,
+						height: 500,
 						resizeMode: "contain",
 					}}
 				/>
-				{index === imageUris.length - 1 && (
-					<TouchableOpacity
+
+				{index < texts.length && (
+					<>
+						<Text
+							style={{
+								color: theme.colors.text,
+							}}
+							className="text-center mt-12 text-3xl font-bold	"
+						>
+							{texts[index].title}
+						</Text>
+						<Text
+							style={{
+								color: theme.colors.textTertiary,
+								marginTop: 10,
+								textAlign: "center",
+							}}
+							className="text-center w-10/12"
+						>
+							{texts[index].description}
+						</Text>
+					</>
+				)}
+
+				{index !== imagePaths.length - 1 ? (
+					<Pressable
+						className="py-4 px-24 rounded-xl flex flex-row items-center justify-center w-11/12 mx-auto mt-5"
 						style={{
 							backgroundColor: theme.colors.primary,
 						}}
-						className="absolute bottom-10 bg-primary py-4 px-24 rounded-3xl"
 						onPress={() => {
-							handleFinish();
+							scrollViewRef.current?.scrollTo({
+								x: width * (index + 1),
+								animated: true,
+							});
 						}}
 					>
-						<Text className="text-white text-lg font-semibold">{t("discover")}</Text>
-					</TouchableOpacity>
+						<Text
+							style={{
+								color: theme.colors.textSecondary,
+							}}
+							className="text-xl font-semibold"
+						>
+							{t("go_next")}
+						</Text>
+					</Pressable>
+				) : (
+					<Pressable
+						className="py-4 px-24 rounded-xl flex flex-row items-center justify-center w-11/12 mx-auto mt-5"
+						style={{
+							backgroundColor: theme.colors.primary,
+						}}
+						onPress={handleFinish}
+					>
+						<Text
+							style={{
+								color: theme.colors.textSecondary,
+							}}
+							className="text-xl font-semibold"
+						>
+							{t("start_now")}
+						</Text>
+					</Pressable>
 				)}
 			</View>
 		));
 	};
-
 	return (
 		<Modal
 			visible={visible}
@@ -117,12 +177,18 @@ export default function HelpModal({
 					onPress={onClose}
 					style={{
 						position: "absolute",
-						top: "6%",
+						top: "3%",
 						right: 20,
 						zIndex: 10,
 					}}
 				>
-					<Iconify icon="mdi:close" size={30} color={theme.colors.text} />
+					<Text
+						style={{
+							color: theme.colors.textTertiary,
+						}}
+					>
+						{t("skip")}
+					</Text>
 				</Pressable>
 
 				<ScrollView
@@ -144,7 +210,7 @@ export default function HelpModal({
 						alignSelf: "center",
 					}}
 				>
-					{imageUris.map((_, index) => {
+					{imagePaths.map((_, index) => {
 						const opacity = scrollX.interpolate({
 							inputRange: [(index - 1) * width, index * width, (index + 1) * width],
 							outputRange: [0.3, 1, 0.3],

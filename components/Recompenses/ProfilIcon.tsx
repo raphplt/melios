@@ -34,7 +34,17 @@ export default function ProfilIcon({
 	useEffect(() => {
 		const fetchIcon = async () => {
 			try {
-				const path = getIcon(cosmetic.slug);
+				if (
+					cosmetic.slug === undefined ||
+					cosmetic.slug === "" ||
+					cosmetic.slug === "undefined" ||
+					!cosmetic.slug ||
+					cosmetic.slug == null
+				) {
+					const path = getIcon("man");
+					setIconPath(path);
+				}
+				const path = getIcon(cosmetic?.slug ?? "man");
 				setIconPath(path);
 			} catch (error) {
 				console.error("Failed to fetch icon:", error);

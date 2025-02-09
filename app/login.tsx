@@ -2,11 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import {
 	View,
 	ScrollView,
-	ImageBackground,
 	StatusBar,
 	Text,
 	Image,
 	TouchableOpacity,
+	Dimensions,
+	ImageBackground,
+	Pressable,
+	ActivityIndicator,
 } from "react-native";
 import {
 	ParamListBase,
@@ -14,9 +17,7 @@ import {
 	useIsFocused,
 } from "@react-navigation/native";
 import { Iconify } from "react-native-iconify";
-import { BlurView } from "expo-blur";
 
-//Custom imports
 import CustomTextInput from "@components/Shared/CustomTextInput";
 import CustomPasswordInput from "@components/Shared/CustomPasswordInput";
 import { useSession } from "@context/UserContext";
@@ -27,20 +28,15 @@ import { User } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HelpModal from "@components/Modals/HelpModal";
 import { useTheme } from "@context/ThemeContext";
-import { getCachedImage } from "@db/files";
 import { useHabits } from "@context/HabitsContext";
 import { useTranslation } from "react-i18next";
-import {
-	GoogleSignin,
-	GoogleSigninButton,
-} from "@react-native-google-signin/google-signin";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
 	getAuth,
 	signInWithCredential,
 	GoogleAuthProvider,
 } from "firebase/auth";
 import { useNavigation } from "expo-router";
-import { loginOrCreateGoogleUser } from "@db/googleLogin";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -48,18 +44,17 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 	const scrollViewRef = useRef<ScrollView>(null);
 	const passwordInputRef = useRef(null);
 	const isFocused = useIsFocused();
 	const { t } = useTranslation();
-
 	const { user, isLoading } = useSession();
 	const { refreshCategories, refreshHabits } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [loadingLogin, setLoadingLogin] = useState(false);
 
 	useEffect(() => {
-		console.log("Login screen mounted", process.env.EXPO_PUBLIC_WEB_CLIENT_ID);
 		GoogleSignin.configure({
 			webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
 		});
@@ -67,27 +62,20 @@ export default function Login() {
 
 	const signInWithGoogle = async () => {
 		try {
-			// Vérifiez si les Play Services sont disponibles (Android)
 			await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-
-			// Demandez à l'utilisateur de se connecter à Google
 			await GoogleSignin.signIn();
 
-			// Récupérez les tokens après la connexion
 			const { idToken } = await GoogleSignin.getTokens();
 
-			// Créez une credential Firebase avec l'idToken
 			const googleCredential = GoogleAuthProvider.credential(idToken);
 
-			// Connexion à Firebase
 			const auth = getAuth();
-			const userCredential = await signInWithCredential(auth, googleCredential);
+			await signInWithCredential(auth, googleCredential);
 
-			// Redirection ou rafraîchissement
 			navigation.navigate("(navbar)");
 		} catch (error) {
 			console.error("Erreur Google Signin:", error);
-			setError("Erreur Google Signin");
+			// setError("Erreur Google Signin");
 		}
 	};
 
@@ -126,15 +114,13 @@ export default function Login() {
 				refreshHabits(true);
 			}
 		} catch (error) {
-			setError("Erreur lors d e la connexion.");
+			setError("Erreur lors de la connexion.");
 		} finally {
 			setLoadingLogin(false);
 		}
 	};
 
 	const isDisabled = email === "" || password === "";
-
-	const [showModal, setShowModal] = useState(false);
 
 	useEffect(() => {
 		const checkFirstTime = async () => {
@@ -146,26 +132,6 @@ export default function Login() {
 		};
 
 		checkFirstTime();
-	}, []);
-
-	const [image, setImage] = useState<string | null>("images/fallback.png");
-
-	useEffect(() => {
-		let isMounted = true;
-		const fetchImage = async () => {
-			try {
-				const localUri = await getCachedImage(`images/illustrations/login-bg.jpg`);
-				if (isMounted) setImage(localUri);
-			} catch (error) {
-				console.error("Failed to fetch image:", error);
-			}
-		};
-
-		fetchImage();
-
-		return () => {
-			isMounted = false;
-		};
 	}, []);
 
 	if (showModal) {
@@ -194,129 +160,154 @@ export default function Login() {
 				barStyle="light-content"
 			/>
 			<ImageBackground
-				source={image ? { uri: image } : undefined}
-				resizeMode="cover"
+				source={require("@assets/images/onboarding/login.png")}
 				style={{
-					flex: 1,
-					justifyContent: "center",
+					width: Dimensions.get("window").width,
+					height: 300,
+				}}
+				className="flex flex-col justify-center items-start p-5"
+			>
+				<Text
+					style={{
+						color: "white",
+						fontSize: 32,
+						fontWeight: "bold",
+					}}
+					className="mb-2"
+				>
+					{t("sign_in_to_your_account")}
+				</Text>
+				<Text
+					style={{
+						color: "#f1f1f1",
+					}}
+					className=" w-10/12"
+				>
+					{t("sign_in_to_your_account_description")}
+				</Text>
+			</ImageBackground>
+
+			<View className="flex flex-col items-center w-full py-3 rounded-xl">
+				<View className="flex flex-col justify-center items-start w-11/12 mt-3">
+					<CustomTextInput
+						label={t("email")}
+						placeholder="melios@gmail.com"
+						value={email}
+						onChangeText={setEmail}
+						keyboardType="email-address"
+						autoCapitalize="none"
+						autoCorrect={false}
+						onSubmitEditing={() =>
+							passwordInputRef.current && (passwordInputRef.current as any).focus()
+						}
+						returnKeyType="next"
+					/>
+					<CustomPasswordInput
+						ref={passwordInputRef}
+						onChangeText={setPassword}
+						label={t("password")}
+						placeholder="********"
+						value={password}
+						showPassword={showPassword}
+						setShowPassword={setShowPassword}
+						secureTextEntry={!showPassword}
+						onSubmitEditing={login}
+						returnKeyType="done"
+					/>
+					<TouchableOpacity className="flex flex-row items-end justify-end w-full">
+						<Text
+							style={{
+								color: theme.colors.primary,
+							}}
+							className="mt-4 mx-2 font-bold text-end"
+							onPress={() => navigation.navigate("resetPassword")}
+						>
+							{t("forget_password_question")}
+						</Text>
+					</TouchableOpacity>
+				</View>
+
+				<Pressable
+					disabled={isDisabled}
+					onPress={login}
+					style={{
+						backgroundColor: isDisabled
+							? theme.colors.grayPrimary
+							: theme.colors.primary,
+					}}
+					className="w-11/12 mx-auto py-4 rounded-xl focus:bg-blue-800 mt-6 flex items-center"
+				>
+					{loadingLogin ? (
+						<ActivityIndicator size="small" color={"#F8F9FF"} />
+					) : (
+						<Text
+							style={{ color: "#F8F9FF" }}
+							className="text-[18px] text-center font-semibold"
+						>
+							{t("login_bis")}
+						</Text>
+					)}
+				</Pressable>
+
+				<View className="flex flex-row items-center justify-center w-full py-8">
+					<View
+						className="h-0.5 w-1/3"
+						style={{ backgroundColor: theme.colors.border }}
+					/>
+					<Text className="mx-2" style={{ color: theme.colors.textTertiary }}>
+						{t("or")}
+					</Text>
+					<View
+						className="h-0.5 w-1/3"
+						style={{ backgroundColor: theme.colors.border }}
+					/>
+				</View>
+
+				<View
+					className="mx-auto rounded-2xl my-3 p-3 flex flex-row items-center w-full"
+					style={{
+						backgroundColor: theme.colors.redSecondary,
+						display: error === "" ? "none" : "flex",
+					}}
+				>
+					<Iconify
+						icon="material-symbols:error"
+						color={theme.colors.redPrimary}
+						size={20}
+					/>
+					<Text
+						style={{
+							color: theme.colors.redPrimary,
+						}}
+						className="ml-2"
+					>
+						{error}
+					</Text>
+				</View>
+			</View>
+
+			<Pressable
+				onPress={signInWithGoogle}
+				className="py-4 rounded-xl mt-3 items-center justify-center flex flex-row w-11/12 mx-auto gap-4"
+				style={{
+					borderColor: theme.colors.border,
+					borderWidth: 1,
 				}}
 			>
-				<BlurView
-					intensity={70}
-					className="w-11/12 mx-auto p-6 rounded-xl py-8"
-					style={{
-						overflow: "hidden",
-					}}
-					tint="light"
+				<Iconify icon="devicon:google" color={theme.colors.text} size={20} />
+				<Text
+					style={{ color: theme.colors.text }}
+					className=" text-center font-semibold"
 				>
-					<View className="flex flex-col items-center w-full py-3 rounded-xl">
-						<Image
-							source={require("../assets/images/icon.png")}
-							style={{ width: 100, height: 100 }}
-							className="mb-4"
-						/>
-						<View className="flex flex-col justify-center items-center w-full">
-							<Text style={{ color: "rgb(28, 28, 30)" }} className="text-3xl">
-								{t("welcome_back_to")}
-							</Text>
-							<Text
-								style={{ color: "rgb(28, 28, 30)" }}
-								className="text-3xl font-bold"
-							>
-								Melios
-							</Text>
-						</View>
-						<View className="flex flex-col justify-center items-start w-full mt-3">
-							<CustomTextInput
-								label="Votre email"
-								placeholder="melios@gmail.com"
-								value={email}
-								onChangeText={setEmail}
-								keyboardType="email-address"
-								autoCapitalize="none"
-								autoCorrect={false}
-								// onFocus={() => {
-								// 	scrollViewRef.current?.scrollToEnd({ animated: true });
-								// }}
-								onSubmitEditing={() =>
-									passwordInputRef.current && (passwordInputRef.current as any).focus()
-								}
-								returnKeyType="next"
-							/>
-							<CustomPasswordInput
-								ref={passwordInputRef}
-								onChangeText={setPassword}
-								label="Votre mot de passe"
-								placeholder="********"
-								value={password}
-								showPassword={showPassword}
-								setShowPassword={setShowPassword}
-								secureTextEntry={!showPassword}
-								// onFocus={() => {
-								// 	scrollViewRef.current?.scrollToEnd({ animated: true });
-								// }}
-								onSubmitEditing={login}
-								returnKeyType="done"
-							/>
-							<TouchableOpacity>
-								<Text
-									style={{
-										color: theme.colors.primary,
-									}}
-									className="mt-1 ml-2"
-									onPress={() => navigation.navigate("resetPassword")}
-								>
-									{t("forget_password_question")}
-								</Text>
-							</TouchableOpacity>
-						</View>
+					{t("sign_in_with_google")}
+				</Text>
+			</Pressable>
 
-						<ButtonLogin
-							login={login}
-							isDisabled={isDisabled}
-							isLoading={loadingLogin}
-						/>
-
-						<View
-							className="mx-auto rounded-2xl my-4 p-3 flex flex-row items-center w-full"
-							style={{
-								backgroundColor: theme.colors.redSecondary,
-								display: error === "" ? "none" : "flex",
-							}}
-						>
-							<Iconify
-								icon="material-symbols:error"
-								color={theme.colors.redPrimary}
-								size={20}
-							/>
-							<Text
-								style={{
-									color: theme.colors.redPrimary,
-								}}
-								className="ml-2"
-							>
-								{error}
-							</Text>
-						</View>
-					</View>
-
-					<GoogleSigninButton
-						style={{
-							width: 200,
-							height: 54,
-							alignSelf: "center",
-							marginTop: 20,
-						}}
-						size={GoogleSigninButton.Size.Wide}
-						color={GoogleSigninButton.Color.Dark}
-						onPress={signInWithGoogle}
-					/>
-				</BlurView>
-				<ButtonNavigate
-					text={t("no_account")}
-					onPress={() => navigation.navigate("register")}
-				/>
-			</ImageBackground>
+			<ButtonNavigate
+				text={t("no_account")}
+				text2={t("register")}
+				onPress={() => navigation.navigate("register")}
+			/>
 		</ScrollView>
 	);
 }

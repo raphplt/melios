@@ -106,7 +106,7 @@ const FriendPreview = () => {
 							}}
 						>
 							<CachedImage
-								imagePath={`images/cosmetics/${friend.profilePicture}.png`}
+								imagePath={`images/cosmetics/${friend.profilePicture ?? "man"}.png`}
 								style={{
 									width: 70,
 									height: 70,

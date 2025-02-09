@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View, Text, TextInput, TextInputProps } from "react-native";
-import { ThemeContext } from "@context/ThemeContext";
+import { ThemeContext, useTheme } from "@context/ThemeContext";
 
 interface CustomTextInputProps extends TextInputProps {
 	label: string;
@@ -29,13 +29,13 @@ export default function CustomTextInput({
 	autoFocus,
 	...props
 }: CustomTextInputProps) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 
 	return (
 		<View className="flex flex-col justify-center w-full mt-5 mx-auto">
 			<Text
-				style={{ color: textColor || "rgb(28, 28, 30)" }}
-				className="mb-2 ml-2 font-semibold text-[16px]"
+				style={{ color: textColor || theme.colors.textTertiary }}
+				className="mb-2 ml-2"
 			>
 				{label}
 			</Text>
@@ -50,7 +50,8 @@ export default function CustomTextInput({
 				onFocus={onFocus}
 				style={{
 					color: theme.colors.text,
-					backgroundColor: theme.colors.cardBackground,
+					borderColor: theme.colors.border,
+					borderWidth: 1,
 				}}
 				className="px-5 py-4 w-full mx-auto rounded-2xl"
 				placeholderTextColor={theme.colors.grayPrimary}
