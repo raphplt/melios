@@ -230,5 +230,7 @@
     "i_register": "Je m'inscris",
     "sign_up_to_your_account_description": "Inscrivez-vous pour accéder à Melios et rejoindre une communauté de personnes motivées.",
     "pseudo": "Pseudo",
-    "repeat_password": "Répéter le mot de passe"
+    "repeat_password": "Répéter le mot de passe",
+    "next_level_reward": "Récompense du prochain niveau",
+    "you_won": "Vous avez gagné"
 }

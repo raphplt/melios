@@ -1,12 +1,22 @@
 import Tasks from "@components/Levels/Tasks";
 import ButtonClose from "@components/Shared/ButtonClose";
+import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { lightenColor } from "@utils/colors";
+import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, Platform, StatusBar, ScrollView } from "react-native";
+import {
+	Text,
+	View,
+	Platform,
+	StatusBar,
+	ScrollView,
+	Dimensions,
+} from "react-native";
 import * as Progress from "react-native-progress";
 
 const LevelDetail = () => {
@@ -22,6 +32,7 @@ const LevelDetail = () => {
 				backgroundColor: theme.colors.background,
 				flexGrow: 1,
 			}}
+			showsVerticalScrollIndicator={false}
 		>
 			<StatusBar
 				barStyle={theme.dark ? "light-content" : "dark-content"}
@@ -37,7 +48,7 @@ const LevelDetail = () => {
 
 			<LinearGradient
 				colors={[
-					selectedLevel.color || theme.colors.primary,
+					lightenColor(selectedLevel.color, 0.7) || theme.colors.primary,
 					theme.colors.background,
 				]}
 				style={{
@@ -46,17 +57,16 @@ const LevelDetail = () => {
 					top: 0,
 					left: 0,
 					right: 0,
-					height: 300,
+					height: Dimensions.get("window").height * 0.5,
 					width: "100%",
 				}}
-			></LinearGradient>
-			<View
-				className="flex flex-col items-center justify-center w-11/12 mx-auto rounded-xl py-8"
+			/>
+			<BlurView
+				className="flex flex-col items-center justify-center w-11/12 mx-auto rounded-xl py-6 gap-1"
 				style={{
-					backgroundColor: theme.colors.background,
-					borderColor: theme.colors.border,
-					borderWidth: 1,
+					overflow: "hidden",
 				}}
+				intensity={100}
 			>
 				<FontAwesome6
 					name={selectedLevel.icon}
@@ -97,30 +107,50 @@ const LevelDetail = () => {
 					</Text>
 				</View>
 
-				<View className="mt-2 flex flex-row w-10/12 mb-2 justify-between items-center">
+				<View className="mt-2 flex flex-row w-10/12 mb-1 justify-between items-center">
 					<Text
 						className="font-semibold"
 						style={{
-							color: theme.colors.text,
+							color: theme.colors.textTertiary,
 						}}
 					>
 						{t("xp")}
 					</Text>
-					<Text className="font-semibold">
+					<Text
+						className="font-semibold"
+						style={{
+							color: theme.colors.textTertiary,
+						}}
+					>
 						{selectedLevel.currentXp} / {selectedLevel.nextLevelXp}
 					</Text>
 				</View>
 				<Progress.Bar
 					progress={selectedLevel.currentXp / selectedLevel.nextLevelXp}
 					height={12}
-					width={300}
+					width={Dimensions.get("window").width * 0.8}
 					unfilledColor={theme.colors.border}
 					borderColor="transparent"
 					borderWidth={0}
 					borderRadius={10}
 					color={selectedLevel.color || theme.colors.primary}
 				/>
-			</View>
+
+				<View className="my-3 flex flex-row w-10/12 justify-between items-center">
+					<Text
+						className="font-semibold"
+						style={{
+							color: theme.colors.textTertiary,
+						}}
+					>
+						{t("next_level_reward")} :
+					</Text>
+					<View className="flex flex-row items-center gap-2">
+						<Text className="font-semibold">{selectedLevel.currentLevel + 2}</Text>
+						<MoneyMelios width={22} />
+					</View>
+				</View>
+			</BlurView>
 
 			<Tasks />
 		</ScrollView>

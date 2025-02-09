@@ -32,7 +32,7 @@ const Tasks = () => {
 	});
 
 	return (
-		<View>
+		<View className="mb-10">
 			<Text
 				className="text-lg font-semibold mt-5 mb-2 mx-auto w-10/12 py-3"
 				style={{

@@ -6,6 +6,7 @@ import { CombinedLevel } from "@type/levels";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import ConfettiCannon from "react-native-confetti-cannon";
+import MoneyMelios from "@components/Svg/MoneyMelios";
 
 type Props = {
 	visible: boolean;
@@ -23,7 +24,7 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 
 	useEffect(() => {
 		if (visible) {
-			setShowConfetti(true); // Activer les confettis
+			setShowConfetti(true);
 			Animated.timing(animatedProgress, {
 				toValue: 100,
 				duration: 1500,
@@ -32,7 +33,7 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 				setProgress(100);
 			});
 		} else {
-			setShowConfetti(false); // Désactiver les confettis
+			setShowConfetti(false);
 			Animated.timing(animatedProgress, {
 				toValue: 0,
 				duration: 500,
@@ -42,11 +43,6 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 			});
 		}
 	}, [visible]);
-
-	const progressBarWidth = animatedProgress.interpolate({
-		inputRange: [0, 100],
-		outputRange: ["0%", "100%"],
-	});
 
 	if (!levelData) return null;
 
@@ -112,6 +108,21 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 				<Text className="text-sm text-gray-500">
 					{t("progression")}: {progress}%
 				</Text>
+
+				<View className="my-3 flex flex-row w-10/12 justify-between items-center">
+					<Text
+						className="font-semibold"
+						style={{
+							color: theme.colors.textTertiary,
+						}}
+					>
+						{t("you_won")} :
+					</Text>
+					<View className="flex flex-row items-center gap-2">
+						<Text className="font-semibold">{levelData.currentLevel + 2}</Text>
+						<MoneyMelios width={22} />
+					</View>
+				</View>
 			</View>
 		</ModalWrapper>
 	);
