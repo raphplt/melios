@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import {
-	NavigationContainer,
 	NavigationProp,
 	ParamListBase,
 	ThemeProvider,
@@ -22,7 +21,6 @@ import "../global.css";
 import { useTranslation } from "react-i18next";
 import { StatusBar } from "expo-status-bar";
 import notifee from "@notifee/react-native";
-import { useNotificationConfig } from "@hooks/useNotifee";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -63,14 +61,6 @@ function MainNavigator() {
 			return newTheme;
 		});
 	};
-
-	notifee.registerForegroundService(() => {
-		return new Promise(() => {
-			// Ajouter des tâches spécifiques si nécessaire
-		});
-	});
-
-	useNotificationConfig();
 
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -212,9 +202,9 @@ function RootLayoutContent() {
 export default function RootLayout() {
 	return (
 		<SessionProvider>
-			<NavigationContainer>
-				<RootLayoutContent />
-			</NavigationContainer>
+			{/* <NavigationContainer> */}
+			<RootLayoutContent />
+			{/* </NavigationContainer> */}
 		</SessionProvider>
 	);
 }

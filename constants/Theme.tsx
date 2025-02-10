@@ -31,6 +31,24 @@ const DefaultTheme: Theme = {
 		purpleSecondary: "#E5D1F7",
 		grayPrimary: "#B0B0B0",
 	},
+	fonts: {
+		regular: {
+			fontFamily: "Baskerville",
+			fontWeight: "normal",
+		},
+		medium: {
+			fontFamily: "Baskerville",
+			fontWeight: "500",
+		},
+		bold: {
+			fontFamily: "BaskervilleBold",
+			fontWeight: "bold",
+		},
+		heavy: {
+			fontFamily: "BaskervilleBold",
+			fontWeight: "900",
+		},
+	},
 };
 
 const DarkTheme: Theme = {
@@ -63,6 +81,24 @@ const DarkTheme: Theme = {
 		purplePrimary: "#955CD3",
 		purpleSecondary: "#F5EAFB",
 		grayPrimary: "#808080",
+	},
+	fonts: {
+		regular: {
+			fontFamily: "Baskerville",
+			fontWeight: "normal",
+		},
+		medium: {
+			fontFamily: "Baskerville",
+			fontWeight: "500",
+		},
+		bold: {
+			fontFamily: "BaskervilleBold",
+			fontWeight: "bold",
+		},
+		heavy: {
+			fontFamily: "BaskervilleBold",
+			fontWeight: "900",
+		},
 	},
 };
 

@@ -30,4 +30,10 @@ export type Theme = {
 		purpleSecondary: string;
 		grayPrimary: string;
 	};
+	fonts: {
+		regular: FontStyle;
+		medium: FontStyle;
+		bold: FontStyle;
+		heavy: FontStyle;
+	};
 };
