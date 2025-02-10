@@ -16,14 +16,12 @@ import Animated, {
 export default function HabitTypeBox({
 	icon,
 	name,
-	bgColor,
 	bgColorSelected,
 	typeHabit,
 	onPress,
 }: {
 	icon: ReactNode;
 	name: string;
-	bgColor?: string;
 	bgColorSelected?: string;
 	typeHabit: string;
 	onPress?: () => void;
@@ -34,13 +32,18 @@ export default function HabitTypeBox({
 	const borderColor = useSharedValue(theme.colors.border);
 	const textColor = useSharedValue(theme.colors.text);
 	const [haveSeenNegative, setHaveSeenNegative] = useState(false);
+	const [haveSeenRoutine, setHaveSeenRoutine] = useState(false);
 	const { t } = useTranslation();
 
 	useEffect(() => {
 		const fetchLocalNew = async () => {
-			const newHabit = await AsyncStorage.getItem("haveSeenNegative");
-			if (newHabit) {
+			const newHabitNegative = await AsyncStorage.getItem("haveSeenNegative");
+			if (newHabitNegative) {
 				setHaveSeenNegative(true);
+			}
+			const newHabitRoutine = await AsyncStorage.getItem("haveSeenRoutine");
+			if (newHabitRoutine) {
+				setHaveSeenRoutine(true);
 			}
 		};
 		fetchLocalNew();
@@ -79,6 +82,10 @@ export default function HabitTypeBox({
 			AsyncStorage.setItem("haveSeenNegative", "true");
 			setHaveSeenNegative(true);
 		}
+		if (typeHabit === CategoryTypeSelect.routine) {
+			AsyncStorage.setItem("haveSeenRoutine", "true");
+			setHaveSeenRoutine(true);
+		}
 		if (onPress) {
 			onPress();
 		}
@@ -92,6 +99,16 @@ export default function HabitTypeBox({
 					className="absolute top-1 right-1 px-2 py-1 rounded-xl"
 					style={{
 						backgroundColor: theme.colors.redPrimary,
+					}}
+				>
+					<Text className="text-white text-xs font-semibold">{t("new")}</Text>
+				</View>
+			)}
+			{!haveSeenRoutine && typeHabit === CategoryTypeSelect.routine && (
+				<View
+					className="absolute top-1 right-1 px-2 py-1 rounded-xl"
+					style={{
+						backgroundColor: theme.colors.bluePrimary,
 					}}
 				>
 					<Text className="text-white text-xs font-semibold">{t("new")}</Text>

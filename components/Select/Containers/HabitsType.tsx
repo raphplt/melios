@@ -34,7 +34,6 @@ export default function HabitsType() {
 						/>
 					}
 					name={t("positive")}
-					bgColor={theme.colors.greenSecondary}
 					bgColorSelected={theme.colors.greenPrimary}
 					onPress={() => setType(CategoryTypeSelect.positive)}
 					typeHabit={CategoryTypeSelect.positive}
@@ -48,7 +47,6 @@ export default function HabitsType() {
 						/>
 					}
 					name={t("negative")}
-					bgColor={theme.colors.redSecondary}
 					bgColorSelected={theme.colors.redPrimary}
 					onPress={() => setType(CategoryTypeSelect.negative)}
 					typeHabit={CategoryTypeSelect.negative}
@@ -62,7 +60,6 @@ export default function HabitsType() {
 						/>
 					}
 					name={t("routine")}
-					bgColor={theme.colors.blueSecondary}
 					bgColorSelected={theme.colors.bluePrimary}
 					onPress={() => setType(CategoryTypeSelect.routine)}
 					typeHabit={CategoryTypeSelect.routine}
