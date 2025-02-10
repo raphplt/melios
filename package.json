@@ -83,7 +83,6 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@types/react": "~18.3.12",
-    "@types/react-native": "^0.72.6",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/tinycolor2": "^1.4.6",
     "depcheck": "^1.4.7",
