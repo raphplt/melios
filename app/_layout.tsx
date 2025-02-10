@@ -20,7 +20,6 @@ import "../i18n";
 import "../global.css";
 import { useTranslation } from "react-i18next";
 import { StatusBar } from "expo-status-bar";
-import notifee from "@notifee/react-native";
 
 export { ErrorBoundary } from "expo-router";
 

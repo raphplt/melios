@@ -34,17 +34,15 @@ const useHabitTimer = () => {
 			setIsTimerActive(true);
 			setIsTimerVisible(true);
 
-			await notifee.displayNotification({
-				title: habit.name,
-				body: "Le timer est en cours...",
-				android: {
-					channelId: "foreground_service",
-					asForegroundService: true,
-					color: AndroidColor.GREEN,
-				},
-			});
-
-			console.log("startTimer");
+			// await notifee.displayNotification({
+			// 	title: habit.name,
+			// 	body: "Le timer est en cours...",
+			// 	android: {
+			// 		channelId: "foreground_service",
+			// 		asForegroundService: true,
+			// 		color: AndroidColor.GREEN,
+			// 	},
+			// });
 
 			timerRef.current = setInterval(() => {
 				setTimerSeconds((prevSeconds) => {
@@ -67,7 +65,7 @@ const useHabitTimer = () => {
 			timerRef.current = null;
 		}
 
-		await notifee.stopForegroundService();
+		// await notifee.stopForegroundService();
 
 		setIsTimerActive(false);
 		setIsTimerVisible(false);

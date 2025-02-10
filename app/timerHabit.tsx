@@ -12,7 +12,7 @@ import { SoundProvider } from "@context/SoundContext";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { FontAwesome6 } from "@expo/vector-icons";
-import notifee, { AndroidColor } from "@notifee/react-native";
+// import notifee, { AndroidColor } from "@notifee/react-native";
 
 export default function TimerHabit() {
 	const { currentHabit } = useHabits();
@@ -65,23 +65,23 @@ export default function TimerHabit() {
 		return unsubscribe;
 	}, [navigation, quitHabit]);
 
-	useEffect(() => {
-		const subscription = AppState.addEventListener("change", async (state) => {
-			if (state === "background" && currentHabit) {
-				await notifee.displayNotification({
-					title: currentHabit.name,
-					body: "Le timer est toujours actif.",
-					android: {
-						channelId: "foreground_service",
-						asForegroundService: true,
-						color: AndroidColor.RED,
-					},
-				});
-			}
-		});
+	// useEffect(() => {
+	// 	const subscription = AppState.addEventListener("change", async (state) => {
+	// 		if (state === "background" && currentHabit) {
+	// 			await notifee.displayNotification({
+	// 				title: currentHabit.name,
+	// 				body: "Le timer est toujours actif.",
+	// 				android: {
+	// 					channelId: "foreground_service",
+	// 					asForegroundService: true,
+	// 					color: AndroidColor.RED,
+	// 				},
+	// 			});
+	// 		}
+	// 	});
 
-		return () => subscription.remove();
-	}, [currentHabit]);
+	// 	return () => subscription.remove();
+	// }, [currentHabit]);
 
 	return (
 		<SoundProvider>
