@@ -1,8 +1,9 @@
 import EditButton from "@components/Shared/EditButton";
-import { View, TextInput, Pressable, Keyboard } from "react-native";
+import { View, TextInput, Pressable, Keyboard, Text } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useSelect } from "@context/SelectContext";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export default function HabitTitle({
 	register,
@@ -12,6 +13,7 @@ export default function HabitTitle({
 	setIsEditingDescription,
 	setFocus,
 	setValue,
+	errors,
 }: {
 	register: any;
 	isEditingName: boolean;
@@ -20,9 +22,11 @@ export default function HabitTitle({
 	setIsEditingDescription: (value: boolean) => void;
 	setFocus: any;
 	setValue: any;
+	errors: any;
 }) {
 	const { theme } = useTheme();
 	const { habit } = useSelect();
+	const { t } = useTranslation();
 
 	const toggleFocus = (
 		fieldName: string,
@@ -40,13 +44,13 @@ export default function HabitTitle({
 
 	return (
 		<>
-			<View className="flex flex-row items-center justify-between">
+			<View className="flex flex-row items-center justify-between w-[95%] mx-auto">
 				<TextInput
 					style={{
 						color: theme.colors.text,
 					}}
 					className="text-2xl font-semibold w-10/12"
-					placeholder={"Nom de l'habitude"}
+					placeholder={t("habit_name")}
 					placeholderTextColor={theme.colors.textTertiary}
 					{...register("name")}
 					onFocus={() => setIsEditingName(true)}
@@ -60,9 +64,10 @@ export default function HabitTitle({
 					<EditButton isEditing={isEditingName} />
 				</Pressable>
 			</View>
+			{errors.name && <Text style={{ color: "red" }}>{errors.name.message}</Text>}
 
 			<View
-				className="rounded-xl px-4 py-2 pb-3 mt-5 flex flex-row items-center justify-between"
+				className="rounded-lg px-4 py-2 pb-3 mt-4 flex flex-row items-center justify-between w-full mx-auto"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 
@@ -77,8 +82,8 @@ export default function HabitTitle({
 					style={{
 						color: theme.colors.text,
 					}}
-					className="w-10/12 font-semibold"
-					placeholder={"Entrez une description"}
+					className="w-10/12"
+					placeholder={t("set_a_description")}
 					{...register("description")}
 					onFocus={() => setIsEditingDescription(true)}
 					onBlur={() => setIsEditingDescription(false)}
@@ -93,7 +98,11 @@ export default function HabitTitle({
 					onPress={() =>
 						toggleFocus("description", isEditingDescription, setIsEditingDescription)
 					}
-				></Pressable>
+				/>
+
+				{errors.description && (
+					<Text style={{ color: "red" }}>{errors.description.message}</Text>
+				)}
 			</View>
 		</>
 	);

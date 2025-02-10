@@ -8,6 +8,12 @@ import { Iconify } from "react-native-iconify";
 import RowTitleCustom from "../Items/RowTitleCustom";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import Animated, {
+	useSharedValue,
+	useAnimatedStyle,
+	withTiming,
+	interpolateColor,
+} from "react-native-reanimated";
 
 export default function HabitMoment({
 	setValue,
@@ -20,17 +26,55 @@ export default function HabitMoment({
 	const { habit } = useSelect();
 	const { t } = useTranslation();
 
-	const blockStyle =
-		"flex flex-row items-center justify-evenly flex-1 rounded-2xl mx-2";
-
 	const [selectedMoment, setSelectedMoment] = useState(habit?.moment || -1);
 	const [visible, setVisible] = useState(false);
 	const [customMoment, setCustomMoment] = useState<Date | null>(null);
 	const [isCustom, setIsCustom] = useState(false);
 
+	// Création d'une valeur partagée pour chaque bloc
+	const progressCustom = useSharedValue(customMoment ? 1 : 0);
+	const progressFree = useSharedValue(
+		selectedMoment === -1 && !customMoment ? 1 : 0
+	);
+	const progressMorning = useSharedValue(
+		selectedMoment >= 6 && selectedMoment < 12 && !customMoment ? 1 : 0
+	);
+	const progressAfternoon = useSharedValue(
+		selectedMoment >= 12 && selectedMoment < 18 && !customMoment ? 1 : 0
+	);
+	const progressEvening = useSharedValue(
+		selectedMoment >= 18 && selectedMoment < 24 && !customMoment ? 1 : 0
+	);
+
 	useEffect(() => {
 		setValue("moment", selectedMoment);
 	}, [selectedMoment, setValue]);
+
+	// À chaque modification de l'état, on anime les valeurs partagées
+	useEffect(() => {
+		progressCustom.value = withTiming(customMoment ? 1 : 0, { duration: 300 });
+		progressFree.value = withTiming(
+			selectedMoment === -1 && !customMoment ? 1 : 0,
+			{ duration: 300 }
+		);
+		progressMorning.value = withTiming(
+			selectedMoment >= 6 && selectedMoment < 12 && !customMoment ? 1 : 0,
+			{ duration: 300 }
+		);
+		progressAfternoon.value = withTiming(
+			selectedMoment >= 12 && selectedMoment < 18 && !customMoment ? 1 : 0,
+			{ duration: 300 }
+		);
+		progressEvening.value = withTiming(
+			selectedMoment >= 18 && selectedMoment < 24 && !customMoment ? 1 : 0,
+			{ duration: 300 }
+		);
+	}, [
+		selectedMoment,
+		customMoment,
+		theme.colors.primary,
+		theme.colors.cardBackground,
+	]);
 
 	const resetCustomMoment = () => {
 		setCustomMoment(null);
@@ -49,33 +93,70 @@ export default function HabitMoment({
 		setIsCustom(true);
 	};
 
+	const blockStyle =
+		"flex flex-row items-center justify-evenly flex-1 rounded-xl mx-2";
 	const itemStyle =
-		"w-full flex flex-row items-center justify-between px-3 py-2 rounded-2xl";
+		"w-full flex flex-row items-center justify-between px-3 py-2 rounded-xl";
+
+	// Styles animés pour chaque bloc grâce à leur valeur partagée
+	const animatedStyleCustom = useAnimatedStyle(() => ({
+		backgroundColor: interpolateColor(
+			progressCustom.value,
+			[0, 1],
+			[theme.colors.cardBackground, theme.colors.primary]
+		),
+	}));
+
+	const animatedStyleFree = useAnimatedStyle(() => ({
+		backgroundColor: interpolateColor(
+			progressFree.value,
+			[0, 1],
+			[theme.colors.cardBackground, theme.colors.primary]
+		),
+	}));
+
+	const animatedStyleMorning = useAnimatedStyle(() => ({
+		backgroundColor: interpolateColor(
+			progressMorning.value,
+			[0, 1],
+			[theme.colors.cardBackground, theme.colors.primary]
+		),
+	}));
+
+	const animatedStyleAfternoon = useAnimatedStyle(() => ({
+		backgroundColor: interpolateColor(
+			progressAfternoon.value,
+			[0, 1],
+			[theme.colors.cardBackground, theme.colors.primary]
+		),
+	}));
+
+	const animatedStyleEvening = useAnimatedStyle(() => ({
+		backgroundColor: interpolateColor(
+			progressEvening.value,
+			[0, 1],
+			[theme.colors.cardBackground, theme.colors.primary]
+		),
+	}));
 
 	return (
 		<>
 			<RowTitleCustom title="MOMENT" />
-			{/* Elements du haut */}
-			<View className="flex flex-row items-center justify-between pb-2">
-				<View
+			<View className="flex flex-row items-center justify-between pb-1">
+				<Animated.View
 					className={blockStyle}
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-
-						shadowColor: theme.colors.textTertiary,
-						shadowOffset: { width: 0, height: 2 },
-						shadowOpacity: 0.25,
-						shadowRadius: 4,
-						elevation: 3,
-					}}
+					style={[
+						animatedStyleCustom,
+						{
+							shadowColor: theme.colors.textTertiary,
+							shadowOffset: { width: 0, height: 2 },
+							shadowOpacity: 0.25,
+							shadowRadius: 4,
+							elevation: 3,
+						},
+					]}
 				>
-					<Pressable
-						className={itemStyle}
-						style={{
-							backgroundColor: customMoment ? theme.colors.primary : "transparent",
-						}}
-						onPress={() => setVisible(true)}
-					>
+					<Pressable className={itemStyle} onPress={() => setVisible(true)}>
 						<Text
 							className="py-2 text-[14px] mx-auto"
 							style={{
@@ -91,27 +172,24 @@ export default function HabitMoment({
 							color={isCustom ? theme.colors.background : theme.colors.text}
 						/>
 					</Pressable>
-				</View>
-				<View
-					className={blockStyle}
-					style={{
-						backgroundColor: theme.colors.cardBackground,
+				</Animated.View>
 
-						shadowColor: theme.colors.textTertiary,
-						shadowOffset: { width: 0, height: 2 },
-						shadowOpacity: 0.25,
-						shadowRadius: 4,
-						elevation: 3,
-					}}
+				{/* Bloc pour free_time */}
+				<Animated.View
+					className={blockStyle}
+					style={[
+						animatedStyleFree,
+						{
+							shadowColor: theme.colors.textTertiary,
+							shadowOffset: { width: 0, height: 2 },
+							shadowOpacity: 0.25,
+							shadowRadius: 4,
+							elevation: 3,
+						},
+					]}
 				>
 					<Pressable
 						className={itemStyle}
-						style={{
-							backgroundColor:
-								selectedMoment === -1 && !customMoment
-									? theme.colors.primary
-									: "transparent",
-						}}
 						onPress={() => handleSelectMoment(-1)}
 						{...register("moment")}
 					>
@@ -136,31 +214,27 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</View>
+				</Animated.View>
 			</View>
 
-			{/* Elements du bas */}
+			{/* Bas : blocs pour morning, afternoon et evening */}
 			<View className="flex flex-row items-center justify-between py-2">
-				<View
+				{/* Bloc morning */}
+				<Animated.View
 					className={blockStyle}
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-
-						shadowColor: theme.colors.textTertiary,
-						shadowOffset: { width: 0, height: 2 },
-						shadowOpacity: 0.25,
-						shadowRadius: 4,
-						elevation: 3,
-					}}
+					style={[
+						animatedStyleMorning,
+						{
+							shadowColor: theme.colors.textTertiary,
+							shadowOffset: { width: 0, height: 2 },
+							shadowOpacity: 0.25,
+							shadowRadius: 4,
+							elevation: 3,
+						},
+					]}
 				>
 					<Pressable
 						className={itemStyle}
-						style={{
-							backgroundColor:
-								selectedMoment >= 6 && selectedMoment < 12 && !customMoment
-									? theme.colors.primary
-									: "transparent",
-						}}
 						onPress={() => handleSelectMoment(7)}
 						{...register("moment")}
 					>
@@ -185,27 +259,24 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</View>
-				<View
-					className={blockStyle}
-					style={{
-						backgroundColor: theme.colors.cardBackground,
+				</Animated.View>
 
-						shadowColor: theme.colors.textTertiary,
-						shadowOffset: { width: 0, height: 2 },
-						shadowOpacity: 0.25,
-						shadowRadius: 4,
-						elevation: 3,
-					}}
+				{/* Bloc afternoon */}
+				<Animated.View
+					className={blockStyle}
+					style={[
+						animatedStyleAfternoon,
+						{
+							shadowColor: theme.colors.textTertiary,
+							shadowOffset: { width: 0, height: 2 },
+							shadowOpacity: 0.25,
+							shadowRadius: 4,
+							elevation: 3,
+						},
+					]}
 				>
 					<Pressable
 						className={itemStyle}
-						style={{
-							backgroundColor:
-								selectedMoment >= 12 && selectedMoment < 18 && !customMoment
-									? theme.colors.primary
-									: "transparent",
-						}}
 						onPress={() => handleSelectMoment(12)}
 						{...register("moment")}
 					>
@@ -230,28 +301,24 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</View>
+				</Animated.View>
 
-				<View
+				{/* Bloc evening */}
+				<Animated.View
 					className={blockStyle}
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-
-						shadowColor: theme.colors.textTertiary,
-						shadowOffset: { width: 0, height: 2 },
-						shadowOpacity: 0.25,
-						shadowRadius: 4,
-						elevation: 3,
-					}}
+					style={[
+						animatedStyleEvening,
+						{
+							shadowColor: theme.colors.textTertiary,
+							shadowOffset: { width: 0, height: 2 },
+							shadowOpacity: 0.25,
+							shadowRadius: 4,
+							elevation: 3,
+						},
+					]}
 				>
 					<Pressable
 						className={itemStyle}
-						style={{
-							backgroundColor:
-								selectedMoment >= 18 && selectedMoment < 24 && !customMoment
-									? theme.colors.primary
-									: "transparent",
-						}}
 						onPress={() => handleSelectMoment(18)}
 						{...register("moment")}
 					>
@@ -276,10 +343,10 @@ export default function HabitMoment({
 							}
 						/>
 					</Pressable>
-				</View>
+				</Animated.View>
 			</View>
 
-			{/* Affichage du sélecteur de date pour l'heure personnalisée */}
+			{/* Sélecteur de date pour l'heure personnalisée */}
 			{visible && (
 				<RNDateTimePicker
 					mode="time"

@@ -28,7 +28,7 @@ export default function Notifications({ setValue }: { setValue: any }) {
 			<RowTitleCustom title="RAPPEL" />
 
 			<View
-				className="rounded-xl px-4 py-3 mt-1 flex flex-row items-center justify-between h-fit"
+				className="rounded-lg px-4 py-4 mt-1 flex flex-row items-center justify-between h-fit w-full"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 
@@ -54,19 +54,17 @@ export default function Notifications({ setValue }: { setValue: any }) {
 				<View className="flex flex-row items-center px-2">
 					<Pressable
 						style={{
-							backgroundColor: isSwitchOn
-								? theme.colors.primary
-								: theme.colors.grayPrimary,
+							backgroundColor: isSwitchOn ? theme.colors.primary : theme.colors.border,
 						}}
-						className="rounded-xl py-2 px-4"
+						className="rounded-lg py-2 px-4"
 						onPress={() => isSwitchOn && setVisible(true)}
 						disabled={!isSwitchOn}
 					>
 						<Text
 							style={{
-								color: "white",
+								color: isSwitchOn ? theme.colors.textSecondary : theme.colors.text,
 							}}
-							className="text-[16px]"
+							className="text-[14px]"
 						>
 							{selectedMoment.label}
 						</Text>

@@ -34,7 +34,7 @@ export default function RepeatHabit({
 			<RowTitleCustom title="RÉPÉTITION" />
 
 			<View
-				className="rounded-xl px-4 py-4 mt-1 flex flex-row items-center justify-between h-fit"
+				className="rounded-lg px-4 py-4 mt-1 flex flex-row items-center justify-between h-fit w-full"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 
@@ -53,16 +53,15 @@ export default function RepeatHabit({
 						style={{
 							backgroundColor: selectedDays[day.slug]
 								? theme.colors.primary
-								: theme.colors.background,
+								: theme.colors.border,
 						}}
-						className="rounded-full p-2 mx-1"
+						className="rounded-2xl p-2 mx-1"
 					>
 						<Text
 							style={{
-								color: selectedDays[day.slug]
-									? theme.colors.background
-									: theme.colors.text,
+								color: selectedDays[day.slug] ? theme.colors.border : theme.colors.text,
 							}}
+							className="text-sm"
 						>
 							{day.name}
 						</Text>

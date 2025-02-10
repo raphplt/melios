@@ -230,5 +230,7 @@
     "pseudo": "Pseudo",
     "repeat_password": "Repeat password",
     "next_level_reward": "Next level reward",
-    "you_won": "You won"
+    "you_won": "You won",
+    "set_a_description": "Set a description",
+    "habit_name": "Habit name"
 }

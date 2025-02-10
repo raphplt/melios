@@ -34,6 +34,7 @@ import { UserHabit } from "@type/userHabit";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import ConfidentialitySelectorHabit from "@components/Select/Items/Confidentiality";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -102,11 +103,12 @@ export default function CustomHabit() {
 				contentContainerStyle={{
 					flexGrow: 1,
 					paddingTop: 40,
+					zIndex: 10,
 				}}
 			>
 				<ButtonClose />
 				<FormProvider {...methods}>
-					<View className="w-11/12 mx-auto pb-10">
+					<View className="w-[95%] mx-auto flex flex-col items-center gap-1 z-10">
 						{/* TITRE */}
 						<HabitTitle
 							register={register}
@@ -116,13 +118,8 @@ export default function CustomHabit() {
 							setIsEditingDescription={setIsEditingDescription}
 							setFocus={setFocus}
 							setValue={setValue}
+							errors={errors}
 						/>
-						{errors.name && (
-							<Text style={{ color: "red" }}>{errors.name.message}</Text>
-						)}
-						{errors.description && (
-							<Text style={{ color: "red" }}>{errors.description.message}</Text>
-						)}
 
 						{/* INFORMATIONS */}
 						<HabitInfos habit={habit} setValue={setValue} />
@@ -154,27 +151,38 @@ export default function CustomHabit() {
 						/>
 					</View>
 				</FormProvider>
+				<LinearGradient
+					colors={["rgba(255, 255, 255, 0)", "rgb(200, 200, 255)"]}
+					style={{
+						position: "absolute",
+						left: 0,
+						right: 0,
+						bottom: 0,
+						height: 300,
+						zIndex: 1,
+					}}
+				/>
+				<Pressable
+					style={{
+						backgroundColor: theme.colors.primary,
+					}}
+					onPress={handleSubmit(onSubmit)}
+					className="rounded-xl flex flex-row items-center justify-center absolute bottom-4 left-5 right-5 p-4 z-10"
+				>
+					{isSubmitting ? (
+						<ActivityIndicator size="small" color="white" />
+					) : (
+						<Text
+							style={{
+								color: "white",
+							}}
+							className="text-lg"
+						>
+							{t("save")}
+						</Text>
+					)}
+				</Pressable>
 			</ScrollView>
-			<Pressable
-				style={{
-					backgroundColor: theme.colors.primary,
-				}}
-				onPress={handleSubmit(onSubmit)}
-				className="rounded-2xl flex flex-row items-center justify-center absolute bottom-4 left-5 right-5 p-4 mb-2"
-			>
-				{isSubmitting ? (
-					<ActivityIndicator size="small" color="white" />
-				) : (
-					<Text
-						style={{
-							color: "white",
-						}}
-						className="text-lg"
-					>
-						{t("save")}
-					</Text>
-				)}
-			</Pressable>
 		</View>
 	);
 }

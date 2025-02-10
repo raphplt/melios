@@ -6,9 +6,13 @@ export default function EditButton({ isEditing }: { isEditing: boolean }) {
 	return (
 		<>
 			{isEditing ? (
-				<Iconify icon="material-symbols:save" color={theme.colors.text} size={24} />
+				<Iconify
+					icon="material-symbols:save"
+					color={theme.colors.textTertiary}
+					size={24}
+				/>
 			) : (
-				<Iconify icon="fe:edit" color={theme.colors.text} size={24} />
+				<Iconify icon="fe:edit" color={theme.colors.textTertiary} size={24} />
 			)}
 		</>
 	);

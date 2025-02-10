@@ -17,19 +17,31 @@ export default function RowTitleCustom({ title }: { title: string }) {
 			case "MOMENT":
 				return (
 					<Iconify
-						icon="mdi:clock-time-four-outline"
-						color={theme.colors.text}
-						size={22}
+						icon="tabler:clock-hour-3"
+						color={theme.colors.textTertiary}
+						size={20}
 					/>
 				);
 			case "RAPPEL":
 				return (
-					<Iconify icon="mdi:bell-outline" color={theme.colors.text} size={22} />
+					<Iconify icon="mdi:bell-outline" color={theme.colors.textTertiary} size={20} />
 				);
 			case "RÉPÉTITION":
-				return <Iconify icon="mdi:calendar" color={theme.colors.text} size={22} />;
+				return (
+					<Iconify
+						icon="material-symbols:repeat"
+						color={theme.colors.textTertiary}
+						size={20}
+					/>
+				);
 			case "CONFIDENTIALITÉ":
-				return <Iconify icon="mdi:lock" color={theme.colors.text} size={22} />;
+				return (
+					<Iconify
+						icon="material-symbols:group-outline-rounded"
+						color={theme.colors.textTertiary}
+						size={20}
+					/>
+				);
 		}
 	};
 
@@ -50,8 +62,8 @@ export default function RowTitleCustom({ title }: { title: string }) {
 
 	return (
 		<>
-			<View className="w-full flex flex-row items-center justify-between mt-4 mb-2">
-				<View className="flex items-center justify-cente flex-row">
+			<View className="w-full flex flex-row items-center justify-between mt-5 mb-1">
+				<View className="flex items-center justify-cente flex-row gap-1">
 					{renderIcon()}
 					<Text
 						style={{

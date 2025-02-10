@@ -42,7 +42,7 @@ export default function HabitInfos({
 	return (
 		<>
 			<View
-				className="rounded-xl px-1 py-4 mt-3 flex flex-row items-center justify-between h-fit"
+				className="rounded-lg px-1 py-3 mt-3 flex flex-row items-center justify-between h-fit"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
 
@@ -63,7 +63,7 @@ export default function HabitInfos({
 					}}
 				/>
 
-				<SeparatorVertical color={theme.colors.textTertiary} />
+				<SeparatorVertical />
 
 				{/* Catégorie */}
 				<HabitInfoSection
@@ -73,7 +73,7 @@ export default function HabitInfos({
 					// onPress={handleShowModalCategory}
 				/>
 
-				<SeparatorVertical color={theme.colors.textTertiary} />
+				<SeparatorVertical />
 
 				{/* Couleur */}
 				<Pressable
