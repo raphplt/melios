@@ -5,7 +5,7 @@ import { useData } from "@context/DataContext";
 import { useHabits } from "@context/HabitsContext";
 import { setRewards } from "@db/rewards";
 
-const NextLevelHandler = () => {
+export default function NextLevelHandler() {
     const { usersLevels } = useData();
     const { genericLevels } = useHabits();
     const [showNextLevelModal, setShowNextLevelModal] = useState(false);
@@ -37,5 +37,3 @@ const NextLevelHandler = () => {
         />
     );
 };
-
-export default NextLevelHandler;

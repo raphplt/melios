@@ -9,8 +9,8 @@ import DailyQuote from "@components/Home/DailyQuote";
 import HabitsSection from "@components/Home/HabitsSection";
 import ActivitiesContainer from "@components/Home/ActivitiesContainer";
 import ViewHelp from "@components/Home/ViewHelp";
-import NextLevelHandler from "@components/Progression/NextLevelHandler";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
+import NextLevelHandler from "@components/Progression/NextLevelHandler";
 
 export default function Index() {
 	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
