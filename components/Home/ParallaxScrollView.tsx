@@ -109,16 +109,20 @@ return (
 				<BlurBox
 					position={{ top: 20, right: 20 }}
 					borderColor={
-						streakUpdatedToday ? theme.colors.redSecondary : theme.colors.border
+						streakUpdatedToday ? theme.colors.purplePrimary : theme.colors.border
 					}
-					borderWidth={1}
+					borderWidth={2}
 				>
 					<View className="flex flex-row items-center gap-2">
-						<Iconify icon="mdi:calendar" color={color} size={18} />
+						<Iconify
+							icon="mdi:calendar"
+							color={streakUpdatedToday ? theme.colors.purplePrimary : color}
+							size={18}
+						/>
 						<Text
 							className="font-semibold text-[15px]"
 							style={{
-								color: color,
+								color: streakUpdatedToday ? theme.colors.purplePrimary : color,
 							}}
 						>
 							{t("streak")} : {streak?.value}{" "}
