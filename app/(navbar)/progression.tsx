@@ -1,13 +1,13 @@
 import React from "react";
 import { ScrollView, View } from "react-native";
 import { useTheme } from "@context/ThemeContext";
-import GoalSection from "../../components/Progression/GoalSection";
 import { GoalProvider } from "@context/GoalsContext";
-import Chart from "@components/Progression/Chart";
-import Levels from "@components/Progression/Levels";
-import CalendarHabits from "@components/Progression/Calendar";
+import Chart from "@components/Progressions/Chart";
+import Levels from "@components/Progressions/Levels";
+import CalendarHabits from "@components/Progressions/Calendar";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
-import Streak from "@components/Progression/Streak";
+import Streak from "@components/Progressions/Streak";
+import GoalSection from "@components/Progressions/GoalSection";
 
 const Progression: React.FC = () => {
 	const { theme } = useTheme();
