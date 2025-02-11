@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import useIndex from "@hooks/useIndex";
 import { UserHabit } from "@type/userHabit";
