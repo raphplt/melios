@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, View } from "react-native";
 import { useTheme } from "@context/ThemeContext";
-import GoalSection from "@components/Progression/GoalSection";
+import GoalSection from "../../components/Progression/GoalSection";
 import { GoalProvider } from "@context/GoalsContext";
 import Chart from "@components/Progression/Chart";
 import Levels from "@components/Progression/Levels";
