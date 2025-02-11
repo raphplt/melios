@@ -95,15 +95,17 @@ return (
 				style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 			>
 				<BlurBox position={{ top: 20, left: 20 }}>
-					<Flamme color={flammeColor ?? theme.colors.redSecondary} />
-					<Text
-						style={{
-							color: color,
-						}}
-						className="text-lg mt-1 font-semibold text-center"
-					>
-						{todayScore}%
-					</Text>
+					<View className="flex flex-col items-center px-1">
+						<Flamme color={flammeColor ?? theme.colors.redSecondary} />
+						<Text
+							style={{
+								color: color,
+							}}
+							className="text-lg mt-1 font-semibold text-center "
+						>
+							{todayScore}%
+						</Text>
+					</View>
 				</BlurBox>
 
 				<BlurBox

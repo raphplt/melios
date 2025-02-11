@@ -47,31 +47,30 @@ function Activity({ habit }: { habit: UserHabit }) {
 			<View
 				className="h-64 w-40 mx-2 rounded-xl"
 				style={{
-					backgroundColor: theme.colors.background,
+					borderColor: theme.colors.border,
+					borderWidth: 1,
 				}}
 			>
 				<Pressable
-					onPress={() => {
-						goHabitDetail();
-					}}
+					onPress={goHabitDetail}
 					className="flex flex-col justify-between h-full"
 				>
 					<View
 						style={{
 							backgroundColor: lighterColor,
 						}}
-						className="h-14 rounded-t-xl"
+						className="h-14 rounded-t-lg"
 					>
 						<Text
-							className="font-semibold w-1/2 italic ml-3 mt-2 text-[13px]"
+							className="font-semibold w-2/3 italic ml-2 mt-2 text-[12px]"
 							style={{
 								color: theme.colors.text,
 							}}
 						>
-							{habit.category.slice(0, 15) + (habit.category.length > 15 ? "..." : "")}
+							{habit.category.slice(0, 25) + (habit.category.length > 25 ? "..." : "")}
 						</Text>
 						<View
-							className="px-2 py-1 rounded-bl-xl rounded-tr-xl"
+							className="px-2 py-1 rounded-bl-lg rounded-tr-lg"
 							style={{
 								backgroundColor: theme.colors.backgroundSecondary,
 								position: "absolute",
@@ -89,7 +88,7 @@ function Activity({ habit }: { habit: UserHabit }) {
 							</Text>
 						</View>
 					</View>
-					<View className="flex flex-col justify-evenly items-center rounded-b-xl bg-slate-20 flex-1">
+					<View className="flex flex-col justify-evenly items-center rounded-b-lg bg-slate-20 flex-1">
 						<CachedImage
 							imagePath={imageUri || "images/categories/fitness.jpg"}
 							style={StyleSheet.absoluteFill}
@@ -99,9 +98,14 @@ function Activity({ habit }: { habit: UserHabit }) {
 						/>
 
 						<View className=" flex items-center justify-center w-10/12 px-1 py-2 rounded-lg overflow-hidden">
-							<BlurView intensity={60} tint={"light"} style={styles.blurView} />
+							<BlurView intensity={95} tint={"light"} style={styles.blurView} />
+							<FontAwesome6
+								name={habit.icon || "question"}
+								size={24}
+								color={habit.color || theme.colors.text}
+							/>
 							<Text
-								className="text-md w-11/12 mx-auto font-semibold text-center py-2 mb-2 text-[14px]"
+								className="text-md w-11/12 mx-auto font-semibold text-center py-2 h-12 text-[12px]"
 								style={{
 									color: "#121212",
 								}}
@@ -110,11 +114,6 @@ function Activity({ habit }: { habit: UserHabit }) {
 							>
 								{habit.name}
 							</Text>
-							<FontAwesome6
-								name={habit.icon || "question"}
-								size={32}
-								color={habit.color || theme.colors.text}
-							/>
 						</View>
 					</View>
 				</Pressable>
