@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { formRoutines } from "@constants/formRoutine";
 import ButtonClose from "@components/Shared/ButtonClose";
@@ -82,7 +82,7 @@ const CustomRoutineForm = () => {
 	};
 
 	return (
-		<View
+		<ScrollView
 			style={{ flex: 1, backgroundColor: theme.colors.background, paddingTop: 40 }}
 		>
 			<ButtonClose />
@@ -190,7 +190,7 @@ const CustomRoutineForm = () => {
 					/>
 				)}
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 
