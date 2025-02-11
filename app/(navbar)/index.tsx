@@ -25,13 +25,11 @@ export default function Index() {
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
 		>
-			{/* <Background /> */}
 			<HabitsSection />
 			<ActivitiesContainer />
 			<ViewHelp />
 			<DailyQuote />
 
-			{/* Modales */}
 			<NextLevelHandler />
 			<ModalTutorial
 				title="Comment utiliser la page Accueil"

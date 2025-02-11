@@ -47,13 +47,6 @@ export default {
 			"@react-native-google-signin/google-signin",
 			"expo-router",
 			"expo-secure-store",
-			// [
-			// 	"@evennit/notifee-expo-plugin",
-			// 	{
-			// 		iosDeploymentTarget: "13.4",
-			// 		apsEnvMode: "development",
-			// 	},
-			// ],
 			[
 				"expo-notifications",
 				{

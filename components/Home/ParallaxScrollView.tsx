@@ -79,77 +79,87 @@ export default function ParallaxScrollView({
 
 	const color = isDayTime ? "black" : "white";
 
-	return (
-		<>
-			<Animated.ScrollView
-				ref={scrollRef}
-				scrollEventThrottle={16}
-				showsVerticalScrollIndicator={false}
-				refreshControl={refreshControl}
+const streakUpdatedToday =
+	streak?.updatedAt &&
+	new Date(streak.updatedAt).toDateString() === new Date().toDateString();
+
+return (
+	<>
+		<Animated.ScrollView
+			ref={scrollRef}
+			scrollEventThrottle={16}
+			showsVerticalScrollIndicator={false}
+			refreshControl={refreshControl}
+		>
+			<Animated.View
+				style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 			>
-				<Animated.View
-					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
+				<BlurBox position={{ top: 20, left: 20 }}>
+					<Flamme color={flammeColor ?? theme.colors.redSecondary} />
+					<Text
+						style={{
+							color: color,
+						}}
+						className="text-lg mt-1 font-semibold text-center"
+					>
+						{todayScore}%
+					</Text>
+				</BlurBox>
+
+				<BlurBox
+					position={{ top: 20, right: 20 }}
+					borderColor={
+						streakUpdatedToday ? theme.colors.redSecondary : theme.colors.border
+					}
+					borderWidth={1}
 				>
-					<BlurBox position={{ top: 20, left: 20 }}>
-						<Flamme color={flammeColor ?? theme.colors.redSecondary} />
+					<View className="flex flex-row items-center gap-2">
+						<Iconify icon="mdi:calendar" color={color} size={18} />
 						<Text
+							className="font-semibold text-[15px]"
 							style={{
 								color: color,
 							}}
-							className="text-lg mt-1 font-semibold text-center"
 						>
-							{todayScore}%
+							{t("streak")} : {streak?.value}{" "}
+							{streak && streak?.value > 1 ? t("days") : t("day")}
 						</Text>
-					</BlurBox>
-
-					<BlurBox position={{ top: 20, right: 20 }}>
-						<View className="flex flex-row items-center gap-2">
-							<Iconify icon="mdi:calendar" color={color} size={18} />
-							<Text
-								className="font-semibold text-[15px]"
-								style={{
-									color: color,
-								}}
-							>
-								{t("streak")} : {streak?.value}{" "}
-								{streak && streak?.value > 1 ? t("days") : t("day")}
-							</Text>
-						</View>
-					</BlurBox>
-					<BlurBox position={{ bottom: 20, left: 20 }}>
-						<WelcomeRow />
-					</BlurBox>
-					<View className="absolute z-30 bottom-5 right-5">
-						<AddHabits />
 					</View>
-
-					{imageTemple ? (
-						<Image
-							source={{ uri: imageTemple }}
-							style={{ width: "100%", height: 220, resizeMode: "cover" }}
-							className="rounded-b-xl"
-						/>
-					) : (
-						<View
-							style={{
-								width: "100%",
-								height: 220,
-								backgroundColor: theme.colors.backgroundSecondary,
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						/>
-					)}
-				</Animated.View>
-				<View
-					style={{
-						backgroundColor: theme.colors.background,
-						paddingBottom: paddingBottom,
-					}}
-				>
-					{children}
+				</BlurBox>
+				<BlurBox position={{ bottom: 20, left: 20 }}>
+					<WelcomeRow />
+				</BlurBox>
+				<View className="absolute z-30 bottom-5 right-5">
+					<AddHabits />
 				</View>
-			</Animated.ScrollView>
-		</>
-	);
+
+				{imageTemple ? (
+					<Image
+						source={{ uri: imageTemple }}
+						style={{ width: "100%", height: 220, resizeMode: "cover" }}
+						className="rounded-b-xl"
+					/>
+				) : (
+					<View
+						style={{
+							width: "100%",
+							height: 220,
+							backgroundColor: theme.colors.backgroundSecondary,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					/>
+				)}
+			</Animated.View>
+			<View
+				style={{
+					backgroundColor: theme.colors.background,
+					paddingBottom: paddingBottom,
+				}}
+			>
+				{children}
+			</View>
+		</Animated.ScrollView>
+	</>
+);
 }

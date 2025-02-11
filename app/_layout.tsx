@@ -82,10 +82,6 @@ function MainNavigator() {
 							title: "Compte",
 						}}
 					/>
-					{/* <Stack.Screen
-						name="rewards"
-						options={{ headerShown: false, title: "Récompenses" }}
-					/> */}
 					<Stack.Screen
 						name="editProfil"
 						options={{ headerShadowVisible: false, title: "Éditer le profil" }}
@@ -201,9 +197,7 @@ function RootLayoutContent() {
 export default function RootLayout() {
 	return (
 		<SessionProvider>
-			{/* <NavigationContainer> */}
 			<RootLayoutContent />
-			{/* </NavigationContainer> */}
 		</SessionProvider>
 	);
 }
