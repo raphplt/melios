@@ -68,7 +68,7 @@ export default function SectionWrapper({
 				>
 					{title}
 				</Text>
-				<View className="absolute right-0">
+				{/* <View className="absolute right-0">
 					<Animated.View style={{ transform: [{ rotate: rotation }] }}>
 						{showHabits ? (
 							<Iconify
@@ -84,7 +84,7 @@ export default function SectionWrapper({
 							/>
 						)}
 					</Animated.View>
-				</View>
+				</View> */}
 			</TouchableOpacity>
 
 			<View style={{ height: showHabits ? "auto" : 0, overflow: "hidden" }}>

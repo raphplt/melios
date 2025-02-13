@@ -139,6 +139,10 @@ function MainNavigator() {
 						options={{ title: "Pack", headerShown: false }}
 					/>
 					<Stack.Screen
+						name="dailyRewards"
+						options={{ title: "Récompenses journalières", headerShown: false }}
+					/>
+					<Stack.Screen
 						name="cosmeticShop"
 						options={{
 							title: "Boutique cosmétique",

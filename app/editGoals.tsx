@@ -3,31 +3,27 @@ import { useData } from "@context/DataContext";
 import { View, Text, ScrollView } from "react-native";
 import { Answer, Questions } from "@constants/Slides";
 import { Iconify } from "react-native-iconify";
-import { useContext } from "react";
-import { ThemeContext } from "@context/ThemeContext";
+import { useTheme } from "@context/ThemeContext";
 
 export default function EditGoals() {
 	const { member } = useData();
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
 
 	if (!member) return <LoaderScreen text="Chargement des objectifs" />;
 
 	const title = "font-semibold text-lg py-1 px-3";
 	const block = "py-3 px-3 rounded-xl my-2";
 
-	// Fonction pour vérifier si une réponse est cochée par le membre
 	const isChecked = (answer: Answer, memberAnswers: Answer[]) => {
 		return memberAnswers.includes(answer);
 	};
 
-	// Fonction pour vérifier la sélection unique (Motivation et Temps)
 	const isSingleChecked = (answer: Answer, memberAnswer: string) => {
 		return answer.answer === memberAnswer;
 	};
 
 	return (
 		<ScrollView className="w-11/12 mx-auto">
-			{/* Affichage des Aspects */}
 			<View
 				className={block}
 				style={{

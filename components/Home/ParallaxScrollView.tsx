@@ -22,6 +22,7 @@ import WelcomeRow from "./WelcomeRow";
 import AddHabits from "./AddHabits";
 import { getTodayScore } from "@utils/progressionUtils";
 import { useTranslation } from "react-i18next";
+import * as Progress from "react-native-progress";
 
 const HEADER_HEIGHT = 250;
 
@@ -64,108 +65,116 @@ export default function ParallaxScrollView({
 		};
 	}, [scrollOffset]);
 
-	const todayScore = getTodayScore(habits, completedHabitsToday);
-	const [flammeColor, setFlammeColor] = useState("#FFD580");
-
-	useEffect(() => {
-		if (todayScore >= 0 && todayScore < 30) {
-			setFlammeColor("#FFD580");
-		} else if (todayScore >= 30 && todayScore < 60) {
-			setFlammeColor("#FFB347");
-		} else if (todayScore >= 60 && todayScore < 100) {
-			setFlammeColor("#FF6961");
-		}
-	}, [todayScore]);
+	const { usersLevels } = useData();
 
 	const color = isDayTime ? "black" : "white";
 
-const streakUpdatedToday =
-	streak?.updatedAt &&
-	new Date(streak.updatedAt).toDateString() === new Date().toDateString();
+	const streakUpdatedToday =
+		streak?.updatedAt &&
+		new Date(streak.updatedAt).toDateString() === new Date().toDateString();
 
-return (
-	<>
-		<Animated.ScrollView
-			ref={scrollRef}
-			scrollEventThrottle={16}
-			showsVerticalScrollIndicator={false}
-			refreshControl={refreshControl}
-		>
-			<Animated.View
-				style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
+	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
+
+	const xpPercentage = globalLevel
+		? (globalLevel.currentXp / globalLevel.nextLevelXp) * 100
+		: 0;
+
+	return (
+		<>
+			<Animated.ScrollView
+				ref={scrollRef}
+				scrollEventThrottle={16}
+				showsVerticalScrollIndicator={false}
+				refreshControl={refreshControl}
 			>
-				<BlurBox position={{ top: 20, left: 20 }}>
-					<View className="flex flex-col items-center px-1">
-						<Flamme color={flammeColor ?? theme.colors.redSecondary} />
-						<Text
-							style={{
-								color: color,
-							}}
-							className="text-lg mt-1 font-semibold text-center "
-						>
-							{todayScore}%
-						</Text>
-					</View>
-				</BlurBox>
-
-				<BlurBox
-					position={{ top: 20, right: 20 }}
-					borderColor={
-						streakUpdatedToday ? theme.colors.purplePrimary : theme.colors.border
-					}
-					borderWidth={2}
+				<Animated.View
+					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 				>
-					<View className="flex flex-row items-center gap-2">
-						<Iconify
-							icon="mdi:calendar"
-							color={streakUpdatedToday ? theme.colors.purplePrimary : color}
-							size={18}
-						/>
-						<Text
-							className="font-semibold text-[15px]"
-							style={{
-								color: streakUpdatedToday ? theme.colors.purplePrimary : color,
-							}}
-						>
-							{t("streak")} : {streak?.value}{" "}
-							{streak && streak?.value > 1 ? t("days") : t("day")}
-						</Text>
-					</View>
-				</BlurBox>
-				<BlurBox position={{ bottom: 20, left: 20 }}>
-					<WelcomeRow />
-				</BlurBox>
-				<View className="absolute z-30 bottom-5 right-5">
-					<AddHabits />
-				</View>
+					<BlurBox position={{ top: 20, left: 20 }}>
+						<WelcomeRow />
+					</BlurBox>
 
-				{imageTemple ? (
-					<Image
-						source={{ uri: imageTemple }}
-						style={{ width: "100%", height: 220, resizeMode: "cover" }}
-						className="rounded-b-xl"
-					/>
-				) : (
 					<View
 						style={{
-							width: "100%",
-							height: 220,
-							backgroundColor: theme.colors.backgroundSecondary,
-							justifyContent: "center",
-							alignItems: "center",
+							top: 15,
+							right: 5,
 						}}
-					/>
-				)}
-			</Animated.View>
-			<View
-				style={{
-					backgroundColor: theme.colors.background,
-					paddingBottom: paddingBottom,
-				}}
-			>
-				{children}
-			</View>
-		</Animated.ScrollView>
-	</>
-);
+						className="absolute z-30 py-2  overflow-hidden"
+					>
+						<View className="flex items-center justify-center flex-row px-2 mx-2 rounded-l-full">
+							<View className="flex items-center justify-center">
+								<Progress.Circle
+									size={32}
+									progress={xpPercentage / 100}
+									color={theme.colors.tertiary}
+									unfilledColor={theme.colors.card}
+									borderWidth={0}
+									thickness={4}
+								/>
+								<Text
+									style={{
+										fontSize: 12,
+										color: theme.colors.tertiary,
+									}}
+									className="font-bold absolute"
+								>
+									{globalLevel?.currentLevel || "1"}
+								</Text>
+							</View>
+						</View>
+					</View>
+					<BlurBox
+						position={{ bottom: 20, left: 20 }}
+						// borderColor={
+						// 	streakUpdatedToday ? theme.colors.purpleSecondary : theme.colors.border
+						// }
+						// borderWidth={1}
+					>
+						<View className="flex flex-row items-center gap-2">
+							<Iconify
+								icon="mdi:calendar"
+								color={streakUpdatedToday ? theme.colors.purpleSecondary : color}
+								size={18}
+							/>
+							<Text
+								className="font-semibold text-[14px]"
+								style={{
+									color: streakUpdatedToday ? theme.colors.purpleSecondary : color,
+								}}
+							>
+								{t("streak")} : {streak?.value}{" "}
+								{streak && streak?.value > 1 ? t("days") : t("day")}
+							</Text>
+						</View>
+					</BlurBox>
+
+					{imageTemple ? (
+						<Image
+							source={{ uri: imageTemple }}
+							style={{ width: "100%", height: 220, resizeMode: "cover" }}
+							className="rounded-b-md"
+						/>
+					) : (
+						<View
+							style={{
+								width: "100%",
+								height: 220,
+								backgroundColor: theme.colors.backgroundSecondary,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						/>
+					)}
+				</Animated.View>
+				<View
+					style={{
+						backgroundColor: theme.colors.background,
+						paddingBottom: paddingBottom,
+					}}
+				>
+					{children}
+				</View>
+			</Animated.ScrollView>
+		</>
+	);
 }

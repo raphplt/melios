@@ -6,6 +6,7 @@ import Gift from "../../components/Svg/Gift";
 import Agora from "../../components/Svg/Aroga";
 import { ThemeContext } from "@context/ThemeContext";
 import BlurGradientBackground from "./BlurGradientBackground";
+import { Iconify } from "react-native-iconify";
 
 type Props = {
 	state: any;
@@ -27,7 +28,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
 				case "recompenses":
 					return <Gift color={color} />;
 				case "agora":
-					return <Agora color={color} />;
+					return <Iconify icon="formkit:people" size={30} color={color} />;
 				default:
 					return null;
 			}
@@ -45,7 +46,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
 			<BlurGradientBackground />
 			<View
 				style={{
-					backgroundColor: theme.colors.backgroundTertiary,
+					backgroundColor: theme.colors.background,
 				}}
 				className="w-[95%] mx-auto flex flex-row justify-between items-center rounded-[30px] py-3 px-4 mb-5 mt-4"
 			>
@@ -53,9 +54,9 @@ const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
 					const isFocused = state.index === index;
 					const isPressed = pressedIndex === index;
 					const iconColor =
-						isFocused || isPressed ? theme.colors.primary : theme.colors.textTertiary;
+						isFocused || isPressed ? theme.colors.primary : theme.colors.tertiary;
 					const backgroundColor =
-						isFocused || isPressed ? theme.colors.background : "transparent";
+						isFocused || isPressed ? theme.colors.backgroundTertiary : "transparent";
 
 					const onPress = () => {
 						if (!isFocused) {

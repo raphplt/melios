@@ -21,7 +21,7 @@ export default function AddHabits() {
 				style={{
 					backgroundColor: isDayTime
 						? theme.colors.primary
-						: theme.colors.background,
+						: theme.colors.backgroundTertiary,
 				}}
 			>
 				<Ionicons
