@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
 import CachedImage from "@components/Shared/CachedImage";
-import { BlurView } from "expo-blur";
+import { Svg, Path } from "react-native-svg";
 
 export default function PackItem({ pack }: { pack: Pack }) {
 	const { theme } = useTheme();
@@ -21,71 +21,53 @@ export default function PackItem({ pack }: { pack: Pack }) {
 	};
 
 	return (
-		<TouchableOpacity
-			onPress={handlePress}
-			className="my-2 w-[95%] mx-auto h-36 relative flex flex-col items-center justify-start"
-		>
-			<CachedImage
-				imagePath={"images/packs/" + pack.image}
-				blurRadius={5}
-				style={{
-					width: "100%",
-					height: "100%",
-					borderRadius: 12,
-					position: "absolute",
-					top: 0,
-					left: 0,
-					right: 0,
-					zIndex: -1,
-				}}
-			/>
-
-			<BlurView
-				tint="extraLight"
-				intensity={70}
-				className="p-2 rounded-xl w-[95%] mt-3 flex flex-row items-center justify-start"
-				style={{
-					overflow: "hidden",
-				}}
+		<View className="my-2 w-[95%] mx-auto flex flex-col items-center justify-start">
+			<TouchableOpacity
+				onPress={handlePress}
+				className="h-36 relative w-full flex flex-row"
 			>
-				<Iconify
-					icon="material-symbols:book-outline"
-					size={20}
-					color={theme.colors.text}
-				/>
-				<Text
+				<View
+					className="w-1/2 flex justify-center items-start px-2"
 					style={{
-						color: theme.colors.text,
+						backgroundColor: theme.colors.cardBackground,
+						borderTopLeftRadius: 10,
+						borderBottomLeftRadius: 10,
 					}}
-					className="text-[14px] text-center font-bold ml-2"
 				>
-					{pack.name}
-				</Text>
-			</BlurView>
-
-			<View
-				style={{
-					position: "absolute",
-					backgroundColor: theme.colors.primary,
-					bottom: 6,
-					right: 6,
-				}}
-				className="rounded-2xl px-4 py-2 my-2 w-fit flex flex-row items-center justify-center"
-			>
-				<Text
-					style={{
-						color: theme.colors.textSecondary,
-					}}
-					className="text-[13px] font-bold mr-2"
-				>
-					{t("discover")}
-				</Text>
-				<Iconify
-					icon="mdi:arrow-right"
-					size={18}
-					color={theme.colors.textSecondary}
-				/>
-			</View>
-		</TouchableOpacity>
+					<Text
+						style={{
+							color: theme.colors.text,
+						}}
+						className="font-semibold text-lg ml-2"
+					>
+						{pack.name}
+					</Text>
+				</View>
+				<View className="w-1/2 h-full relative">
+					<CachedImage
+						imagePath={"images/packs/" + pack.image}
+						style={{
+							width: "100%",
+							height: "100%",
+							borderTopRightRadius: 10,
+							borderBottomRightRadius: 10,
+						}}
+					/>
+					<Svg
+						width="61%" // Légère augmentation pour couvrir le gap
+						height="100%"
+						viewBox="0 0 100 100"
+						preserveAspectRatio="none"
+						style={{
+							position: "absolute",
+							top: 0,
+							left: -1, // Décalage pour recouvrir le pixel manquant
+						}}
+					>
+						<Path d="M-1,0 L81,100 L-1,100 Z" fill={theme.colors.cardBackground} />
+					</Svg>
+				</View>
+			</TouchableOpacity>
+		</View>
 	);
 }

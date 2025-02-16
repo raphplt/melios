@@ -8,6 +8,10 @@ export type Pack = {
 	content: {
 		sections: Section[];
 	};
+	promises?: {
+		keyResults: string[];
+		expectations: string[];
+	};
 };
 
 type Section = {

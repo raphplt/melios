@@ -1,22 +1,11 @@
-import ButtonBack from "@components/Shared/ButtonBack";
+import React from "react";
+import { Text, View, Pressable, Alert, ScrollView } from "react-native";
 import ButtonClose from "@components/Shared/ButtonClose";
 import CachedImage from "@components/Shared/CachedImage";
 import MoneyMelios from "@components/Svg/MoneyMelios";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
-import { BlurView } from "expo-blur";
-import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-	Text,
-	View,
-	StyleSheet,
-	Dimensions,
-	Pressable,
-	Alert,
-	StatusBar,
-	ScrollView,
-} from "react-native";
 
 type Props = {
 	unlocked: boolean;
@@ -44,7 +33,6 @@ const PackPreview = ({ unlocked, setUnlocked }: Props) => {
 			showsVerticalScrollIndicator={false}
 			className="flex-1 relative"
 			style={{
-				backgroundColor: theme.colors.background,
 				flex: 1,
 			}}
 			contentContainerStyle={{
@@ -53,25 +41,21 @@ const PackPreview = ({ unlocked, setUnlocked }: Props) => {
 		>
 			<View
 				style={{
-					paddingTop: StatusBar.currentHeight ?? 50,
-				}}
-			/>
-			<View
-				style={{
 					height: 250,
+					backgroundColor: theme.colors.redPrimary,
 				}}
-				className="relative block "
 			>
-				<BlurView intensity={100} tint="light" className="rounded-lg p-2">
-					<ButtonClose color="white" />
-				</BlurView>
+				<View className="mt-14 z-10">
+					<ButtonClose />
+				</View>
+
 				<CachedImage
 					imagePath={"images/packs/" + selectedPack.image}
 					className="w-full h-full object-cover absolute"
 				/>
 			</View>
-			<View className="flex items-center justify-between relative">
-				<View className="p-4 w-[95%] rounded-xl mt-2 flex flex-col items-start justify-start">
+			<View className="flex-1 items-center justify-start w-full">
+				<View className="w-11/12 mt-4 rounded-xl flex flex-col items-start justify-start flex-grow">
 					<Text
 						className="text-2xl font-bold"
 						style={{

@@ -6,6 +6,7 @@ import PackItem from "./PackItem";
 import { useTranslation } from "react-i18next";
 import { getAllPacks } from "@db/packs";
 import { Pack } from "@type/pack";
+import maj from "@utils/textUtils";
 
 export default function MarketPacks() {
 	const { theme } = useTheme();
@@ -16,7 +17,7 @@ export default function MarketPacks() {
 	useEffect(() => {
 		const fetchPacks = async () => {
 			try {
-				const data = await getAllPacks({ forceRefresh: true });
+				const data = await getAllPacks({ forceRefresh: false });
 				setPacks(data);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des packs :", error);
@@ -36,17 +37,15 @@ export default function MarketPacks() {
 			}}
 			className="mb-20"
 		>
-			<View className="w-11/12 mx-auto py-1 mt-5">
+			<View className="w-11/12 mx-auto py-1 mt-6">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
-					<Iconify icon="ri:walk-fill" size={24} color={theme.colors.text} />
 					<Text
 						style={{
 							color: theme.colors.text,
-							fontFamily: "BaskervilleBold",
 						}}
-						className="mx-2 text-[16px] font-semibold"
+						className="text-xl font-bold"
 					>
-						{t("the_companions_of_travel")}
+						{maj(t("the_companions_of_travel")).toUpperCase()}
 					</Text>
 				</View>
 			</View>

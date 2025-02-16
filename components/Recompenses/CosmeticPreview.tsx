@@ -34,19 +34,13 @@ export default function CosmeticPreviewStacked() {
 		>
 			<View className="w-11/12 mx-auto py-4">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">
-					<Iconify
-						icon="lucide:shopping-basket"
-						size={24}
-						color={theme.colors.text}
-					/>
 					<Text
 						style={{
 							color: theme.colors.text,
-							fontFamily: "BaskervilleBold",
 						}}
-						className="mx-2 text-[16px]"
+						className="text-xl font-bold"
 					>
-						{t("cosmetic_shop")}
+						{t("cosmetic_shop").toUpperCase()}
 					</Text>
 				</View>
 			</View>
