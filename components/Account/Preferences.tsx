@@ -66,7 +66,7 @@ export default function Preferences() {
 	const goAbout = () => {
 		Alert.alert(
 			t("about"),
-			"Melios v1.1.7 - © 2024 Melios" + "\n" + t("all_rights_reserved")
+			"Melios v1.1.10 - © 2025 Melios" + "\n" + t("all_rights_reserved")
 		);
 	};
 

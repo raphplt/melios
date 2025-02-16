@@ -9,7 +9,6 @@ import General from "@components/Account/General";
 import Preferences from "@components/Account/Preferences";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import ButtonBack from "@components/Shared/ButtonBack";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import ButtonClose from "@components/Shared/ButtonClose";

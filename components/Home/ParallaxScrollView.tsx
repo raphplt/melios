@@ -106,15 +106,15 @@ export default function ParallaxScrollView({
 								<Progress.Circle
 									size={32}
 									progress={xpPercentage / 100}
-									color={theme.colors.tertiary}
+									color={isDayTime ? theme.colors.primary : theme.colors.tertiary}
 									unfilledColor={theme.colors.card}
 									borderWidth={0}
 									thickness={4}
 								/>
 								<Text
 									style={{
-										fontSize: 12,
-										color: theme.colors.tertiary,
+										fontSize: 14,
+										color: isDayTime ? theme.colors.primary : theme.colors.tertiary,
 									}}
 									className="font-bold absolute"
 								>
@@ -123,13 +123,7 @@ export default function ParallaxScrollView({
 							</View>
 						</View>
 					</View>
-					<BlurBox
-						position={{ bottom: 20, left: 20 }}
-						// borderColor={
-						// 	streakUpdatedToday ? theme.colors.purpleSecondary : theme.colors.border
-						// }
-						// borderWidth={1}
-					>
+					<BlurBox position={{ bottom: 20, left: 20 }}>
 						<View className="flex flex-row items-center gap-2">
 							<Iconify
 								icon="mdi:calendar"
