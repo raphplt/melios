@@ -37,6 +37,8 @@ import {
 	GoogleAuthProvider,
 } from "firebase/auth";
 import { useNavigation } from "expo-router";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@db/index";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -63,14 +65,37 @@ export default function Login() {
 	const signInWithGoogle = async () => {
 		try {
 			await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-			await GoogleSignin.signIn();
+			const userInfo = await GoogleSignin.signIn();
 
 			const { idToken } = await GoogleSignin.getTokens();
-
 			const googleCredential = GoogleAuthProvider.credential(idToken);
 
 			const auth = getAuth();
-			await signInWithCredential(auth, googleCredential);
+			const userCredential = await signInWithCredential(auth, googleCredential);
+			const user = userCredential.user;
+
+			const membersCollectionRef = collection(db, "members");
+
+			let memberDocRef;
+			try {
+				memberDocRef = await addDoc(membersCollectionRef, {
+					uid: user.uid,
+					habits: [],
+					nom: user.displayName, // Utiliser le nom du compte Google
+				});
+			} catch (error: any) {
+				throw new Error("Failed to add user data to Firestore: " + error.message);
+			}
+
+			try {
+				await AsyncStorage.setItem("user", JSON.stringify(user));
+				await AsyncStorage.setItem("isAuthenticated", "true");
+				await AsyncStorage.setItem("lastFetchDate", "0");
+			} catch (error: any) {
+				throw new Error(
+					"Failed to save user data to AsyncStorage: " + String(error.message)
+				);
+			}
 
 			navigation.navigate("(navbar)");
 		} catch (error) {
