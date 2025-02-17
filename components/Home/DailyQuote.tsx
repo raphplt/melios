@@ -4,15 +4,18 @@ import { Text, View } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Quote } from "@type/quote";
+import { useData } from "@context/DataContext";
 
 export default function DailyQuote() {
 	const [quote, setQuote] = useState<Quote | null>(null);
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const { member } = useData();
 
 	useEffect(() => {
 		const getQuote = async () => {
 			try {
+				if (!member) return;
 				const dailyQuote = await fetchDailyQuote();
 				setQuote(dailyQuote);
 			} catch (error) {
@@ -25,7 +28,7 @@ export default function DailyQuote() {
 
 	return (
 		<View
-			className="w-11/12 mx-auto flex flex-col items-center justify-center rounded-xl mt-3 mb-8"
+			className="w-[95%] mx-auto flex flex-col items-center justify-center rounded-lg mt-2 mb-8"
 			style={{
 				backgroundColor: theme.colors.blueSecondary,
 			}}

@@ -1,9 +1,4 @@
-import React, {
-	useEffect,
-	useState,
-	type PropsWithChildren,
-	type ReactElement,
-} from "react";
+import React, { type PropsWithChildren, type ReactElement } from "react";
 import { Image, Text, View } from "react-native";
 import Animated, {
 	interpolate,
@@ -19,8 +14,6 @@ import { useTheme } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
 import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
-import AddHabits from "./AddHabits";
-import { getTodayScore } from "@utils/progressionUtils";
 import { useTranslation } from "react-i18next";
 import * as Progress from "react-native-progress";
 
@@ -39,7 +32,7 @@ export default function ParallaxScrollView({
 
 	const { theme } = useTheme();
 	const { isDayTime, imageTemple } = useIndex();
-	const { streak, completedHabitsToday, habits } = useData();
+	const { streak } = useData();
 	const { t } = useTranslation();
 
 	const paddingBottom = useTabBarPadding();
@@ -127,13 +120,23 @@ export default function ParallaxScrollView({
 						<View className="flex flex-row items-center gap-2">
 							<Iconify
 								icon="mdi:calendar"
-								color={streakUpdatedToday ? theme.colors.purpleSecondary : color}
+								color={
+									streakUpdatedToday
+										? isDayTime
+											? theme.colors.purplePrimary
+											: theme.colors.purpleSecondary
+										: color
+								}
 								size={18}
 							/>
 							<Text
 								className="font-semibold text-[14px]"
 								style={{
-									color: streakUpdatedToday ? theme.colors.purpleSecondary : color,
+									color: streakUpdatedToday
+										? isDayTime
+											? theme.colors.purplePrimary
+											: theme.colors.purpleSecondary
+										: color,
 								}}
 							>
 								{t("streak")} : {streak?.value}{" "}

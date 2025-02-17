@@ -35,7 +35,7 @@ export default function MarketPacks() {
 				backgroundColor: theme.colors.background,
 				flex: 1,
 			}}
-			className="mb-20"
+			className="mb-24"
 		>
 			<View className="w-11/12 mx-auto py-1 mt-6">
 				<View className="flex flex-row items-center justify-start w-full mx-auto">

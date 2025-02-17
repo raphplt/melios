@@ -94,7 +94,7 @@ export default function HabitTypeBox({
 	return (
 		<Animated.View style={[animatedStyle]} className="w-[30%] rounded-xl">
 			{/* Temp */}
-			{!haveSeenNegative && typeHabit === CategoryTypeSelect.negative && (
+			{/* {!haveSeenNegative && typeHabit === CategoryTypeSelect.negative && (
 				<View
 					className="absolute top-1 right-1 px-2 py-1 rounded-xl"
 					style={{
@@ -103,12 +103,12 @@ export default function HabitTypeBox({
 				>
 					<Text className="text-white text-xs font-semibold">{t("new")}</Text>
 				</View>
-			)}
+			)} */}
 			{!haveSeenRoutine && typeHabit === CategoryTypeSelect.routine && (
 				<View
 					className="absolute top-1 right-1 px-2 py-1 rounded-xl"
 					style={{
-						backgroundColor: theme.colors.bluePrimary,
+						backgroundColor: theme.colors.redPrimary,
 					}}
 				>
 					<Text className="text-white text-xs font-semibold">{t("new")}</Text>

@@ -232,5 +232,7 @@
     "next_level_reward": "Next level reward",
     "you_won": "You won",
     "set_a_description": "Set a description",
-    "habit_name": "Habit name"
+    "habit_name": "Habit name",
+    "start_a_work_session": "Start a work session",
+    "session_work": "Work session"
 }

@@ -20,6 +20,9 @@ export default {
 			bundleIdentifier: "com.raphplt.melios",
 			supportsTablet: true,
 			googleServicesFile: process.env.GOOGLE_SERVICES_INFOPLIST,
+			infoPlist: {
+				ITSAppUsesNonExemptEncryption: false,
+			},
 		},
 		android: {
 			googleServicesFile: process.env.GOOGLE_SERVICES_JSON,

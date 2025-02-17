@@ -11,6 +11,7 @@ import ActivitiesContainer from "@components/Home/ActivitiesContainer";
 import ViewHelp from "@components/Home/ViewHelp";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
 import NextLevelHandler from "@components/Progressions/NextLevelHandler";
+import WorkSession from "@components/Home/WorkSession";
 
 export default function Index() {
 	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
@@ -28,6 +29,7 @@ export default function Index() {
 			>
 				<HabitsSection />
 				<ActivitiesContainer />
+				<WorkSession />
 				<ViewHelp />
 				<DailyQuote />
 
@@ -43,7 +45,6 @@ export default function Index() {
 					slug="index"
 				/>
 			</ParallaxScrollView>
-			{/* <MissionButton /> */}
 		</>
 	);
 }

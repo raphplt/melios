@@ -26,7 +26,7 @@ export const fetchDailyQuote = async () => {
 		if (storedDate === today) {
 			const storedQuote = await AsyncStorage.getItem(QUOTE_STORAGE_KEY);
 			if (storedQuote) {
-				return JSON.parse(storedQuote); // Parse the stored quote
+				return JSON.parse(storedQuote);
 			}
 		}
 
@@ -35,7 +35,7 @@ export const fetchDailyQuote = async () => {
 		await AsyncStorage.setItem(DATE_STORAGE_KEY, today);
 		return newQuote;
 	} catch (error) {
-		console.error("Error fetching daily quote: ", error);
+		console.log("Error fetching daily quote: ", error);
 		throw error;
 	}
 };

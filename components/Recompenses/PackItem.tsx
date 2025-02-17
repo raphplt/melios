@@ -1,13 +1,13 @@
 import { useTheme } from "@context/ThemeContext";
 import { Pack } from "@type/pack";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Iconify } from "react-native-iconify";
 import { useData } from "@context/DataContext";
 import CachedImage from "@components/Shared/CachedImage";
 import { Svg, Path } from "react-native-svg";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 export default function PackItem({ pack }: { pack: Pack }) {
 	const { theme } = useTheme();
@@ -21,53 +21,55 @@ export default function PackItem({ pack }: { pack: Pack }) {
 	};
 
 	return (
-		<View className="my-2 w-[95%] mx-auto flex flex-col items-center justify-start">
-			<TouchableOpacity
-				onPress={handlePress}
-				className="h-36 relative w-full flex flex-row"
-			>
-				<View
-					className="w-1/2 flex justify-center items-start px-2"
-					style={{
-						backgroundColor: theme.colors.cardBackground,
-						borderTopLeftRadius: 10,
-						borderBottomLeftRadius: 10,
-					}}
+		<ZoomableView>
+			<View className="my-2 w-[95%] mx-auto flex flex-col items-center justify-start">
+				<Pressable
+					onPress={handlePress}
+					className="h-36 relative w-full flex flex-row"
 				>
-					<Text
+					<View
+						className="w-1/2 flex justify-center items-start px-2"
 						style={{
-							color: theme.colors.text,
-						}}
-						className="font-semibold text-lg ml-2"
-					>
-						{pack.name}
-					</Text>
-				</View>
-				<View className="w-1/2 h-full relative">
-					<CachedImage
-						imagePath={"images/packs/" + pack.image}
-						style={{
-							width: "100%",
-							height: "100%",
-							borderTopRightRadius: 10,
-							borderBottomRightRadius: 10,
-						}}
-					/>
-					<Svg
-						width="61%" // Légère augmentation pour couvrir le gap
-						height="100%"
-						viewBox="0 0 100 100"
-						preserveAspectRatio="none"
-						style={{
-							position: "absolute",
-							top: 0,
-							left: -1, // Décalage pour recouvrir le pixel manquant
+							backgroundColor: theme.colors.cardBackground,
+							borderTopLeftRadius: 10,
+							borderBottomLeftRadius: 10,
 						}}
 					>
-						<Path d="M-1,0 L81,100 L-1,100 Z" fill={theme.colors.cardBackground} />
-					</Svg>
-				</View>
-			</TouchableOpacity>
-		</View>
+						<Text
+							style={{
+								color: theme.colors.text,
+							}}
+							className="font-semibold text-lg ml-2"
+						>
+							{pack.name}
+						</Text>
+					</View>
+					<View className="w-1/2 h-full relative">
+						<CachedImage
+							imagePath={"images/packs/" + pack.image}
+							style={{
+								width: "100%",
+								height: "100%",
+								borderTopRightRadius: 10,
+								borderBottomRightRadius: 10,
+							}}
+						/>
+						<Svg
+							width="61%"
+							height="100%"
+							viewBox="0 0 100 100"
+							preserveAspectRatio="none"
+							style={{
+								position: "absolute",
+								top: 0,
+								left: -1,
+							}}
+						>
+							<Path d="M-1,0 L81,100 L-1,100 Z" fill={theme.colors.cardBackground} />
+						</Svg>
+					</View>
+				</Pressable>
+			</View>
+		</ZoomableView>
 	);
 }

@@ -17,32 +17,31 @@ export default function ViewHelp() {
 		<>
 			<ZoomableView>
 				<LinearGradient
-					colors={[theme.colors.backgroundTertiary, theme.colors.purpleSecondary]}
+					colors={[theme.colors.greenSecondary, theme.colors.backgroundSecondary]}
 					style={{
-						borderRadius: 10,
+						borderRadius: 8,
 						padding: 10,
 						margin: 10,
-						marginTop: 20,
-						marginBottom: 20,
+						marginTop: 10,
+						marginBottom: 10,
 					}}
 					start={[0, 0]}
-					className="w-11/12 mx-auto my-1 py-8 "
+					className="w-[95%] mx-auto py-8 "
 				>
 					<Pressable
 						className="w-full flex flex-row items-center justify-between"
 						onPress={() => setShowModal(true)}
 					>
-						<View>
+						<View className="ml-2">
 							<Text
 								style={{
 									color: theme.colors.text,
-									fontFamily: "BaskervilleBold",
 								}}
-								className="text-lg font-semibold"
+								className="text-xl font-semibold"
 							>
 								{t("need_help")}
 							</Text>
-							<View className="flex flex-row items-center justify-between mt-2">
+							<View className="flex flex-row items-center justify-between mt-1">
 								<Text
 									style={{
 										color: theme.colors.text,
@@ -53,7 +52,11 @@ export default function ViewHelp() {
 								</Text>
 							</View>
 						</View>
-						<Iconify icon="mdi:chevron-right" size={40} color={theme.colors.text} />
+						<Iconify
+							icon="solar:help-linear"
+							size={36}
+							color={theme.colors.textTertiary}
+						/>
 					</Pressable>
 				</LinearGradient>
 			</ZoomableView>

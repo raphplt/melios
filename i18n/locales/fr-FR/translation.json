@@ -234,5 +234,7 @@
     "next_level_reward": "Récompense du prochain niveau",
     "you_won": "Vous avez gagné",
     "set_a_description": "Définir une description",
-    "habit_name": "Nom de l'habitude"
+    "habit_name": "Nom de l'habitude",
+    "start_a_work_session": "Commencer une session de travail",
+    "session_work": "Session de travail"
 }

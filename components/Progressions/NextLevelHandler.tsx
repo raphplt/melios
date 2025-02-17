@@ -23,7 +23,7 @@ export default function NextLevelHandler() {
                     ...userLevel,
                 });
 
-                setRewards("odyssee", userLevel.currentLevel + 2);
+                setRewards("rewards", userLevel.currentLevel + 2);
             }
         });
         setPreviousLevels(usersLevels);
