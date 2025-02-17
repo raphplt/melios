@@ -234,5 +234,6 @@
     "set_a_description": "Set a description",
     "habit_name": "Habit name",
     "start_a_work_session": "Start a work session",
-    "session_work": "Work session"
+    "session_work": "Work session",
+    "daily_rewards": "Daily rewards"
 }

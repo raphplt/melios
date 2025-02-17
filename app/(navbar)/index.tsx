@@ -12,6 +12,7 @@ import ViewHelp from "@components/Home/ViewHelp";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
 import NextLevelHandler from "@components/Progressions/NextLevelHandler";
 import WorkSession from "@components/Home/WorkSession";
+import MissionButton from "@components/Home/MissionButton";
 
 export default function Index() {
 	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
@@ -45,6 +46,7 @@ export default function Index() {
 					slug="index"
 				/>
 			</ParallaxScrollView>
+			<MissionButton />
 		</>
 	);
 }

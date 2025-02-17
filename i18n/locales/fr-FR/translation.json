@@ -236,5 +236,6 @@
     "set_a_description": "Définir une description",
     "habit_name": "Nom de l'habitude",
     "start_a_work_session": "Commencer une session de travail",
-    "session_work": "Session de travail"
+    "session_work": "Session de travail",
+    "daily_rewards": "Récompenses quotidiennes"
 }
