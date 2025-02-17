@@ -143,6 +143,10 @@ function MainNavigator() {
 						options={{ title: "Récompenses journalières", headerShown: false }}
 					/>
 					<Stack.Screen
+						name="workSession"
+						options={{ title: "Session de travail", headerShown: false }}
+					/>
+					<Stack.Screen
 						name="cosmeticShop"
 						options={{
 							title: "Boutique cosmétique",

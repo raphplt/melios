@@ -1,6 +1,8 @@
 import ZoomableView from "@components/Shared/ZoomableView";
 import { useTheme } from "@context/ThemeContext";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
@@ -9,6 +11,8 @@ import { Iconify } from "react-native-iconify";
 const WorkSession = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
 	return (
 		<ZoomableView>
 			<LinearGradient
@@ -25,7 +29,7 @@ const WorkSession = () => {
 			>
 				<Pressable
 					className="w-full flex flex-row items-center justify-between"
-					// onPress={() => setShowModal(true)}
+					onPress={() => navigation.navigate("workSession")}
 				>
 					<View className="ml-2">
 						<Text
