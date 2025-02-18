@@ -8,7 +8,6 @@ import { useTimer } from "@context/TimerContext";
 import { getHabitPoints } from "@utils/pointsUtils";
 import useAddXp from "./useAddXp";
 import { setHabitLog } from "@db/logs";
-import notifee, { AndroidColor } from "@notifee/react-native";
 
 const useHabitTimer = () => {
 	const date = moment().format("YYYY-MM-DD");
@@ -34,16 +33,6 @@ const useHabitTimer = () => {
 			setIsTimerActive(true);
 			setIsTimerVisible(true);
 
-			// await notifee.displayNotification({
-			// 	title: habit.name,
-			// 	body: "Le timer est en cours...",
-			// 	android: {
-			// 		channelId: "foreground_service",
-			// 		asForegroundService: true,
-			// 		color: AndroidColor.GREEN,
-			// 	},
-			// });
-
 			timerRef.current = setInterval(() => {
 				setTimerSeconds((prevSeconds) => {
 					if (prevSeconds <= 1) {
@@ -64,8 +53,6 @@ const useHabitTimer = () => {
 			clearInterval(timerRef.current);
 			timerRef.current = null;
 		}
-
-		// await notifee.stopForegroundService();
 
 		setIsTimerActive(false);
 		setIsTimerVisible(false);

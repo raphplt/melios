@@ -47,7 +47,6 @@ export default {
 			favicon: "./assets/images/favicon.png",
 		},
 		plugins: [
-			"@notifee/react-native",
 			"@react-native-google-signin/google-signin",
 			"expo-router",
 			"expo-secure-store",

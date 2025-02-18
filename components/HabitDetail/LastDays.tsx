@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, FlatList } from "react-native";
 import { Iconify } from "react-native-iconify";
 import { useState, useEffect } from "react";
 import { useTheme } from "@context/ThemeContext";
@@ -43,7 +43,6 @@ export default function LastDays() {
 
 					const done = logs?.some((log) => {
 						const logDateObj = log.date?.toDate ? log.date.toDate() : log.date;
-
 						const logDate = moment(logDateObj).format("YYYY-MM-DD");
 						return logDate === day;
 					});
@@ -69,7 +68,6 @@ export default function LastDays() {
 
 	const calculateCurrentStreak = (days: DayStatus[]) => {
 		let streak = 0;
-
 		for (let i = 0; i < days.length; i++) {
 			if (days[i].done) {
 				streak++;
@@ -77,7 +75,6 @@ export default function LastDays() {
 				break;
 			}
 		}
-
 		setCurrentStreak(streak);
 	};
 
@@ -101,9 +98,7 @@ export default function LastDays() {
 		<BlurView
 			intensity={70}
 			className="py-2 px-3 rounded-xl w-[95%] mx-auto flex items-center flex-col justify-center"
-			style={{
-				overflow: "hidden",
-			}}
+			style={{ overflow: "hidden" }}
 			tint="extraLight"
 		>
 			{/* En-tête avec icône + STREAK */}
@@ -134,25 +129,24 @@ export default function LastDays() {
 				</View>
 			</View>
 
-			{/* Scroll horizontal avec l’historique des derniers jours */}
-			<ScrollView
-				horizontal
-				showsHorizontalScrollIndicator={false}
-				contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
-				className="w-full mx-auto mt-2 mb-3"
-			>
-				{lastDays && !loading ? (
-					lastDays.map((day: DayStatus, index) => (
+			{/* FlatList horizontal avec l’historique des derniers jours */}
+			{!loading ? (
+				<FlatList
+					data={lastDays}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
+					keyExtractor={(_, index) => index.toString()}
+					renderItem={({ item }) => (
 						<View
-							key={index}
 							style={{
-								backgroundColor: day.done
+								backgroundColor: item.done
 									? theme.colors.backgroundTertiary
 									: theme.colors.backgroundSecondary,
 							}}
 							className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
 						>
-							{day.done ? (
+							{item.done ? (
 								<Iconify size={24} color={theme.colors.text} icon="mdi:check" />
 							) : (
 								<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
@@ -161,18 +155,18 @@ export default function LastDays() {
 								style={{ color: theme.colors.text }}
 								className="font-semibold mt-1"
 							>
-								{moment(day.date, "YYYY-MM-DD").format("DD/MM")}
+								{moment(item.date, "YYYY-MM-DD").format("DD/MM")}
 							</Text>
 						</View>
-					))
-				) : (
-					<View className="w-full flex flex-row items-center justify-center">
-						{placeholders.map((_, index) => (
-							<CardPlaceHolder key={index} />
-						))}
-					</View>
-				)}
-			</ScrollView>
+					)}
+				/>
+			) : (
+				<View className="w-full flex flex-row items-center justify-center">
+					{placeholders.map((_, index) => (
+						<CardPlaceHolder key={index} />
+					))}
+				</View>
+			)}
 		</BlurView>
 	);
 }
