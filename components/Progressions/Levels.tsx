@@ -55,8 +55,14 @@ export default function Levels() {
 				setShow={setShowLevels}
 				icon="levels"
 			>
-				<View className="w-[95%] mx-auto mb-2 mt-2">
-					<ScrollView>
+				<View className="w-[95%] mx-auto">
+					<ScrollView
+						contentContainerStyle={{
+							flexDirection: "row",
+							flexWrap: "wrap",
+							justifyContent: "space-between",
+						}}
+					>
 						{filteredLevels.map((item) => (
 							<LevelItem key={item.levelId} level={item} />
 						))}

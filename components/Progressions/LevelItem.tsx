@@ -9,6 +9,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ZoomableView from "@components/Shared/ZoomableView";
+import { lightenColor } from "@utils/colors";
 
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
@@ -17,74 +18,51 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { setSelectedLevel } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
+	const itemSize = (width - 40) / 2;
+
 	return (
 		<ZoomableView>
 			<Pressable
 				style={{
-					backgroundColor: theme.colors.background,
-					borderColor: theme.colors.border,
-					borderWidth: 1,
+					backgroundColor: lightenColor(level.color) ?? theme.colors.background,
+					width: itemSize,
+					height: itemSize,
 				}}
+				className="p-3 rounded-lg my-2"
 				onPress={() => {
 					setSelectedLevel(level);
 					navigation.navigate("levelDetail");
 				}}
-				className="py-2 px-2 my-1 rounded-xl"
 			>
-				<View className="flex flex-row items-center justify-between py-1 mx-1">
-					<View className="flex flex-row items-center">
+				<View className="flex flex-col items-center justify-between h-full">
+					<View className="flex flex-row items-start gap-1">
 						<FontAwesome6
 							name={level.icon || "question"}
-							size={18}
+							size={20}
 							color={level.color || theme.colors.primary}
 						/>
 						<Text
 							style={{
 								color: theme.colors.text,
 							}}
-							className="text-[14px] ml-2 font-bold"
+							className="font-bold mx-1 w-10/12 text-[14px]"
+							numberOfLines={1}
 						>
 							{level.name}
 						</Text>
 					</View>
 
-					<View
-						style={{
-							borderColor: level.color || theme.colors.primary,
-							borderWidth: 1,
-						}}
-						className="px-2 py-[2px] rounded-2xl"
-					>
-						<Text
-							style={{
-								color: level.color ?? theme.colors.textTertiary,
-							}}
-							className="text-sm font-semibold "
-						>
-							{level.currentXp} / {level.nextLevelXp}
-						</Text>
+					<View className="flex items-center justify-center flex-1">
+						<Progress.Circle
+							progress={level.currentXp / level.nextLevelXp}
+							color={level.color || theme.colors.primary}
+							borderWidth={0}
+							unfilledColor={theme.colors.border}
+							size={80}
+							thickness={6}
+						/>
+						<Text className="absolute font-bold text-2xl">{level.currentLevel}</Text>
 					</View>
-				</View>
-				<View className="flex flex-row items-center justify-between pt-1">
-					<Text
-						style={{
-							color: theme.colors.text,
-						}}
-						className="text-[14px] font-semibold ml-2"
-					>
-						{level.currentLevel}
-					</Text>
-					<Progress.Bar
-						progress={level.currentXp / level.nextLevelXp}
-						width={width * 0.85}
-						height={10}
-						color={level.color || theme.colors.primary}
-						borderRadius={15}
-						borderWidth={0}
-						style={{
-							backgroundColor: theme.colors.border,
-						}}
-					/>
 				</View>
 			</Pressable>
 		</ZoomableView>

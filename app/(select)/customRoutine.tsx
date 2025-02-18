@@ -14,6 +14,7 @@ import RoutineResult from "@components/Select/Containers/RoutineResult";
 import LoaderResult from "@components/Select/Items/LoaderResult";
 import { Habit } from "@type/habit";
 import { useData } from "@context/DataContext";
+import { useTranslation } from "react-i18next";
 
 interface Answers {
 	[key: string]: string;
@@ -23,6 +24,7 @@ const CustomRoutineForm = () => {
 	const { theme } = useTheme();
 	const { habitsData } = useHabits();
 	const { member, setHabits } = useData();
+	const { t } = useTranslation();
 
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [answers, setAnswers] = useState<Answers>({});
@@ -82,115 +84,125 @@ const CustomRoutineForm = () => {
 	};
 
 	return (
-		<ScrollView
-			style={{ flex: 1, backgroundColor: theme.colors.background, paddingTop: 40 }}
-		>
-			<ButtonClose />
-			<View
-				className="flex-1 p-4 h-screen flex flex-col items-center justify-between"
-				style={{ backgroundColor: theme.colors.background }}
-			>
-				{loading ? (
-					<LoaderResult />
-				) : currentQuestionIndex < formRoutines.length ? (
-					<>
-						{/* Barre de progression */}
-						<View
-							className="h-2 rounded-full mb-5 overflow-hidden w-[95%] mx-auto"
-							style={{ backgroundColor: theme.colors.border }}
-						>
+		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+			<ScrollView style={{ flex: 1, paddingTop: 40 }}>
+				<ButtonClose />
+				<View
+					className="flex-1 p-4 flex flex-col items-center justify-between"
+					style={{ backgroundColor: theme.colors.background }}
+				>
+					{loading ? (
+						<LoaderResult />
+					) : currentQuestionIndex < formRoutines.length ? (
+						<>
+							{/* Barre de progression */}
 							<View
-								className="h-full rounded-full"
-								style={{ width: `${progress}%`, backgroundColor: theme.colors.primary }}
-							/>
-						</View>
-
-						{/* Questions du formulaire */}
-						<View className="w-[95%] mx-auto">
-							<Text
-								className="text-xl mb-5 font-semibold"
-								style={{ color: theme.colors.text }}
+								className="h-2 rounded-full mb-5 overflow-hidden w-[95%] mx-auto"
+								style={{ backgroundColor: theme.colors.border }}
 							>
-								{currentQuestion.question}
-							</Text>
-							{currentQuestion.answers.map((answer, index) => (
-								<TouchableOpacity
-									key={index}
-									onPress={() => handleAnswerSelect(answer)}
-									className={`p-3 rounded-lg my-2 ${
-										answers[currentQuestion.id] === answer ? "bg-primary" : "bg-card"
-									}`}
+								<View
+									className="h-full rounded-full"
 									style={{
-										backgroundColor:
-											answers[currentQuestion.id] === answer
-												? theme.colors.primary
-												: theme.colors.cardBackground,
+										width: `${progress}%`,
+										backgroundColor: theme.colors.primary,
 									}}
+								/>
+							</View>
+
+							{/* Questions du formulaire */}
+							<View className="w-[95%] mx-auto">
+								<Text
+									className="text-xl mb-5 font-semibold"
+									style={{ color: theme.colors.text }}
 								>
-									<Text
-										className="text-lg"
+									{currentQuestion.question}
+								</Text>
+								{currentQuestion.answers.map((answer, index) => (
+									<TouchableOpacity
+										key={index}
+										onPress={() => handleAnswerSelect(answer)}
+										className={`p-3 rounded-lg my-2 ${
+											answers[currentQuestion.id] === answer ? "bg-primary" : "bg-card"
+										}`}
 										style={{
-											color:
+											backgroundColor:
 												answers[currentQuestion.id] === answer
-													? theme.colors.textSecondary
-													: theme.colors.text,
+													? theme.colors.primary
+													: theme.colors.cardBackground,
 										}}
 									>
-										{answer}
-									</Text>
-								</TouchableOpacity>
-							))}
-						</View>
-
-						{/* Boutons Précédent / Suivant */}
-						<View className="flex-row justify-between w-10/12 mb-5">
-							<TouchableOpacity
-								onPress={handlePrevious}
-								disabled={currentQuestionIndex === 0}
-								className={`p-3 rounded-2xl items-center flex flex-row gap-2`}
-								style={{
-									backgroundColor:
-										currentQuestionIndex === 0
-											? theme.colors.grayPrimary
-											: theme.colors.border,
-								}}
-							>
-								<Iconify icon="mdi:arrow-left" size={20} color={theme.colors.text} />
-								<Text
-									className="font-semibold"
-									style={{
-										color: currentQuestionIndex === 0 ? "gray" : theme.colors.text,
-									}}
-								>
-									Précédent
-								</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								onPress={handleNext}
-								className="p-3 rounded-2xl items-center flex flex-row gap-2"
-								style={{ backgroundColor: theme.colors.backgroundTertiary }}
-								disabled={!answers[currentQuestion.id]}
-							>
-								<Text className="font-semibold" style={{ color: theme.colors.text }}>
-									{currentQuestionIndex === formRoutines.length - 1
-										? "Soumettre"
-										: "Suivant"}
-								</Text>
-								<Iconify icon="mdi:arrow-right" size={20} color={theme.colors.text} />
-							</TouchableOpacity>
-						</View>
-					</>
-				) : (
-					<RoutineResult
-						foundHabits={foundHabits}
-						selectedHabits={selectedHabits}
-						toggleHabitSelection={toggleHabitSelection}
-						setAnswers={setAnswers}
-						addHabits={addHabits}
-					/>
-				)}
+										<Text
+											className="text-lg"
+											style={{
+												color:
+													answers[currentQuestion.id] === answer
+														? theme.colors.textSecondary
+														: theme.colors.text,
+											}}
+										>
+											{answer}
+										</Text>
+									</TouchableOpacity>
+								))}
+							</View>
+						</>
+					) : (
+						<RoutineResult
+							foundHabits={foundHabits}
+							selectedHabits={selectedHabits}
+							toggleHabitSelection={toggleHabitSelection}
+							setAnswers={setAnswers}
+							addHabits={addHabits}
+						/>
+					)}
+				</View>
+			</ScrollView>
+			{/* Boutons Précédent / Suivant */}
+			<View
+				className="flex-row justify-between w-10/12 mb-5"
+				style={{
+					position: "absolute",
+					bottom: 20,
+					left: "5%",
+					right: "5%",
+				}}
+			>
+				<TouchableOpacity
+					onPress={handlePrevious}
+					disabled={currentQuestionIndex === 0}
+					className={`p-3 rounded-2xl items-center flex flex-row gap-2`}
+					style={{
+						backgroundColor:
+							currentQuestionIndex === 0
+								? theme.colors.border
+								: theme.colors.cardBackground,
+					}}
+				>
+					<Iconify icon="mdi:arrow-left" size={20} color={theme.colors.text} />
+					<Text
+						className="font-semibold"
+						style={{
+							color: currentQuestionIndex === 0 ? "gray" : theme.colors.text,
+						}}
+					>
+						{t("form_previous")}
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={handleNext}
+					className="p-3 rounded-2xl items-center flex flex-row gap-2"
+					style={{ backgroundColor: theme.colors.backgroundTertiary }}
+					disabled={!answers[currentQuestion.id]}
+				>
+					<Text className="font-semibold" style={{ color: theme.colors.text }}>
+						{currentQuestionIndex === formRoutines.length - 1
+							? t("form_finish")
+							: t("form_next")}
+					</Text>
+					<Iconify icon="mdi:arrow-right" size={20} color={theme.colors.text} />
+				</TouchableOpacity>
 			</View>
-		</ScrollView>
+		</View>
 	);
 };
 

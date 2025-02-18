@@ -235,5 +235,9 @@
     "habit_name": "Habit name",
     "start_a_work_session": "Start a work session",
     "session_work": "Work session",
-    "daily_rewards": "Daily rewards"
+    "daily_rewards": "Daily rewards",
+    "missions": "Missions",
+    "form_previous": "Previous",
+    "form_next": "Next",
+    "form_finish": "Finish"
 }

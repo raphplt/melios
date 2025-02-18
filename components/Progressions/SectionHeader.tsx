@@ -91,10 +91,10 @@ export default function SectionHeader({
 					<View className="flex flex-row items-center">
 						{renderIcon()}
 						<Text
-							className="text-[14px] mx-2"
+							className="text-lg font-semibold mx-1"
 							style={{
 								color: theme.colors.primary,
-								fontFamily: "BaskervilleBold",
+								// fontFamily: "BaskervilleBold",
 							}}
 						>
 							{title}

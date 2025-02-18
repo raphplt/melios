@@ -1,5 +1,5 @@
 import React, { type PropsWithChildren, type ReactElement } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedRef,
@@ -16,6 +16,8 @@ import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
 import { useTranslation } from "react-i18next";
 import * as Progress from "react-native-progress";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 const HEADER_HEIGHT = 250;
 
@@ -29,6 +31,7 @@ export default function ParallaxScrollView({
 }: Props) {
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
 	const scrollOffset = useScrollViewOffset(scrollRef);
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const { theme } = useTheme();
 	const { isDayTime, imageTemple } = useIndex();
@@ -83,18 +86,22 @@ export default function ParallaxScrollView({
 				<Animated.View
 					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 				>
-					<BlurBox position={{ top: 20, left: 20 }}>
+					<BlurBox
+						position={{ top: 20, left: 20 }}
+						// borderColor={theme.colors.border}
+						// borderWidth={1}
+					>
 						<WelcomeRow />
 					</BlurBox>
 
 					<View
 						style={{
 							top: 15,
-							right: 5,
+							right: 20,
 						}}
 						className="absolute z-30 py-2  overflow-hidden"
 					>
-						<View className="flex items-center justify-center flex-row px-2 mx-2 rounded-l-full">
+						<View className="flex items-center justify-center flex-row ">
 							<View className="flex items-center justify-center">
 								<Progress.Circle
 									size={32}
@@ -116,7 +123,17 @@ export default function ParallaxScrollView({
 							</View>
 						</View>
 					</View>
-					<BlurBox position={{ bottom: 20, left: 20 }}>
+					<BlurBox
+						position={{ bottom: 20, left: 20 }}
+						borderColor={
+							streakUpdatedToday
+								? isDayTime
+									? theme.colors.purplePrimary
+									: theme.colors.purpleSecondary
+								: color
+						}
+						borderWidth={1}
+					>
 						<View className="flex flex-row items-center gap-2">
 							<Iconify
 								icon="mdi:calendar"
@@ -127,7 +144,7 @@ export default function ParallaxScrollView({
 											: theme.colors.purpleSecondary
 										: color
 								}
-								size={18}
+								size={20}
 							/>
 							<Text
 								className="font-semibold text-[14px]"
@@ -143,6 +160,28 @@ export default function ParallaxScrollView({
 								{streak && streak?.value > 1 ? t("days") : t("day")}
 							</Text>
 						</View>
+					</BlurBox>
+					<BlurBox
+						position={{ bottom: 20, right: 20 }}
+						borderColor={theme.colors.border}
+						borderWidth={1}
+					>
+						<Pressable
+							className="flex flex-row items-center gap-2"
+							onPress={() => {
+								navigation.navigate("dailyRewards");
+							}}
+						>
+							<Iconify icon="mdi:rocket" color="white" size={20} />
+							<Text
+								className="font-semibold text-[14px]"
+								style={{
+									color: "white",
+								}}
+							>
+								{t("missions")}
+							</Text>
+						</Pressable>
 					</BlurBox>
 
 					{imageTemple ? (

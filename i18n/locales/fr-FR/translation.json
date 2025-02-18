@@ -237,5 +237,9 @@
     "habit_name": "Nom de l'habitude",
     "start_a_work_session": "Commencer une session de travail",
     "session_work": "Session de travail",
-    "daily_rewards": "Récompenses quotidiennes"
+    "daily_rewards": "Récompenses quotidiennes",
+    "missions": "Missions",
+    "form_previous": "Précédent",
+    "form_next": "Suivant",
+    "form_finish": "Terminer"
 }
