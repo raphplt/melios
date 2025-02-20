@@ -44,13 +44,7 @@ function Activity({ habit }: { habit: UserHabit }) {
 
 	return (
 		<ZoomableView>
-			<View
-				className="h-64 w-40 mx-2 rounded-xl"
-				style={{
-					borderColor: theme.colors.border,
-					borderWidth: 1,
-				}}
-			>
+			<View className="h-64 w-40 mx-2 rounded-xl">
 				<Pressable
 					onPress={goHabitDetail}
 					className="flex flex-col justify-between h-full"

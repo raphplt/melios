@@ -239,5 +239,11 @@
     "missions": "Missions",
     "form_previous": "Previous",
     "form_next": "Next",
-    "form_finish": "Finish"
+    "form_finish": "Finish",
+    "level_title": "Level",
+    "skills": "Skills",
+    "level_global_health": "Global health",
+    "level_social_life": "Social life",
+    "level_learning": "Learning",
+    "level_financial_management": "Financial management"
 }

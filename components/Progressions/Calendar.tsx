@@ -125,7 +125,6 @@ const CalendarHabits = () => {
 						className="w-[95%] mx-auto rounded-xl my-2"
 						style={{
 							borderColor: theme.colors.border,
-							borderWidth: 2,
 						}}
 					>
 						<Calendar

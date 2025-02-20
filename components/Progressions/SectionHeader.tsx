@@ -78,34 +78,29 @@ export default function SectionHeader({
 
 	return (
 		<>
-			<ZoomableView>
-				<Pressable
-					className="flex flex-row w-[95%] rounded-xl px-2 py-2 mx-auto items-center justify-between my-1"
-					style={{
-						backgroundColor: theme.colors.background,
-						borderColor: theme.colors.primary,
-						borderWidth: 1,
-					}}
-					onPress={toggleShow}
-				>
-					<View className="flex flex-row items-center">
-						{renderIcon()}
-						<Text
-							className="text-lg font-semibold mx-1"
-							style={{
-								color: theme.colors.primary,
-								// fontFamily: "BaskervilleBold",
-							}}
-						>
-							{title}
-						</Text>
-					</View>
+			<Pressable
+				className="flex flex-row w-[95%] rounded-xl px-3 py-3 mx-auto items-center justify-between my-1"
+				style={{
+					backgroundColor: theme.colors.cardBackground,
+				}}
+				onPress={toggleShow}
+			>
+				<View className="flex flex-row items-center">
+					{renderIcon()}
+					<Text
+						className="text-base font-semibold ml-2"
+						style={{
+							color: theme.colors.primary,
+						}}
+					>
+						{title.toUpperCase()}
+					</Text>
+				</View>
 
-					<Animated.View style={{ transform: [{ rotate: rotation }] }}>
-						<Ionicons name="chevron-down" size={22} color={theme.colors.primary} />
-					</Animated.View>
-				</Pressable>
-			</ZoomableView>
+				<Animated.View style={{ transform: [{ rotate: rotation }] }}>
+					<Ionicons name="chevron-down" size={22} color={theme.colors.primary} />
+				</Animated.View>
+			</Pressable>
 
 			{show && (
 				<View

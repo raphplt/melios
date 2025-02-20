@@ -4,7 +4,8 @@ export type GenericLevel = {
 	description: string;
 	color: string;
 	associatedCategoryIds: string[];
-	icon?: string;
+	icon: string;
+	slug: string;
 };
 
 export type UserLevel = {

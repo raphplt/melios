@@ -6,7 +6,6 @@ import { getAllCategories } from "@db/category";
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
 import { GenericLevel } from "@type/levels";
-import { getAllGenericLevels } from "@db/levels";
 
 interface HabitsContextProps {
 	habitsData: Habit[];
@@ -17,10 +16,6 @@ interface HabitsContextProps {
 	showHabitDetail?: boolean;
 	setShowHabitDetail: React.Dispatch<React.SetStateAction<boolean>>;
 	categories: Category[];
-	refreshCategories: (forceRefresh?: boolean) => void;
-	genericLevels: GenericLevel[];
-	setGenericLevels: React.Dispatch<React.SetStateAction<GenericLevel[]>>;
-	refreshGenericLevels: (forceRefresh?: boolean) => void;
 }
 
 export const HabitsContext = createContext<HabitsContextProps>({
@@ -32,10 +27,6 @@ export const HabitsContext = createContext<HabitsContextProps>({
 	showHabitDetail: false,
 	setShowHabitDetail: () => {},
 	categories: [],
-	refreshCategories: () => {},
-	genericLevels: [],
-	setGenericLevels: () => {},
-	refreshGenericLevels: () => {},
 });
 
 type HabitsProviderProps = {
@@ -48,13 +39,13 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 	const [currentHabit, setCurrentHabit] = useState<UserHabit | null>(null);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [showHabitDetail, setShowHabitDetail] = useState(false);
-	const [genericLevels, setGenericLevels] = useState<GenericLevel[]>([]);
 
 	const fetchHabitsData = async (signal: AbortSignal, forceRefresh = false) => {
 		try {
 			const data = await getHabitsWithCategories(forceRefresh);
 			if (!signal.aborted) {
-				setHabitsData(data);
+				setHabitsData(data.habits);
+				setCategories(data.categories);
 				setLoading(false);
 			}
 		} catch (error) {
@@ -64,50 +55,11 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 		}
 	};
 
-	const fetchCategoriesData = async (
-		signal: AbortSignal,
-		forceRefresh = false
-	) => {
-		try {
-			const data = await getAllCategories(forceRefresh);
-			if (!signal.aborted) {
-				setCategories(data);
-			}
-		} catch (error) {
-			if (!signal.aborted) {
-				console.log("Erreur lors de la récupération des catégories :", error);
-			}
-		}
-	};
-
-	const fetchGenericLevelsData = async (
-		signal: AbortSignal,
-		forceRefresh = false
-	) => {
-		try {
-			const snapshotGenericLevels = await getAllGenericLevels({
-				forceRefresh,
-			});
-			if (!signal.aborted) {
-				setGenericLevels(snapshotGenericLevels);
-			}
-		} catch (error) {
-			if (!signal.aborted) {
-				console.log(
-					"Erreur lors de la récupération des niveaux génériques :",
-					error
-				);
-			}
-		}
-	};
-
 	useEffect(() => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
 		fetchHabitsData(signal);
-		fetchGenericLevelsData(signal);
-		fetchCategoriesData(signal); // TODO à retirer si inutile
 
 		return () => {
 			console.log("HabitsProvider - cleanup");
@@ -127,12 +79,6 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 				showHabitDetail,
 				setShowHabitDetail,
 				categories,
-				refreshCategories: (forceRefresh = false) =>
-					fetchCategoriesData(new AbortController().signal, forceRefresh),
-				genericLevels,
-				setGenericLevels,
-				refreshGenericLevels: (forceRefresh = false) =>
-					fetchGenericLevelsData(new AbortController().signal, forceRefresh),
 			}}
 		>
 			{children}

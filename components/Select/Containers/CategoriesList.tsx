@@ -11,11 +11,12 @@ import { useNavigation } from "expo-router";
 import { Iconify } from "react-native-iconify";
 
 export default function CategoriesList() {
-	const { categories, refreshCategories } = useHabits();
+	const { categories } = useHabits();
 	const { type } = useSelect();
-	const [hasRefreshed, setHasRefreshed] = useState(false);
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+	const [hasRefreshed, setHasRefreshed] = useState(false);
 
 	const { t } = useTranslation();
 
@@ -33,10 +34,9 @@ export default function CategoriesList() {
 			(!negativeCategories || !positiveCategories || missingIcon) &&
 			!hasRefreshed
 		) {
-			refreshCategories(true);
 			setHasRefreshed(true);
 		}
-	}, [categories, hasRefreshed, refreshCategories]);
+	}, [categories, hasRefreshed]);
 
 	if (!categories) {
 		return null;

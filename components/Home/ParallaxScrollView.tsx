@@ -8,7 +8,6 @@ import Animated, {
 } from "react-native-reanimated";
 import BlurBox from "./ParallaxBlurBox";
 import { useTabBarPadding } from "@hooks/useTabBar";
-import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
@@ -18,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import * as Progress from "react-native-progress";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
+import MissionButton from "./MissionButton";
 
 const HEADER_HEIGHT = 250;
 
@@ -86,11 +86,7 @@ export default function ParallaxScrollView({
 				<Animated.View
 					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 				>
-					<BlurBox
-						position={{ top: 20, left: 20 }}
-						// borderColor={theme.colors.border}
-						// borderWidth={1}
-					>
+					<BlurBox position={{ top: 20, left: 20 }}>
 						<WelcomeRow />
 					</BlurBox>
 
@@ -99,7 +95,7 @@ export default function ParallaxScrollView({
 							top: 15,
 							right: 20,
 						}}
-						className="absolute z-30 py-2  overflow-hidden"
+						className="absolute z-30 py-2 overflow-hidden"
 					>
 						<View className="flex items-center justify-center flex-row ">
 							<View className="flex items-center justify-center">
@@ -161,28 +157,7 @@ export default function ParallaxScrollView({
 							</Text>
 						</View>
 					</BlurBox>
-					<BlurBox
-						position={{ bottom: 20, right: 20 }}
-						borderColor={theme.colors.border}
-						borderWidth={1}
-					>
-						<Pressable
-							className="flex flex-row items-center gap-2"
-							onPress={() => {
-								navigation.navigate("dailyRewards");
-							}}
-						>
-							<Iconify icon="mdi:rocket" color="white" size={20} />
-							<Text
-								className="font-semibold text-[14px]"
-								style={{
-									color: "white",
-								}}
-							>
-								{t("missions")}
-							</Text>
-						</Pressable>
-					</BlurBox>
+					<MissionButton />
 
 					{imageTemple ? (
 						<Image

@@ -1,38 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchCollectionData } from "./fetch";
 import { doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 import { db } from ".";
 import { GenericLevel, UserLevel } from "@type/levels";
-
-const LOCAL_STORAGE_GENERIC_LEVELS_ICONS_KEY = "genericLevels";
-
-/**
- * 	Fonction pour récupérer tous les niveaux génériques
- *
- * @param options
- * @returns
- */
-export const getAllGenericLevels = async (
-	options: {
-		signal?: AbortSignal;
-		forceRefresh?: boolean;
-	} = {}
-) => {
-	if (!options.forceRefresh) {
-		const storedData = await AsyncStorage.getItem(
-			LOCAL_STORAGE_GENERIC_LEVELS_ICONS_KEY
-		);
-		if (storedData && Object.keys(JSON.parse(storedData)).length > 0) {
-			return JSON.parse(storedData);
-		}
-	}
-
-	return fetchCollectionData(
-		"genericLevels",
-		LOCAL_STORAGE_GENERIC_LEVELS_ICONS_KEY,
-		options.forceRefresh || false
-	);
-};
 
 /**
  * Fonction pour récupérer les niveaux d'un utilisateur
@@ -111,7 +79,7 @@ export const initUserLevels = async (
 
 		if (docSnap.exists()) {
 			console.log("Document already exists for userId: ", userId);
-			return docSnap.data().levels; // Retourne les niveaux existants
+			return docSnap.data().levels;
 		}
 
 		const userLevels = genericLevels.reduce(
@@ -137,8 +105,6 @@ export const initUserLevels = async (
 		throw error;
 	}
 };
-
-
 
 export const calculateNextLevelXp = (level: number): number => {
 	return Math.floor(100 * Math.pow(1.5, level - 1));

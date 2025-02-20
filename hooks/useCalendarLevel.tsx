@@ -22,9 +22,8 @@ const useCompletedHabitPeriods = () => {
 		// On parcourt tous les logs et sous-logs
 		logs.forEach((logEntry: Log) => {
 			logEntry.logs?.forEach((dailyLog: DailyLog) => {
-				if (!dailyLog.date) return; // sécurité
+				if (!dailyLog.date) return;
 
-				// dailyLog.date est maintenant une Date JavaScript
 				const logDate = moment(dailyLog.date).format("YYYY-MM-DD");
 
 				completedDates.add(logDate);

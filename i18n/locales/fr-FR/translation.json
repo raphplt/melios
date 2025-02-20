@@ -241,5 +241,11 @@
     "missions": "Missions",
     "form_previous": "Précédent",
     "form_next": "Suivant",
-    "form_finish": "Terminer"
+    "form_finish": "Terminer",
+    "level_title": "Niveau",
+    "skills": "Compétences",
+    "level_global_health": "Santé globale",
+    "level_social_life": "Vie sociale",
+    "level_learning": "Apprentissage",
+    "level_financial_management": "Gestion financière"
 }

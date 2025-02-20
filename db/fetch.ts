@@ -14,6 +14,7 @@ export const fetchCollectionData = async (
 ) => {
 	try {
 		if (!forceRefresh) {
+			// console.log(`Fetching ${collectionName} from local storage...`);
 			const storedData = await AsyncStorage.getItem(storageKey);
 			if (storedData) {
 				return JSON.parse(storedData);
@@ -70,7 +71,7 @@ export const getHabitsWithCategories = async (forceRefresh = false) => {
 			category: categoriesMap[habit.category as any],
 		}));
 
-		return habitsWithCategories;
+		return { habits: habitsWithCategories, categories };
 	} catch (error) {
 		console.error(
 			"Erreur lors de la récupération des habitudes avec leurs catégories associées: ",

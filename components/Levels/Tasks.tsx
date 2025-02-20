@@ -15,9 +15,9 @@ const Tasks = () => {
 	const { categories } = useHabits();
 	const { t } = useTranslation();
 	const { theme } = useTheme();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	if (!selectedLevel) return null;
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const filteredHabits = habits.filter((habit) => {
 		const category = categories.find(
@@ -26,7 +26,7 @@ const Tasks = () => {
 		const categoryId = category?.id || "";
 		const categoryIdNumber = Number(categoryId);
 		const isIncluded = selectedLevel.associatedCategoryIds.includes(
-			categoryIdNumber as any
+			String(categoryIdNumber)
 		);
 		return isIncluded;
 	});

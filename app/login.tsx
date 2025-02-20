@@ -52,7 +52,7 @@ export default function Login() {
 	const isFocused = useIsFocused();
 	const { t } = useTranslation();
 	const { user, isLoading } = useSession();
-	const { refreshCategories, refreshHabits } = useHabits();
+	const { refreshHabits } = useHabits();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const [loadingLogin, setLoadingLogin] = useState(false);
 
@@ -135,7 +135,6 @@ export default function Login() {
 				setError(snapshot.error);
 				return;
 			} else {
-				refreshCategories(true);
 				refreshHabits(true);
 			}
 		} catch (error) {

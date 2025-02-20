@@ -21,19 +21,15 @@ import { Log } from "@type/log";
 import { getAllHabitLogs } from "@db/logs";
 import { calculateCompletedHabits } from "@utils/habitsUtils";
 import { CombinedLevel, UserLevel } from "@type/levels";
-import {
-	getAllGenericLevels,
-	getUserLevelsByUserId,
-	initUserLevels,
-} from "@db/levels";
+import { getUserLevelsByUserId, initUserLevels } from "@db/levels";
 import { useSession } from "./UserContext";
 import { getRewards } from "@db/rewards";
 import { extractPoints } from "@utils/pointsUtils";
 import { Reward } from "@type/reward";
 import { Streak } from "@type/streak";
 import { getUserStreak, initializeStreak } from "@db/streaks";
-import { useHabits } from "./HabitsContext";
 import { Pack } from "@type/pack";
+import { genericLevels } from "@constants/levels";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -48,7 +44,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [completedHabitsToday, setCompletedHabitsToday] = useState<UserHabit[]>(
 		[]
 	);
-	const { genericLevels } = useHabits();
 	const [isLoading, setIsLoading] = useState(true);
 	const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
 	const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
@@ -112,7 +107,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 				//Rewards
 				const snapshotRewards = await getRewards({
 					signal: abortController.signal,
-					forceRefresh: true,
+					forceRefresh: false,
 				});
 				if (snapshotRewards) {
 					setPoints(extractPoints(snapshotRewards as Reward[]));
@@ -167,18 +162,10 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 			}
 
 			try {
-				let localGenericLevels = genericLevels;
-
-				// Si les genericLevels sont vides, les récupérer directement
-				if (!localGenericLevels || localGenericLevels.length === 0) {
-					localGenericLevels = await getAllGenericLevels({ forceRefresh: true });
-				}
-
-				// Vérifier si les niveaux utilisateur existent
 				const fetchedUserLevels = await getUserLevelsByUserId(user.uid);
 
 				if (!fetchedUserLevels || Object.keys(fetchedUserLevels).length === 0) {
-					await initUserLevels(user.uid, localGenericLevels);
+					await initUserLevels(user.uid, genericLevels);
 
 					const initializedLevels = await getUserLevelsByUserId(user.uid);
 					setUsersLevels(initializedLevels);

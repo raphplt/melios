@@ -26,6 +26,8 @@ const LevelDetail = () => {
 
 	if (!selectedLevel) return null;
 
+	console.log("selectedLevel", selectedLevel.associatedCategoryIds);
+
 	return (
 		<ScrollView
 			style={{
