@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { View, Pressable } from "react-native";
+import { View, Pressable, Button } from "react-native";
 import { Text } from "react-native";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -136,12 +136,23 @@ function CardCheckHabit({
 
 	const isNegative = habit.type === CategoryTypeSelect.negative;
 
+	// const addXpFnc = async () => {
+	// 	if (addXp) {
+	// 		await addXp(habit, 10 * habit.difficulty);
+	// 	}
+	// }
+
 	return (
 		<ZoomableView>
 			<Animated.View
 				style={[animatedStyles]}
 				className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
 			>
+				{/* <Button
+					title="Add XP"
+				onPress={addXpFnc}
+				/> */}
+
 				<Pressable
 					onPress={setHabitDone}
 					className="flex items-center justify-center"

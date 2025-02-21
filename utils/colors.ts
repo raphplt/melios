@@ -11,6 +11,12 @@ export function lightenColor(hex: string, alpha: number = 0.1): string {
 	return hex;
 }
 
+export function lightenColorHex(hex: string, amount: number = 10): string {
+	const color = tinycolor(hex);
+	const lightened = color.lighten(amount);
+	return lightened.toHexString();
+}
+
 export const getFlammeColor = (todayScore: number): string => {
 	if (todayScore >= 0 && todayScore < 30) {
 		return "#FFD580";

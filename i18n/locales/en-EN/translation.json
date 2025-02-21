@@ -245,5 +245,8 @@
     "level_global_health": "Global health",
     "level_social_life": "Social life",
     "level_learning": "Learning",
-    "level_financial_management": "Financial management"
+    "level_financial_management": "Financial management",
+    "level_up": "Level up",
+    "points_earned": "Points earned",
+    "continue": "Continue"
 }

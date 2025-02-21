@@ -1,12 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Text, View, Animated, Dimensions } from "react-native";
-import ModalWrapper from "./ModalWrapper";
-import * as Progress from "react-native-progress";
+import React, { useEffect, useRef } from "react";
+import {
+	Text,
+	View,
+	Animated,
+	Dimensions,
+	Modal,
+	Pressable,
+} from "react-native";
 import { CombinedLevel } from "@type/levels";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
-import ConfettiCannon from "react-native-confetti-cannon";
 import MoneyMelios from "@components/Svg/MoneyMelios";
+import { LinearGradient } from "expo-linear-gradient";
+import BadgeLevel from "@components/Svg/Level";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { lightenColor, lightenColorHex } from "@utils/colors";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 type Props = {
 	visible: boolean;
@@ -15,116 +24,149 @@ type Props = {
 };
 
 const NextLevel = ({ visible, setVisible, levelData }: Props) => {
-	const [progress, setProgress] = useState(0);
-	const [showConfetti, setShowConfetti] = useState(false);
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const animatedProgress = useRef(new Animated.Value(0)).current;
-	const confettiRef = useRef<any>(null);
+	const fadeAnim = useRef(new Animated.Value(0)).current;
+	const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
 	useEffect(() => {
 		if (visible) {
-			setShowConfetti(true);
-			Animated.timing(animatedProgress, {
-				toValue: 100,
-				duration: 1500,
-				useNativeDriver: false,
-			}).start(() => {
-				setProgress(100);
-			});
+			Animated.parallel([
+				Animated.timing(animatedProgress, {
+					toValue: 100,
+					duration: 1500,
+					useNativeDriver: false,
+				}),
+				Animated.timing(fadeAnim, {
+					toValue: 1,
+					duration: 500,
+					useNativeDriver: true,
+				}),
+				Animated.timing(scaleAnim, {
+					toValue: 1,
+					duration: 500,
+					useNativeDriver: true,
+				}),
+			]).start(() => {});
 		} else {
-			setShowConfetti(false);
-			Animated.timing(animatedProgress, {
-				toValue: 0,
-				duration: 500,
-				useNativeDriver: false,
-			}).start(() => {
-				setProgress(0);
-			});
+			Animated.parallel([
+				Animated.timing(animatedProgress, {
+					toValue: 0,
+					duration: 500,
+					useNativeDriver: false,
+				}),
+				Animated.timing(fadeAnim, {
+					toValue: 0,
+					duration: 500,
+					useNativeDriver: true,
+				}),
+				Animated.timing(scaleAnim, {
+					toValue: 0.8,
+					duration: 500,
+					useNativeDriver: true,
+				}),
+			]).start(() => {});
 		}
 	}, [visible]);
 
 	if (!levelData) return null;
 
+	const lightHex = lightenColorHex(levelData.color);
+
 	return (
-		<ModalWrapper visible={visible} setVisible={setVisible}>
-			<View className="p-2 items-center w-11/12 mx-auto">
-				{showConfetti && (
-					<ConfettiCannon
-						ref={confettiRef}
-						count={200}
-						fadeOut
-						origin={{ x: Dimensions.get("window").width / 2, y: 0 }}
-					/>
-				)}
-				<Text className="text-3xl font-bold mb-3 text-green-600">
-					🎉 {t("congratulations")}!
-				</Text>
-				<Text
-					className="text-lg mb-2"
+		<Modal
+			visible={visible}
+			transparent={false}
+			hardwareAccelerated={true}
+			onRequestClose={() => {
+				setVisible(false);
+			}}
+			statusBarTranslucent={true}
+			className="w-screen h-screen"
+		>
+			<Animated.View
+				style={{
+					flex: 1,
+					opacity: fadeAnim,
+					transform: [{ scale: scaleAnim }],
+				}}
+			>
+				<LinearGradient
 					style={{
-						color: theme.colors.textTertiary,
+						paddingTop: 40,
+						height: Dimensions.get("screen").height,
+						padding: 10,
+						margin: "auto",
+						width: "100%",
 					}}
+					start={[0, 0]}
+					colors={[
+						lightenColor(levelData.color, 0.4) || theme.colors.yellowSecondary,
+						theme.colors.background,
+						lightenColor(levelData.color, 0.4) || theme.colors.yellowSecondary,
+					]}
 				>
-					{t("you_achieve_a_new_level")}!
-				</Text>
-				<Text
-					className="text-xl font-semibold mb-5"
-					style={{
-						color: theme.colors.text,
-					}}
-				>
-					{levelData.name}
-				</Text>
+					<View className="flex flex-col items-center justify-center w-full h-full">
+						<BadgeLevel
+							level={levelData.currentLevel ?? 1}
+							color1={levelData.color}
+							color2={lightHex}
+						/>
+						<Text className="text-2xl font-bold mt-4">
+							{t("level_up").toUpperCase()}!
+						</Text>
 
-				<View className="flex-row w-full justify-between items-center mb-3">
-					<Text
-						className="text-base"
-						style={{
-							color: theme.colors.textTertiary,
-						}}
-					>
-						{levelData.currentLevel ? levelData.currentLevel - 1 : 0}
-					</Text>
-					<Text
-						className="text-base"
-						style={{
-							color: theme.colors.textTertiary,
-						}}
-					>
-						{levelData.currentLevel ?? 1}
-					</Text>
-				</View>
+						<View className="flex flex-row justify-evenly w-full mt-10">
+							{/* Partie gauche */}
+							<View className="flex flex-col justify-between items-center">
+								<View className="flex flex-col items-center">
+									<MoneyMelios width={40} height={40} />
+									<Text className="font-semibold text-lg mt-2">
+										+{levelData.currentLevel + 2}
+									</Text>
+									<Text className="text-sm text-gray-700">{t("points_earned")}</Text>
+								</View>
+							</View>
 
-				<Progress.Bar
-					progress={progress / 100}
-					color={levelData.color || theme.colors.greenPrimary}
-					unfilledColor={theme.colors.border}
-					borderWidth={0}
-					height={10}
-					width={Dimensions.get("window").width - 100}
-				/>
+							{/* Partie droite */}
+							<View className="flex flex-col items-center">
+								<FontAwesome6
+									name={levelData.icon}
+									size={40}
+									color={levelData.color ?? theme.colors.primary}
+								/>
+								<Text className="font-semibold text-lg mt-2">{t(levelData.slug)}</Text>
+								<Text className="text-sm text-gray-700">{t("category")}</Text>
+							</View>
+						</View>
 
-				<Text className="text-sm text-gray-500">
-					{t("progression")}: {progress}%
-				</Text>
-
-				<View className="my-3 flex flex-row w-10/12 justify-between items-center">
-					<Text
-						className="font-semibold"
-						style={{
-							color: theme.colors.textTertiary,
-						}}
-					>
-						{t("you_won")} :
-					</Text>
-					<View className="flex flex-row items-center gap-2">
-						<Text className="font-semibold">{levelData.currentLevel + 2}</Text>
-						<MoneyMelios width={22} />
+						<View className="mt-24 w-full mx-auto">
+							<ZoomableView>
+								<Pressable
+									className="w-[95%] mx-auto p-4 rounded-xl flex items-center justify-center"
+									style={{
+										backgroundColor: theme.colors.primary,
+									}}
+									onPress={() => {
+										setVisible(false);
+									}}
+								>
+									<Text
+										style={{
+											color: theme.colors.textSecondary,
+										}}
+										className="text-xl font-semibold"
+									>
+										{t("continue")}
+									</Text>
+								</Pressable>
+							</ZoomableView>
+						</View>
 					</View>
-				</View>
-			</View>
-		</ModalWrapper>
+				</LinearGradient>
+			</Animated.View>
+		</Modal>
 	);
 };
 

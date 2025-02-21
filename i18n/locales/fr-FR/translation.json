@@ -247,5 +247,8 @@
     "level_global_health": "Santé globale",
     "level_social_life": "Vie sociale",
     "level_learning": "Apprentissage",
-    "level_financial_management": "Gestion financière"
+    "level_financial_management": "Gestion financière",
+    "level_up": "Niveau supérieur",
+    "points_earned": "Points gagnés",
+    "continue": "Continuer"
 }

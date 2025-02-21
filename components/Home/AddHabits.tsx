@@ -18,14 +18,16 @@ export default function AddHabits() {
 				onPress={() => {
 					navigation.navigate("(select)");
 				}}
-				className="rounded-full p-[6px]"
+				className="rounded-full p-2"
 				style={{
-					backgroundColor: theme.colors.background,
-					borderColor: theme.colors.primary,
-					borderWidth: 2,
+					backgroundColor: theme.colors.primary,
 				}}
 			>
-				<Iconify icon="ic:round-plus" size={24} color={theme.colors.primary} />
+				<Iconify
+					icon="ic:round-plus"
+					size={24}
+					color={theme.colors.textSecondary}
+				/>
 			</Pressable>
 		</Animated.View>
 	);

@@ -1,5 +1,5 @@
 import React, { type PropsWithChildren, type ReactElement } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedRef,
@@ -15,8 +15,6 @@ import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
 import { useTranslation } from "react-i18next";
 import * as Progress from "react-native-progress";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
 import MissionButton from "./MissionButton";
 
 const HEADER_HEIGHT = 250;
@@ -31,7 +29,6 @@ export default function ParallaxScrollView({
 }: Props) {
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
 	const scrollOffset = useScrollViewOffset(scrollRef);
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const { theme } = useTheme();
 	const { isDayTime, imageTemple } = useIndex();
@@ -115,13 +112,23 @@ export default function ParallaxScrollView({
 						<View className="flex flex-row items-center gap-2">
 							<Iconify
 								icon="mdi:calendar"
-								color={streakUpdatedToday ? theme.colors.primary : color}
+								color={
+									streakUpdatedToday
+										? isDayTime
+											? theme.colors.primary
+											: theme.colors.backgroundTertiary
+										: color
+								}
 								size={20}
 							/>
 							<Text
 								className="font-semibold text-[14px]"
 								style={{
-									color: streakUpdatedToday ? theme.colors.primary : color,
+									color: streakUpdatedToday
+										? isDayTime
+											? theme.colors.primary
+											: theme.colors.backgroundTertiary
+										: color,
 								}}
 							>
 								{t("streak")} : {streak?.value}{" "}
