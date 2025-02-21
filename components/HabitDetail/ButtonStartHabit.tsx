@@ -26,13 +26,12 @@ export default function ButtonStartHabit() {
 		navigation.navigate("timerHabit");
 	};
 
-	const habitPoints = getHabitPoints(currentHabit);
 
 	return (
 		<ZoomableView>
 			<Pressable
 				onPress={handlePress}
-				className="py-3 px-4 rounded-lg w-11/12 mx-auto justify-evenly flex flex-row items-center"
+				className="py-3 px-6 rounded-full mx-2 justify-evenly flex flex-row items-center"
 				style={{
 					backgroundColor: theme.colors.primary,
 				}}
@@ -41,11 +40,6 @@ export default function ButtonStartHabit() {
 					<Text className=" font-semibold text-[16px] text-white mx-1">
 						{t("launch")}
 					</Text>
-					<RewardDetail
-						point={habitPoints.rewards}
-						money={<MoneyMelios />}
-						color={theme.colors.textSecondary}
-					/>
 				</View>
 			</Pressable>
 		</ZoomableView>

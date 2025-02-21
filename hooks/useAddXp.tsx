@@ -5,10 +5,11 @@ import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { getLevelByCategoryId } from "@utils/progressionUtils";
 import { UserLevel } from "@type/levels";
+import { genericLevels } from "@constants/levels";
 
 const useAddXp = () => {
 	const { usersLevels, setUsersLevels, member } = useData();
-	const { categories, genericLevels } = useHabits();
+	const { categories } = useHabits();
 
 	if (!member) {
 		console.error("No member found in useAddXp");

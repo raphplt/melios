@@ -1,7 +1,6 @@
 import React from "react";
 import { ScrollView, StatusBar, Text, View, Dimensions } from "react-native";
 import * as Progress from "react-native-progress";
-import { Iconify } from "react-native-iconify";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useTheme } from "@context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,10 +24,12 @@ const DailyRewards: React.FC = () => {
 
 	return (
 		<ScrollView
-			className="flex-1 pt-10"
-			contentContainerStyle={{ flexGrow: 1 }}
+			className="flex-1"
 			showsVerticalScrollIndicator={false}
-			style={{ backgroundColor: theme.colors.background }}
+			style={{
+				backgroundColor: theme.colors.background,
+				// marginTop: 20,
+			}}
 		>
 			<StatusBar
 				barStyle="light-content"
@@ -36,7 +37,7 @@ const DailyRewards: React.FC = () => {
 				translucent
 			/>
 			<View
-				className="rounded-b-lg py-4 px-4"
+				className="rounded-b-xl py-4 pt-12 px-4"
 				style={{ backgroundColor: theme.colors.backgroundTertiary }}
 			>
 				<ButtonClose />

@@ -288,7 +288,7 @@ export default function Login() {
 				</View>
 
 				<View
-					className="mx-auto rounded-2xl my-3 p-3 flex flex-row items-center w-full"
+					className="mx-auto rounded-2xl my-3 p-3 flex flex-row items-center w-11/12"
 					style={{
 						backgroundColor: theme.colors.redSecondary,
 						display: error === "" ? "none" : "flex",

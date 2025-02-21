@@ -24,7 +24,7 @@ export default function HabitDetailHeader() {
 			<FontAwesome6
 				name={currentHabit.icon || "question"}
 				size={24}
-				color={textColor}
+				color={currentHabit.color ?? textColor}
 				style={{ marginRight: 15 }}
 			/>
 			<Text
@@ -32,7 +32,7 @@ export default function HabitDetailHeader() {
 					color: textColor,
 					fontFamily: "BaskervilleBold",
 				}}
-				className="text-lg text-center font-semibold"
+				className="text-xl text-center font-semibold"
 			>
 				{currentHabit.name}
 			</Text>

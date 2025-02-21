@@ -25,9 +25,6 @@ const LevelDetail = () => {
 	const { selectedLevel } = useData();
 
 	if (!selectedLevel) return null;
-
-	console.log("selectedLevel", selectedLevel.associatedCategoryIds);
-
 	return (
 		<ScrollView
 			style={{
@@ -43,6 +40,7 @@ const LevelDetail = () => {
 			<View
 				style={{
 					paddingTop: 40,
+					zIndex: 10,
 				}}
 			>
 				<ButtonClose />

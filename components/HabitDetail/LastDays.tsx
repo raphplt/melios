@@ -102,7 +102,7 @@ export default function LastDays() {
 			tint="extraLight"
 		>
 			{/* En-tête avec icône + STREAK */}
-			<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 pb-1">
+			<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 mb-2">
 				<View className="flex flex-row items-center">
 					<Iconify icon="ph:calendar-check-fill" size={20} color={textColor} />
 					<Text
@@ -113,16 +113,16 @@ export default function LastDays() {
 					</Text>
 				</View>
 				<View
-					className="flex flex-row items-center justify-start px-3 py-1"
+					className="flex flex-row items-center justify-start px-3 py-1 gap-1 rounded-full"
 					style={{
-						backgroundColor: theme.colors.backgroundSecondary,
-						borderRadius: 10,
+						borderWidth: 1,
+						borderColor: theme.colors.textSecondary,
 					}}
 				>
-					<Iconify icon="mdi:fire" size={20} color={theme.colors.redPrimary} />
+					<Iconify icon="mdi:fire" size={18} color={theme.colors.redPrimary} />
 					<Text
 						style={{ color: theme.colors.text }}
-						className="text-[14px] font-semibold italic"
+						className="text-[12px] font-semibold italic"
 					>
 						{t("streak")}: {currentStreak}
 					</Text>

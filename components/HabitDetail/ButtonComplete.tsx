@@ -60,7 +60,7 @@ export default function ButtonComplete() {
 			<ZoomableView>
 				<Pressable
 					onPress={handlePress}
-					className="py-3 px-4 rounded-lg w-11/12 mx-auto justify-evenly flex flex-row items-center"
+					className="py-3 px-4 rounded-full mx-2 justify-evenly flex flex-row items-center"
 					style={{
 						backgroundColor: theme.colors.backgroundSecondary,
 					}}
@@ -80,39 +80,6 @@ export default function ButtonComplete() {
 										? t("restart")
 										: t("complete")}
 								</Text>
-
-								{currentHabit.type !== CategoryTypeSelect.negative ? (
-									<View className="flex flex-row items-center mx-1">
-										<View
-											style={{
-												width: 28,
-												height: 28,
-												justifyContent: "center",
-												alignItems: "center",
-											}}
-										>
-											<Image
-												source={require("@assets/images/badge.png")}
-												style={{ width: "100%", height: "100%", position: "absolute" }}
-											/>
-											<Text className="text-[12px] font-bold text-white text-center">
-												{10 * currentHabit.difficulty}
-											</Text>
-										</View>
-										<Text
-											style={{
-												color: theme.colors.primary,
-											}}
-											className="text-[12x] font-semibold px-1"
-										>
-											XP
-										</Text>
-									</View>
-								) : (
-									<View className="mx-2">
-										<Iconify icon="mdi:restart" size={20} color={theme.colors.text} />
-									</View>
-								)}
 							</View>
 						)}
 					</View>

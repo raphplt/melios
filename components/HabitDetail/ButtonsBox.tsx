@@ -21,14 +21,15 @@ export default function ButtonsBox() {
 	return (
 		<View className="py-6">
 			{!isHabitCompleted ? (
-				<View>
-					{habitHasDuration && !isNegativeHabit ? (
-						<View>
+				<View className="flex flex-row justify-evenly w-11/12 mx-auto">
+					{habitHasDuration && !isNegativeHabit && (
+						<View style={{ flex: 0.5 }}>
 							<ButtonStartHabit />
-							<Separator />
 						</View>
-					) : null}
-					<ButtonComplete />
+					)}
+					<View style={{ flex: 0.5 }}>
+						<ButtonComplete />
+					</View>
 				</View>
 			) : (
 				<HabitDone />
