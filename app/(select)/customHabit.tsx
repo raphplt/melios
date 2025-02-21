@@ -82,7 +82,7 @@ export default function CustomHabit() {
 	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 		try {
 			setIsSubmitting(true);
-			console.log("data", data);
+			// console.log("data", data);
 			const newHabit = await setMemberHabit(data);
 			setHabits((prev: UserHabit[]) => [...prev, newHabit as UserHabit]);
 			navigation.navigate("(navbar)");

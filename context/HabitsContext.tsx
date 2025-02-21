@@ -1,11 +1,8 @@
-// HabitsProvider.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Category } from "@type/category";
 import { getHabitsWithCategories } from "@db/fetch";
-import { getAllCategories } from "@db/category";
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
-import { GenericLevel } from "@type/levels";
 
 interface HabitsContextProps {
 	habitsData: Habit[];

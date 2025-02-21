@@ -21,9 +21,7 @@ export default function LastDays() {
 	const [loading, setLoading] = useState(true);
 	const [currentStreak, setCurrentStreak] = useState(0);
 
-	if (!currentHabit) return null;
-
-	if (currentHabit.type === CategoryTypeSelect.negative) {
+	if (!currentHabit || currentHabit.type === CategoryTypeSelect.negative) {
 		return null;
 	}
 

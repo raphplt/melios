@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
 	View,
 	ScrollView,
@@ -19,9 +18,9 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import ButtonsBox from "@components/HabitDetail/ButtonsBox";
 import { useTheme } from "@context/ThemeContext";
 import SettingsButton from "@components/HabitDetail/SettingsButton";
-import getImage from "@utils/getImage";
 import { useTranslation } from "react-i18next";
 import NegativeCounter from "@components/HabitDetail/NegativeCounter";
+import { catImgs } from "@utils/categoriesBg";
 
 export interface DayStatus {
 	date: string;
@@ -37,17 +36,14 @@ export default function HabitDetail() {
 
 	if (!currentHabit) return <LoaderScreen text={t("loading")} />;
 
-	const habitCategory = categories.find(
-		(c) => c.category === currentHabit.category
-	);
+	const habitCategory =
+		categories.find((c) => c.category === currentHabit.category) ||
+		categories.find((c) => c.slug === "other");
 
 	const dark = theme.dark;
 	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
 
-	const images = {
-		ecology: require("@assets/images/categories/ecology.png"),
-		sport: require("@assets/images/categories/sport.png"),
-	};
+	const slug: string = habitCategory?.slug || "sport";
 
 	return (
 		<ScrollView
@@ -60,7 +56,7 @@ export default function HabitDetail() {
 			showsVerticalScrollIndicator={false}
 		>
 			<ImageBackground
-				source={images[habitCategory?.slug]}
+				source={catImgs[slug]}
 				style={{
 					width: Dimensions.get("window").width,
 					height: Dimensions.get("window").height,

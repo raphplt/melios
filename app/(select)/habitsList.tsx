@@ -1,20 +1,24 @@
+import React, { useEffect, useState, useRef } from "react";
+import { Animated, Dimensions, View, Text } from "react-native";
 import CategoryHabit from "@components/Select/Items/CategoryHabit";
 import ButtonClose from "@components/Shared/ButtonClose";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { lightenColor } from "@utils/colors";
 import { useHabits } from "@context/HabitsContext";
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { Habit } from "@type/habit";
-import { lightenColor } from "@utils/colors";
-import { useEffect, useState } from "react";
-import { View, Text, StatusBar, FlatList } from "react-native";
+
+const { height: screenHeight } = Dimensions.get("screen");
+const ITEM_HEIGHT = 80;
 
 export default function CategoryList() {
 	const { theme } = useTheme();
 	const { category } = useSelect();
 	const { habitsData, refreshHabits } = useHabits();
 	const [hasRefreshed, setHasRefreshed] = useState(false);
-	const [habits, setHabits] = useState<Habit[]>([]);
+	const [habits, setHabits] = useState([]);
+	const scrollY = useRef(new Animated.Value(0)).current;
+	const flatListRef = useRef<Animated.FlatList>(null);
 
 	useEffect(() => {
 		if (!category || hasRefreshed) return;
@@ -37,32 +41,39 @@ export default function CategoryList() {
 	}, [category, habitsData, refreshHabits, hasRefreshed]);
 
 	if (!category) {
-		return null; 
+		return null;
 	}
 
 	const lightColor = lightenColor(category.color, 0.2);
 
 	return (
-		<View
-			style={{
-				flex: 1,
-				backgroundColor: theme.colors.cardBackground,
-			}}
-		>
+		<View style={{ flex: 1, backgroundColor: theme.colors.cardBackground }}>
 			<View
 				style={{
 					backgroundColor: lightColor || theme.colors.cardBackground,
 					paddingTop: 40,
+					borderBottomLeftRadius: 30,
+					borderBottomRightRadius: 30,
 				}}
-				className="rounded-b-3xl"
 			>
 				<ButtonClose />
-				<View className="w-11/12 flex flex-row items-center justify-start mx-auto py-4">
+				<View
+					style={{
+						width: "90%",
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "flex-start",
+						alignSelf: "center",
+						paddingVertical: 16,
+					}}
+				>
 					<Text
 						style={{
 							color: category.color || theme.colors.text,
+							fontSize: 24,
+							fontWeight: "bold",
+							marginRight: 16,
 						}}
-						className="text-3xl font-semibold mr-4"
 					>
 						{category.category}
 					</Text>
@@ -74,11 +85,53 @@ export default function CategoryList() {
 				</View>
 			</View>
 
-			<FlatList
+			<Animated.FlatList
+				ref={flatListRef}
 				data={habits}
 				keyExtractor={(item) => item.id.toString()}
-				renderItem={({ item }) => <CategoryHabit item={item} />}
 				showsVerticalScrollIndicator={false}
+				snapToInterval={ITEM_HEIGHT}
+				decelerationRate="fast"
+				onScroll={Animated.event(
+					[{ nativeEvent: { contentOffset: { y: scrollY } } }],
+					{ useNativeDriver: true }
+				)}
+				// Suppression du padding top inutile
+				contentContainerStyle={{
+					paddingBottom: (screenHeight - ITEM_HEIGHT) / 2,
+				}}
+				// Ajout d’un header léger au lieu d’un padding excessif
+				ListHeaderComponent={<View style={{ height: 20 }} />}
+				renderItem={({ item, index }) => {
+					const inputRange = [
+						(index - 1) * ITEM_HEIGHT,
+						index * ITEM_HEIGHT,
+						(index + 1) * ITEM_HEIGHT,
+					];
+					const scale = scrollY.interpolate({
+						inputRange,
+						outputRange: [0.9, 1, 0.9],
+						extrapolate: "clamp",
+					});
+					const opacity = scrollY.interpolate({
+						inputRange,
+						outputRange: [0.5, 1, 0.5],
+						extrapolate: "clamp",
+					});
+
+					return (
+						<Animated.View
+							style={{
+								transform: [{ scale }],
+								opacity,
+								height: ITEM_HEIGHT,
+								justifyContent: "center",
+							}}
+						>
+							<CategoryHabit item={item} />
+						</Animated.View>
+					);
+				}}
 			/>
 		</View>
 	);

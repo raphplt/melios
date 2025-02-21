@@ -1,25 +1,22 @@
-import { useData } from "@context/DataContext";
-import { useHabits } from "@context/HabitsContext";
-import { useSelect } from "@context/SelectContext";
-import { useTheme } from "@context/ThemeContext";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { Habit } from "@type/habit";
-import { useNavigation } from "expo-router";
 import React from "react";
+import { Pressable, View, Text, Alert } from "react-native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import { useTheme } from "@context/ThemeContext";
+import { useSelect } from "@context/SelectContext";
+import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
-import { View, Text, Pressable, Alert } from "react-native";
 import { Iconify } from "react-native-iconify";
 
-export default function CategoryHabit({ item }: { item: Habit }) {
+export default function CategoryHabit({ item }: { item: any }) {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
-
 	const { theme } = useTheme();
 	const { setHabit } = useSelect();
 	const { habits } = useData();
 	const { t } = useTranslation();
 
 	const handlePress = () => {
-		if (habits.length > 20) return Alert.alert(t("habits_limit")); //TODO : constante ?
+		if (habits.length > 20) return Alert.alert(t("habits_limit"));
 		setHabit(item);
 		navigation.navigate("customHabit");
 	};
@@ -30,20 +27,28 @@ export default function CategoryHabit({ item }: { item: Habit }) {
 		<>
 			<Pressable
 				key={item.id}
-				className="w-full flex flex-row items-center justify-between mx-auto py-4 px-4 rounded-2xl"
 				onPress={handlePress}
 				style={{
 					backgroundColor: selectedHabit
 						? theme.colors.background
 						: theme.colors.cardBackground,
+					paddingVertical: 16,
+					paddingHorizontal: 16,
+					marginHorizontal: 16,
+					borderRadius: 16,
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
 				}}
 				disabled={!!selectedHabit}
 			>
 				<Text
 					style={{
 						color: theme.colors.text,
+						fontWeight: "bold",
+						fontSize: 18,
+						width: "85%",
 					}}
-					className="font-bold text-lg w-10/12"
 					numberOfLines={1}
 					ellipsizeMode="tail"
 				>
@@ -63,7 +68,13 @@ export default function CategoryHabit({ item }: { item: Habit }) {
 					/>
 				)}
 			</Pressable>
-			<View style={{ height: 1 }} className="w-11/12 mx-auto bg-gray-300" />
+			{/* <View
+				style={{
+					height: 1,
+					backgroundColor: "#ccc",
+					marginHorizontal: 16,
+				}}
+			/> */}
 		</>
 	);
 }
