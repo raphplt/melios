@@ -9,7 +9,7 @@ import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
 
 const { height: screenHeight } = Dimensions.get("screen");
-const ITEM_HEIGHT = 80;
+const ITEM_HEIGHT = 60;
 
 export default function CategoryList() {
 	const { theme } = useTheme();
@@ -79,7 +79,7 @@ export default function CategoryList() {
 					</Text>
 					<FontAwesome6
 						name={category.icon}
-						size={40}
+						size={32}
 						color={category.color || theme.colors.text}
 					/>
 				</View>
@@ -96,11 +96,9 @@ export default function CategoryList() {
 					[{ nativeEvent: { contentOffset: { y: scrollY } } }],
 					{ useNativeDriver: true }
 				)}
-				// Suppression du padding top inutile
 				contentContainerStyle={{
 					paddingBottom: (screenHeight - ITEM_HEIGHT) / 2,
 				}}
-				// Ajout d’un header léger au lieu d’un padding excessif
 				ListHeaderComponent={<View style={{ height: 20 }} />}
 				renderItem={({ item, index }) => {
 					const inputRange = [
@@ -110,12 +108,12 @@ export default function CategoryList() {
 					];
 					const scale = scrollY.interpolate({
 						inputRange,
-						outputRange: [0.9, 1, 0.9],
+						outputRange: [0.95, 1, 0.95],
 						extrapolate: "clamp",
 					});
 					const opacity = scrollY.interpolate({
 						inputRange,
-						outputRange: [0.5, 1, 0.5],
+						outputRange: [0.7, 1, 0.7],
 						extrapolate: "clamp",
 					});
 
