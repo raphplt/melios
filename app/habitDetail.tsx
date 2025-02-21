@@ -4,10 +4,10 @@ import {
 	Dimensions,
 	ImageBackground,
 	Text,
+	StyleSheet,
 } from "react-native";
 import { useNavigation } from "expo-router";
 
-// Customs imports
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
@@ -21,6 +21,7 @@ import SettingsButton from "@components/HabitDetail/SettingsButton";
 import { useTranslation } from "react-i18next";
 import NegativeCounter from "@components/HabitDetail/NegativeCounter";
 import { catImgs } from "@utils/categoriesBg";
+import { Platform } from "react-native";
 
 export interface DayStatus {
 	date: string;
@@ -45,42 +46,44 @@ export default function HabitDetail() {
 
 	const slug: string = habitCategory?.slug || "sport";
 
+	console.log("platform", Platform.OS);
+
+	const screenHeight = Dimensions.get("screen").height;
+
 	return (
 		<ScrollView
 			style={{
 				flex: 1,
-			}}
-			contentContainerStyle={{
-				flexGrow: 1,
+				minHeight: screenHeight,
 			}}
 			showsVerticalScrollIndicator={false}
 		>
 			<ImageBackground
 				source={catImgs[slug]}
+				style={[StyleSheet.absoluteFillObject, { height: screenHeight }]}
+			/>
+			<View
+				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mb-2"
 				style={{
-					width: Dimensions.get("window").width,
-					height: Dimensions.get("window").height,
+					paddingTop: Platform.OS === "ios" ? 0 : 40,
 				}}
-				className="flex"
 			>
-				<View className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mt-12 mb-2">
-					<ButtonBack
-						handleQuit={() => navigation.navigate("(navbar)")}
-						color={textColor}
-					/>
-					<SettingsButton />
-				</View>
-				<View
-					className="w-full mx-auto flex justify-between flex-col"
-					style={{ flexGrow: 1 }}
-				>
-					<HabitDetailHeader />
-					<InfosPanel />
-					<NegativeCounter />
-					<LastDays />
-					<ButtonsBox />
-				</View>
-			</ImageBackground>
+				<ButtonBack
+					handleQuit={() => navigation.navigate("(navbar)")}
+					color={textColor}
+				/>
+				<SettingsButton />
+			</View>
+			<View
+				className="w-full mx-auto flex justify-between flex-col"
+				style={{ flexGrow: 1 }}
+			>
+				<HabitDetailHeader />
+				<InfosPanel />
+				<NegativeCounter />
+				<LastDays />
+				<ButtonsBox />
+			</View>
 		</ScrollView>
 	);
 }

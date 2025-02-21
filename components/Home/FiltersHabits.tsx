@@ -2,8 +2,7 @@ import { useTheme } from "@context/ThemeContext";
 import { CategoryTypeSelect } from "@utils/category.type";
 import { t } from "i18next";
 import React from "react";
-import { View, Pressable, Text, TouchableOpacity } from "react-native";
-import { Iconify } from "react-native-iconify";
+import { View, Text, TouchableOpacity } from "react-native";
 import AddHabits from "./AddHabits";
 
 type Props = {
@@ -25,7 +24,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 								: theme.colors.border,
 						borderWidth: 2,
 					}}
-					className="mx-1 px-2 py-3 rounded-3xl flex flex-row items-center"
+					className="mx-1 px-2 py-[10px] rounded-3xl flex flex-row items-center"
 				>
 					<Text
 						style={{
@@ -49,7 +48,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 								: theme.colors.border,
 						borderWidth: 2,
 					}}
-					className="mx-1 px-2 py-3 rounded-3xl flex flex-row items-center "
+					className="mx-1 px-2 py-[10px] rounded-3xl flex flex-row items-center "
 				>
 					<Text
 						style={{

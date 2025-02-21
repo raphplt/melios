@@ -35,7 +35,7 @@ export default function InfosPanel() {
 
 	return (
 		<BlurView
-			intensity={70}
+			intensity={95}
 			className="w-[95%] mx-auto p-4 rounded-xl my-4"
 			style={{
 				overflow: "hidden",

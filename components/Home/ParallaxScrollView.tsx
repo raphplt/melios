@@ -90,66 +90,38 @@ export default function ParallaxScrollView({
 						<WelcomeRow />
 					</BlurBox>
 
-					<View
-						style={{
-							top: 15,
-							right: 20,
-						}}
-						className="absolute z-30 py-2 overflow-hidden"
-					>
+					<BlurBox position={{ top: 20, right: 20 }} intensity={100}>
 						<View className="flex items-center justify-center flex-row ">
-							<View className="flex items-center justify-center">
-								<Progress.Circle
-									size={32}
-									progress={xpPercentage / 100}
-									color={isDayTime ? theme.colors.primary : theme.colors.tertiary}
-									unfilledColor={theme.colors.card}
-									borderWidth={0}
-									thickness={4}
-								/>
-								<Text
-									style={{
-										fontSize: 14,
-										color: isDayTime ? theme.colors.primary : theme.colors.tertiary,
-									}}
-									className="font-bold absolute"
-								>
-									{globalLevel?.currentLevel || "1"}
-								</Text>
-							</View>
+							<Progress.Circle
+								size={32}
+								progress={xpPercentage / 100}
+								color={isDayTime ? theme.colors.primary : theme.colors.tertiary}
+								unfilledColor={theme.colors.card}
+								borderWidth={0}
+								thickness={4}
+							/>
+							<Text
+								style={{
+									fontSize: 14,
+									color: isDayTime ? theme.colors.primary : theme.colors.tertiary,
+								}}
+								className="font-bold absolute text-lg"
+							>
+								{globalLevel?.currentLevel || "1"}
+							</Text>
 						</View>
-					</View>
-					<BlurBox
-						position={{ bottom: 20, left: 20 }}
-						borderColor={
-							streakUpdatedToday
-								? isDayTime
-									? theme.colors.purplePrimary
-									: theme.colors.purpleSecondary
-								: color
-						}
-						borderWidth={1}
-					>
+					</BlurBox>
+					<BlurBox position={{ bottom: 20, left: 20 }} intensity={100}>
 						<View className="flex flex-row items-center gap-2">
 							<Iconify
 								icon="mdi:calendar"
-								color={
-									streakUpdatedToday
-										? isDayTime
-											? theme.colors.purplePrimary
-											: theme.colors.purpleSecondary
-										: color
-								}
+								color={streakUpdatedToday ? theme.colors.primary : color}
 								size={20}
 							/>
 							<Text
 								className="font-semibold text-[14px]"
 								style={{
-									color: streakUpdatedToday
-										? isDayTime
-											? theme.colors.purplePrimary
-											: theme.colors.purpleSecondary
-										: color,
+									color: streakUpdatedToday ? theme.colors.primary : color,
 								}}
 							>
 								{t("streak")} : {streak?.value}{" "}

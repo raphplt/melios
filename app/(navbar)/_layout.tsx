@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 const createHeaderStyle = (backgroundColor: string) => ({
 	backgroundColor: backgroundColor,
 	shadowColor: "transparent",
-	height: 110,
+	// height: 100,
 });
 
 const createTabOptions = (

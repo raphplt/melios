@@ -3,6 +3,7 @@ import useIndex from "@hooks/useIndex";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { Animated, Pressable } from "react-native";
+import { Iconify } from "react-native-iconify";
 
 export default function AddHabits() {
 	const { theme, handlePressIn, rotate, handlePressOut, isDayTime } = useIndex();
@@ -17,18 +18,14 @@ export default function AddHabits() {
 				onPress={() => {
 					navigation.navigate("(select)");
 				}}
-				className="rounded-full p-2 "
+				className="rounded-full p-[6px]"
 				style={{
-					backgroundColor: isDayTime
-						? theme.colors.primary
-						: theme.colors.backgroundTertiary,
+					backgroundColor: theme.colors.background,
+					borderColor: theme.colors.primary,
+					borderWidth: 2,
 				}}
 			>
-				<Ionicons
-					name="add"
-					size={24}
-					color={isDayTime ? "white" : theme.colors.primary}
-				/>
+				<Iconify icon="ic:round-plus" size={24} color={theme.colors.primary} />
 			</Pressable>
 		</Animated.View>
 	);

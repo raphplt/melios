@@ -32,12 +32,12 @@ const BlurBox: React.FC<BlurBoxProps> = ({
 					borderColor: borderColor ?? "transparent",
 				},
 			]}
-			className="absolute z-30 px-4 py-3 rounded-xl overflow-hidden"
+			className="absolute z-30 px-2 py-2 rounded-lg overflow-hidden"
 		>
 			<BlurView
 				intensity={intensity ?? 95}
 				style={styles.blurView}
-				tint={isDayTime ? "extraLight" : "dark"}
+				tint={isDayTime ? "light" : "dark"}
 			/>
 			{children}
 		</View>
