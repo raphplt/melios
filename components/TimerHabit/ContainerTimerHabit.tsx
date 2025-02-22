@@ -3,10 +3,18 @@ import { useHabits } from "@context/HabitsContext";
 import { useTheme } from "@context/ThemeContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { catImgs } from "@utils/categoriesBg";
 import getImage from "@utils/getImage";
 import { useNavigation } from "expo-router";
 import { ReactNode, useEffect, useState } from "react";
-import { View, Pressable, StyleSheet, Alert } from "react-native";
+import {
+	View,
+	Pressable,
+	StyleSheet,
+	Alert,
+	ImageBackground,
+	Dimensions,
+} from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function ({ children }: { children: ReactNode }) {
@@ -43,24 +51,15 @@ export default function ({ children }: { children: ReactNode }) {
 		(c) => c.category === currentHabit.category
 	);
 
-	const [imageUri, setImageUri] = useState<string | null>(null);
+	const screenHeight = Dimensions.get("screen").height;
 
-	useEffect(() => {
-		const loadCategoryImage = async () => {
-			if (habitCategory) {
-				const uri = getImage(habitCategory.slug);
-				setImageUri(uri);
-			}
-		};
-		loadCategoryImage();
-	}, [habitCategory]);
+	const slug: string = habitCategory?.slug || "sport";
 
 	return (
 		<View className="flex flex-col items-center justify-around h-full">
-			<CachedImage
-				imagePath={imageUri || "images/categories/fitness.jpg"}
-				blurRadius={15}
-				style={StyleSheet.absoluteFill}
+			<ImageBackground
+				source={catImgs[slug]}
+				style={[StyleSheet.absoluteFillObject, { height: screenHeight }]}
 			/>
 
 			<Pressable

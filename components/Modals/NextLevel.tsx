@@ -123,7 +123,7 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 								<View className="flex flex-col items-center">
 									<MoneyMelios width={40} height={40} />
 									<Text className="font-semibold text-lg mt-2">
-										+{levelData.currentLevel + 2}
+										+{+levelData.currentLevel + 2}
 									</Text>
 									<Text className="text-sm text-gray-700">{t("points_earned")}</Text>
 								</View>

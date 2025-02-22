@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-	Text,
-	FlatList,
-	ActivityIndicator,
-	View,
-	RefreshControl,
-	Pressable,
-} from "react-native";
+import { Text, FlatList, View, RefreshControl, Pressable } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useData } from "@context/DataContext";
 import { Iconify } from "react-native-iconify";
 import Confidentiality from "@components/Modals/Confidentiality";
 import ConfidentialityFilter from "./ConfidentialityFilter";
-
 import { DailyLogExtended, getAllDailyLogsPaginated } from "@db/logs";
 import { DailyLogItem } from "./DailyLogItem";
 import PlaceHolderLog from "./PlaceHolderLog";

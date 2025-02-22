@@ -5,6 +5,7 @@ import {
 	ImageBackground,
 	Text,
 	StyleSheet,
+	StatusBar,
 } from "react-native";
 import { useNavigation } from "expo-router";
 
@@ -63,7 +64,7 @@ export default function HabitDetail() {
 			<View
 				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mb-2"
 				style={{
-					paddingTop: Platform.OS === "ios" ? 0 : 40,
+					paddingTop: 45,
 				}}
 			>
 				<ButtonBack
@@ -73,7 +74,7 @@ export default function HabitDetail() {
 				<SettingsButton />
 			</View>
 			<View
-				className="w-full mx-auto flex justify-between flex-col"
+				className="w-full h-full mx-auto flex justify-between flex-col"
 				style={{ flexGrow: 1 }}
 			>
 				<HabitDetailHeader />

@@ -28,6 +28,20 @@ export default function NextLevelHandler() {
 		setPreviousLevels(usersLevels);
 	}, [usersLevels]);
 
+	// const levelData = {
+	// 	id: "P0gwsxEYNJATbmCoOdhc",
+	// 	name: "Niveau général",
+	// 	description: "string",
+	// 	color: "#FFC107",
+	// 	icon: "compass",
+	// 	slug: "level_general",
+	// 	levelId: "P0gwsxEYNJATbmCoOdhc",
+	// 	userId: "1",
+	// 	currentLevel: "1",
+	// 	currentXp: 100,
+	// 	nextLevelXp: 89,
+	// };
+
 	return (
 		<NextLevel
 			visible={showNextLevelModal}

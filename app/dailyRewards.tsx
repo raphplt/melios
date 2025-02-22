@@ -17,7 +17,7 @@ const DailyRewards: React.FC = () => {
 		{ text: "Se connecter à Melios", completed: true },
 		{ text: "Compléter 3 habitudes", completed: false },
 		{ text: "Supporter un membre dans l'Agora", completed: false },
-		{ text: "Écrire son journal de bord quotidien", completed: false },
+		// { text: "Écrire son journal de bord quotidien", completed: false },
 	];
 
 	tasks[1].completed = completedHabitsToday.length >= 3;

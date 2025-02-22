@@ -16,7 +16,6 @@ import ProgressBar from "@components/TimerHabit/ProgressBar";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { useHabits } from "@context/HabitsContext";
 import { SoundProvider } from "@context/SoundContext";
-import { useTheme } from "@context/ThemeContext";
 import { useTimer } from "@context/TimerContext";
 
 export default function TimerHabit() {
@@ -131,6 +130,7 @@ export default function TimerHabit() {
 	// Fonction d'arrêt de l'habitude
 	const handleStopHabit = async () => {
 		await notifee.stopForegroundService();
+		await notifee.cancelNotification(notificationId); // Ajoutez cette ligne pour annuler la notification
 		await stopTimer();
 		setQuitHabit(true);
 		if (beforeRemoveListenerRef.current) {
@@ -176,7 +176,7 @@ export default function TimerHabit() {
 					translucent={true}
 				/>
 				<BlurView
-					tint="default"
+					tint="systemThinMaterialDark"
 					intensity={75}
 					className="p-4 rounded-lg flex flex-col items-center justify-center gap-y-2 w-10/12"
 					style={{ overflow: "hidden" }}

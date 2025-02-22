@@ -24,9 +24,11 @@ export default function ViewHelp() {
 						margin: 10,
 						marginTop: 10,
 						marginBottom: 10,
+						width: "95%",
+						alignSelf: "center",
+						paddingVertical: 20,
 					}}
 					start={[0, 0]}
-					className="w-[95%] mx-auto py-8 "
 				>
 					<Pressable
 						className="w-full flex flex-row items-center justify-between"

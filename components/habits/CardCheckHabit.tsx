@@ -109,6 +109,12 @@ function CardCheckHabit({
 
 	const setHabitDone = async () => {
 		try {
+
+			if (completed) {
+				console.log("Habit already completed");
+				return;
+			}
+
 			setCompleted(true);
 			await setHabitLog(habit.id, date);
 
@@ -136,13 +142,6 @@ function CardCheckHabit({
 	};
 
 	const isNegative = habit.type === CategoryTypeSelect.negative;
-
-	// const addXpFnc = async () => {
-	// 	if (addXp) {
-	// 		await addXp(habit, 10 * habit.difficulty);
-	// 	}
-	// }
-
 	return (
 		<ZoomableView>
 			<Animated.View
