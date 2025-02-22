@@ -9,17 +9,17 @@ interface BlurBoxProps {
 		right?: number;
 		bottom?: number;
 	};
-	intensity?: number;
 	children: React.ReactNode;
 	borderColor?: string;
 	borderWidth?: number;
+	tint?: "light" | "dark" | "default";
 }
 
 const BlurBox: React.FC<BlurBoxProps> = ({
 	position,
-	intensity,
 	borderColor,
 	borderWidth,
+	tint,
 	children,
 }) => {
 	const { isDayTime } = useIndex();
@@ -37,7 +37,7 @@ const BlurBox: React.FC<BlurBoxProps> = ({
 			<BlurView
 				intensity={100}
 				style={styles.blurView}
-				tint={isDayTime ? (Platform.OS == "ios" ? "light" : "default") : "dark"}
+				tint={tint ? tint : isDayTime ? "light" : "dark"}
 			/>
 			{children}
 		</View>

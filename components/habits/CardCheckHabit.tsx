@@ -28,6 +28,7 @@ import { incrementStreak } from "@db/streaks";
 import RestartHabit from "@components/Modals/RestartHabit";
 import { useNavigation } from "expo-router";
 import { lightenColor } from "@utils/colors";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 function CardCheckHabit({
 	habit,
@@ -153,18 +154,26 @@ function CardCheckHabit({
 				onPress={addXpFnc}
 				/> */}
 
-				<Pressable
-					onPress={setHabitDone}
-					className="flex items-center justify-center"
-					disabled={completed}
-					style={{ flexBasis: "12.5%" }}
+				<View
+					// onPress={setHabitDone}
+					// className="flex items-center justify-center"
+					// disabled={completed}
+					style={{ flexBasis: "12%" }}
 				>
-					<Ionicons
+					{/* <Ionicons
 						name={completed ? "checkmark-circle" : "ellipse-outline"}
 						size={30}
 						color={isNegative ? theme.colors.redPrimary : theme.colors.primary}
+					/> */}
+
+					<BouncyCheckbox
+						size={25}
+						fillColor={theme.colors.primary}
+						useBuiltInState={false}
+						isChecked={completed}
+						onPress={setHabitDone}
 					/>
-				</Pressable>
+				</View>
 				<Pressable
 					onPress={() => {
 						setShowDetails(!showDetails);

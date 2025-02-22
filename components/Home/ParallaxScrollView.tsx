@@ -87,7 +87,7 @@ export default function ParallaxScrollView({
 						<WelcomeRow />
 					</BlurBox>
 
-					<BlurBox position={{ top: 20, right: 20 }} intensity={100}>
+					<BlurBox position={{ top: 20, right: 20 }} tint="default">
 						<View className="flex items-center justify-center flex-row ">
 							<Progress.Circle
 								size={32}
@@ -108,7 +108,7 @@ export default function ParallaxScrollView({
 							</Text>
 						</View>
 					</BlurBox>
-					<BlurBox position={{ bottom: 20, left: 20 }} intensity={100}>
+					<BlurBox position={{ bottom: 20, left: 20 }}>
 						<View className="flex flex-row items-center gap-2">
 							<Iconify
 								icon="mdi:calendar"
