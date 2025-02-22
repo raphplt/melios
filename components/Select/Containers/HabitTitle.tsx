@@ -70,12 +70,6 @@ export default function HabitTitle({
 				className="rounded-lg px-4 py-2 pb-3 mt-4 flex flex-row items-center justify-between w-full mx-auto"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
-
-					shadowColor: theme.colors.textTertiary,
-					shadowOffset: { width: 0, height: 2 },
-					shadowOpacity: 0.25,
-					shadowRadius: 4,
-					elevation: 3,
 				}}
 			>
 				<TextInput

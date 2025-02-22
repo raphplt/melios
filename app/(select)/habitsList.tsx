@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Animated, Dimensions, View, Text } from "react-native";
+import { FlatList, Dimensions, View, Text } from "react-native";
 import CategoryHabit from "@components/Select/Items/CategoryHabit";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -17,8 +17,7 @@ export default function CategoryList() {
 	const { habitsData, refreshHabits } = useHabits();
 	const [hasRefreshed, setHasRefreshed] = useState(false);
 	const [habits, setHabits] = useState([]);
-	const scrollY = useRef(new Animated.Value(0)).current;
-	const flatListRef = useRef<Animated.FlatList>(null);
+	const flatListRef = useRef<FlatList>(null);
 
 	useEffect(() => {
 		if (!category || hasRefreshed) return;
@@ -45,6 +44,8 @@ export default function CategoryList() {
 	}
 
 	const lightColor = lightenColor(category.color, 0.2);
+
+	const centerOffset = (screenHeight - ITEM_HEIGHT) / 2;
 
 	return (
 		<View style={{ flex: 1, backgroundColor: theme.colors.cardBackground }}>
@@ -85,51 +86,22 @@ export default function CategoryList() {
 				</View>
 			</View>
 
-			<Animated.FlatList
+			<FlatList
 				ref={flatListRef}
 				data={habits}
 				keyExtractor={(item) => item.id.toString()}
 				showsVerticalScrollIndicator={false}
-				snapToInterval={ITEM_HEIGHT}
-				decelerationRate="fast"
-				onScroll={Animated.event(
-					[{ nativeEvent: { contentOffset: { y: scrollY } } }],
-					{ useNativeDriver: true }
-				)}
-				contentContainerStyle={{
-					paddingBottom: (screenHeight - ITEM_HEIGHT) / 2,
-				}}
 				ListHeaderComponent={<View style={{ height: 20 }} />}
-				renderItem={({ item, index }) => {
-					const inputRange = [
-						(index - 1) * ITEM_HEIGHT,
-						index * ITEM_HEIGHT,
-						(index + 1) * ITEM_HEIGHT,
-					];
-					const scale = scrollY.interpolate({
-						inputRange,
-						outputRange: [0.95, 1, 0.95],
-						extrapolate: "clamp",
-					});
-					const opacity = scrollY.interpolate({
-						inputRange,
-						outputRange: [0.7, 1, 0.7],
-						extrapolate: "clamp",
-					});
-
-					return (
-						<Animated.View
-							style={{
-								transform: [{ scale }],
-								opacity,
-								height: ITEM_HEIGHT,
-								justifyContent: "center",
-							}}
-						>
-							<CategoryHabit item={item} />
-						</Animated.View>
-					);
-				}}
+				renderItem={({ item }) => (
+					<View
+						style={{
+							height: ITEM_HEIGHT,
+							justifyContent: "center",
+						}}
+					>
+						<CategoryHabit item={item} />
+					</View>
+				)}
 			/>
 		</View>
 	);

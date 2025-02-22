@@ -2,16 +2,13 @@ import { FlatList, View, Dimensions } from "react-native";
 import AddGoal from "./AddGoal";
 import CurrentGoal from "./CurrentGoal";
 import { useGoal } from "@context/GoalsContext";
-import GoalPlaceHolder from "./GoalPlaceHolder";
 
 export default function GoalSection() {
-	const { goals, loadingGoals } = useGoal();
+	const { goals } = useGoal();
 
-	const { width } = Dimensions.get("window");
+	const { width } = Dimensions.get("screen");
 
 	const goalWithAddButton = [...goals, { id: "add_goal_button" } as any];
-
-	if (loadingGoals) return <GoalPlaceHolder />;
 
 	return (
 		<View className="mt-1">

@@ -31,12 +31,6 @@ export default function Notifications({ setValue }: { setValue: any }) {
 				className="rounded-lg px-4 py-4 mt-1 flex flex-row items-center justify-between h-fit w-full"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
-
-					shadowColor: theme.colors.textTertiary,
-					shadowOffset: { width: 0, height: 2 },
-					shadowOpacity: 0.25,
-					shadowRadius: 4,
-					elevation: 3,
 				}}
 			>
 				<View className="flex flex-row items-center px-2">

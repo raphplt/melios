@@ -4,6 +4,9 @@ import {
 	Pressable,
 	ScrollView,
 	ActivityIndicator,
+	ImageBackground,
+	StatusBar,
+	Dimensions,
 } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -34,7 +37,8 @@ import { UserHabit } from "@type/userHabit";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import ConfidentialitySelectorHabit from "@components/Select/Items/Confidentiality";
-import { LinearGradient } from "expo-linear-gradient";
+import { catImgs } from "@utils/categoriesBg";
+import { StyleSheet } from "react-native";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -97,92 +101,87 @@ export default function CustomHabit() {
 		};
 	}, []);
 
+	const screenHeight = Dimensions.get("screen").height;
+
 	return (
-		<View style={{ flex: 1 }}>
-			<ScrollView
-				contentContainerStyle={{
-					flexGrow: 1,
-					paddingTop: 40,
-					zIndex: 10,
-				}}
-			>
+		<ScrollView
+			contentContainerStyle={{
+				flexGrow: 1,
+				// paddingTop: 40,
+				zIndex: 10,
+			}}
+		>
+			<ImageBackground
+				source={catImgs[habit?.category?.slug || "sport"]}
+				style={[StyleSheet.absoluteFillObject, { height: screenHeight }]}
+			/>
+			<View style={{ paddingTop: 30 }}>
 				<ButtonClose />
-				<FormProvider {...methods}>
-					<View className="w-[95%] mx-auto flex flex-col items-center gap-1 z-10">
-						{/* TITRE */}
-						<HabitTitle
-							register={register}
-							isEditingName={isEditingName}
-							setIsEditingName={setIsEditingName}
-							isEditingDescription={isEditingDescription}
-							setIsEditingDescription={setIsEditingDescription}
-							setFocus={setFocus}
-							setValue={setValue}
-							errors={errors}
-						/>
+			</View>
+			<FormProvider {...methods}>
+				<View className="w-[95%] mx-auto flex flex-col items-center gap-1 z-10">
+					{/* TITRE */}
+					<HabitTitle
+						register={register}
+						isEditingName={isEditingName}
+						setIsEditingName={setIsEditingName}
+						isEditingDescription={isEditingDescription}
+						setIsEditingDescription={setIsEditingDescription}
+						setFocus={setFocus}
+						setValue={setValue}
+						errors={errors}
+					/>
 
-						{/* INFORMATIONS */}
-						<HabitInfos habit={habit} setValue={setValue} />
-						{/* HEURE */}
-						<HabitMoment register={register} setValue={setValue} />
-						{errors.moment && (
-							<Text style={{ color: "red" }}>{errors.moment.message}</Text>
-						)}
-
-						{/* RÉPÉTER */}
-						<RepeatHabit register={register} setValue={setValue} />
-						{errors.frequency && (
-							<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
-						)}
-
-						{/* NOTIFICATIONS */}
-						<Notifications setValue={setValue} />
-						{errors.reminderMoment && (
-							<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
-						)}
-						{errors.category && (
-							<Text style={{ color: "red" }}>{errors.category.message}</Text>
-						)}
-
-						{/* CONFIDENTIALITÉ */}
-						<ConfidentialitySelectorHabit
-							value={methods.watch("confidentiality")}
-							onChange={(value) => setValue("confidentiality", value)}
-						/>
-					</View>
-				</FormProvider>
-				<LinearGradient
-					colors={["rgba(255, 255, 255, 0)", "rgb(200, 200, 255)"]}
-					style={{
-						position: "absolute",
-						left: 0,
-						right: 0,
-						bottom: 0,
-						height: 300,
-						zIndex: 1,
-					}}
-				/>
-				<Pressable
-					style={{
-						backgroundColor: theme.colors.primary,
-					}}
-					onPress={handleSubmit(onSubmit)}
-					className="rounded-xl flex flex-row items-center justify-center absolute bottom-4 left-5 right-5 p-4 z-10"
-				>
-					{isSubmitting ? (
-						<ActivityIndicator size="small" color="white" />
-					) : (
-						<Text
-							style={{
-								color: "white",
-							}}
-							className="text-lg"
-						>
-							{t("save")}
-						</Text>
+					{/* INFORMATIONS */}
+					<HabitInfos habit={habit} setValue={setValue} />
+					{/* HEURE */}
+					<HabitMoment register={register} setValue={setValue} />
+					{errors.moment && (
+						<Text style={{ color: "red" }}>{errors.moment.message}</Text>
 					)}
-				</Pressable>
-			</ScrollView>
-		</View>
+
+					{/* RÉPÉTER */}
+					<RepeatHabit register={register} setValue={setValue} />
+					{errors.frequency && (
+						<Text style={{ color: "red" }}>{errors.frequency.message}</Text>
+					)}
+
+					{/* NOTIFICATIONS */}
+					<Notifications setValue={setValue} />
+					{errors.reminderMoment && (
+						<Text style={{ color: "red" }}>{errors.reminderMoment.message}</Text>
+					)}
+					{errors.category && (
+						<Text style={{ color: "red" }}>{errors.category.message}</Text>
+					)}
+
+					{/* CONFIDENTIALITÉ */}
+					<ConfidentialitySelectorHabit
+						value={methods.watch("confidentiality")}
+						onChange={(value) => setValue("confidentiality", value)}
+					/>
+				</View>
+			</FormProvider>
+			<Pressable
+				style={{
+					backgroundColor: theme.colors.primary,
+				}}
+				onPress={handleSubmit(onSubmit)}
+				className="rounded-xl flex flex-row items-center justify-center absolute bottom-4 left-5 right-5 p-4 z-10"
+			>
+				{isSubmitting ? (
+					<ActivityIndicator size="small" color="white" />
+				) : (
+					<Text
+						style={{
+							color: "white",
+						}}
+						className="text-lg"
+					>
+						{t("save")}
+					</Text>
+				)}
+			</Pressable>
+		</ScrollView>
 	);
 }

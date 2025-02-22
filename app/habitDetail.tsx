@@ -46,8 +46,6 @@ export default function HabitDetail() {
 
 	const slug: string = habitCategory?.slug || "sport";
 
-	console.log("platform", Platform.OS);
-
 	const screenHeight = Dimensions.get("screen").height;
 
 	return (

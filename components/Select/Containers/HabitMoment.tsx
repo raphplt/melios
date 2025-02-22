@@ -143,19 +143,7 @@ export default function HabitMoment({
 		<>
 			<RowTitleCustom title="MOMENT" />
 			<View className="flex flex-row items-center justify-between pb-1">
-				<Animated.View
-					className={blockStyle}
-					style={[
-						animatedStyleCustom,
-						{
-							shadowColor: theme.colors.textTertiary,
-							shadowOffset: { width: 0, height: 2 },
-							shadowOpacity: 0.25,
-							shadowRadius: 4,
-							elevation: 3,
-						},
-					]}
-				>
+				<Animated.View className={blockStyle} style={[animatedStyleCustom]}>
 					<Pressable className={itemStyle} onPress={() => setVisible(true)}>
 						<Text
 							className="py-2 text-[14px] mx-auto"
@@ -175,19 +163,7 @@ export default function HabitMoment({
 				</Animated.View>
 
 				{/* Bloc pour free_time */}
-				<Animated.View
-					className={blockStyle}
-					style={[
-						animatedStyleFree,
-						{
-							shadowColor: theme.colors.textTertiary,
-							shadowOffset: { width: 0, height: 2 },
-							shadowOpacity: 0.25,
-							shadowRadius: 4,
-							elevation: 3,
-						},
-					]}
-				>
+				<Animated.View className={blockStyle} style={[animatedStyleFree]}>
 					<Pressable
 						className={itemStyle}
 						onPress={() => handleSelectMoment(-1)}
@@ -220,19 +196,7 @@ export default function HabitMoment({
 			{/* Bas : blocs pour morning, afternoon et evening */}
 			<View className="flex flex-row items-center justify-between py-2">
 				{/* Bloc morning */}
-				<Animated.View
-					className={blockStyle}
-					style={[
-						animatedStyleMorning,
-						{
-							shadowColor: theme.colors.textTertiary,
-							shadowOffset: { width: 0, height: 2 },
-							shadowOpacity: 0.25,
-							shadowRadius: 4,
-							elevation: 3,
-						},
-					]}
-				>
+				<Animated.View className={blockStyle} style={[animatedStyleMorning]}>
 					<Pressable
 						className={itemStyle}
 						onPress={() => handleSelectMoment(7)}
@@ -262,19 +226,7 @@ export default function HabitMoment({
 				</Animated.View>
 
 				{/* Bloc afternoon */}
-				<Animated.View
-					className={blockStyle}
-					style={[
-						animatedStyleAfternoon,
-						{
-							shadowColor: theme.colors.textTertiary,
-							shadowOffset: { width: 0, height: 2 },
-							shadowOpacity: 0.25,
-							shadowRadius: 4,
-							elevation: 3,
-						},
-					]}
-				>
+				<Animated.View className={blockStyle} style={[animatedStyleAfternoon]}>
 					<Pressable
 						className={itemStyle}
 						onPress={() => handleSelectMoment(12)}
@@ -304,19 +256,7 @@ export default function HabitMoment({
 				</Animated.View>
 
 				{/* Bloc evening */}
-				<Animated.View
-					className={blockStyle}
-					style={[
-						animatedStyleEvening,
-						{
-							shadowColor: theme.colors.textTertiary,
-							shadowOffset: { width: 0, height: 2 },
-							shadowOpacity: 0.25,
-							shadowRadius: 4,
-							elevation: 3,
-						},
-					]}
-				>
+				<Animated.View className={blockStyle} style={[animatedStyleEvening]}>
 					<Pressable
 						className={itemStyle}
 						onPress={() => handleSelectMoment(18)}
