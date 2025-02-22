@@ -15,7 +15,7 @@ const MissionButton = () => {
 	const { isDayTime } = useIndex();
 
 	return (
-		<View className="absolute bottom-6 right-5 p-2 z-30 px-4 rounded-xl overflow-hidden">
+		<View className="absolute bottom-6 right-5 p-2 z-30 px-4 rounded-lg overflow-hidden">
 			<BlurView
 				intensity={95}
 				style={styles.blurView}

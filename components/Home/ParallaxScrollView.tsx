@@ -93,7 +93,7 @@ export default function ParallaxScrollView({
 								size={32}
 								progress={xpPercentage / 100}
 								color={isDayTime ? theme.colors.primary : theme.colors.tertiary}
-								unfilledColor={theme.colors.card}
+								unfilledColor={theme.colors.cardBackground}
 								borderWidth={0}
 								thickness={4}
 							/>

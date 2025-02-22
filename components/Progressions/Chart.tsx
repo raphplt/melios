@@ -59,6 +59,9 @@ export default function Chart() {
 					backgroundColor: theme.colors.cardBackground,
 				}}
 			>
+				<Text className="text-center font-bold ">
+					{t("your_progression_during_the_last_7_days")}
+				</Text>
 				<View style={{ flexDirection: "row", justifyContent: "center" }}>
 					<ProgressChart
 						data={data}

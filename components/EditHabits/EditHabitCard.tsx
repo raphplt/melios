@@ -1,7 +1,7 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ImageBackground } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { ThemeContext } from "@context/ThemeContext";
-import { useContext, useState } from "react";
+import { useTheme } from "@context/ThemeContext";
+import { useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useData } from "@context/DataContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,9 +14,13 @@ import {
 } from "@db/userHabit";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { deleteLogsByHabitId } from "@db/logs";
+import { useHabits } from "@context/HabitsContext";
+import { catImgs } from "@utils/categoriesBg";
+import { BlurView } from "expo-blur";
 
 export default function EditHabitCard({ habit }: { habit: UserHabit }) {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useTheme();
+	const { categories } = useHabits();
 	const { setHabits } = useData();
 
 	const [modalVisible, setModalVisible] = useState(false);
@@ -48,33 +52,37 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 		setModalVisible(false);
 	};
 
+	const habitCategory = categories.find((c) => c.category === habit.category);
+
 	return (
-		<ZoomableView>
-			<View
-				className="flex flex-row items-center justify-between mx-auto w-11/12 py-3 px-2 my-[6px] rounded-2xl"
-				style={{
-					backgroundColor: theme.colors.cardBackground,
-				}}
+		<>
+			{/* Card */}
+
+			<ImageBackground
+				source={catImgs[habitCategory?.slug || "sport"]}
+				style={{ flex: 1 }}
+				imageStyle={{ resizeMode: "cover" }}
+				className="flex flex-row justify-between items-center py-6 px-2 my-[6px] rounded-xl overflow-hidden w-[95%] mx-auto"
 			>
-				<View className="flex flex-row items-center">
-					<View className="w-8 ml-1">
-						<FontAwesome6
-							name={habit.icon || "question"}
-							size={18}
-							color={habit.color || theme.colors.text}
-						/>
+				<BlurView
+					tint="dark"
+					intensity={80}
+					className="flex flex-row items-center py-2 rounded-full w-2/3 overflow-hidden px-2"
+				>
+					<View className="w-6 ml-1">
+						<FontAwesome6 name={habit.icon || "question"} size={16} color={"white"} />
 					</View>
 					<Text
-						className="ml-2 w-10/12 font-semibold overflow-clip"
-						style={{
-							color: theme.colors.text,
-						}}
+						className="ml-2 text-sm text-white  font-semibold overflow-clip"
 						numberOfLines={1}
 					>
 						{habit.name}
 					</Text>
-				</View>
-				<Pressable onPress={confirmDeleteHabit}>
+				</BlurView>
+				<Pressable
+					onPress={confirmDeleteHabit}
+					className="bg-white rounded-full p-2"
+				>
 					<Iconify
 						icon="mdi:trash-outline"
 						size={26}
@@ -82,14 +90,15 @@ export default function EditHabitCard({ habit }: { habit: UserHabit }) {
 						className="mr-2"
 					/>
 				</Pressable>
-			</View>
+			</ImageBackground>
 
+			{/* Modal */}
 			<DeleteHabit
 				visible={modalVisible}
 				setVisible={setModalVisible}
 				habit={habit}
 				handleDelete={handleDeleteConfirm}
 			/>
-		</ZoomableView>
+		</>
 	);
 }

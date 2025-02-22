@@ -2,11 +2,11 @@ import EditHabitCard from "@components/EditHabits/EditHabitCard";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useState } from "react";
-import { FlatList, View, TextInput } from "react-native";
+import { View, TextInput, Text } from "react-native";
 import { Iconify } from "react-native-iconify";
-import NumberSelected from "@components/Select/Old/NumberSelected";
 import { UserHabit } from "@type/userHabit";
 import { useTranslation } from "react-i18next";
+import Animated, { LinearTransition } from "react-native-reanimated";
 
 export default function EditHabits() {
 	const { theme } = useTheme();
@@ -21,24 +21,26 @@ export default function EditHabits() {
 		);
 
 	return (
-		<FlatList
+		<Animated.FlatList
 			style={{ backgroundColor: theme.colors.background }}
 			contentContainerStyle={{ flexGrow: 1 }}
 			ListHeaderComponent={
-				<View className="w-[95%] flex flex-row items-center mx-auto">
+				<View className="w-11/12 flex flex-row items-center mx-auto mb-4">
 					<View
-						className="flex flex-row items-center w-[80%] my-3 py-3 px-4 rounded-3xl"
+						className="flex flex-row items-center rounded-xl flex-1"
 						style={{
 							backgroundColor: theme.colors.background,
-							borderColor: theme.colors.primary,
+							borderColor: theme.colors.border,
 							borderWidth: 1,
 						}}
 					>
-						<Iconify icon="mdi:magnify" size={20} color={theme.colors.text} />
+						<View className="flex flex-row items-center p-2">
+							<Iconify icon="mdi:magnify" size={20} color={theme.colors.text} />
+						</View>
 						<TextInput
 							placeholder={t("search_habit")}
 							placeholderTextColor={theme.colors.text}
-							className="ml-1"
+							className="flex-1 py-3"
 							value={searchText}
 							style={{
 								color: theme.colors.text,
@@ -46,13 +48,20 @@ export default function EditHabits() {
 							onChangeText={setSearchText}
 						/>
 					</View>
-					<NumberSelected number={habits.length} />
+					<View
+						style={{ backgroundColor: theme.colors.primary }}
+						className="px-3 rounded-3xl flex flex-row items-center py-4 ml-2"
+					>
+						<Text className="w-fit font-semibold text-white">{habits.length}/10</Text>
+					</View>
 				</View>
 			}
 			data={filteredHabits}
 			keyExtractor={(item: UserHabit) => item.id.toString()}
 			renderItem={({ item }) => <EditHabitCard habit={item} />}
 			showsVerticalScrollIndicator={false}
+			keyboardDismissMode="on-drag"
+			itemLayoutAnimation={LinearTransition}
 		/>
 	);
 }

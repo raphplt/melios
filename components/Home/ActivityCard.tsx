@@ -1,4 +1,4 @@
-import { useContext, memo, useEffect, useState } from "react";
+import { useContext, memo } from "react";
 import {
 	View,
 	Text,
@@ -14,10 +14,8 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useTheme } from "@context/ThemeContext";
 import { lightenColor } from "@utils/colors";
 import { HabitsContext, useHabits } from "@context/HabitsContext";
-import getImage from "@utils/getImage";
 import { UserHabit } from "@type/userHabit";
 import { BlurView } from "expo-blur";
-import CachedImage from "@components/Shared/CachedImage";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { catImgs } from "@utils/categoriesBg";
 

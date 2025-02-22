@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { BlurView } from "expo-blur";
 import useIndex from "@hooks/useIndex";
 
@@ -35,9 +35,9 @@ const BlurBox: React.FC<BlurBoxProps> = ({
 			className="absolute z-30 px-2 py-2 rounded-lg overflow-hidden"
 		>
 			<BlurView
-				intensity={intensity ?? 95}
+				intensity={100}
 				style={styles.blurView}
-				tint={isDayTime ? "light" : "dark"}
+				tint={isDayTime ? (Platform.OS == "ios" ? "light" : "default") : "dark"}
 			/>
 			{children}
 		</View>

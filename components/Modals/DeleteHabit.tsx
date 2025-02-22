@@ -1,5 +1,4 @@
 import { UserHabit } from "@type/userHabit";
-import ModalWrapper from "./ModalWrapper";
 import { View, Pressable, Text } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
