@@ -245,17 +245,18 @@ export const updateProfilePicture = async (slug: string) => {
 };
 
 /**
- *
- * Méthode pour récupérer les membres avec pagination
- * @param lastVisibleDoc
- * @param pageSize
- * @returns
+ * Récupère les membres avec pagination.
+ * @param lastVisibleDoc Document de référence pour la pagination
+ * @param pageSize Nombre d'éléments à récupérer
+ * @param filter Type de filtre à appliquer
+ * @param member Membre courant pour les filtres
+ * @returns { members, lastVisible }
  */
 export const getMembersPaginated = async (
 	lastVisibleDoc: any = null,
 	pageSize: number = 10,
 	filter: "all" | "friends" | "received" | "sent" = "all",
-	member?: Member
+	member?: any
 ) => {
 	try {
 		const membersCollectionRef = collection(db, "members");
@@ -294,32 +295,27 @@ export const getMembersPaginated = async (
 		}
 
 		const querySnapshot = await getDocs(membersQuery);
-
 		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
 		const uniqueMembers = new Set();
 		const members = querySnapshot.docs
-			.map((doc) => ({
-				id: doc.id,
-				...doc.data(),
-			}))
+			.map((doc) => ({ id: doc.id, ...doc.data() }))
 			.filter((member: any) => {
-				if (uniqueMembers.has(member.uid)) {
-					return false;
-				}
+				if (uniqueMembers.has(member.uid)) return false;
 				uniqueMembers.add(member.uid);
 				return true;
 			});
 
 		return { members, lastVisible };
 	} catch (error) {
-		console.error(
+		console.log(
 			"Erreur lors de la récupération des membres avec pagination: ",
 			error
 		);
 		throw error;
 	}
 };
+
 
 /**
  *

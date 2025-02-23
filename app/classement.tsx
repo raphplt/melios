@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-	FlatList,
-	ActivityIndicator,
-	View,
-	Text,
-	Platform,
-	StatusBar,
-} from "react-native";
+import { FlatList, ActivityIndicator, View, Text } from "react-native";
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import { getAllRewardsPaginated } from "@db/rewards";
 import { Iconify } from "react-native-iconify";
@@ -15,8 +8,8 @@ import CardClassement from "@components/Agora/CardClassement";
 import { useTranslation } from "react-i18next";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { LinearGradient } from "expo-linear-gradient";
-import maj from "@utils/textUtils";
 import React from "react";
+import { maj } from "@utils/textUtils";
 
 export default function Classement() {
 	const [usersRewards, setUsersRewards]: any = useState([]);

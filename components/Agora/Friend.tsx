@@ -26,7 +26,6 @@ const Friend = ({ member }: Props) => {
 	const [loading, setLoading] = useState(false);
 
 	const { member: currentUser, setMember } = useData();
-
 	if (!currentUser) return null;
 
 	const [isFriend, setIsFriend] = useState(
@@ -40,13 +39,10 @@ const Friend = ({ member }: Props) => {
 	);
 
 	useEffect(() => {
-		const loadProfilePicture = () => {
-			if (member?.profilePicture) {
-				const uri = getIcon(member.profilePicture);
-				setProfilePictureUri(uri);
-			}
-		};
-		loadProfilePicture();
+		if (member?.profilePicture) {
+			const uri = getIcon(member.profilePicture);
+			setProfilePictureUri(uri);
+		}
 	}, [member]);
 
 	const handleSendRequest = async () => {
@@ -54,7 +50,6 @@ const Friend = ({ member }: Props) => {
 		try {
 			if (!member.uid) return;
 			await sendFriendRequest(member.uid);
-
 			setRequestSent(true);
 			setMember((prevData) => {
 				if (!prevData) return prevData;
@@ -116,20 +111,39 @@ const Friend = ({ member }: Props) => {
 
 	return (
 		<View
-			className="flex flex-col items-center justify-between w-[47%] p-2 my-2 rounded-lg mx-auto"
 			style={{
-				borderColor: theme.colors.primary,
-				borderWidth: 2,
+				borderWidth: 1,
+				borderColor: theme.colors.border,
+				borderRadius: 12,
+				backgroundColor: theme.colors.cardBackground,
+				padding: 16,
+				marginVertical: 8,
+				marginHorizontal: 4,
+				shadowColor: "#000",
+				shadowOpacity: 0.1,
+				shadowRadius: 8,
+				elevation: 2,
+				alignItems: "center",
+				width: "47%",
 			}}
+			className="mx-auto"
 		>
 			<CachedImage
 				imagePath={profilePictureUri || "images/cosmetics/man.png"}
-				style={{ width: 60, height: 60, marginTop: 5 }}
+				style={{
+					width: 70,
+					height: 70,
+					borderRadius: 35,
+					marginBottom: 8,
+				}}
 			/>
 			<Text
-				className="text-center text-[14px] font-bold mt-1 py-1"
 				style={{
+					fontSize: 16,
+					fontWeight: "600",
 					color: theme.colors.text,
+					textAlign: "center",
+					marginBottom: 8,
 				}}
 			>
 				{member.nom}
@@ -138,15 +152,22 @@ const Friend = ({ member }: Props) => {
 				<ActivityIndicator size="small" color={theme.colors.primary} />
 			) : isFriend ? (
 				<View
-					className="flex flex-row items-center justify-evenly rounded-lg w-fit py-1 px-4"
-					style={{ backgroundColor: theme.colors.primary }}
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						backgroundColor: theme.colors.primary,
+						paddingVertical: 6,
+						paddingHorizontal: 12,
+						borderRadius: 8,
+					}}
 				>
 					<Iconify icon="mdi:account-check" size={20} color="white" />
 					<Text
 						style={{
 							color: theme.colors.textSecondary,
+							fontSize: 14,
+							marginLeft: 6,
 						}}
-						className="text-center py-[2px] ml-2"
 					>
 						{t("is_friend")}
 					</Text>
@@ -155,24 +176,44 @@ const Friend = ({ member }: Props) => {
 				<Text
 					style={{
 						color: theme.colors.textTertiary,
+						fontSize: 14,
+						marginTop: 4,
 					}}
-					className="text-center mt-1"
 				>
 					{t("request_sent")}
 				</Text>
 			) : requestReceived ? (
-				<View className="flex flex-row items-center justify-evenly w-full py-1">
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-between",
+						width: "100%",
+						marginTop: 8,
+					}}
+				>
 					<Pressable
 						onPress={handleAcceptRequest}
-						style={{ backgroundColor: theme.colors.primary }}
-						className="p-2 rounded-lg mt-2"
+						style={{
+							backgroundColor: theme.colors.primary,
+							padding: 8,
+							borderRadius: 8,
+							flex: 1,
+							marginRight: 4,
+							alignItems: "center",
+						}}
 					>
 						<Iconify icon="material-symbols:done" size={20} color="white" />
 					</Pressable>
 					<Pressable
 						onPress={handleDeclineRequest}
-						style={{ backgroundColor: theme.colors.redPrimary }}
-						className="p-2 rounded-lg mt-2"
+						style={{
+							backgroundColor: theme.colors.redPrimary,
+							padding: 8,
+							borderRadius: 8,
+							flex: 1,
+							marginLeft: 4,
+							alignItems: "center",
+						}}
 					>
 						<Iconify icon="material-symbols:close" size={20} color="white" />
 					</Pressable>
@@ -180,12 +221,19 @@ const Friend = ({ member }: Props) => {
 			) : (
 				<Pressable
 					onPress={handleSendRequest}
-					style={{ backgroundColor: theme.colors.primary }}
-					className="py-[6px] px-3 rounded-lg mt-2 flex flex-row items-center justify-center"
+					style={{
+						backgroundColor: theme.colors.primary,
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "center",
+						paddingVertical: 8,
+						paddingHorizontal: 16,
+						borderRadius: 8,
+						marginTop: 8,
+					}}
 				>
 					<Iconify icon="mdi:account-plus" size={18} color="white" />
-
-					<Text style={{ color: "white" }} className="text-center ml-2 text-sm">
+					<Text style={{ color: "white", fontSize: 14, marginLeft: 6 }}>
 						{t("add_friend")}
 					</Text>
 				</Pressable>

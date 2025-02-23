@@ -1,9 +1,11 @@
+import { useTheme } from "@context/ThemeContext";
 import React from "react";
 import { Dimensions, View } from "react-native";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 
 const PlaceHolderLog = () => {
 	const screen = Dimensions.get("screen");
+	const { theme } = useTheme();
 
 	return (
 		<View
@@ -11,9 +13,9 @@ const PlaceHolderLog = () => {
 				width: screen.width - 24,
 				padding: 12, // Réduction du padding
 				borderRadius: 10, // Légère réduction du rayon des bords
-				backgroundColor: "#fff",
+				backgroundColor: theme.colors.cardBackground,
 				marginBottom: 12, // Espacement inférieur ajusté
-				shadowColor: "#000",
+				shadowColor: theme.colors.border,
 				shadowOffset: { width: 0, height: 2 },
 				shadowOpacity: 0.1,
 				shadowRadius: 4,

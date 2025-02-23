@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "@context/ThemeContext";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
-import { Iconify } from "react-native-iconify";
+import { View, Text, ScrollView } from "react-native";
 import PackItem from "./PackItem";
 import { useTranslation } from "react-i18next";
 import { getAllPacks } from "@db/packs";
 import { Pack } from "@type/pack";
-import maj from "@utils/textUtils";
+import { maj } from "@utils/textUtils";
 
 export default function MarketPacks() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const [packs, setPacks] = useState<Pack[]>([]);
-	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchPacks = async () => {
@@ -21,8 +19,6 @@ export default function MarketPacks() {
 				setPacks(data);
 			} catch (error) {
 				console.error("Erreur lors de la récupération des packs :", error);
-			} finally {
-				setLoading(false);
 			}
 		};
 

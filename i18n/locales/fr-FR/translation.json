@@ -162,7 +162,7 @@
     "received": "Reçus",
     "no_friends": "Aucun ami",
     "no_results": "Aucun résultat",
-    "search_friend": "Rechercher un ami",
+    "search_friend": "Rechercher quelqu'un",
     "is_friend": "Ami",
     "welcome_back_to": "Bon retour sur",
     "forget_password_question": "Mot de passe oublié ?",
@@ -251,5 +251,13 @@
     "level_up": "Niveau supérieur",
     "points_earned": "Points gagnés",
     "continue": "Continuer",
-    "your_progression_during_the_last_7_days": "Votre progression au cours des 7 derniers jours"
+    "your_progression_during_the_last_7_days": "Votre progression au cours des 7 derniers jours",
+    "claim_reward": "Réclamer la récompense",
+    "congratulations_reward": "Félicitations!",
+    "reward_modal_message": "Vous avez complété toutes vos tâches pour aujourd'hui. Réclamez votre récompense!",
+    "reward_modal_earned": "Vous avez gagné",
+    "reward_claimed_title": "Récompense obtenue",
+    "reward_claimed_message": "Votre récompense a été réclamée avec succès. Revenez demain pour en gagner une nouvelle!",
+    "share_app": "Partager l'app",
+    "add_friends": "Ajouter des amis"
 }

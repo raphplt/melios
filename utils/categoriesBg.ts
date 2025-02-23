@@ -20,4 +20,5 @@ export const catImgs: { [key: string]: any } = {
 	perfectionnisme: require("@assets/images/categories/perfectionnisme.png"),
 	sommeil: require("@assets/images/categories/sommeil.png"),
 	dependance_ecrans: require("@assets/images/categories/dependance_ecrans.png"),
+	personnalise: require("@assets/images/categories/grow.png"),
 };

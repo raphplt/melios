@@ -21,16 +21,13 @@ const WorkSession: React.FC = () => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
 
-	// Options de sessions disponibles
 	const sessionOptions: SessionOption[] = [
 		{ work: 20, break: 5, label: "20/5" },
 		{ work: 25, break: 5, label: "25/5" },
 		{ work: 50, break: 10, label: "50/10" },
 		{ work: 90, break: 20, label: "90/20" },
-		// Vous pouvez ajouter d'autres options ici
 	];
 
-	// State pour la session sélectionnée et le timer
 	const [selectedSession, setSelectedSession] = useState<SessionOption>(
 		sessionOptions[0]
 	);
@@ -42,14 +39,12 @@ const WorkSession: React.FC = () => {
 	);
 	const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
 
-	// Référence pour l'intervalle du timer
 	const timerInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
 	// Animation de clignotement (quand le timer est en pause)
 	const blinkAnim = useRef(new Animated.Value(1)).current;
 	const animationRef = useRef<Animated.CompositeAnimation | null>(null);
 
-	// Lorsqu'on change de session, on réinitialise le timer
 	useEffect(() => {
 		const newTotal = selectedSession.work * 60;
 		setTotalSeconds(newTotal);
@@ -61,7 +56,6 @@ const WorkSession: React.FC = () => {
 		}
 	}, [selectedSession]);
 
-	// Effet pour décrémenter le timer chaque seconde quand il est actif
 	useEffect(() => {
 		if (isTimerActive) {
 			timerInterval.current = setInterval(() => {
@@ -92,7 +86,6 @@ const WorkSession: React.FC = () => {
 		};
 	}, [isTimerActive]);
 
-	// Animation de clignotement lorsque le timer est en pause
 	useEffect(() => {
 		if (!isTimerActive) {
 			animationRef.current = Animated.loop(
@@ -120,25 +113,21 @@ const WorkSession: React.FC = () => {
 		}
 	}, [isTimerActive, blinkAnim]);
 
-	// Fonction pour démarrer ou mettre en pause le timer
 	const toggleTimer = (): void => {
 		setIsTimerActive((prev) => !prev);
 	};
 
-	// Fonction pour réinitialiser le timer
 	const resetTimer = (): void => {
 		setIsTimerActive(false);
 		setTimerSeconds(totalSeconds);
 	};
 
-	// Fonction utilitaire pour formater le temps en mm:ss
 	const formatTime = (seconds: number): string => {
 		const minutes: number = Math.floor(seconds / 60);
 		const secs: number = seconds % 60;
 		return `${minutes < 10 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
 	};
 
-	// Composant local pour afficher le progress bar
 	const TimerProgressBar = (): JSX.Element => {
 		const { width } = Dimensions.get("window");
 		const progressValue: number = 1 - timerSeconds / totalSeconds;

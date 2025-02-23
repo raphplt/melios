@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	Text,
 	View,
@@ -18,8 +18,9 @@ import { Iconify } from "react-native-iconify";
 const FriendList = () => {
 	const { member } = useData();
 	const { theme } = useTheme();
-	const [members, setMembers] = useState<Member[]>([]);
 	const { t } = useTranslation();
+
+	const [members, setMembers] = useState<Member[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [lastVisibleDoc, setLastVisibleDoc] = useState<any>(null);
 	const [hasMoreMembers, setHasMoreMembers] = useState(true);
@@ -28,13 +29,36 @@ const FriendList = () => {
 	);
 	const [searchQuery, setSearchQuery] = useState<string>("");
 
+	const cacheRef = useRef<
+		Record<string, { members: Member[]; lastVisible: any }>
+	>({});
+
 	const fetchMembers = async (isRefreshing = false) => {
 		try {
+			// Si rafraîchissement, on réinitialise
 			if (isRefreshing) {
 				setLastVisibleDoc(null);
 				setMembers([]);
+				setHasMoreMembers(true);
+			}
+			setLoading(true);
+
+			// Clé du cache basée sur le filtre et la page
+			const cacheKey = `${filter}-${lastVisibleDoc ? lastVisibleDoc.id : "first"}`;
+
+			if (cacheRef.current[cacheKey]) {
+				// Utilisation des données en cache
+				const { members: cachedMembers, lastVisible } = cacheRef.current[cacheKey];
+				setMembers((prevMembers) =>
+					isRefreshing ? cachedMembers : [...prevMembers, ...cachedMembers]
+				);
+				setLastVisibleDoc(lastVisible);
+				if (cachedMembers.length < 10) setHasMoreMembers(false);
+				setLoading(false);
+				return;
 			}
 
+			// Récupération des membres via l'API
 			const { members: newMembers, lastVisible } = await getMembersPaginated(
 				lastVisibleDoc,
 				10,
@@ -44,35 +68,33 @@ const FriendList = () => {
 
 			if (newMembers && newMembers.length < 10) setHasMoreMembers(false);
 
-			setMembers((prevMembers: any) => {
-				const updatedMembers = isRefreshing
-					? newMembers
-					: [
-							...prevMembers,
-							...newMembers.filter(
-								(newMember: any) =>
-									!prevMembers.some((member: Member) => member.uid === newMember.uid)
-							),
-					  ];
-
-				return updatedMembers;
-			});
-
+			setMembers((prevMembers: any) =>
+				isRefreshing ? newMembers : [...prevMembers, ...newMembers]
+			);
 			setLastVisibleDoc(lastVisible);
+
+			// Mise en cache de la page
+			cacheRef.current[cacheKey] = { members: newMembers as any, lastVisible };
+
 			setLoading(false);
 		} catch (error) {
-			console.error("Erreur lors de la récupération des membres: ", error);
+			console.log("Erreur lors de la récupération des membres: ", error);
+			setLoading(false);
 		}
 	};
 
+	// Recharge lors du changement de filtre
 	useEffect(() => {
 		fetchMembers(true);
 	}, [filter]);
 
 	const loadMoreMembers = () => {
-		if (hasMoreMembers) fetchMembers();
+		if (hasMoreMembers && !loading) {
+			fetchMembers();
+		}
 	};
 
+	// Filtrage côté client pour la recherche et le filtre
 	const filteredMembers = members.filter((m) => {
 		if (!member) return false;
 		const isCurrentUser = m.uid === member.uid;
@@ -86,25 +108,36 @@ const FriendList = () => {
 		return !isCurrentUser && matchesFilter && matchesSearch;
 	});
 
-	if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+	if (loading && members.length === 0) {
+		return <ActivityIndicator size="large" color="#0000ff" />;
+	}
 
-	const filterStyle = "px-4 py-2 rounded-lg mx-2";
+	// Style commun pour les boutons de filtre
+	const filterStyle = {
+		paddingHorizontal: 16,
+		paddingVertical: 8,
+		borderRadius: 8,
+		marginHorizontal: 8,
+	};
 
 	return (
-		<View
-			style={{
-				flex: 1,
-				backgroundColor: theme.colors.background,
-			}}
-		>
-			<View className="flex flex-row items-center justify-center mb-4">
+		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+			{/* Boutons de filtre */}
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "center",
+					marginBottom: 16,
+				}}
+			>
 				<Pressable
 					onPress={() => setFilter("all")}
 					style={{
 						backgroundColor:
 							filter === "all" ? theme.colors.primary : theme.colors.cardBackground,
+						...filterStyle,
 					}}
-					className={filterStyle}
 				>
 					<Text
 						style={{
@@ -121,15 +154,15 @@ const FriendList = () => {
 							filter === "friends"
 								? theme.colors.primary
 								: theme.colors.cardBackground,
+						...filterStyle,
 					}}
-					className={filterStyle}
 				>
 					<Text
 						style={{
 							color:
 								filter === "friends" ? theme.colors.textSecondary : theme.colors.text,
+							fontSize: 14,
 						}}
-						className="text-sm"
 					>
 						{t("friends")} ({member?.friends?.length || 0})
 					</Text>
@@ -141,8 +174,8 @@ const FriendList = () => {
 							filter === "received"
 								? theme.colors.primary
 								: theme.colors.cardBackground,
+						...filterStyle,
 					}}
-					className={filterStyle}
 				>
 					<Text
 						style={{
@@ -158,8 +191,8 @@ const FriendList = () => {
 					style={{
 						backgroundColor:
 							filter === "sent" ? theme.colors.primary : theme.colors.cardBackground,
+						...filterStyle,
 					}}
-					className={filterStyle}
 				>
 					<Text
 						style={{
@@ -171,36 +204,40 @@ const FriendList = () => {
 					</Text>
 				</Pressable>
 			</View>
-			<View className="flex flex-row items-center justify-center mb-4 w-11/12 mx-auto">
+
+			{/* Zone de recherche */}
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "center",
+					marginBottom: 16,
+					width: "90%",
+					alignSelf: "center",
+				}}
+			>
 				<TextInput
 					placeholder={t("search_friend")}
 					value={searchQuery}
 					onChangeText={setSearchQuery}
 					style={{
+						flex: 1,
 						borderRadius: 8,
 						padding: 8,
 						backgroundColor: theme.colors.cardBackground,
-						width: "90%",
 					}}
-					className="mr-2"
 				/>
 				<Iconify icon="mdi:search" size={24} color={theme.colors.text} />
 			</View>
 
+			{/* Liste des membres */}
 			<FlatList
 				data={filteredMembers}
 				numColumns={2}
 				keyExtractor={(item) => item.uid}
 				showsVerticalScrollIndicator={false}
 				renderItem={({ item }) => <Friend member={item} />}
-				onEndReached={loadMoreMembers}
-				onEndReachedThreshold={0.5}
-				className="w-[95%] mx-auto"
-				ListFooterComponent={
-					loading && hasMoreMembers ? (
-						<ActivityIndicator size="large" color="#0000ff" />
-					) : null
-				}
+				contentContainerStyle={{ paddingBottom: 20 }}
 				ListEmptyComponent={
 					!loading ? (
 						<Text style={{ textAlign: "center", marginTop: 20 }}>
@@ -208,6 +245,29 @@ const FriendList = () => {
 						</Text>
 					) : null
 				}
+				ListFooterComponent={
+					hasMoreMembers && !loading ? (
+						<Pressable
+							onPress={loadMoreMembers}
+							style={{
+								alignSelf: "center",
+								marginVertical: 16,
+								padding: 10,
+								backgroundColor: theme.colors.backgroundTertiary,
+							}}
+							className="w-11/12 rounded-full flex items-center justify-center py-4"
+						>
+							<Text style={{ color: theme.colors.text }}>{t("see_more")}</Text>
+						</Pressable>
+					) : loading ? (
+						<ActivityIndicator
+							size="large"
+							color="#0000ff"
+							style={{ marginVertical: 16 }}
+						/>
+					) : null
+				}
+				style={{ width: "95%", alignSelf: "center" }}
 			/>
 		</View>
 	);

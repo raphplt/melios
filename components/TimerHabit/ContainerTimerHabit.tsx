@@ -1,12 +1,10 @@
-import CachedImage from "@components/Shared/CachedImage";
 import { useHabits } from "@context/HabitsContext";
 import { useTheme } from "@context/ThemeContext";
 import useHabitTimer from "@hooks/useHabitTimer";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { catImgs } from "@utils/categoriesBg";
-import getImage from "@utils/getImage";
 import { useNavigation } from "expo-router";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import {
 	View,
 	Pressable,

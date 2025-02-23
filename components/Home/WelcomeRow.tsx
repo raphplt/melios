@@ -3,7 +3,6 @@ import useIndex from "@hooks/useIndex";
 import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "@context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 
 export default function WelcomeRow() {
@@ -44,7 +43,6 @@ export default function WelcomeRow() {
 			<Text
 				style={{
 					color: color,
-					// fontFamily: "BaskervilleBold",
 				}}
 				className="text-[16px] font-semibold"
 			>

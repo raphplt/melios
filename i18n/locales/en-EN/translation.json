@@ -160,7 +160,7 @@
     "sent": "Sent",
     "received": "Received",
     "no_results": "No results",
-    "search_friend": "Search a friend",
+    "search_friend": "Search someone",
     "is_friend": "Friend",
     "welcome_back_to": "Welcome back to",
     "forget_password_question": "Forgot your password ?",
@@ -249,5 +249,13 @@
     "level_up": "Level up",
     "points_earned": "Points earned",
     "continue": "Continue",
-    "your_progression_during_the_last_7_days": "Your progression during the last 7 days"
+    "your_progression_during_the_last_7_days": "Your progression during the last 7 days",
+    "claim_reward": "Claim reward",
+    "congratulations_reward": "Congratulations!",
+    "reward_modal_message": "You have completed all your tasks for today. You can now claim your reward.",
+    "reward_modal_earned": "You have earned",
+    "reward_claimed_title": "Reward claimed",
+    "reward_claimed_message": "You have successfully claimed your reward.",
+    "share_app": "Share the app",
+    "add_friends": "Add friends"
 }

@@ -12,7 +12,6 @@ import {
 	deleteHabitById,
 	LOCAL_STORAGE_MEMBER_HABITS_KEY,
 } from "@db/userHabit";
-import ZoomableView from "@components/Shared/ZoomableView";
 import { deleteLogsByHabitId } from "@db/logs";
 import { useHabits } from "@context/HabitsContext";
 import { catImgs } from "@utils/categoriesBg";

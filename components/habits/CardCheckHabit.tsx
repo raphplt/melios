@@ -154,17 +154,8 @@ function CardCheckHabit({
 				/> */}
 
 				<View
-					// onPress={setHabitDone}
-					// className="flex items-center justify-center"
-					// disabled={completed}
 					style={{ flexBasis: "12%" }}
 				>
-					{/* <Ionicons
-						name={completed ? "checkmark-circle" : "ellipse-outline"}
-						size={30}
-						color={isNegative ? theme.colors.redPrimary : theme.colors.primary}
-					/> */}
-
 					<BouncyCheckbox
 						size={25}
 						fillColor={theme.colors.primary}

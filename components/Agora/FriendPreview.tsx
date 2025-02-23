@@ -8,6 +8,9 @@ import { Pressable, ScrollView, Share, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Iconify } from "react-native-iconify";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
+import ZoomableView from "@components/Shared/ZoomableView";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 const FriendPreview = () => {
 	const [friends, setFriends] = useState<
@@ -16,6 +19,7 @@ const FriendPreview = () => {
 	const { theme } = useTheme();
 	const [loading, setLoading] = useState(true);
 	const { t } = useTranslation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	useEffect(() => {
 		try {
@@ -62,41 +66,60 @@ const FriendPreview = () => {
 		<ScrollView
 			showsHorizontalScrollIndicator={false}
 			horizontal
-			contentContainerStyle={{ paddingHorizontal: 8 }}
-			className="py-2"
+			contentContainerStyle={{ paddingHorizontal: 8, alignItems: "flex-start" }}
+			className="py-1 ml-2 w-full"
 		>
-			<Pressable onPress={inviteFriends} className="ml-2 mr-1">
-				<LinearGradient
-					colors={[theme.colors.blueSecondary, theme.colors.cardBackground]}
-					style={{
-						width: 80,
-						height: 80,
-						borderRadius: 40,
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				>
-					<Iconify icon="mdi:account-plus" color={theme.colors.primary} size={32} />
-				</LinearGradient>
-				<Text
-					style={{
-						color: theme.colors.text,
-						fontSize: 13,
-						textAlign: "center",
-						marginTop: 4,
-					}}
-				>
-					{t("invite_friends")}
-				</Text>
-			</Pressable>
-
 			{loading ? (
 				<Placeholder />
-			) : (
+			) : friends.length > 1 ? (
 				friends.map((friend, index) => (
 					<View key={index} style={{ alignItems: "center", marginRight: 12 }}>
+						<ZoomableView>
+							<LinearGradient
+								colors={["#ff9a9e", "#fad0c4"]}
+								style={{
+									width: 80,
+									height: 80,
+									borderRadius: 40,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<CachedImage
+									imagePath={`images/cosmetics/${friend.profilePicture ?? "man"}.png`}
+									style={{
+										width: 70,
+										height: 70,
+										borderRadius: 35,
+										borderWidth: 2,
+										borderColor: "white",
+									}}
+								/>
+							</LinearGradient>
+							<Text
+								style={{
+									color: theme.colors.text,
+									fontSize: 13,
+									marginTop: 4,
+									textAlign: "center",
+									maxWidth: 80,
+								}}
+								className="font-semibold"
+								numberOfLines={1}
+							>
+								{friend.nom}
+							</Text>
+						</ZoomableView>
+					</View>
+				))
+			) : (
+				<Pressable
+					onPress={() => navigation.navigate("friendList")}
+					className="px-4"
+				>
+					<ZoomableView>
 						<LinearGradient
-							colors={["#ff9a9e", "#fad0c4"]}
+							colors={[theme.colors.purpleSecondary, theme.colors.cardBackground]}
 							style={{
 								width: 80,
 								height: 80,
@@ -105,32 +128,58 @@ const FriendPreview = () => {
 								alignItems: "center",
 							}}
 						>
-							<CachedImage
-								imagePath={`images/cosmetics/${friend.profilePicture ?? "man"}.png`}
-								style={{
-									width: 70,
-									height: 70,
-									borderRadius: 35,
-									borderWidth: 2,
-									borderColor: "white",
-								}}
+							<Iconify
+								icon="mdi:account-plus"
+								color={theme.colors.primary}
+								size={32}
 							/>
 						</LinearGradient>
 						<Text
 							style={{
 								color: theme.colors.text,
 								fontSize: 13,
-								marginTop: 4,
 								textAlign: "center",
-								maxWidth: 80,
+								marginTop: 4,
 							}}
-							numberOfLines={1}
+							className="font-semibold"
 						>
-							{friend.nom}
+							{t("add_friends")}
 						</Text>
-					</View>
-				))
+					</ZoomableView>
+				</Pressable>
 			)}
+
+			<Pressable onPress={inviteFriends} className="mr-2">
+				<ZoomableView>
+					<LinearGradient
+						colors={[theme.colors.blueSecondary, theme.colors.cardBackground]}
+						style={{
+							width: 80,
+							height: 80,
+							borderRadius: 40,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<Iconify
+							icon="material-symbols:share"
+							color={theme.colors.primary}
+							size={32}
+						/>
+					</LinearGradient>
+					<Text
+						style={{
+							color: theme.colors.text,
+							fontSize: 13,
+							textAlign: "center",
+							marginTop: 4,
+						}}
+						className="font-semibold"
+					>
+						{t("share_app")}
+					</Text>
+				</ZoomableView>
+			</Pressable>
 		</ScrollView>
 	);
 };

@@ -130,7 +130,7 @@ export default function TimerHabit() {
 	// Fonction d'arrêt de l'habitude
 	const handleStopHabit = async () => {
 		await notifee.stopForegroundService();
-		await notifee.cancelNotification(notificationId); // Ajoutez cette ligne pour annuler la notification
+		await notifee.cancelNotification(notificationId);
 		await stopTimer();
 		setQuitHabit(true);
 		if (beforeRemoveListenerRef.current) {
