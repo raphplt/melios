@@ -18,6 +18,32 @@ import { useHabits } from "@context/HabitsContext";
 import { SoundProvider } from "@context/SoundContext";
 import { useTimer } from "@context/TimerContext";
 
+// --- Enregistrement global du Foreground Service ---
+// Ce callback s'assure que lorsque l'action "stop" est pressée dans la notif en background,
+// le service s'arrête et le callback se résout avant le délai imposé par Android.
+notifee.registerForegroundService((notification) => {
+	return new Promise(async (resolve) => {
+		const unsubscribe = notifee.onForegroundEvent(async ({ type, detail }) => {
+			if (
+				type === EventType.ACTION_PRESS &&
+				detail.pressAction &&
+				detail.pressAction.id === "stop"
+			) {
+				// L'utilisateur a appuyé sur "Arrêter" en background
+				await notifee.stopForegroundService();
+				unsubscribe();
+				resolve();
+			}
+		});
+		// Pour éviter que la promesse ne reste en attente trop longtemps,
+		// on résout automatiquement après 5 secondes
+		setTimeout(() => {
+			unsubscribe();
+			resolve();
+		}, 5000);
+	});
+});
+
 export default function TimerHabit() {
 	const { currentHabit } = useHabits();
 	const { stopTimer, pauseTimer, startTimer } = useHabitTimer();
@@ -26,21 +52,21 @@ export default function TimerHabit() {
 
 	const [quitHabit, setQuitHabit] = React.useState(false);
 	const beforeRemoveListenerRef = useRef<any>(null);
+	// Ce flag permet de s'assurer que la navigation vers "habitDetail" n'est lancée qu'une seule fois
+	const hasNavigated = useRef(false);
 
 	if (!currentHabit) return null;
 
-	// ID fixe pour la notification
 	const notificationId = "foreground_notification";
 
-	// Formatage du temps en mm:ss
 	const formatTime = (seconds: number) => {
 		const m = Math.floor(seconds / 60);
 		const s = seconds % 60;
 		return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 	};
 
-	// Création / mise à jour de la notif en foreground
-	const updateForegroundNotification = async () => {
+	// Affichage / mise à jour de la notification
+	const displayNotification = async () => {
 		const channelId = await notifee.createChannel({
 			id: "foreground",
 			name: "Foreground Service Channel",
@@ -56,7 +82,6 @@ export default function TimerHabit() {
 				asForegroundService: true,
 				color: AndroidColor.WHITE,
 				colorized: true,
-				// Actions affichées en bas de la notif
 				actions: [
 					{
 						title: isTimerActive ? "Pause" : "Reprendre",
@@ -67,52 +92,53 @@ export default function TimerHabit() {
 						pressAction: { id: "stop" },
 					},
 				],
-				// Action par défaut lors d'un clic sur la notif (en dehors des boutons)
 				pressAction: { id: "default", launchActivity: "default" },
 			},
 		});
 	};
 
-	// Lance la notif en background
 	const startForegroundNotification = async () => {
-		await updateForegroundNotification();
+		await displayNotification();
 	};
 
-	// On écoute l'état de l'application pour afficher/cacher la notif
+	// Gestion de l'état de l'app : en background, on affiche la notif,
+	// et lorsque l'app redevient active, on arrête le service et si l'utilisateur
+	// avait cliqué sur "Arrêter", on navigue vers "habitDetail".
 	useEffect(() => {
 		const subscription = AppState.addEventListener("change", (nextAppState) => {
-			if (nextAppState !== "active") {
-				// L'app passe en background ou inactive → on affiche la notif
-				startForegroundNotification();
-			} else {
-				// L'app est active → on cache la notif
+			if (nextAppState === "active") {
 				notifee.stopForegroundService();
 				notifee.cancelNotification(notificationId);
+				if (quitHabit && !hasNavigated.current) {
+					hasNavigated.current = true;
+					navigation.navigate("habitDetail");
+				}
+			} else {
+				startForegroundNotification();
 			}
 		});
 
 		return () => {
 			subscription.remove();
 		};
-	}, []);
+	}, [quitHabit]);
 
-	// Au montage, on démarre le timer s'il n'est pas déjà actif
+	// Démarrage du timer au montage si nécessaire
 	useEffect(() => {
 		if (!isTimerActive) {
 			startTimer(currentHabit);
 		}
 	}, []);
 
-	// On met à jour la notif dès que le timer change
+	// Mise à jour de la notif dès que le timer change
 	useEffect(() => {
-		updateForegroundNotification();
+		displayNotification();
 	}, [timerSeconds, isTimerActive]);
 
-	// Gestion des interactions sur la notification (clic sur le corps et sur les actions)
+	// Gestion des interactions sur la notification quand l'app est au premier plan
 	useEffect(() => {
 		const subscription = notifee.onForegroundEvent(async ({ type, detail }) => {
 			if (type === EventType.PRESS) {
-				// Clic sur le corps de la notif → ramener l'app au premier plan sur la page en cours
 				if (detail.pressAction?.id === "default") {
 					navigation.navigate("timerHabit");
 				}
@@ -127,7 +153,8 @@ export default function TimerHabit() {
 		return () => subscription();
 	}, []);
 
-	// Fonction d'arrêt de l'habitude
+	// Lorsqu'on stoppe l'habitude : on arrête le timer, la notif et on demande la navigation.
+	// Si l'app est en background, la navigation sera déclenchée au retour au premier plan.
 	const handleStopHabit = async () => {
 		await notifee.stopForegroundService();
 		await notifee.cancelNotification(notificationId);
@@ -136,7 +163,11 @@ export default function TimerHabit() {
 		if (beforeRemoveListenerRef.current) {
 			navigation.removeListener("beforeRemove", beforeRemoveListenerRef.current);
 		}
-		navigation.goBack();
+		if (AppState.currentState === "active") {
+			hasNavigated.current = true;
+			navigation.navigate("habitDetail");
+		}
+		// Sinon, le listener AppState se chargera de naviguer dès que l'app redeviendra active
 	};
 
 	// Confirmation avant de quitter la page
@@ -148,7 +179,7 @@ export default function TimerHabit() {
 					"Êtes-vous sûr de vouloir arrêter cette habitude ?",
 					"La progression actuelle sera perdue",
 					[
-						{ text: "Annuler", style: "cancel", onPress: () => {} },
+						{ text: "Annuler", style: "cancel" },
 						{
 							text: "Arrêter",
 							style: "destructive",

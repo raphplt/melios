@@ -31,7 +31,7 @@ export default function ButtonStartHabit() {
 		<ZoomableView>
 			<Pressable
 				onPress={handlePress}
-				className="py-3 px-6 rounded-full mx-2 justify-evenly flex flex-row items-center"
+				className="py-4 px-6 rounded-full mx-2 justify-evenly flex flex-row items-center"
 				style={{
 					backgroundColor: theme.colors.primary,
 				}}

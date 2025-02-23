@@ -74,7 +74,7 @@ export default function HabitDetail() {
 				<SettingsButton />
 			</View>
 			<View
-				className="w-full h-full mx-auto flex justify-between flex-col"
+				className="w-full h-full mx-auto flex justify-start flex-col gap-2"
 				style={{ flexGrow: 1 }}
 			>
 				<HabitDetailHeader />

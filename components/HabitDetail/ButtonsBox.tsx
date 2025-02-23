@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import ButtonComplete from "./ButtonComplete";
 import ButtonStartHabit from "./ButtonStartHabit";
-import Separator from "./Separator";
 import { useHabits } from "@context/HabitsContext";
 import { useData } from "@context/DataContext";
 import HabitDone from "./HabitDone";

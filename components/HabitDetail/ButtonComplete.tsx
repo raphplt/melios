@@ -60,7 +60,7 @@ export default function ButtonComplete() {
 			<ZoomableView>
 				<Pressable
 					onPress={handlePress}
-					className="py-3 px-4 rounded-full mx-2 justify-evenly flex flex-row items-center"
+					className="py-4 px-4 rounded-full mx-2 justify-evenly flex flex-row items-center"
 					style={{
 						backgroundColor: theme.colors.backgroundSecondary,
 					}}
