@@ -100,7 +100,7 @@ const NegativeCounter: React.FC = () => {
 
 	return (
 		<BlurView
-			intensity={70}
+			intensity={100}
 			className="w-[95%] mx-auto p-2 rounded-xl my-1 overflow-hidden"
 			tint="extraLight"
 		>

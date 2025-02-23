@@ -14,7 +14,7 @@ export default function HabitDetailHeader() {
 
 	return (
 		<BlurView
-			intensity={90}
+			intensity={100}
 			className="py-4 px-6 rounded-xl w-[95%] mx-auto flex items-center flex-row justify-center"
 			style={{
 				overflow: "hidden",

@@ -94,7 +94,7 @@ export default function LastDays() {
 
 	return (
 		<BlurView
-			intensity={70}
+			intensity={100}
 			className="py-2 px-3 rounded-xl w-[95%] mx-auto flex items-center flex-col justify-center"
 			style={{ overflow: "hidden" }}
 			tint="extraLight"
@@ -113,8 +113,7 @@ export default function LastDays() {
 				<View
 					className="flex flex-row items-center justify-start px-3 py-1 gap-1 rounded-full"
 					style={{
-						borderWidth: 1,
-						borderColor: theme.colors.textSecondary,
+						backgroundColor: theme.colors.backgroundSecondary,
 					}}
 				>
 					<Iconify icon="mdi:fire" size={18} color={theme.colors.redPrimary} />

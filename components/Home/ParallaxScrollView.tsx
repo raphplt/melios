@@ -11,11 +11,11 @@ import { useTabBarPadding } from "@hooks/useTabBar";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
-import { Iconify } from "react-native-iconify";
 import WelcomeRow from "./WelcomeRow";
 import { useTranslation } from "react-i18next";
 import * as Progress from "react-native-progress";
 import MissionButton from "./MissionButton";
+import StreakBox from "./StreakBox";
 
 const HEADER_HEIGHT = 250;
 
@@ -60,12 +60,6 @@ export default function ParallaxScrollView({
 
 	const { usersLevels } = useData();
 
-	const color = isDayTime ? "black" : "white";
-
-	const streakUpdatedToday =
-		streak?.updatedAt &&
-		new Date(streak.updatedAt).toDateString() === new Date().toDateString();
-
 	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
 
 	const xpPercentage = globalLevel
@@ -83,59 +77,48 @@ export default function ParallaxScrollView({
 				<Animated.View
 					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 				>
+					{/* Texte de bienvenue */}
 					<BlurBox position={{ top: 20, left: 20 }}>
 						<WelcomeRow />
 					</BlurBox>
 
-					<BlurBox position={{ top: 20, right: 20 }} tint="default">
-						<View className="flex items-center justify-center flex-row ">
-							<Progress.Circle
-								size={32}
-								progress={xpPercentage / 100}
-								color={isDayTime ? theme.colors.primary : theme.colors.tertiary}
-								unfilledColor={theme.colors.cardBackground}
-								borderWidth={0}
-								thickness={4}
-							/>
+					{/* Niveau actuel */}
+					<BlurBox position={{ top: 20, right: 20 }}>
+						<View className="flex flex-col gap-1 p-[2px]">
 							<Text
+								className="font-semibold text-sm"
 								style={{
-									fontSize: 14,
-									color: isDayTime ? theme.colors.primary : theme.colors.tertiary,
-								}}
-								className="font-bold absolute text-lg"
-							>
-								{globalLevel?.currentLevel || "1"}
-							</Text>
-						</View>
-					</BlurBox>
-					<BlurBox position={{ bottom: 20, left: 20 }}>
-						<View className="flex flex-row items-center gap-2">
-							<Iconify
-								icon="mdi:calendar"
-								color={
-									streakUpdatedToday
-										? isDayTime
-											? theme.colors.primary
-											: theme.colors.backgroundTertiary
-										: color
-								}
-								size={20}
-							/>
-							<Text
-								className="font-semibold text-[14px]"
-								style={{
-									color: streakUpdatedToday
-										? isDayTime
-											? theme.colors.primary
-											: theme.colors.backgroundTertiary
-										: color,
+									color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
 								}}
 							>
-								{t("streak")} : {streak?.value}{" "}
-								{streak && streak?.value > 1 ? t("days") : t("day")}
+								{t("level_title")}
 							</Text>
+							<View className="flex items-center justify-center flex-row">
+								<Progress.Circle
+									size={32}
+									progress={xpPercentage / 100}
+									color={isDayTime ? theme.colors.primary : theme.colors.tertiary}
+									unfilledColor={theme.colors.cardBackground}
+									borderWidth={0}
+									thickness={4}
+								/>
+								<Text
+									style={{
+										fontSize: 14,
+										color: isDayTime ? theme.colors.primary : theme.colors.tertiary,
+									}}
+									className="font-bold absolute text-lg"
+								>
+									{globalLevel?.currentLevel || "1"}
+								</Text>
+							</View>
 						</View>
 					</BlurBox>
+
+					{/* Série */}
+					<StreakBox />
+
+					{/* Missions */}
 					<MissionButton />
 
 					{imageTemple ? (

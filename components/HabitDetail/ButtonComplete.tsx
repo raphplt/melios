@@ -47,7 +47,7 @@ export default function ButtonComplete() {
 				setStreak(streak);
 			}
 
-			navigation.navigate("index");
+			navigation.navigate("(navbar)");
 			setLoading(false);
 		} else {
 			setShowModalNegative(true);
