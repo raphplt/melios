@@ -155,21 +155,35 @@ export default function TimerHabit() {
 
 	// Lorsqu'on stoppe l'habitude : on arrête le timer, la notif et on demande la navigation.
 	// Si l'app est en background, la navigation sera déclenchée au retour au premier plan.
-	const handleStopHabit = async () => {
-		await notifee.stopForegroundService();
-		await notifee.cancelNotification(notificationId);
-		await stopTimer();
-		setQuitHabit(true);
-		if (beforeRemoveListenerRef.current) {
-			navigation.removeListener("beforeRemove", beforeRemoveListenerRef.current);
-		}
-		if (AppState.currentState === "active") {
-			hasNavigated.current = true;
-			navigation.navigate("habitDetail");
-		}
-		// Sinon, le listener AppState se chargera de naviguer dès que l'app redeviendra active
-	};
+const handleStopHabit = async () => {
+	// Naviguer vers la page timerHabit
+	navigation.navigate("timerHabit");
 
+	// Attendre un court instant pour s'assurer que la navigation est terminée
+	await new Promise((resolve) => setTimeout(resolve, 100));
+
+	// Arrêter le service en avant-plan et annuler la notification
+	await notifee.stopForegroundService();
+	await notifee.cancelNotification(notificationId);
+
+	// Arrêter le timer
+	await stopTimer();
+
+	// Mettre à jour l'état pour indiquer que l'utilisateur a quitté l'habitude
+	setQuitHabit(true);
+
+	// Retirer le listener beforeRemove si nécessaire
+	if (beforeRemoveListenerRef.current) {
+		navigation.removeListener("beforeRemove", beforeRemoveListenerRef.current);
+	}
+
+	// Si l'application est active, naviguer vers habitDetail
+	if (AppState.currentState === "active") {
+		hasNavigated.current = true;
+		navigation.navigate("habitDetail");
+	}
+	// Sinon, le listener AppState se chargera de naviguer dès que l'application redeviendra active
+};
 	// Confirmation avant de quitter la page
 	useEffect(() => {
 		const beforeRemoveListener = (e: any) => {
