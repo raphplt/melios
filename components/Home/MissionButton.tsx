@@ -21,7 +21,7 @@ const MissionButton = () => {
 		>
 			<View className="flex flex-row items-center gap-2">
 				<Pressable
-					className="flex flex-row items-center justify-center px-4 py-2"
+					className="flex flex-row items-center justify-center px-4 py-[10px]"
 					onPress={() => navigation.navigate("dailyRewards")}
 				>
 					<Iconify

@@ -103,27 +103,22 @@ export default function TimerHabit() {
 
 	useEffect(() => {
 		if (!isFocused) {
-			console.log("pas focus mon bg");
 			return;
 		}
 
 		const subscription = AppState.addEventListener("change", (nextAppState) => {
 			const active = nextAppState === "active";
-			console.log("AppState", active);
 			setIsAppActive(active);
 			if (active) {
 				if (route.name !== "habitDetail") {
-					console.log("1");
 					notifee.stopForegroundService();
 				}
 				if (stopPressed && !hasNavigated.current) {
-					console.log("2");
 					hasNavigated.current = true;
 					handleStopHabit();
 					stopPressed = false;
 				}
 			} else {
-				console.log("startForegroundNotification");
 				startForegroundNotification();
 			}
 		});
@@ -140,7 +135,6 @@ export default function TimerHabit() {
 
 	useEffect(() => {
 		if (!isAppActive && !quitHabit) {
-			// console.log("on relance");
 			displayNotification();
 		}
 	}, [timerSeconds, isTimerActive, isAppActive, quitHabit]);
@@ -153,8 +147,6 @@ export default function TimerHabit() {
 				}
 			} else if (type === EventType.ACTION_PRESS && detail.pressAction) {
 				if (detail.pressAction.id === "stop") {
-					console.log("stop");
-					// handleStopHabit();
 				} else if (detail.pressAction.id === "return") {
 					navigation.navigate("timerHabit");
 				} else if (detail.pressAction.id === "pause") {
@@ -166,7 +158,6 @@ export default function TimerHabit() {
 	}, []);
 
 	const handleStopHabit = async () => {
-		console.log("stop");
 		navigation.navigate("(navbar)");
 		await notifee.stopForegroundService();
 		await stopTimer();

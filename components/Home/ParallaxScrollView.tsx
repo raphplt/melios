@@ -88,7 +88,7 @@ export default function ParallaxScrollView({
 							<Text
 								className="font-semibold text-sm"
 								style={{
-									color: isDayTime ? theme.colors.text : theme.colors.textSecondary,
+									color: isDayTime ? "#000" : "#fff",
 								}}
 							>
 								{t("level_title")}

@@ -67,7 +67,7 @@ const DarkTheme: Theme = {
 		border: "#403F47",
 		notification: "rgb(255, 69, 58)",
 		backgroundSecondary: "#4A4A4A",
-		backgroundTertiary: "rgb(30, 30, 60)",
+		backgroundTertiary: "rgb(60, 60, 120)",
 		cardBackground: "#3A3A3A",
 		greenPrimary: "#47A86C",
 		greenSecondary: "#E6F5E8",
