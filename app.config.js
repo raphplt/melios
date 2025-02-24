@@ -2,7 +2,7 @@ export default {
 	expo: {
 		name: "Melios",
 		slug: "melios",
-		version: "1.1.26",
+		version: "1.1.27",
 		orientation: "portrait",
 		icon: "./assets/images/icon.png",
 		platforms: ["ios", "android", "web"],
@@ -16,7 +16,7 @@ export default {
 
 		assetBundlePatterns: ["**/*"],
 		ios: {
-			buildNumber: "22",
+			buildNumber: "23",
 			bundleIdentifier: "com.raphplt.melios",
 			supportsTablet: true,
 			googleServicesFile: process.env.GOOGLE_SERVICES_INFOPLIST,
