@@ -10,13 +10,14 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 
 const StreakBox = () => {
-	const { streak } = useData();
+	const { streak, completedHabitsToday } = useData();
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const streakUpdatedToday =
-		streak?.updatedAt &&
-		new Date(streak.updatedAt).toDateString() === new Date().toDateString();
+		completedHabitsToday.length ||
+		(streak?.updatedAt &&
+			new Date(streak.updatedAt).toDateString() === new Date().toDateString());
 
 	const colors: [string, string, ...string[]] = streakUpdatedToday
 		? [theme.colors.orangePrimary, theme.colors.orangeSecondary]

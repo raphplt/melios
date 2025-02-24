@@ -17,7 +17,7 @@ const MissionButton = () => {
 	return (
 		<GradientBox
 			position={{ bottom: 20, right: 20 }}
-			colors={[theme.colors.purplePrimary, theme.colors.purpleSecondary]}
+			colors={[theme.colors.primary, theme.colors.backgroundTertiary]}
 		>
 			<View className="flex flex-row items-center gap-2">
 				<Pressable

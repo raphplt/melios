@@ -62,22 +62,7 @@ function MainNavigator() {
 	};
 
 	notifee.registerForegroundService((notification) => {
-		return new Promise(async (resolve) => {
-			// On peut écouter les interactions avec la notification.
-			const unsubscribe = notifee.onForegroundEvent(async ({ type, detail }) => {
-				if (
-					type === EventType.ACTION_PRESS &&
-					detail.pressAction &&
-					detail.pressAction.id === "stop"
-				) {
-					// Si l'utilisateur appuie sur l'action "Arrêter", on stoppe le service
-					await notifee.stopForegroundService();
-					unsubscribe();
-					resolve(); // On résout la promesse pour arrêter la tâche de fond
-				}
-			});
-			// La promesse ne se résout que lorsque stopForegroundService est appelé
-		});
+		return new Promise(async (resolve) => {});
 	});
 
 	return (

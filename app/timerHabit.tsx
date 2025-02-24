@@ -4,6 +4,8 @@ import {
 	useNavigation,
 	NavigationProp,
 	ParamListBase,
+	useRoute,
+	useIsFocused,
 } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -21,9 +23,8 @@ import useHabitTimer from "@hooks/useHabitTimer";
 import { useHabits } from "@context/HabitsContext";
 import { SoundProvider } from "@context/SoundContext";
 import { useTimer } from "@context/TimerContext";
+import { useTheme } from "@context/ThemeContext";
 
-// --- Gestion des événements en background ---
-// On utilise une variable module-level pour retenir si l'utilisateur a appuyé sur "Arrêter" en background.
 let stopPressed = false;
 notifee.onBackgroundEvent(async ({ type, detail }) => {
 	if (
@@ -42,14 +43,15 @@ export default function TimerHabit() {
 	const { stopTimer, pauseTimer, startTimer } = useHabitTimer();
 	const { timerSeconds, isTimerActive } = useTimer();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
+	const { theme } = useTheme();
+	const route = useRoute();
+	const isFocused = useIsFocused();
 
 	const [quitHabit, setQuitHabit] = useState(false);
-	// On garde en state l'état de l'app pour différencier foreground / background.
 	const [isAppActive, setIsAppActive] = useState(
 		AppState.currentState === "active"
 	);
 	const beforeRemoveListenerRef = useRef<any>(null);
-	// Pour éviter de lancer la navigation plusieurs fois
 	const hasNavigated = useRef(false);
 
 	if (!currentHabit) return null;
@@ -62,7 +64,6 @@ export default function TimerHabit() {
 		return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 	};
 
-	// Affichage de la notif avec une importance adaptée à l'état de l'app
 	const displayNotification = async () => {
 		const channelId = await notifee.createChannel({
 			id: "foreground",
@@ -72,14 +73,13 @@ export default function TimerHabit() {
 
 		await notifee.displayNotification({
 			id: notificationId,
-			title: "Timer en cours",
-			body: `${currentHabit.name} - ${formatTime(timerSeconds)}`,
+			title: `${currentHabit.name}`,
+			body: `Temps restant : ${formatTime(timerSeconds)}`,
 			android: {
 				channelId,
 				asForegroundService: true,
 				color: AndroidColor.WHITE,
 				colorized: true,
-				// En foreground, on utilise une importance faible pour éviter le pop-up
 				importance: isAppActive ? AndroidImportance.LOW : AndroidImportance.HIGH,
 				autoCancel: true,
 				actions: [
@@ -89,7 +89,7 @@ export default function TimerHabit() {
 					},
 					{
 						title: "Arrêter",
-						pressAction: { id: "stop" },
+						pressAction: { id: "stop", launchActivity: "default" },
 					},
 				],
 				pressAction: { id: "default", launchActivity: "default" },
@@ -101,46 +101,50 @@ export default function TimerHabit() {
 		await displayNotification();
 	};
 
-	// Gestion de l'état de l'application via AppState.
 	useEffect(() => {
+		if (!isFocused) {
+			console.log("pas focus mon bg");
+			return;
+		}
+
 		const subscription = AppState.addEventListener("change", (nextAppState) => {
 			const active = nextAppState === "active";
+			console.log("AppState", active);
 			setIsAppActive(active);
 			if (active) {
-				// Dès que l'app redevient active, on annule la notif.
-				notifee.stopForegroundService();
-				notifee.cancelNotification(notificationId);
-				// Si l'utilisateur a appuyé sur "Arrêter" en background, on déclenche l'arrêt complet.
+				if (route.name !== "habitDetail") {
+					console.log("1");
+					notifee.stopForegroundService();
+				}
 				if (stopPressed && !hasNavigated.current) {
+					console.log("2");
 					hasNavigated.current = true;
 					handleStopHabit();
 					stopPressed = false;
 				}
 			} else {
-				// En background, on affiche la notif avec importance élevée.
+				console.log("startForegroundNotification");
 				startForegroundNotification();
 			}
 		});
 		return () => {
 			subscription.remove();
 		};
-	}, [quitHabit, isAppActive]);
+	}, [isFocused, quitHabit, isAppActive, route.name, stopPressed]);
 
-	// Au montage, on démarre le timer si nécessaire.
 	useEffect(() => {
 		if (!isTimerActive) {
 			startTimer(currentHabit);
 		}
 	}, []);
 
-	// Mise à jour de la notif uniquement si l'app n'est pas active.
 	useEffect(() => {
-		if (!isAppActive) {
+		if (!isAppActive && !quitHabit) {
+			// console.log("on relance");
 			displayNotification();
 		}
-	}, [timerSeconds, isTimerActive, isAppActive]);
+	}, [timerSeconds, isTimerActive, isAppActive, quitHabit]);
 
-	// Gestion des interactions en foreground sur la notif.
 	useEffect(() => {
 		const subscription = notifee.onForegroundEvent(async ({ type, detail }) => {
 			if (type === EventType.PRESS) {
@@ -149,7 +153,10 @@ export default function TimerHabit() {
 				}
 			} else if (type === EventType.ACTION_PRESS && detail.pressAction) {
 				if (detail.pressAction.id === "stop") {
-					handleStopHabit();
+					console.log("stop");
+					// handleStopHabit();
+				} else if (detail.pressAction.id === "return") {
+					navigation.navigate("timerHabit");
 				} else if (detail.pressAction.id === "pause") {
 					pauseTimer();
 				}
@@ -158,10 +165,10 @@ export default function TimerHabit() {
 		return () => subscription();
 	}, []);
 
-	// Action d'arrêt de l'habitude : arrêter la notif, le timer, et naviguer.
 	const handleStopHabit = async () => {
+		console.log("stop");
+		navigation.navigate("(navbar)");
 		await notifee.stopForegroundService();
-		await notifee.cancelNotification(notificationId);
 		await stopTimer();
 		setQuitHabit(true);
 		if (beforeRemoveListenerRef.current) {
@@ -169,12 +176,10 @@ export default function TimerHabit() {
 		}
 		if (isAppActive) {
 			hasNavigated.current = true;
-			navigation.goBack();
+			navigation.navigate("(navbar)");
 		}
-		// Si l'app est en background, le listener AppState déclenchera la navigation dès qu'elle redeviendra active.
 	};
 
-	// Confirmation avant de quitter la page.
 	useEffect(() => {
 		const beforeRemoveListener = (e: any) => {
 			if (!quitHabit) {
@@ -211,10 +216,14 @@ export default function TimerHabit() {
 					translucent={true}
 				/>
 				<BlurView
-					tint="systemThinMaterialDark"
-					intensity={75}
-					className="p-4 rounded-lg flex flex-col items-center justify-center gap-y-2 w-10/12"
-					style={{ overflow: "hidden" }}
+					tint="extraLight"
+					intensity={100}
+					className="p-4 rounded-lg flex flex-col items-center justify-center gap-y-2 w-11/12"
+					style={{
+						overflow: "hidden",
+
+						elevation: 1,
+					}}
 				>
 					<FontAwesome6
 						name={currentHabit.icon}
@@ -222,14 +231,16 @@ export default function TimerHabit() {
 						color={currentHabit.color}
 					/>
 					<Text
-						style={{ fontFamily: "BaskervilleBold", color: "#f1f1f1" }}
-						className="text-2xl text-center w-2/3"
+						style={{ fontFamily: "BaskervilleBold", color: "#010101" }}
+						className="text-xl text-center w-10/12"
 					>
 						{currentHabit.name}
 					</Text>
 					<Text
-						style={{ fontFamily: "BaskervilleBold", color: "#d1d1d1" }}
-						className="text-sm"
+						className="mt-1 font-semibold"
+						style={{
+							color: "#010101",
+						}}
 					>
 						{currentHabit.description}
 					</Text>

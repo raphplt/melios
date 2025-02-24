@@ -1,13 +1,13 @@
 import React, { memo, useEffect, useState } from "react";
-import { View, Pressable, Button } from "react-native";
+import { View, Pressable } from "react-native";
 import { Text } from "react-native";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { FontAwesome6,  } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withTiming,
-	withDelay,
+	withDelay
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
@@ -143,7 +143,7 @@ function CardCheckHabit({
 
 	const isNegative = habit.type === CategoryTypeSelect.negative;
 	return (
-		<ZoomableView>
+		// <ZoomableView>
 			<Animated.View
 				style={[animatedStyles]}
 				className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
@@ -286,13 +286,12 @@ function CardCheckHabit({
 						)}
 					</Animated.View>
 				</Pressable>
+				<RestartHabit
+					visible={showModalNegative}
+					setVisible={setShowModalNegative}
+					habit={habit}
+				/>
 			</Animated.View>
-			<RestartHabit
-				visible={showModalNegative}
-				setVisible={setShowModalNegative}
-				habit={habit}
-			/>
-		</ZoomableView>
 	);
 }
 
