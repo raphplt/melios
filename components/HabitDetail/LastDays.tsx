@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Text, View, FlatList } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { DayStatus } from "../../app/habitDetail";
 import { getHabitLogs } from "@db/logs";
@@ -64,7 +64,7 @@ export default function LastDays() {
 		fetchHabitLogs();
 	}, [currentHabit.id]);
 
-	const calculateCurrentStreak = (days: DayStatus[]) => {
+	const calculateCurrentStreak = useCallback((days: DayStatus[]) => {
 		let streak = 0;
 		for (let i = 0; i < days.length; i++) {
 			if (days[i].done) {
@@ -74,7 +74,7 @@ export default function LastDays() {
 			}
 		}
 		setCurrentStreak(streak);
-	};
+	}, []);
 
 	const CardPlaceHolder = () => {
 		return (
@@ -90,7 +90,30 @@ export default function LastDays() {
 		);
 	};
 
-	const placeholders = Array(5).fill(null);
+	const placeholders = useMemo(() => Array(5).fill(null), []);
+
+	const renderItem = useCallback(
+		({ item }: { item: DayStatus }) => (
+			<View
+				style={{
+					backgroundColor: item.done
+						? theme.colors.backgroundTertiary
+						: theme.colors.backgroundSecondary,
+				}}
+				className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
+			>
+				{item.done ? (
+					<Iconify size={24} color={theme.colors.text} icon="mdi:check" />
+				) : (
+					<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
+				)}
+				<Text style={{ color: theme.colors.text }} className="font-semibold mt-1">
+					{moment(item.date, "YYYY-MM-DD").format("DD/MM")}
+				</Text>
+			</View>
+		),
+		[theme.colors]
+	);
 
 	return (
 		<BlurView
@@ -134,28 +157,7 @@ export default function LastDays() {
 					showsHorizontalScrollIndicator={false}
 					contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
 					keyExtractor={(_, index) => index.toString()}
-					renderItem={({ item }) => (
-						<View
-							style={{
-								backgroundColor: item.done
-									? theme.colors.backgroundTertiary
-									: theme.colors.backgroundSecondary,
-							}}
-							className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
-						>
-							{item.done ? (
-								<Iconify size={24} color={theme.colors.text} icon="mdi:check" />
-							) : (
-								<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
-							)}
-							<Text
-								style={{ color: theme.colors.text }}
-								className="font-semibold mt-1"
-							>
-								{moment(item.date, "YYYY-MM-DD").format("DD/MM")}
-							</Text>
-						</View>
-					)}
+					renderItem={renderItem}
 				/>
 			) : (
 				<View className="w-full flex flex-row items-center justify-center">

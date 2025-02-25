@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+	createContext,
+	useContext,
+	useState,
+	useEffect,
+	useCallback,
+} from "react";
 import { Category } from "@type/category";
 import { getHabitsWithCategories } from "@db/fetch";
 import { Habit } from "@type/habit";
@@ -37,20 +43,25 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [showHabitDetail, setShowHabitDetail] = useState(false);
 
-	const fetchHabitsData = async (signal: AbortSignal, forceRefresh = false) => {
-		try {
-			const data = await getHabitsWithCategories(forceRefresh);
-			if (!signal.aborted) {
-				setHabitsData(data.habits);
-				setCategories(data.categories);
-				setLoading(false);
+	const fetchHabitsData = useCallback(
+		async (signal: AbortSignal, forceRefresh = false) => {
+			setLoading(true);
+			try {
+				const data = await getHabitsWithCategories(forceRefresh);
+				if (!signal.aborted) {
+					setHabitsData(data.habits);
+					setCategories(data.categories);
+					setLoading(false);
+				}
+			} catch (error) {
+				if (!signal.aborted) {
+					console.log("Erreur lors de la récupération des habitudes :", error);
+					setLoading(false);
+				}
 			}
-		} catch (error) {
-			if (!signal.aborted) {
-				console.log("Erreur lors de la récupération des habitudes :", error);
-			}
-		}
-	};
+		},
+		[]
+	);
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -62,7 +73,7 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 			console.log("HabitsProvider - cleanup");
 			controller.abort();
 		};
-	}, []);
+	}, [fetchHabitsData]);
 
 	return (
 		<HabitsContext.Provider

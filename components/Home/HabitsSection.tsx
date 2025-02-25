@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import useIndex from "@hooks/useIndex";
@@ -22,43 +22,60 @@ export default function HabitsSection() {
 		CategoryTypeSelect.positive
 	);
 
-	const today: DayOfWeek = new Date()
-		.toLocaleString("en-US", { weekday: "long" })
-		.toLowerCase() as DayOfWeek;
+	const today: DayOfWeek = useMemo(() => {
+		return new Date()
+			.toLocaleString("en-US", { weekday: "long" })
+			.toLowerCase() as DayOfWeek;
+	}, []);
 
-	const filteredHabits = userHabits?.filter((habit) => {
-		if (filter === CategoryTypeSelect.positive) {
-			return (
-				habit.type !== CategoryTypeSelect.negative &&
-				habit.frequency &&
-				habit.frequency[today]
-			);
-		}
-		if (filter === CategoryTypeSelect.negative) {
-			return (
-				habit.type === CategoryTypeSelect.negative &&
-				habit.frequency &&
-				habit.frequency[today]
-			);
-		}
-		return false;
-	});
+	const filteredHabits = useMemo(() => {
+		if (!userHabits) return [];
+		return userHabits.filter((habit) => {
+			if (filter === CategoryTypeSelect.positive) {
+				return (
+					habit.type !== CategoryTypeSelect.negative &&
+					habit.frequency &&
+					habit.frequency[today]
+				);
+			}
+			if (filter === CategoryTypeSelect.negative) {
+				return (
+					habit.type === CategoryTypeSelect.negative &&
+					habit.frequency &&
+					habit.frequency[today]
+				);
+			}
+			return false;
+		});
+	}, [userHabits, filter, today]);
 
-	const morningHabits = filteredHabits?.filter(
-		(habit) => habit.moment >= 6 && habit.moment < 12
+	// Groupes d'habitudes par moment de la journée
+	const morningHabits = useMemo(
+		() =>
+			filteredHabits.filter((habit) => habit.moment >= 6 && habit.moment < 12),
+		[filteredHabits]
 	);
 
-	const afternoonHabits = filteredHabits?.filter(
-		(habit) => habit.moment >= 12 && habit.moment < 18
+	const afternoonHabits = useMemo(
+		() =>
+			filteredHabits.filter((habit) => habit.moment >= 12 && habit.moment < 18),
+		[filteredHabits]
 	);
 
-	const eveningHabits = filteredHabits?.filter((habit) => habit.moment >= 18);
-
-	const freeHabits = filteredHabits?.filter(
-		(habit: UserHabit) => habit.moment === -1 || habit.moment < 6
+	const eveningHabits = useMemo(
+		() => filteredHabits.filter((habit) => habit.moment >= 18),
+		[filteredHabits]
 	);
 
-	if (!userHabits || userHabits.length == 0) return <NoHabits />;
+	const freeHabits = useMemo(
+		() =>
+			filteredHabits.filter(
+				(habit: UserHabit) => habit.moment === -1 || habit.moment < 6
+			),
+		[filteredHabits]
+	);
+
+	if (!userHabits || userHabits.length === 0) return <NoHabits />;
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -69,14 +86,14 @@ export default function HabitsSection() {
 			<ScrollView>
 				{filter === CategoryTypeSelect.negative ? (
 					<View className="mt-4">
-						{filteredHabits.map((habit, index) => (
-							<CardCheckHabit key={index} habit={habit} />
+						{filteredHabits.map((habit) => (
+							<CardCheckHabit key={habit.id || habit.name} habit={habit} />
 						))}
 					</View>
 				) : (
 					<>
 						{/* Routine Matinale */}
-						{morningHabits && morningHabits.length > 0 && (
+						{morningHabits.length > 0 && (
 							<SectionWrapper
 								title={t("morning_routine")}
 								icon={
@@ -87,14 +104,14 @@ export default function HabitsSection() {
 									/>
 								}
 							>
-								{morningHabits.map((habit, index) => (
-									<CardCheckHabit key={index} habit={habit} />
+								{morningHabits.map((habit) => (
+									<CardCheckHabit key={habit.id || habit.name} habit={habit} />
 								))}
 							</SectionWrapper>
 						)}
 
 						{/* Routine de l'après-midi */}
-						{afternoonHabits && afternoonHabits.length > 0 && (
+						{afternoonHabits.length > 0 && (
 							<SectionWrapper
 								title={t("afternoon_routine")}
 								icon={
@@ -105,14 +122,14 @@ export default function HabitsSection() {
 									/>
 								}
 							>
-								{afternoonHabits.map((habit, index) => (
-									<CardCheckHabit key={index} habit={habit} />
+								{afternoonHabits.map((habit) => (
+									<CardCheckHabit key={habit.id || habit.name} habit={habit} />
 								))}
 							</SectionWrapper>
 						)}
 
 						{/* Routine du soir */}
-						{eveningHabits && eveningHabits.length > 0 && (
+						{eveningHabits.length > 0 && (
 							<SectionWrapper
 								title={t("evening_routine")}
 								icon={
@@ -123,14 +140,14 @@ export default function HabitsSection() {
 									/>
 								}
 							>
-								{eveningHabits.map((habit, index) => (
-									<CardCheckHabit key={index} habit={habit} />
+								{eveningHabits.map((habit) => (
+									<CardCheckHabit key={habit.id || habit.name} habit={habit} />
 								))}
 							</SectionWrapper>
 						)}
 
 						{/* Habitudes libres */}
-						{freeHabits && freeHabits.length > 0 && (
+						{freeHabits.length > 0 && (
 							<SectionWrapper
 								title={t("free_time_habits")}
 								icon={
@@ -141,8 +158,8 @@ export default function HabitsSection() {
 									/>
 								}
 							>
-								{freeHabits.map((habit, index) => (
-									<CardCheckHabit key={index} habit={habit} />
+								{freeHabits.map((habit) => (
+									<CardCheckHabit key={habit.id || habit.name} habit={habit} />
 								))}
 							</SectionWrapper>
 						)}

@@ -17,11 +17,11 @@ const MissionButton = () => {
 	return (
 		<GradientBox
 			position={{ bottom: 20, right: 20 }}
-			colors={[theme.colors.primary, theme.colors.backgroundTertiary]}
+			colors={[theme.colors.tertiary, theme.colors.backgroundTertiary]}
 		>
 			<View className="flex flex-row items-center gap-2">
 				<Pressable
-					className="flex flex-row items-center justify-center px-4 py-[10px]"
+					className="flex flex-row items-center justify-center px-4 py-2"
 					onPress={() => navigation.navigate("dailyRewards")}
 				>
 					<Iconify

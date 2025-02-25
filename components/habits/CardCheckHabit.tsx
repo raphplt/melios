@@ -1,18 +1,18 @@
 import React, { memo, useEffect, useState } from "react";
-import { View, Pressable } from "react-native";
-import { Text } from "react-native";
-import { FontAwesome6,  } from "@expo/vector-icons";
+import { View, Pressable, Text } from "react-native";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
 	withTiming,
-	withDelay
+	interpolate,
+	withSpring,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 
-// Customs imports
+// Imports personnalisés
 import usePoints from "@hooks/usePoints";
 import { useTheme } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
@@ -46,18 +46,15 @@ function CardCheckHabit({
 	const addXp = useAddXp()?.addXp;
 	const { t } = useTranslation();
 
-	// États
 	const [showDetails, setShowDetails] = useState(false);
 	const [completed, setCompleted] = useState(false);
 	const [showModalNegative, setShowModalNegative] = useState(false);
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-	// Animations
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
-	const detailsHeight = useSharedValue(0);
-	const detailsOpacity = useSharedValue(0);
+	const progress = useSharedValue(0);
 
 	const animatedStyles = useAnimatedStyle(() => {
 		return {
@@ -68,8 +65,8 @@ function CardCheckHabit({
 
 	const detailsAnimatedStyle = useAnimatedStyle(() => {
 		return {
-			height: detailsHeight.value,
-			opacity: detailsOpacity.value,
+			height: interpolate(progress.value, [0, 1], [0, 70]),
+			opacity: progress.value,
 		};
 	});
 
@@ -81,21 +78,14 @@ function CardCheckHabit({
 	}, []);
 
 	useEffect(() => {
-		const completed = completedHabitsToday.some((h) => h.id === habit.id);
-		setCompleted(completed);
+		const isCompleted = completedHabitsToday.some((h) => h.id === habit.id);
+		setCompleted(isCompleted);
 	}, [completedHabitsToday]);
 
 	useEffect(() => {
-		if (showDetails) {
-			detailsHeight.value = withTiming(70, { duration: 250 });
-			detailsOpacity.value = withDelay(100, withTiming(1, { duration: 250 }));
-		} else {
-			detailsOpacity.value = withTiming(0, { duration: 250 });
-			detailsHeight.value = withDelay(200, withTiming(0, { duration: 250 }));
-		}
+		progress.value = withSpring(showDetails ? 1 : 0, { damping: 20, stiffness: 90 });
 	}, [showDetails]);
 
-	// Fonctions
 	const goHabitDetail = () => {
 		setCurrentHabit(habit);
 		navigation.navigate("habitDetail");
@@ -109,12 +99,7 @@ function CardCheckHabit({
 
 	const setHabitDone = async () => {
 		try {
-
-			if (completed) {
-				console.log("Habit already completed");
-				return;
-			}
-
+			if (completed) return;
 			setCompleted(true);
 			await setHabitLog(habit.id, date);
 
@@ -122,11 +107,11 @@ function CardCheckHabit({
 				await addXp(habit, 10 * habit.difficulty);
 			}
 
-			// set points
-			addOdysseePoints(habit.difficulty); // set local points
-			setRewards("odyssee", habit.difficulty * 2); // set database points
+			// Points et récompenses
+			addOdysseePoints(habit.difficulty);
+			setRewards("odyssee", habit.difficulty * 2);
 
-			// set streak
+			// Gestion du streak
 			const streak = await incrementStreak();
 			if (streak) {
 				setStreak(streak);
@@ -143,95 +128,84 @@ function CardCheckHabit({
 
 	const isNegative = habit.type === CategoryTypeSelect.negative;
 	return (
-		// <ZoomableView>
-			<Animated.View
-				style={[animatedStyles]}
-				className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
+		<Animated.View
+			style={[animatedStyles]}
+			className="w-11/12 mx-auto my-[5px] flex flex-row items-center justify-between"
+		>
+			<View style={{ flexBasis: "12%" }}>
+				<BouncyCheckbox
+					size={25}
+					fillColor={theme.colors.primary}
+					useBuiltInState={false}
+					isChecked={completed}
+					onPress={setHabitDone}
+				/>
+			</View>
+			<Pressable
+				onPress={() => setShowDetails(!showDetails)}
+				style={{
+					backgroundColor: completed
+						? isNegative
+							? theme.colors.redSecondary
+							: lightenColor(habit.color, 0.15)
+						: theme.colors.cardBackground,
+					borderColor: completed
+						? habit.color
+						: isNegative
+						? theme.colors.redPrimary
+						: theme.colors.border,
+				}}
+				className="flex-1 flex flex-col rounded-xl z-10"
 			>
-				{/* <Button
-					title="Add XP"
-				onPress={addXpFnc}
-				/> */}
-
-				<View
-					style={{ flexBasis: "12%" }}
-				>
-					<BouncyCheckbox
-						size={25}
-						fillColor={theme.colors.primary}
-						useBuiltInState={false}
-						isChecked={completed}
-						onPress={setHabitDone}
-					/>
-				</View>
-				<Pressable
-					onPress={() => {
-						setShowDetails(!showDetails);
-					}}
-					style={{
-						backgroundColor: completed
-							? isNegative
-								? theme.colors.redSecondary
-								: lightenColor(habit.color, 0.15)
-							: theme.colors.cardBackground,
-						borderColor: completed
-							? habit.color
-							: isNegative
-							? theme.colors.redPrimary
-							: theme.colors.border,
-
-						// borderWidth: 1,
-					}}
-					className="flex-1 flex flex-col rounded-xl z-10"
-				>
-					<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
-						<View className="flex flex-row items-center justify-start">
-							<FontAwesome6
-								name={habit.icon || "question"}
-								size={18}
-								color={habit.color || theme.colors.text}
-							/>
-							<Text
-								style={{
-									color: theme.colors.text,
-								}}
-								className="text-[16px] font-semibold w-[85%] ml-2"
-								numberOfLines={1}
-								ellipsizeMode="tail"
-							>
-								{habit.name}
-							</Text>
-						</View>
-						<Pressable
-							onPress={() => setShowDetails(!showDetails)}
-							className="flex items-center justify-center relative"
+				<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
+					<View className="flex flex-row items-center justify-start">
+						<FontAwesome6
+							name={habit.icon || "question"}
+							size={18}
+							color={habit.color || theme.colors.text}
+						/>
+						<Text
+							style={{ color: theme.colors.text }}
+							className="text-[16px] font-semibold w-[85%] ml-2"
+							numberOfLines={1}
+							ellipsizeMode="tail"
 						>
-							{showDetails ? (
-								<Iconify
-									icon="mdi:chevron-up"
-									color={theme.colors.textTertiary}
-									size={24}
-								/>
-							) : (
-								<Iconify
-									icon="mdi:chevron-down"
-									color={theme.colors.textTertiary}
-									size={24}
-								/>
-							)}
-						</Pressable>
+							{habit.name}
+						</Text>
 					</View>
-					<Animated.View style={[detailsAnimatedStyle]}>
-						{showDetails && (
-							<View className="flex flex-row items-center justify-around">
+					<Pressable
+						onPress={() => setShowDetails(!showDetails)}
+						className="flex items-center justify-center relative"
+					>
+						{showDetails ? (
+							<Iconify
+								icon="mdi:chevron-up"
+								color={theme.colors.textTertiary}
+								size={24}
+							/>
+						) : (
+							<Iconify
+								icon="mdi:chevron-down"
+								color={theme.colors.textTertiary}
+								size={24}
+							/>
+						)}
+					</Pressable>
+				</View>
+				<Animated.View style={[detailsAnimatedStyle]}>
+					{showDetails && (
+						<View className="flex flex-row items-center justify-around">
+							<ZoomableView
+								style={{
+									backgroundColor: theme.colors.background,
+									borderWidth: 1,
+									borderColor: theme.colors.primary,
+								}}
+								className="py-[10px] px-5 rounded-2xl flex-1 mx-4"
+							>
 								<Pressable
 									onPress={goHabitDetail}
-									className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
-									style={{
-										backgroundColor: theme.colors.background,
-										borderWidth: 2,
-										borderColor: theme.colors.primary,
-									}}
+									className="flex flex-row items-center justify-center"
 								>
 									<Iconify
 										icon="mdi:information"
@@ -245,16 +219,20 @@ function CardCheckHabit({
 										{t("details")}
 									</Text>
 								</Pressable>
+							</ZoomableView>
 
-								{!completed && habit.duration ? (
+							{!completed && habit.duration ? (
+								<ZoomableView
+									style={{
+										backgroundColor: theme.colors.primary,
+										borderWidth: 2,
+										borderColor: theme.colors.primary,
+									}}
+									className="py-[10px] px-5 rounded-2xl flex-1 mx-4"
+								>
 									<Pressable
 										onPress={isNegative ? setHabitDone : startHabit}
-										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
-										style={{
-											backgroundColor: theme.colors.primary,
-											borderWidth: 2,
-											borderColor: theme.colors.primary,
-										}}
+										className="flex flex-row items-center justify-center"
 									>
 										{isNegative ? (
 											<Iconify icon="ri:reset-right-fill" color="white" size={20} />
@@ -267,31 +245,32 @@ function CardCheckHabit({
 												: t("start")}
 										</Text>
 									</Pressable>
-								) : (
-									<View
-										className="flex flex-row items-center justify-center py-3 px-5 rounded-2xl w-2/5"
-										style={{
-											backgroundColor: theme.colors.primary,
-											borderWidth: 2,
-											borderColor: theme.colors.primary,
-										}}
-									>
-										<Iconify icon="bi:check" color="white" size={20} />
-										<Text className="text-[16px] font-semibold ml-2 text-white">
-											{t("done")}
-										</Text>
-									</View>
-								)}
-							</View>
-						)}
-					</Animated.View>
-				</Pressable>
-				<RestartHabit
-					visible={showModalNegative}
-					setVisible={setShowModalNegative}
-					habit={habit}
-				/>
-			</Animated.View>
+								</ZoomableView>
+							) : (
+								<View
+									className="flex flex-row items-center justify-center py-[10px] px-5 rounded-2xl flex-1 mx-4"
+									style={{
+										backgroundColor: theme.colors.primary,
+										borderWidth: 2,
+										borderColor: theme.colors.primary,
+									}}
+								>
+									<Iconify icon="bi:check" color="white" size={20} />
+									<Text className="text-[16px] font-semibold ml-2 text-white">
+										{t("done")}
+									</Text>
+								</View>
+							)}
+						</View>
+					)}
+				</Animated.View>
+			</Pressable>
+			<RestartHabit
+				visible={showModalNegative}
+				setVisible={setShowModalNegative}
+				habit={habit}
+			/>
+		</Animated.View>
 	);
 }
 

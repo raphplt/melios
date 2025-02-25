@@ -175,6 +175,7 @@ const DailyRewards: React.FC = () => {
 							color={theme.colors.primary}
 							borderRadius={10}
 							height={12}
+							borderWidth={0}
 							className="mx-auto mb-4"
 							unfilledColor={theme.colors.cardBackground}
 						/>

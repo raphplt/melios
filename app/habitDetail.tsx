@@ -3,7 +3,6 @@ import {
 	ScrollView,
 	Dimensions,
 	ImageBackground,
-	Text,
 	StyleSheet,
 	StatusBar,
 } from "react-native";
@@ -15,14 +14,17 @@ import InfosPanel from "@components/HabitDetail/InfosPanel";
 import LastDays from "@components/HabitDetail/LastDays";
 import { useHabits } from "@context/HabitsContext";
 import ButtonBack from "@components/Shared/ButtonBack";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import {
+	NavigationProp,
+	ParamListBase,
+	StackActions,
+} from "@react-navigation/native";
 import ButtonsBox from "@components/HabitDetail/ButtonsBox";
 import { useTheme } from "@context/ThemeContext";
 import SettingsButton from "@components/HabitDetail/SettingsButton";
 import { useTranslation } from "react-i18next";
 import NegativeCounter from "@components/HabitDetail/NegativeCounter";
 import { catImgs } from "@utils/categoriesBg";
-import { Platform } from "react-native";
 
 export interface DayStatus {
 	date: string;
@@ -68,7 +70,7 @@ export default function HabitDetail() {
 				}}
 			>
 				<ButtonBack
-					handleQuit={() => navigation.navigate("(navbar)")}
+					handleQuit={() => navigation.dispatch(StackActions.replace("(navbar)"))}
 					color={textColor}
 				/>
 				<SettingsButton />
