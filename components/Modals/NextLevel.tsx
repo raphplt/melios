@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	Text,
 	View,
@@ -6,6 +6,7 @@ import {
 	Dimensions,
 	Modal,
 	Pressable,
+	ActivityIndicator,
 } from "react-native";
 import { CombinedLevel } from "@type/levels";
 import { useTheme } from "@context/ThemeContext";
@@ -29,6 +30,7 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 	const animatedProgress = useRef(new Animated.Value(0)).current;
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 	const scaleAnim = useRef(new Animated.Value(0.8)).current;
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		if (visible) {
@@ -71,6 +73,11 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 	}, [visible]);
 
 	if (!levelData) return null;
+
+	const handleContinue = () => {
+		setLoading(true);
+		setVisible(false);
+	};
 
 	const lightHex = lightenColorHex(levelData.color);
 
@@ -148,18 +155,20 @@ const NextLevel = ({ visible, setVisible, levelData }: Props) => {
 									style={{
 										backgroundColor: theme.colors.primary,
 									}}
-									onPress={() => {
-										setVisible(false);
-									}}
+									onPress={handleContinue}
 								>
-									<Text
-										style={{
-											color: theme.colors.textSecondary,
-										}}
-										className="text-xl font-semibold"
-									>
-										{t("continue")}
-									</Text>
+									{loading ? (
+										<ActivityIndicator color={theme.colors.textSecondary} />
+									) : (
+										<Text
+											style={{
+												color: theme.colors.textSecondary,
+											}}
+											className="text-xl font-semibold"
+										>
+											{t("continue")}
+										</Text>
+									)}
 								</Pressable>
 							</ZoomableView>
 						</View>

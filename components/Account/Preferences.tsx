@@ -37,18 +37,6 @@ export default function Preferences() {
 		await AsyncStorage.setItem("theme", newTheme ? "dark" : "light");
 	};
 
-	const handleToggleNotifications = async () => {
-		const notificationEnabled = await AsyncStorage.getItem("notificationEnabled");
-		if (notificationEnabled === "true") {
-			await AsyncStorage.setItem("notificationEnabled", "false");
-			await cancelAllNotifications();
-			setNotificationToggle(false);
-		} else {
-			await AsyncStorage.setItem("notificationEnabled", "true");
-			await scheduleDailyNotification();
-			setNotificationToggle(true);
-		}
-	};
 
 	const confirmLogout = async () => {
 		await disconnectUser();
@@ -61,6 +49,10 @@ export default function Preferences() {
 
 	const goToHelp = () => {
 		navigation.navigate("help");
+	};
+
+	const goToNotifications = () => {
+		navigation.navigate("manageNotifications");
 	};
 
 	const goAbout = () => {
@@ -92,12 +84,20 @@ export default function Preferences() {
 					<Iconify icon="mdi:bell-outline" size={20} color={theme.colors.primary} />
 				}
 				title={t("notifications")}
+				// rightContent={
+				// 	<ToggleButton
+				// 		onToggle={handleToggleNotifications}
+				// 		value={notificationToggle}
+				// 	/>
+				// }
 				rightContent={
-					<ToggleButton
-						onToggle={handleToggleNotifications}
-						value={notificationToggle}
+					<Iconify
+						icon="ion:chevron-forward"
+						size={20}
+						color={theme.colors.primary}
 					/>
 				}
+				onPress={goToNotifications}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 

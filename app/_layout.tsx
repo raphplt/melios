@@ -20,8 +20,9 @@ import "../i18n";
 import "../global.css";
 import { useTranslation } from "react-i18next";
 import { StatusBar } from "expo-status-bar";
-import notifee, { EventType } from "@notifee/react-native";
+import notifee from "@notifee/react-native";
 export { ErrorBoundary } from "expo-router";
+import * as Notifications from "expo-notifications";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -63,6 +64,14 @@ function MainNavigator() {
 
 	notifee.registerForegroundService((notification) => {
 		return new Promise(async (resolve) => {});
+	});
+
+	Notifications.setNotificationHandler({
+		handleNotification: async () => ({
+			shouldShowAlert: true,
+			shouldPlaySound: true,
+			shouldSetBadge: false,
+		}),
 	});
 
 	return (
@@ -149,6 +158,10 @@ function MainNavigator() {
 					<Stack.Screen
 						name="workSession"
 						options={{ title: "Session de travail", headerShown: false }}
+					/>
+					<Stack.Screen
+						name="manageNotifications"
+						options={{ title: "Gestion des notifications", headerShown: false }}
 					/>
 					<Stack.Screen
 						name="cosmeticShop"
