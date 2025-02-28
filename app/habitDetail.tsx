@@ -5,6 +5,7 @@ import {
 	ImageBackground,
 	StyleSheet,
 	StatusBar,
+	Platform,
 } from "react-native";
 import { useNavigation } from "expo-router";
 
@@ -66,7 +67,7 @@ export default function HabitDetail() {
 			<View
 				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mb-2"
 				style={{
-					paddingTop: StatusBar.currentHeight,
+					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 50,
 				}}
 			>
 				<ButtonBack
