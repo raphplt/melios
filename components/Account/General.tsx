@@ -19,6 +19,22 @@ export default function General() {
 			<RowBlock
 				icon={
 					<Iconify
+						icon="material-symbols:inbox"
+						size={20}
+						color={theme.colors.primary}
+					/>
+				}
+				title={t("inbox")}
+				rightContent={
+					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
+				}
+				onPress={() => navigation.navigate("inbox")}
+			/>
+			<View className="w-full h-[1px] bg-gray-300"></View>
+
+			<RowBlock
+				icon={
+					<Iconify
 						icon="icon-park-outline:list"
 						size={20}
 						color={theme.colors.primary}
@@ -32,15 +48,6 @@ export default function General() {
 				onPress={() => navigation.navigate("editHabits")}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
-			{/* <RowBlock
-				icon={<Iconify icon="ph:target" size={20} color={theme.colors.primary} />}
-				title={t("my_objectives")}
-				rightContent={
-					<Iconify icon="ion:chevron-forward" size={20} color={theme.colors.text} />
-				}
-				onPress={() => navigation.navigate("editGoals")}
-			/>
-			<View className="w-full h-[1px] bg-gray-300"></View> */}
 
 			<RowBlock
 				icon={

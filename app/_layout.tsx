@@ -163,6 +163,7 @@ function MainNavigator() {
 						name="manageNotifications"
 						options={{ title: "Gestion des notifications", headerShown: false }}
 					/>
+					<Stack.Screen name="inbox" options={{ title: "Boite de réception" }} />
 					<Stack.Screen
 						name="cosmeticShop"
 						options={{

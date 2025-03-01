@@ -259,5 +259,6 @@
     "reward_claimed_title": "Récompense obtenue",
     "reward_claimed_message": "Votre récompense a été réclamée avec succès. Revenez demain pour en gagner une nouvelle!",
     "share_app": "Partager l'app",
-    "add_friends": "Ajouter des amis"
+    "add_friends": "Ajouter des amis",
+    "inbox": "Boîte de réception"
 }

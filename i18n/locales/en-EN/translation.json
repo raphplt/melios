@@ -257,5 +257,6 @@
     "reward_claimed_title": "Reward claimed",
     "reward_claimed_message": "You have successfully claimed your reward.",
     "share_app": "Share the app",
-    "add_friends": "Add friends"
+    "add_friends": "Add friends",
+    "inbox": "Inbox"
 }
