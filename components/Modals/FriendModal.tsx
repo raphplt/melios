@@ -6,6 +6,7 @@ import { Member } from "@type/member";
 import { useEffect, useState } from "react";
 import { getUserLevelsByUserId } from "@db/levels";
 import { UserLevel } from "@type/levels";
+import LevelMinimal from "@components/Levels/LevelMinimal";
 
 export default function FriendModal({
 	visible,
@@ -47,7 +48,7 @@ export default function FriendModal({
 					<View>
 						<Text
 							style={{ color: theme.colors.text }}
-							className="text-center font-semibold text-lg"
+							className="text-center font-semibold text-2xl mb-4"
 						>
 							{friend.nom}
 						</Text>
@@ -56,23 +57,10 @@ export default function FriendModal({
 				{loading ? (
 					<ActivityIndicator size="large" color={theme.colors.primary} />
 				) : (
-					<View>
+					<View className="flex flex-row flex-wrap gap-y-2 items-center justify-center py-3">
 						{Object.keys(levels).length > 0 ? (
 							Object.values(levels).map((level) => (
-								<View key={level.levelId} className="my-2">
-									<Text style={{ color: theme.colors.text }}>
-										{/* {t("level")}: {level.id} */}
-									</Text>
-									<Text style={{ color: theme.colors.text }}>
-										{t("level")}: {level.currentLevel}
-									</Text>
-									<Text style={{ color: theme.colors.text }}>
-										{t("current_xp")}: {level.currentXp}
-									</Text>
-									<Text style={{ color: theme.colors.text }}>
-										{t("next_level_xp")}: {level.nextLevelXp}
-									</Text>
-								</View>
+								<LevelMinimal level={level} key={level.levelId} />
 							))
 						) : (
 							<Text style={{ color: theme.colors.text }}>{t("no_levels_found")}</Text>
