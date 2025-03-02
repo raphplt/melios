@@ -12,7 +12,6 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 
-// Imports personnalisés
 import usePoints from "@hooks/usePoints";
 import { useTheme } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
@@ -83,7 +82,10 @@ function CardCheckHabit({
 	}, [completedHabitsToday]);
 
 	useEffect(() => {
-		progress.value = withSpring(showDetails ? 1 : 0, { damping: 20, stiffness: 90 });
+		progress.value = withSpring(showDetails ? 1 : 0, {
+			damping: 20,
+			stiffness: 90,
+		});
 	}, [showDetails]);
 
 	const goHabitDetail = () => {
@@ -192,77 +194,76 @@ function CardCheckHabit({
 						)}
 					</Pressable>
 				</View>
-				<Animated.View style={[detailsAnimatedStyle]}>
-					{showDetails && (
-						<View className="flex flex-row items-center justify-around">
+				{/* La vue animée est toujours rendue et masque son contenu via height et opacity */}
+				<Animated.View style={[detailsAnimatedStyle, { overflow: "hidden" }]}>
+					<View className="flex flex-row items-center justify-around">
+						<ZoomableView
+							style={{
+								backgroundColor: theme.colors.background,
+								borderWidth: 1,
+								borderColor: theme.colors.primary,
+							}}
+							className="py-[10px] px-5 rounded-2xl flex-1 mx-4"
+						>
+							<Pressable
+								onPress={goHabitDetail}
+								className="flex flex-row items-center justify-center"
+							>
+								<Iconify
+									icon="mdi:information"
+									color={theme.colors.primary}
+									size={20}
+								/>
+								<Text
+									className="text-[16px] font-semibold ml-2"
+									style={{ color: theme.colors.primary }}
+								>
+									{t("details")}
+								</Text>
+							</Pressable>
+						</ZoomableView>
+
+						{!completed && habit.duration ? (
 							<ZoomableView
 								style={{
-									backgroundColor: theme.colors.background,
-									borderWidth: 1,
+									backgroundColor: theme.colors.primary,
+									borderWidth: 2,
 									borderColor: theme.colors.primary,
 								}}
 								className="py-[10px] px-5 rounded-2xl flex-1 mx-4"
 							>
 								<Pressable
-									onPress={goHabitDetail}
+									onPress={isNegative ? setHabitDone : startHabit}
 									className="flex flex-row items-center justify-center"
 								>
-									<Iconify
-										icon="mdi:information"
-										color={theme.colors.primary}
-										size={20}
-									/>
-									<Text
-										className="text-[16px] font-semibold ml-2"
-										style={{ color: theme.colors.primary }}
-									>
-										{t("details")}
+									{isNegative ? (
+										<Iconify icon="ri:reset-right-fill" color="white" size={20} />
+									) : (
+										<Iconify icon="bi:play" color="white" size={20} />
+									)}
+									<Text className="text-[16px] text-white font-semibold ml-2">
+										{habit.type === CategoryTypeSelect.negative
+											? t("relaunch")
+											: t("start")}
 									</Text>
 								</Pressable>
 							</ZoomableView>
-
-							{!completed && habit.duration ? (
-								<ZoomableView
-									style={{
-										backgroundColor: theme.colors.primary,
-										borderWidth: 2,
-										borderColor: theme.colors.primary,
-									}}
-									className="py-[10px] px-5 rounded-2xl flex-1 mx-4"
-								>
-									<Pressable
-										onPress={isNegative ? setHabitDone : startHabit}
-										className="flex flex-row items-center justify-center"
-									>
-										{isNegative ? (
-											<Iconify icon="ri:reset-right-fill" color="white" size={20} />
-										) : (
-											<Iconify icon="bi:play" color="white" size={20} />
-										)}
-										<Text className="text-[16px] text-white font-semibold ml-2">
-											{habit.type === CategoryTypeSelect.negative
-												? t("relaunch")
-												: t("start")}
-										</Text>
-									</Pressable>
-								</ZoomableView>
-							) : (
-								<View
-									className="flex flex-row items-center justify-center py-[10px] px-5 rounded-2xl flex-1 mx-4"
-									style={{
-										backgroundColor: theme.colors.primary,
-										borderWidth: 2,
-										borderColor: theme.colors.primary,
-									}}
-								>
-									<Iconify icon="bi:check" color="white" size={20} />
-									<Text className="text-[16px] font-semibold ml-2 text-white">
-										{t("done")}
-									</Text>
-								</View>
-							)}
-						</View>
-					)}
+						) : (
+							<View
+								className="flex flex-row items-center justify-center py-[10px] px-5 rounded-2xl flex-1 mx-4"
+								style={{
+									backgroundColor: theme.colors.primary,
+									borderWidth: 2,
+									borderColor: theme.colors.primary,
+								}}
+							>
+								<Iconify icon="bi:check" color="white" size={20} />
+								<Text className="text-[16px] font-semibold ml-2 text-white">
+									{t("done")}
+								</Text>
+							</View>
+						)}
+					</View>
 				</Animated.View>
 			</Pressable>
 			<RestartHabit
