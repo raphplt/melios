@@ -260,5 +260,17 @@
     "reward_claimed_message": "Votre récompense a été réclamée avec succès. Revenez demain pour en gagner une nouvelle!",
     "share_app": "Partager l'app",
     "add_friends": "Ajouter des amis",
-    "inbox": "Boîte de réception"
+    "inbox": "Boîte de réception",
+    "manage_notifications": "Gérer les notifications",
+    "daily_reminder": "Rappel quotidien",
+    "custom_notification_time": "Heure de notification",
+    "custom_notification_title": "Titre de la notification",
+    "custom_notification_body": "Message de la notification",
+    "set_notifications": "Activer les notifications",
+    "custom_notification": "Personnalisation",
+    "set_random_notification": "Définir une notification aléatoire",
+    "notification_scheduled_success": "Notification programmée avec succès",
+    "notification_time": "Heure de notification",
+    "notification_message": "Message de notification",
+    "edit": "Éditer"
 }

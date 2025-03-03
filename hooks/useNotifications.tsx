@@ -90,6 +90,44 @@ const scheduleDailyNotification = async () => {
 	console.log("Daily notification scheduled");
 };
 
+const scheduleCustomDailyNotification = async (
+	hour: number,
+	minute: number,
+	title: string,
+	body: string
+) => {
+	if (!Device.isDevice) {
+		console.log("Must use physical device for notifications");
+		return;
+	}
+
+	const { status } = await Notifications.getPermissionsAsync();
+	if (status !== "granted") {
+		const { status: newStatus } = await Notifications.requestPermissionsAsync();
+		if (newStatus !== "granted") {
+			console.log(
+				"Permission not granted to get push token for push notification!"
+			);
+			return;
+		}
+	}
+
+	await Notifications.scheduleNotificationAsync({
+		content: {
+			title: title,
+			body: body,
+			sound: true,
+		},
+		trigger: {
+			type: Notifications.SchedulableTriggerInputTypes.DAILY,
+			hour: hour,
+			minute: minute,
+		},
+	});
+
+	console.log("Custom daily notification scheduled");
+};
+
 const scheduleInactivityNotification = async (hours: number) => {
 	await Notifications.scheduleNotificationAsync({
 		content: {
@@ -149,6 +187,7 @@ useEffect(() => {
 return {
 	sendPushNotification,
 	scheduleDailyNotification,
+	scheduleCustomDailyNotification,
 	scheduleInactivityNotification,
 	cancelAllNotifications,
 	sendStreakReminderNotification,

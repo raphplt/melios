@@ -258,5 +258,17 @@
     "reward_claimed_message": "You have successfully claimed your reward.",
     "share_app": "Share the app",
     "add_friends": "Add friends",
-    "inbox": "Inbox"
+    "inbox": "Inbox",
+    "manage_notifications": "Manage notifications",
+    "daily_reminder": "Daily reminder",
+    "custom_notification_time": "Notification time",
+    "custom_notification_title": "Notification title",
+    "custom_notification_body": "Notification message",
+    "set_notifications": "Enable notifications",
+    "custom_notification": "Custom notification",
+    "set_random_notification": "Set random notification",
+    "notification_scheduled_success": "Notification scheduled successfully",
+    "notification_time": "Notification time",
+    "notification_message": "Notification message",
+    "edit": "Edit"
 }
