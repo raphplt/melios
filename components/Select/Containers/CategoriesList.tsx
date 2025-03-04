@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { Iconify } from "react-native-iconify";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 export default function CategoriesList() {
 	const { categories } = useHabits();
@@ -62,7 +63,7 @@ export default function CategoriesList() {
 					renderItem={({ item }) => <CategoryItem category={item} />}
 					keyExtractor={(item) => item.id}
 					numColumns={2}
-					className="w-full mx-auto pb-4"
+					className="w-[95%] mx-auto pb-4"
 				/>
 			) : type === CategoryTypeSelect.routine ? (
 				<View className="flex items-center justify-start h-full mt-16">
@@ -93,25 +94,29 @@ export default function CategoriesList() {
 						</Text>
 					</View>
 
-					<Pressable
-						onPress={() => {
-							navigation.navigate("customRoutine");
-						}}
+					<ZoomableView
 						style={{
 							backgroundColor: theme.colors.primary,
 						}}
-						className="rounded-xl flex items-center gap-2 mt-10 flex-row justify-center my-2 p-4 w-11/12 mx-auto"
+						className="rounded-xl  mt-10 my-2 p-4 w-11/12 mx-auto"
 					>
-						<Text
-							style={{
-								color: theme.colors.textSecondary,
+						<Pressable
+							className="flex items-center gap-2  flex-row justify-center"
+							onPress={() => {
+								navigation.navigate("customRoutine");
 							}}
-							className="text-[16px] font-semibold"
 						>
-							{t("create_routine")}
-						</Text>
-						<Iconify size={20} icon="mdi:arrow-right" color="#fff" />
-					</Pressable>
+							<Text
+								style={{
+									color: theme.colors.textSecondary,
+								}}
+								className="text-[16px] font-semibold"
+							>
+								{t("create_routine")}
+							</Text>
+							<Iconify size={20} icon="mdi:arrow-right" color="#fff" />
+						</Pressable>
+					</ZoomableView>
 				</View>
 			) : null}
 		</View>

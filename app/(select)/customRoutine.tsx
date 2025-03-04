@@ -15,6 +15,7 @@ import LoaderResult from "@components/Select/Items/LoaderResult";
 import { Habit } from "@type/habit";
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
+import * as Progress from "react-native-progress";
 
 interface Answers {
 	[key: string]: string;
@@ -62,17 +63,9 @@ const CustomRoutineForm = () => {
 		}
 	};
 
-	const toggleHabitSelection = (habitId: string) => {
-		setSelectedHabits((prevSelected) =>
-			prevSelected.includes(habitId)
-				? prevSelected.filter((id) => id !== habitId)
-				: [...prevSelected, habitId]
-		);
-	};
-
 	const addHabits = async () => {
 		const habitsFromSelected = foundHabits.filter((habit) =>
-			selectedHabits.includes(habit.id)
+			selectedHabits.includes(habit?.id)
 		);
 		if (member) {
 			const habits: UserHabit[] = (await addMultipleUserHabits(
@@ -82,6 +75,16 @@ const CustomRoutineForm = () => {
 			if (habits) setHabits((prev: UserHabit[]) => [...prev, ...habits]);
 		}
 	};
+
+	const toggleHabitSelection = (habitId: string) => {
+		setSelectedHabits((prevSelected) =>
+			prevSelected.includes(habitId)
+				? prevSelected.filter((id) => id !== habitId)
+				: [...prevSelected, habitId]
+		);
+	};
+
+	console.log("foundHabits", foundHabits);
 
 	return (
 		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -96,16 +99,16 @@ const CustomRoutineForm = () => {
 					) : currentQuestionIndex < formRoutines.length ? (
 						<>
 							{/* Barre de progression */}
-							<View
-								className="h-2 rounded-full mb-5 overflow-hidden w-[95%] mx-auto"
-								style={{ backgroundColor: theme.colors.border }}
-							>
-								<View
-									className="h-full rounded-full"
-									style={{
-										width: `${progress}%`,
-										backgroundColor: theme.colors.primary,
-									}}
+							<View className="w-full">
+								<Progress.Bar
+									progress={progress / 100}
+									width={null}
+									color={theme.colors.primary}
+									unfilledColor={theme.colors.border}
+									borderWidth={0}
+									borderRadius={10}
+									height={10}
+									style={{ marginBottom: 20 }}
 								/>
 							</View>
 
@@ -158,50 +161,52 @@ const CustomRoutineForm = () => {
 				</View>
 			</ScrollView>
 			{/* Boutons Précédent / Suivant */}
-			<View
-				className="flex-row justify-between w-10/12 mb-5"
-				style={{
-					position: "absolute",
-					bottom: 20,
-					left: "5%",
-					right: "5%",
-				}}
-			>
-				<TouchableOpacity
-					onPress={handlePrevious}
-					disabled={currentQuestionIndex === 0}
-					className={`p-3 rounded-2xl items-center flex flex-row gap-2`}
+			{currentQuestionIndex < formRoutines.length && (
+				<View
+					className="flex-row justify-between w-full mb-5 mx-auto px-5"
 					style={{
-						backgroundColor:
-							currentQuestionIndex === 0
-								? theme.colors.border
-								: theme.colors.cardBackground,
+						position: "absolute",
+						bottom: 20,
+						left: 0,
+						right: 0,
 					}}
 				>
-					<Iconify icon="mdi:arrow-left" size={20} color={theme.colors.text} />
-					<Text
-						className="font-semibold"
+					<TouchableOpacity
+						onPress={handlePrevious}
+						disabled={currentQuestionIndex === 0}
+						className="p-4 rounded-2xl items-center flex flex-row gap-2"
 						style={{
-							color: currentQuestionIndex === 0 ? "gray" : theme.colors.text,
+							backgroundColor:
+								currentQuestionIndex === 0
+									? theme.colors.border
+									: theme.colors.cardBackground,
 						}}
 					>
-						{t("form_previous")}
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={handleNext}
-					className="p-3 rounded-2xl items-center flex flex-row gap-2"
-					style={{ backgroundColor: theme.colors.backgroundTertiary }}
-					disabled={!answers[currentQuestion.id]}
-				>
-					<Text className="font-semibold" style={{ color: theme.colors.text }}>
-						{currentQuestionIndex === formRoutines.length - 1
-							? t("form_finish")
-							: t("form_next")}
-					</Text>
-					<Iconify icon="mdi:arrow-right" size={20} color={theme.colors.text} />
-				</TouchableOpacity>
-			</View>
+						<Iconify icon="mdi:arrow-left" size={20} color={theme.colors.text} />
+						<Text
+							className="font-semibold"
+							style={{
+								color: currentQuestionIndex === 0 ? "gray" : theme.colors.text,
+							}}
+						>
+							{t("form_previous")}
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={handleNext}
+						className="p-4 rounded-2xl items-center flex flex-row gap-2"
+						style={{ backgroundColor: theme.colors.backgroundTertiary }}
+						disabled={currentQuestion ? !answers[currentQuestion.id] : false}
+					>
+						<Text className="font-semibold" style={{ color: theme.colors.text }}>
+							{currentQuestionIndex === formRoutines.length - 1
+								? t("form_finish")
+								: t("form_next")}
+						</Text>
+						<Iconify icon="mdi:arrow-right" size={20} color={theme.colors.text} />
+					</TouchableOpacity>
+				</View>
+			)}
 		</View>
 	);
 };

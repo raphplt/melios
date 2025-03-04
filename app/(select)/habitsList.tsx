@@ -45,8 +45,6 @@ export default function CategoryList() {
 
 	const lightColor = lightenColor(category.color, 0.2);
 
-	const centerOffset = (screenHeight - ITEM_HEIGHT) / 2;
-
 	return (
 		<View style={{ flex: 1, backgroundColor: theme.colors.cardBackground }}>
 			<View
