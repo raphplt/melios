@@ -131,7 +131,7 @@ const RoutineResult = ({
 						{t("selected_habits")} : {selectedHabits.length}
 					</Text>
 				</View>
-				<View className="flex flex-col gap-3 mb-2 items-center justify-between w-full mb-20">
+				<View className="flex flex-col gap-3 items-center justify-between w-full mb-20">
 					<Pressable
 						onPress={() => addHabits()}
 						className=" flex flex-row gap-4 items-center flex-1 justify-center p-4 rounded-xl w-full"
