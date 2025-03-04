@@ -16,7 +16,8 @@ export default function CategoryHabit({ item }: { item: any }) {
 	const { t } = useTranslation();
 
 	const handlePress = () => {
-		if (habits.length > 20) return Alert.alert(t("habits_limit"));
+		if (habits.length > 10)
+			return Alert.alert(t("habits_limit_reached"), t("habits_limit_description"));
 		setHabit(item);
 		navigation.navigate("customHabit");
 	};

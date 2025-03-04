@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FlatList, Dimensions, View, Text } from "react-native";
+import { FlatList, View, Text } from "react-native";
 import CategoryHabit from "@components/Select/Items/CategoryHabit";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -7,8 +7,8 @@ import { lightenColor } from "@utils/colors";
 import { useHabits } from "@context/HabitsContext";
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
+import { Habit } from "@type/habit";
 
-const { height: screenHeight } = Dimensions.get("screen");
 const ITEM_HEIGHT = 60;
 
 export default function CategoryList() {
@@ -16,7 +16,7 @@ export default function CategoryList() {
 	const { category } = useSelect();
 	const { habitsData, refreshHabits } = useHabits();
 	const [hasRefreshed, setHasRefreshed] = useState(false);
-	const [habits, setHabits] = useState([]);
+	const [habits, setHabits] = useState<Habit[]>([]);
 	const flatListRef = useRef<FlatList>(null);
 
 	useEffect(() => {
