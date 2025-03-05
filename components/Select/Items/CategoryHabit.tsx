@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, View, Text, Alert } from "react-native";
+import { Pressable, Text, Alert } from "react-native";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useTheme } from "@context/ThemeContext";

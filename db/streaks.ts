@@ -81,17 +81,11 @@ export const incrementStreak = async (): Promise<Streak | null> => {
 				value: resetStreak.value,
 				updatedAt: resetStreak.updatedAt,
 			});
-			console.log(
-				"La streak a été réinitialisée car plus de 48 heures se sont écoulées."
-			);
 			return resetStreak;
 		}
 
 		// Ne pas incrémenter si la streak a déjà été mise à jour dans les 24 dernières heures
 		if (hoursSinceLastUpdate < 24) {
-			console.log(
-				"La streak a déjà été incrémentée dans les dernières 24 heures."
-			);
 			return currentStreak;
 		}
 
@@ -113,7 +107,6 @@ export const incrementStreak = async (): Promise<Streak | null> => {
 			maxValue: updatedStreak.maxValue,
 		});
 
-		console.log("La streak a été incrémentée avec succès.");
 		return updatedStreak;
 	} catch (error) {
 		console.error(
