@@ -36,7 +36,7 @@ export default function InfosPanel() {
 	return (
 		<BlurView
 			intensity={100}
-			className="w-[95%] mx-auto p-4 rounded-xl my-4"
+			className="w-[95%] mx-auto py-3 px-2 rounded-xl my-4"
 			style={{
 				overflow: "hidden",
 			}}
@@ -46,7 +46,7 @@ export default function InfosPanel() {
 				style={{
 					color: textColor,
 				}}
-				className="text-[14px] text-pretty ml-4 py-2 w-11/12 mx-auto font-semibold"
+				className="text-[15px] text-pretty ml-4 py-2 w-11/12 mx-auto font-semibold"
 			>
 				{currentHabit.description}
 			</Text>

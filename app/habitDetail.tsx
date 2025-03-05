@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
 	View,
 	ScrollView,
@@ -8,7 +9,6 @@ import {
 	Platform,
 } from "react-native";
 import { useNavigation } from "expo-router";
-
 import LoaderScreen from "@components/Shared/LoaderScreen";
 import HabitDetailHeader from "@components/HabitDetail/HabitDetailHeader";
 import InfosPanel from "@components/HabitDetail/InfosPanel";
@@ -26,6 +26,10 @@ import SettingsButton from "@components/HabitDetail/SettingsButton";
 import { useTranslation } from "react-i18next";
 import NegativeCounter from "@components/HabitDetail/NegativeCounter";
 import { catImgs } from "@utils/categoriesBg";
+import { getHabitLogs } from "@db/logs";
+import Trophies from "@components/HabitDetail/Trophies";
+import { useData } from "@context/DataContext";
+import HabitDone from "@components/HabitDetail/HabitDone";
 
 export interface DayStatus {
 	date: string;
@@ -38,6 +42,25 @@ export default function HabitDetail() {
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { categories } = useHabits();
+	const [habitLogs, setHabitLogs] = useState<any[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchLogs = async () => {
+			try {
+				if (!currentHabit) return;
+				const logs = await getHabitLogs(currentHabit.id);
+				setHabitLogs(logs || []);
+				setLoading(false);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des logs :", error);
+			}
+		};
+
+		if (currentHabit) {
+			fetchLogs();
+		}
+	}, [currentHabit]);
 
 	if (!currentHabit) return <LoaderScreen text={t("loading")} />;
 
@@ -51,6 +74,11 @@ export default function HabitDetail() {
 	const slug: string = habitCategory?.slug || "sport";
 
 	const screenHeight = Dimensions.get("screen").height;
+	const { completedHabitsToday } = useData();
+
+	const isHabitCompleted = completedHabitsToday.some(
+		(habit) => habit.id === currentHabit?.id
+	);
 
 	return (
 		<ScrollView
@@ -58,11 +86,12 @@ export default function HabitDetail() {
 				flex: 1,
 				minHeight: screenHeight,
 			}}
+			className="pb-10"
 			showsVerticalScrollIndicator={false}
 		>
 			<ImageBackground
 				source={catImgs[slug]}
-				style={[StyleSheet.absoluteFillObject, { height: screenHeight }]}
+				style={[StyleSheet.absoluteFillObject]}
 			/>
 			<View
 				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mb-2"
@@ -77,13 +106,15 @@ export default function HabitDetail() {
 				<SettingsButton />
 			</View>
 			<View
-				className="w-full h-full mx-auto flex justify-start flex-col gap-2"
+				className="w-full h-full mx-auto flex justify-start flex-col gap-2 "
 				style={{ flexGrow: 1 }}
 			>
 				<HabitDetailHeader />
+				{isHabitCompleted && <HabitDone />}
 				<InfosPanel />
+				<Trophies logs={habitLogs} loading={loading} />
 				<NegativeCounter />
-				<LastDays />
+				<LastDays logs={habitLogs} loading={loading} />
 				<ButtonsBox />
 			</View>
 		</ScrollView>

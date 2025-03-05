@@ -19,15 +19,15 @@ export default function HabitDone() {
 				shadowRadius: 3.84,
 				elevation: 5,
 			}}
-			className="mx-auto w-[95%] py-6 px-10 rounded-xl flex flex-col items-center justify-center"
+			className="mx-auto w-[95%] mt-4 py-4 px-10 rounded-xl flex flex-col items-center justify-center gap-4"
 		>
 			<Iconify
 				icon="gravity-ui:seal-check"
-				size={48}
+				size={40}
 				color={theme.colors.primary}
 			/>
 			<Text
-				className="text-center text-[16px] font-semibold py-2"
+				className="text-center text-[15px] font-semibold"
 				style={{
 					color: theme.colors.primary,
 				}}

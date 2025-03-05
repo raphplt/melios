@@ -1,96 +1,75 @@
 import moment from "moment";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Text, View, FlatList } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { useState, useEffect, useMemo, useCallback } from "react";
 import { useTheme } from "@context/ThemeContext";
 import { DayStatus } from "../../app/habitDetail";
-import { getHabitLogs } from "@db/logs";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHabits } from "@context/HabitsContext";
 import { CategoryTypeSelect } from "@utils/category.type";
 
-export default function LastDays() {
+const DAYS_TOTAL = 365;
+const INITIAL_VISIBLE_DAYS = 30;
+const INCREMENT_DAYS = 30;
+
+interface LastDaysProps {
+	logs: any[];
+	loading: boolean;
+}
+
+export default function LastDays({ logs, loading }: LastDaysProps) {
 	const { theme } = useTheme();
 	const { currentHabit } = useHabits();
 	const { t } = useTranslation();
-	const [lastDays, setLastDays] = useState<DayStatus[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [allDays, setAllDays] = useState<DayStatus[]>([]);
 	const [currentStreak, setCurrentStreak] = useState(0);
+	const [visibleDaysCount, setVisibleDaysCount] = useState(INITIAL_VISIBLE_DAYS);
 
 	if (!currentHabit || currentHabit.type === CategoryTypeSelect.negative) {
 		return null;
 	}
 
 	const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-
-	const dark = theme.dark;
-	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
+	const textColor = theme.dark ? theme.colors.textSecondary : theme.colors.text;
 
 	useEffect(() => {
-		const fetchHabitLogs = async () => {
-			try {
-				const logs: any[] = (await getHabitLogs(currentHabit.id)) || [];
+		if (!loading) {
+			// Création d'un Set pour un accès rapide aux dates de log
+			const loggedDates = new Set(
+				logs.map((log) =>
+					moment(log.date?.toDate ? log.date.toDate() : log.date).format(
+						"YYYY-MM-DD"
+					)
+				)
+			);
 
-				const lastDaySnapshot: DayStatus[] = [];
-				for (let i = 365; i >= 0; i--) {
-					const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+			const daysArray: DayStatus[] = [];
+			// On itère de 0 (aujourd'hui) à DAYS_TOTAL
+			for (let i = 0; i <= DAYS_TOTAL; i++) {
+				const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+				daysArray.push({
+					date: day,
+					done: loggedDates.has(day),
+				});
+			}
 
-					const done = logs?.some((log) => {
-						const logDateObj = log.date?.toDate ? log.date.toDate() : log.date;
-						const logDate = moment(logDateObj).format("YYYY-MM-DD");
-						return logDate === day;
-					});
+			setAllDays(daysArray);
 
-					lastDaySnapshot.push({
-						date: day,
-						done,
-					});
+			// Calcul du streak à partir d'aujourd'hui
+			let streak = 0;
+			for (let day of daysArray) {
+				if (day.done) {
+					streak++;
+				} else {
+					break;
 				}
-
-				const filteredDays = lastDaySnapshot.reverse();
-
-				setLastDays(filteredDays);
-				calculateCurrentStreak(filteredDays);
-				setLoading(false);
-			} catch (error) {
-				console.error("Erreur lors de la récupération des logs :", error);
 			}
-		};
-
-		fetchHabitLogs();
-	}, [currentHabit.id]);
-
-	const calculateCurrentStreak = useCallback((days: DayStatus[]) => {
-		let streak = 0;
-		for (let i = 0; i < days.length; i++) {
-			if (days[i].done) {
-				streak++;
-			} else {
-				break;
-			}
+			setCurrentStreak(streak);
 		}
-		setCurrentStreak(streak);
-	}, []);
-
-	const CardPlaceHolder = () => {
-		return (
-			<ShimmerPlaceholder
-				width={60}
-				height={60}
-				style={{
-					borderRadius: 10,
-					marginLeft: 10,
-					marginRight: 10,
-				}}
-			/>
-		);
-	};
-
-	const placeholders = useMemo(() => Array(5).fill(null), []);
+	}, [logs, loading]);
 
 	const renderItem = useCallback(
 		({ item }: { item: DayStatus }) => (
@@ -99,15 +78,19 @@ export default function LastDays() {
 					backgroundColor: item.done
 						? theme.colors.backgroundTertiary
 						: theme.colors.backgroundSecondary,
+					paddingHorizontal: 12,
+					paddingVertical: 8,
+					borderRadius: 10,
+					margin: 4,
+					alignItems: "center",
 				}}
-				className="px-3 py-2 rounded-lg flex flex-col items-center mx-1 my-1"
 			>
 				{item.done ? (
 					<Iconify size={24} color={theme.colors.text} icon="mdi:check" />
 				) : (
 					<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
 				)}
-				<Text style={{ color: theme.colors.text }} className="font-semibold mt-1">
+				<Text style={{ color: theme.colors.text, marginTop: 4, fontWeight: "600" }}>
 					{moment(item.date, "YYYY-MM-DD").format("DD/MM")}
 				</Text>
 			</View>
@@ -115,52 +98,106 @@ export default function LastDays() {
 		[theme.colors]
 	);
 
+	const CardPlaceHolder = () => (
+		<ShimmerPlaceholder
+			width={60}
+			height={60}
+			style={{ borderRadius: 10, marginHorizontal: 10 }}
+		/>
+	);
+
+	const placeholders = useMemo(() => Array(5).fill(null), []);
+
+	// Fonction pour charger plus de jours
+	const handleLoadMore = () => {
+		setVisibleDaysCount((prev) =>
+			Math.min(prev + INCREMENT_DAYS, allDays.length)
+		);
+	};
+
 	return (
 		<BlurView
 			intensity={100}
-			className="py-2 px-3 rounded-xl w-[95%] mx-auto flex items-center flex-col justify-center"
-			style={{ overflow: "hidden" }}
+			style={{
+				padding: 10,
+				borderRadius: 12,
+				width: "95%",
+				alignSelf: "center",
+				alignItems: "center",
+				overflow: "hidden",
+			}}
 			tint="extraLight"
 		>
-			{/* En-tête avec icône + STREAK */}
-			<View className="flex flex-row items-center justify-between w-[95%] gap-1 pt-2 mb-2">
-				<View className="flex flex-row items-center">
-					<Iconify icon="ph:calendar-check-fill" size={20} color={textColor} />
+			{/* En-tête avec icône et streak */}
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+					width: "95%",
+					paddingTop: 8,
+					marginBottom: 8,
+				}}
+			>
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
+					<Iconify
+						icon="ph:calendar-check-fill"
+						size={20}
+						color={theme.colors.textTertiary}
+					/>
 					<Text
-						style={{ color: textColor }}
-						className="text-[15px] font-semibold ml-1"
+						style={{
+							color: textColor,
+							fontSize: 15,
+							fontWeight: "600",
+							marginLeft: 4,
+						}}
 					>
 						{t("last_days_completion")}
 					</Text>
 				</View>
 				<View
-					className="flex flex-row items-center justify-start px-3 py-1 gap-1 rounded-full"
 					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						paddingHorizontal: 12,
+						paddingVertical: 4,
+						borderRadius: 999,
 						backgroundColor: theme.colors.backgroundSecondary,
 					}}
 				>
 					<Iconify icon="mdi:fire" size={18} color={theme.colors.redPrimary} />
 					<Text
-						style={{ color: theme.colors.text }}
-						className="text-[12px] font-semibold italic"
+						style={{
+							color: theme.colors.text,
+							fontSize: 12,
+							fontWeight: "600",
+							fontStyle: "italic",
+							marginLeft: 4,
+						}}
 					>
 						{t("streak")}: {currentStreak}
 					</Text>
 				</View>
 			</View>
 
-			{/* FlatList horizontal avec l’historique des derniers jours */}
+			{/* Liste horizontale des jours */}
 			{!loading ? (
-				<FlatList
-					data={lastDays}
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
-					keyExtractor={(_, index) => index.toString()}
-					renderItem={renderItem}
-				/>
+				<>
+					<FlatList
+						data={allDays.slice(0, visibleDaysCount)}
+						horizontal
+						showsHorizontalScrollIndicator={false}
+						contentContainerStyle={{ alignItems: "center", justifyContent: "center" }}
+						onEndReached={handleLoadMore}
+						keyExtractor={(_, index) => index.toString()}
+						renderItem={renderItem}
+					/>
+				</>
 			) : (
-				<View className="w-full flex flex-row items-center justify-center">
+				<View
+					style={{ width: "100%", flexDirection: "row", justifyContent: "center" }}
+				>
 					{placeholders.map((_, index) => (
 						<CardPlaceHolder key={index} />
 					))}
