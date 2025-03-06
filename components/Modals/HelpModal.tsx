@@ -19,6 +19,7 @@ import onboarding1 from "@assets/images/onboarding/onboarding1.png";
 import onboarding2 from "@assets/images/onboarding/onboarding2.png";
 import onboarding3 from "@assets/images/onboarding/onboarding3.png";
 import onboarding4 from "@assets/images/onboarding/onboarding4.png";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 export default function HelpModal({
 	visible,
@@ -73,7 +74,10 @@ export default function HelpModal({
 		return imagePaths.map((uri, index) => (
 			<View
 				key={index}
-				style={{ width, height: height - 100 }}
+				style={{
+					width,
+					height: height - 100,
+				}}
 				className="mx-auto flex items-center justify-evenly"
 			>
 				<StatusBar
@@ -96,17 +100,16 @@ export default function HelpModal({
 					<>
 						<Text
 							style={{
-								color: theme.colors.text,
+								color: "#1a1a1a",
 							}}
-							className="text-center mt-12 text-3xl font-bold	"
+							className="mt-10 text-3xl font-bold"
 						>
 							{texts[index].title}
 						</Text>
 						<Text
 							style={{
-								color: theme.colors.textTertiary,
+								color: "#5b5b5b",
 								marginTop: 10,
-								textAlign: "center",
 							}}
 							className="text-center w-10/12"
 						>
@@ -116,44 +119,48 @@ export default function HelpModal({
 				)}
 
 				{index !== imagePaths.length - 1 ? (
-					<Pressable
-						className="py-4 px-24 rounded-xl flex flex-row items-center justify-center w-11/12 mx-auto mt-5"
-						style={{
-							backgroundColor: theme.colors.primary,
-						}}
-						onPress={() => {
-							scrollViewRef.current?.scrollTo({
-								x: width * (index + 1),
-								animated: true,
-							});
-						}}
-					>
-						<Text
+					<ZoomableView className="flex flex-row items-center justify-center w-11/12 mx-auto mt-5 ">
+						<Pressable
+							className="py-4 px-24 rounded-xl w-full flex flex-row items-center justify-center"
 							style={{
-								color: theme.colors.textSecondary,
+								backgroundColor: "rgb(8, 32, 159)",
 							}}
-							className="text-xl font-semibold"
+							onPress={() => {
+								scrollViewRef.current?.scrollTo({
+									x: width * (index + 1),
+									animated: true,
+								});
+							}}
 						>
-							{t("go_next")}
-						</Text>
-					</Pressable>
+							<Text
+								style={{
+									color: "#fff",
+								}}
+								className="text-xl font-semibold"
+							>
+								{t("go_next")}
+							</Text>
+						</Pressable>
+					</ZoomableView>
 				) : (
-					<Pressable
-						className="py-4 px-24 rounded-xl flex flex-row items-center justify-center w-11/12 mx-auto mt-5"
-						style={{
-							backgroundColor: theme.colors.primary,
-						}}
-						onPress={handleFinish}
-					>
-						<Text
+					<ZoomableView className="flex flex-row items-center justify-center w-11/12 mx-auto mt-5 ">
+						<Pressable
+							className="py-4 px-24 rounded-xl w-full flex flex-row items-center justify-center"
 							style={{
-								color: theme.colors.textSecondary,
+								backgroundColor: "rgb(8, 32, 159)",
 							}}
-							className="text-xl font-semibold"
+							onPress={handleFinish}
 						>
-							{t("start_now")}
-						</Text>
-					</Pressable>
+							<Text
+								style={{
+									color: "#fff",
+								}}
+								className="text-xl font-semibold"
+							>
+								{t("start_now")}
+							</Text>
+						</Pressable>
+					</ZoomableView>
 				)}
 			</View>
 		));
@@ -184,7 +191,7 @@ export default function HelpModal({
 				>
 					<Text
 						style={{
-							color: theme.colors.textTertiary,
+							color: "#5b5b5b",
 						}}
 					>
 						{t("skip")}

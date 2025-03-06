@@ -17,31 +17,28 @@ import { getUserHabits } from "@db/userHabit";
 import { getCachedImage } from "@db/files";
 
 const useIndex = () => {
-	// Contexts
+	// Contexte et hooks
 	const { theme } = useTheme();
-
-	// Hooks
+	const { member, setMember, habits, isLoading } = useData();
+	const { habitsData } = useHabits();
 	const isFocused = useIsFocused();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
-	const { member, setMember, habits, isLoading } = useData();
-
-	const { habitsData } = useHabits();
 
 	// Refs
 	const rotation = useRef(new Animated.Value(0)).current;
 	const abortControllerHabits = useRef<AbortController | null>(null);
 	const abortControllerMember = useRef<AbortController | null>(null);
 
-	// States
+	// États locaux
 	const [userHabits, setUserHabits] = useState<UserHabit[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
-	const [hours, setHours] = useState(new Date().getHours());
+	const [hours, setHours] = useState<number>(new Date().getHours());
 	const [welcomeMessage, setWelcomeMessage] = useState("Bienvenue !");
 	const [showMissingHabits, setShowMissingHabits] = useState(false);
+	const [imageTemple, setImageTemple] = useState<string | null>(null);
 
-	// Memoized values
-
+	// Animation : création d'une valeur interpolée stable
 	const rotate = useMemo(() => {
 		return rotation.interpolate({
 			inputRange: [0, 1],
@@ -49,31 +46,36 @@ const useIndex = () => {
 		});
 	}, [rotation]);
 
-	const [imageTemple, setImageTemple] = useState<string | null>(null);
+	// Gestion des erreurs, mémorisée pour une référence stable
+	const handleError = useCallback((error: any) => {
+		console.log("Index - Erreur lors de la récupération des habitudes :", error);
+	}, []);
 
+	// Récupération de l'image en cache
 	useEffect(() => {
 		let isMounted = true;
 		const fetchImage = async () => {
 			try {
 				const name = isDayTime ? "temple_day.jpg" : "temple_night.jpg";
 				const localUri = await getCachedImage(`images/illustrations/${name}`);
-				if (isMounted) setImageTemple(localUri);
+				if (isMounted) {
+					setImageTemple(localUri);
+				}
 			} catch (error) {
 				console.error("Failed to fetch image:", error);
 			}
 		};
 
 		fetchImage();
-
 		return () => {
 			isMounted = false;
 		};
 	}, [isDayTime]);
 
+	// Récupération des infos du membre (seulement si non défini)
 	const fetchMemberInfosData = useCallback(
 		async (signal: AbortSignal) => {
 			if (member) return;
-
 			try {
 				console.log("Fetching member infos data");
 				const memberInfos = await getMemberInfos();
@@ -86,68 +88,75 @@ const useIndex = () => {
 				}
 			}
 		},
-		[member]
+		[member, setMember, handleError]
 	);
 
-	const getHabitDetails = (name: string) => {
-		return habitsData.find((habit: Habit) => habit.name === name);
-	};
-
-	const getUserHabitDetails = (habitId: string) => {
-		return userHabits.find((habit: UserHabit) => habit.id === habitId);
-	};
-
+	// Lancement du fetch de member quand l'écran est focus
 	useEffect(() => {
 		if (!isFocused) return;
-
-		if (!member && abortControllerMember.current) {
-			abortControllerMember.current.abort();
+		if (!member) {
+			// Abort de la précédente requête si existante
+			abortControllerMember.current?.abort();
 			abortControllerMember.current = new AbortController();
 			fetchMemberInfosData(abortControllerMember.current.signal);
 		}
-	}, [isFocused]);
+	}, [isFocused, member, fetchMemberInfosData]);
 
+	// Mise à jour de l'heure toutes les 10 secondes
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setHours(new Date().getHours());
 		}, 10000);
-
 		return () => clearInterval(interval);
 	}, []);
 
+	// Synchronisation des états locaux avec les données du contexte
 	useEffect(() => {
 		setLoading(isLoading);
 		setUserHabits(habits);
 	}, [habits, isLoading]);
 
-	// Functions
-
-	//TODO pas utile ?
+	// Fonction de rafraîchissement en arrière-plan
 	const backgroundRefresh = useCallback(async () => {
 		if (abortControllerHabits.current) {
 			console.log("Abort previous fetch");
 			abortControllerHabits.current.abort();
 		}
 		abortControllerHabits.current = new AbortController();
-		getUserHabits({
-			signal: abortControllerHabits.current.signal,
-			forceRefresh: true,
-		});
-	}, [getUserHabits]);
+		try {
+			await getUserHabits({
+				signal: abortControllerHabits.current.signal,
+				forceRefresh: true,
+			});
+		} catch (error) {
+			if (!(error instanceof DOMException && error.name === "AbortError")) {
+				handleError(error);
+			}
+		}
+	}, [handleError]);
 
+	// Rafraîchissement via action utilisateur
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
 		if (abortControllerHabits.current) {
 			abortControllerHabits.current.abort();
 		}
 		abortControllerHabits.current = new AbortController();
-		await getUserHabits({
-			signal: abortControllerHabits.current.signal,
-			forceRefresh: true,
-		});
-		setRefreshing(false);
-	}, [getUserHabits]);
+		try {
+			await getUserHabits({
+				signal: abortControllerHabits.current.signal,
+				forceRefresh: true,
+			});
+		} catch (error) {
+			if (!(error instanceof DOMException && error.name === "AbortError")) {
+				handleError(error);
+			}
+		} finally {
+			setRefreshing(false);
+		}
+	}, [handleError]);
 
+	// Fonction utilitaire pour « show more »
 	const updateShowMore = useCallback(
 		(
 			currentValue: number,
@@ -163,11 +172,19 @@ const useIndex = () => {
 		[]
 	);
 
-	// Handlers
-	const handleError = useCallback((error: any) => {
-		console.log("Index - Erreur lors de la récupération des habitudes : ", error);
-	}, []);
+	// Fonctions de recherche mémorisées pour éviter des références instables
+	const getHabitDetails = useCallback(
+		(name: string) => habitsData.find((habit: Habit) => habit.name === name),
+		[habitsData]
+	);
 
+	const getUserHabitDetails = useCallback(
+		(habitId: string) =>
+			userHabits.find((habit: UserHabit) => habit.id === habitId),
+		[userHabits]
+	);
+
+	// Handlers pour l'animation au press in/out
 	const handlePressIn = useCallback(() => {
 		Animated.timing(rotation, {
 			toValue: 1,

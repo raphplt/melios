@@ -1,20 +1,23 @@
 import React, { useContext, useState } from "react";
-import { View, Pressable, Animated } from "react-native";
+import { View, Pressable } from "react-native";
 import Home from "../../components/Svg/Home";
 import Progress from "../../components/Svg/Progress";
 import Gift from "../../components/Svg/Gift";
-import Agora from "../../components/Svg/Aroga";
 import { ThemeContext } from "@context/ThemeContext";
 import BlurGradientBackground from "./BlurGradientBackground";
 import { Iconify } from "react-native-iconify";
+import {
+	NavigationHelpers,
+	ParamListBase,
+	TabNavigationState,
+} from "@react-navigation/native";
 
 type Props = {
-	state: any;
-	descriptors: any;
-	navigation: any;
+	state: TabNavigationState<ParamListBase>;
+	navigation: NavigationHelpers<ParamListBase>;
 };
 
-const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
+const CustomTabBar = ({ state, navigation }: Props) => {
 	const { theme } = useContext(ThemeContext);
 	const [pressedIndex, setPressedIndex] = useState<number | null>(null);
 
@@ -40,7 +43,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: Props) => {
 			className="bottom-0 w-full"
 			style={{
 				position: "absolute",
-				elevation: 0,
+				elevation: 3,
 			}}
 		>
 			<BlurGradientBackground />

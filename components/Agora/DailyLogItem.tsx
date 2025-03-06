@@ -14,6 +14,7 @@ import { catImgs } from "@utils/categoriesBg";
 import { useHabits } from "@context/HabitsContext";
 import { BlurView } from "expo-blur";
 import { maj, reduceText } from "@utils/textUtils";
+import AnimatedPlaceholder from "@components/Shared/AnimatedPlaceholder";
 
 const renderEmoji = (type: string, theme: any) => {
 	switch (type) {
@@ -96,6 +97,9 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 						<CachedImage
 							imagePath={profilePictureUri || "images/cosmetics/man.png"}
 							style={{ width: 20, height: 20, marginRight: 8 }}
+							placeholder={
+								<AnimatedPlaceholder marginRight={8} width={20} height={20} />
+							}
 						/>
 						<Text
 							className="text-base font-bold mr-1"

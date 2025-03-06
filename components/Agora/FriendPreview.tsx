@@ -12,6 +12,7 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import FriendModal from "@components/Modals/FriendModal";
+import AnimatedPlaceholder from "@components/Shared/AnimatedPlaceholder";
 
 const FriendPreview = () => {
 	const [friends, setFriends] = useState<
@@ -106,6 +107,16 @@ const FriendPreview = () => {
 												borderWidth: 2,
 												borderColor: "white",
 											}}
+											placeholder={
+												<View
+													style={{
+														width: 70,
+														height: 70,
+														borderRadius: 35,
+														backgroundColor: "rgba(255, 255, 255, 0.8)",
+													}}
+												/>
+											}
 										/>
 									</LinearGradient>
 								</Pressable>

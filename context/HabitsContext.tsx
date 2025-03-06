@@ -4,6 +4,7 @@ import React, {
 	useState,
 	useEffect,
 	useCallback,
+	useMemo,
 } from "react";
 import { Category } from "@type/category";
 import { getHabitsWithCategories } from "@db/fetch";
@@ -16,7 +17,7 @@ interface HabitsContextProps {
 	refreshHabits: (forceRefresh?: boolean) => void;
 	currentHabit: UserHabit | null;
 	setCurrentHabit: React.Dispatch<React.SetStateAction<UserHabit | null>>;
-	showHabitDetail?: boolean;
+	showHabitDetail: boolean;
 	setShowHabitDetail: React.Dispatch<React.SetStateAction<boolean>>;
 	categories: Category[];
 }
@@ -75,20 +76,37 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 		};
 	}, [fetchHabitsData]);
 
+	const refreshHabits = useCallback(
+		(forceRefresh = false) => {
+			// Crée un nouveau AbortController pour chaque appel
+			fetchHabitsData(new AbortController().signal, forceRefresh);
+		},
+		[fetchHabitsData]
+	);
+
+	const contextValue = useMemo(
+		() => ({
+			habitsData,
+			loading,
+			refreshHabits,
+			currentHabit,
+			setCurrentHabit,
+			showHabitDetail,
+			setShowHabitDetail,
+			categories,
+		}),
+		[
+			habitsData,
+			loading,
+			refreshHabits,
+			currentHabit,
+			showHabitDetail,
+			categories,
+		]
+	);
+
 	return (
-		<HabitsContext.Provider
-			value={{
-				habitsData,
-				loading,
-				refreshHabits: (forceRefresh = false) =>
-					fetchHabitsData(new AbortController().signal, forceRefresh),
-				currentHabit,
-				setCurrentHabit,
-				showHabitDetail,
-				setShowHabitDetail,
-				categories,
-			}}
-		>
+		<HabitsContext.Provider value={contextValue}>
 			{children}
 		</HabitsContext.Provider>
 	);

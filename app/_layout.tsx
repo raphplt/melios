@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useColorScheme } from "react-native";
 import {
 	NavigationProp,
@@ -14,7 +14,6 @@ import { HabitsProvider } from "@context/HabitsContext";
 import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
-import { TimerProvider } from "@context/TimerContext";
 import { DataProvider } from "@context/DataContext";
 import "../i18n";
 import "../global.css";
@@ -43,39 +42,55 @@ function MainNavigator() {
 		}
 	}, [loaded]);
 
+	const deviceColorScheme = useColorScheme();
 	const [theme, setTheme] = useState(
-		useColorScheme() === "dark" ? DarkTheme : DefaultTheme
+		deviceColorScheme === "dark" ? DarkTheme : DefaultTheme
 	);
 
+	// Récupération du thème sauvegardé
 	useEffect(() => {
 		(async () => {
 			const savedTheme = await AsyncStorage.getItem("theme");
-			setTheme(savedTheme === "dark" ? DarkTheme : DefaultTheme);
+			if (savedTheme) {
+				setTheme(savedTheme === "dark" ? DarkTheme : DefaultTheme);
+			}
 		})();
 	}, []);
 
-	const toggleTheme = () => {
+	// Stabilisation de toggleTheme
+	const toggleTheme = useCallback(() => {
 		setTheme((prevTheme) => {
 			const newTheme = prevTheme === DefaultTheme ? DarkTheme : DefaultTheme;
 			AsyncStorage.setItem("theme", newTheme === DarkTheme ? "dark" : "light");
 			return newTheme;
 		});
-	};
+	}, []);
 
-	notifee.registerForegroundService((notification) => {
-		return new Promise(async (resolve) => {});
-	});
+	// Mémorisation de la valeur du contexte
+	const themeContextValue = useMemo(
+		() => ({ theme, toggleTheme }),
+		[theme, toggleTheme]
+	);
 
-	Notifications.setNotificationHandler({
-		handleNotification: async () => ({
-			shouldShowAlert: true,
-			shouldPlaySound: true,
-			shouldSetBadge: false,
-		}),
-	});
+	// Enregistrer le service de notifications une seule fois
+	useEffect(() => {
+		notifee.registerForegroundService((notification) => {
+			return new Promise(() => {});
+		});
+	}, []);
+
+	useEffect(() => {
+		Notifications.setNotificationHandler({
+			handleNotification: async () => ({
+				shouldShowAlert: true,
+				shouldPlaySound: true,
+				shouldSetBadge: false,
+			}),
+		});
+	}, []);
 
 	return (
-		<ThemeContext.Provider value={{ theme, toggleTheme }}>
+		<ThemeContext.Provider value={themeContextValue}>
 			<ThemeProvider value={theme}>
 				<StatusBar
 					style={theme.dark ? "light" : "dark"}
@@ -210,13 +225,11 @@ function RootLayoutContent() {
 	if (isLoading) return <LoaderScreen text={t("loading")} />;
 
 	return (
-		<TimerProvider>
-			<DataProvider>
-				<HabitsProvider>
-					<MainNavigator />
-				</HabitsProvider>
-			</DataProvider>
-		</TimerProvider>
+		<DataProvider>
+			<HabitsProvider>
+				<MainNavigator />
+			</HabitsProvider>
+		</DataProvider>
 	);
 }
 

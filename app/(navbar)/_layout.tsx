@@ -36,6 +36,7 @@ const TabLayout: React.FC = () => {
 			<Tabs
 				tabBar={(props) => <CustomTabBar {...props} />}
 				screenOptions={{
+					lazy: true,
 					headerBackgroundContainerStyle: {
 						backgroundColor: theme.colors.background,
 					},

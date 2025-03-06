@@ -8,6 +8,5 @@ export interface TimerContextProps {
 	startTimer: () => void;
 	pauseTimer: () => void;
 	stopTimer: () => void;
-	date: string;
 	timerRef: { current: NodeJS.Timeout | null };
 }

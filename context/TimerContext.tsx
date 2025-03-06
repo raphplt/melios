@@ -11,7 +11,6 @@ export const TimerContext = createContext<TimerContextProps>({
 	startTimer: function (): void {},
 	pauseTimer: function (): void {},
 	stopTimer: function (): void {},
-	date: "",
 	timerRef: { current: null },
 });
 
@@ -20,8 +19,9 @@ export const TimerProvider = ({ children }: { children: ReactNode }) => {
 	const [timerSeconds, setTimerSeconds] = useState(0);
 	const [isTimerActive, setIsTimerActive] = useState(false);
 	const [isTimerVisible, setIsTimerVisible] = useState(false);
-	const [date, setDate] = useState("");
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+	console.log("no ");
 
 	return (
 		<TimerContext.Provider
@@ -35,7 +35,6 @@ export const TimerProvider = ({ children }: { children: ReactNode }) => {
 				startTimer: function (): void {},
 				pauseTimer: function (): void {},
 				stopTimer: function (): void {},
-				date,
 				timerRef,
 			}}
 		>

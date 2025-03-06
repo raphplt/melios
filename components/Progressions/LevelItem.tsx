@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback, useState, useEffect } from "react";
 import { Text, View, Dimensions, Pressable } from "react-native";
 import * as Progress from "react-native-progress";
 import { useTheme } from "@context/ThemeContext";
@@ -18,21 +18,39 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { setSelectedLevel } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-	const itemSize = (width - 40) / 2;
-	
+	const itemSize = useMemo(() => (width - 40) / 2, [width]);
+
+	const handlePress = useCallback(() => {
+		setSelectedLevel(level);
+		navigation.navigate("levelDetail");
+	}, [level, navigation, setSelectedLevel]);
+
+	const pressableStyle = useMemo(
+		() => ({
+			backgroundColor: lightenColor(level.color) ?? theme.colors.background,
+			width: itemSize,
+			height: itemSize,
+		}),
+		[level.color, itemSize, theme.colors.background]
+	);
+
+	// Etat pour la progression animée
+	const [progress, setProgress] = useState(0);
+
+	useEffect(() => {
+		// On initialise la progression à 0 puis on la met à jour légèrement après le montage
+		const timer = setTimeout(() => {
+			setProgress(level.currentXp / level.nextLevelXp);
+		}, 100);
+		return () => clearTimeout(timer);
+	}, [level.currentXp, level.nextLevelXp]);
+
 	return (
 		<ZoomableView>
 			<Pressable
-				style={{
-					backgroundColor: lightenColor(level.color) ?? theme.colors.background,
-					width: itemSize,
-					height: itemSize,
-				}}
+				style={pressableStyle}
 				className="p-3 rounded-xl my-2"
-				onPress={() => {
-					setSelectedLevel(level);
-					navigation.navigate("levelDetail");
-				}}
+				onPress={handlePress}
 			>
 				<View className="flex flex-col items-center justify-between h-full">
 					<View className="flex flex-row items-start gap-1 px-1">
@@ -62,12 +80,13 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 						</Text>
 						<View className="flex items-center justify-center">
 							<Progress.Circle
-								progress={level.currentXp / level.nextLevelXp}
+								progress={progress}
 								color={level.color || theme.colors.primary}
 								borderWidth={0}
 								unfilledColor={theme.colors.border}
 								size={80}
 								thickness={8}
+								animated
 							/>
 							<Text className="absolute font-bold text-2xl">{level.currentLevel}</Text>
 						</View>
@@ -78,4 +97,4 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	);
 };
 
-export default LevelItem;
+export default React.memo(LevelItem);

@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import CardCheckHabit from "@components/Habits/CardCheckHabit";
 import useIndex from "@hooks/useIndex";
-import { UserHabit } from "@type/userHabit";
 import { DayOfWeek } from "@type/days";
 import SectionWrapper from "./SectionWrapper";
 import { Iconify } from "react-native-iconify";
@@ -13,7 +12,7 @@ import { CategoryTypeSelect } from "@utils/category.type";
 import FiltersHabits from "./FiltersHabits";
 import NoNegativeHabits from "./NoNegativeHabit";
 
-export default function HabitsSection() {
+const HabitsSection = () => {
 	const { userHabits } = useIndex();
 	const { theme } = useTheme();
 	const { t } = useTranslation();
@@ -28,9 +27,18 @@ export default function HabitsSection() {
 			.toLowerCase() as DayOfWeek;
 	}, []);
 
-	const filteredHabits = useMemo(() => {
-		if (!userHabits) return [];
-		return userHabits.filter((habit) => {
+	const categorizedHabits = useMemo(() => {
+		if (!userHabits)
+			return {
+				filteredHabits: [],
+				morning: [],
+				afternoon: [],
+				evening: [],
+				free: [],
+			};
+
+		// Filtrer d'abord par type et fréquence
+		const filtered = userHabits.filter((habit) => {
 			if (filter === CategoryTypeSelect.positive) {
 				return (
 					habit.type !== CategoryTypeSelect.negative &&
@@ -47,35 +55,39 @@ export default function HabitsSection() {
 			}
 			return false;
 		});
+
+		// Catégoriser en une seule passe si on a des habitudes positives
+		if (filter === CategoryTypeSelect.positive) {
+			return {
+				filteredHabits: filtered,
+				morning: filtered.filter((habit) => habit.moment >= 6 && habit.moment < 12),
+				afternoon: filtered.filter(
+					(habit) => habit.moment >= 12 && habit.moment < 18
+				),
+				evening: filtered.filter((habit) => habit.moment >= 18),
+				free: filtered.filter((habit) => habit.moment === -1 || habit.moment < 6),
+			};
+		} else {
+			// Pour les habitudes négatives, nous n'avons pas besoin de catégoriser
+			return {
+				filteredHabits: filtered,
+				morning: [],
+				afternoon: [],
+				evening: [],
+				free: [],
+			};
+		}
 	}, [userHabits, filter, today]);
 
-	// Groupes d'habitudes par moment de la journée
-	const morningHabits = useMemo(
-		() =>
-			filteredHabits.filter((habit) => habit.moment >= 6 && habit.moment < 12),
-		[filteredHabits]
-	);
-
-	const afternoonHabits = useMemo(
-		() =>
-			filteredHabits.filter((habit) => habit.moment >= 12 && habit.moment < 18),
-		[filteredHabits]
-	);
-
-	const eveningHabits = useMemo(
-		() => filteredHabits.filter((habit) => habit.moment >= 18),
-		[filteredHabits]
-	);
-
-	const freeHabits = useMemo(
-		() =>
-			filteredHabits.filter(
-				(habit: UserHabit) => habit.moment === -1 || habit.moment < 6
-			),
-		[filteredHabits]
-	);
-
 	if (!userHabits || userHabits.length === 0) return <NoHabits />;
+
+	const {
+		filteredHabits,
+		morning: morningHabits,
+		afternoon: afternoonHabits,
+		evening: eveningHabits,
+		free: freeHabits,
+	} = categorizedHabits;
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -172,4 +184,6 @@ export default function HabitsSection() {
 			</ScrollView>
 		</View>
 	);
-}
+};
+
+export default React.memo(HabitsSection);

@@ -4,6 +4,7 @@ import React, {
 	useContext,
 	useEffect,
 	ReactNode,
+	useMemo,
 } from "react";
 import moment from "moment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -63,12 +64,13 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const { AskNotification } = permissions();
 
 	useEffect(() => {
-		const interval = setInterval(() => {
+		const now = moment();
+		const nextUpdate = moment().endOf("day").diff(now);
+		const timer = setTimeout(() => {
 			setDate(moment().format("YYYY-MM-DD"));
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, []);
+		}, nextUpdate);
+		return () => clearTimeout(timer);
+	}, [date]);
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -182,40 +184,57 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 		}
 	}, [user, genericLevels]);
 
+	const contextValue = useMemo(
+		() => ({
+			date,
+			isLoading,
+			points,
+			setPoints,
+			habits,
+			setHabits,
+			expoPushToken,
+			setExpoPushToken,
+			notificationToggle,
+			setNotificationToggle,
+			member,
+			setMember,
+			trophies,
+			setTrophies,
+			todayScore,
+			setTodayScore,
+			streak,
+			setStreak,
+			logs,
+			completedHabitsToday,
+			setCompletedHabitsToday,
+			usersLevels,
+			setUsersLevels,
+			selectedLevel,
+			setSelectedLevel,
+			selectedPack,
+			setSelectedPack,
+		}),
+		[
+			date,
+			isLoading,
+			points,
+			habits,
+			expoPushToken,
+			notificationToggle,
+			member,
+			trophies,
+			todayScore,
+			streak,
+			logs,
+			completedHabitsToday,
+			usersLevels,
+			selectedLevel,
+			selectedPack,
+		]
+	);
+
 	return (
-		<DataContext.Provider
-			value={{
-				date,
-				isLoading,
-				points,
-				setPoints,
-				habits,
-				setHabits,
-				expoPushToken,
-				setExpoPushToken,
-				notificationToggle,
-				setNotificationToggle,
-				member,
-				setMember,
-				trophies,
-				setTrophies,
-				todayScore,
-				setTodayScore,
-				streak,
-				setStreak,
-				logs,
-				completedHabitsToday,
-				setCompletedHabitsToday,
-				usersLevels,
-				setUsersLevels,
-				selectedLevel,
-				setSelectedLevel,
-				selectedPack,
-				setSelectedPack,
-			}}
-		>
-			{children}
-		</DataContext.Provider>
+		<DataContext.Provider value={contextValue}>{children}</DataContext.Provider>
 	);
 };
 

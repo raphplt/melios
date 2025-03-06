@@ -1,3 +1,4 @@
+import AnimatedPlaceholder from "@components/Shared/AnimatedPlaceholder";
 import CachedImage from "@components/Shared/CachedImage";
 import MoneyOdyssee from "@components/Svg/MoneyOdyssee";
 import { useTheme } from "@context/ThemeContext";
@@ -54,17 +55,14 @@ export default function IconPreview({
 			>
 				{cosmetic.name}
 			</Text>
-			{loading ? (
-				<ShimmerPlaceholder
-					style={{
-						width: 80,
-						height: 80,
-						borderRadius: 40,
-					}}
-				/>
-			) : (
-				<CachedImage imagePath={iconPath} className="w-24 h-24" />
-			)}
+
+			<CachedImage
+				imagePath={iconPath}
+				className="w-24 h-24"
+				placeholder={
+					<AnimatedPlaceholder width={96} height={96} borderRadius={100} />
+				}
+			/>
 
 			<View className="flex flex-row items-center justify-center py-2">
 				<Text

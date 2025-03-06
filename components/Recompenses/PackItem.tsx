@@ -8,6 +8,7 @@ import { useData } from "@context/DataContext";
 import CachedImage from "@components/Shared/CachedImage";
 import { Svg, Path } from "react-native-svg";
 import ZoomableView from "@components/Shared/ZoomableView";
+import AnimatedPlaceholder from "@components/Shared/AnimatedPlaceholder";
 
 export default function PackItem({ pack }: { pack: Pack }) {
 	const { theme } = useTheme();
@@ -53,6 +54,9 @@ export default function PackItem({ pack }: { pack: Pack }) {
 								borderTopRightRadius: 10,
 								borderBottomRightRadius: 10,
 							}}
+							placeholder={
+								<AnimatedPlaceholder width={190} height={125} borderRadius={6} />
+							}
 						/>
 						<Svg
 							width="61%"

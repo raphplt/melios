@@ -26,7 +26,7 @@ const WorkSession: React.FC = () => {
 
 	// Options de sessions disponibles
 	const sessionOptions: SessionOption[] = [
-		{ work: 1, break: 1, label: "1/1" },
+		// { work: 1, break: 1, label: "1/1" },
 		{ work: 20, break: 5, label: "20/5" },
 		{ work: 25, break: 5, label: "25/5" },
 		{ work: 50, break: 10, label: "50/10" },

@@ -4,6 +4,7 @@ import React, {
 	useEffect,
 	useContext,
 	ReactNode,
+	useMemo,
 } from "react";
 import { User } from "firebase/auth";
 import { auth } from "../db";
@@ -28,23 +29,19 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
-			if (user) {
-				setUser(user);
-			} else {
-				setUser(null);
-			}
+			setUser(user);
 			setIsLoading(false);
 		});
 
 		return () => unsubscribe();
 	}, []);
 
-	return (
-		<UserContext.Provider value={{ user, setUser, isLoading }}>
-			{children}
-		</UserContext.Provider>
-	);
+	// Mémoriser la valeur du contexte
+	const value = useMemo(() => ({ user, setUser, isLoading }), [user, isLoading]);
+
+	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
+
 
 export function useSession() {
 	const value = useContext(UserContext);

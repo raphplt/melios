@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { View, Pressable, Text } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -28,7 +28,6 @@ import RestartHabit from "@components/Modals/RestartHabit";
 import { useNavigation } from "expo-router";
 import { lightenColor } from "@utils/colors";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-
 function CardCheckHabit({
 	habit,
 	onHabitStatusChange,
@@ -44,62 +43,73 @@ function CardCheckHabit({
 	const { startTimer } = useHabitTimer();
 	const addXp = useAddXp()?.addXp;
 	const { t } = useTranslation();
-
 	const [showDetails, setShowDetails] = useState(false);
 	const [completed, setCompleted] = useState(false);
 	const [showModalNegative, setShowModalNegative] = useState(false);
-
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(0);
 	const progress = useSharedValue(0);
 
-	const animatedStyles = useAnimatedStyle(() => {
-		return {
-			opacity: opacity.value,
-			transform: [{ translateX: translateX.value }],
-		};
-	});
+	const animatedStyles = useAnimatedStyle(() => ({
+		opacity: opacity.value,
+		transform: [{ translateX: translateX.value }],
+	}));
 
-	const detailsAnimatedStyle = useAnimatedStyle(() => {
-		return {
-			height: interpolate(progress.value, [0, 1], [0, 70]),
-			opacity: progress.value,
-		};
-	});
+	const detailsAnimatedStyle = useAnimatedStyle(() => ({
+		height: interpolate(progress.value, [0, 1], [0, 70]),
+		opacity: progress.value,
+	}));
+
+	// Mémoriser les objets de style inline
+	const pressableStyle = useMemo(
+		() => ({
+			backgroundColor: completed
+				? habit.type === CategoryTypeSelect.negative
+					? theme.colors.redSecondary
+					: lightenColor(habit.color, 0.15)
+				: theme.colors.cardBackground,
+			borderColor: completed
+				? habit.color
+				: habit.type === CategoryTypeSelect.negative
+				? theme.colors.redPrimary
+				: theme.colors.border,
+		}),
+		[completed, habit, theme]
+	);
 
 	useEffect(() => {
 		opacity.value = withTiming(1, { duration: 200 });
 		return () => {
 			opacity.value = withTiming(0, { duration: 200 });
 		};
-	}, []);
+	}, [opacity]);
 
 	useEffect(() => {
 		const isCompleted = completedHabitsToday.some((h) => h.id === habit.id);
 		setCompleted(isCompleted);
-	}, [completedHabitsToday]);
+	}, [completedHabitsToday, habit.id]);
 
 	useEffect(() => {
 		progress.value = withSpring(showDetails ? 1 : 0, {
 			damping: 20,
 			stiffness: 90,
 		});
-	}, [showDetails]);
+	}, [showDetails, progress]);
 
-	const goHabitDetail = () => {
+	const goHabitDetail = useCallback(() => {
 		setCurrentHabit(habit);
 		navigation.navigate("habitDetail");
-	};
+	}, [habit, setCurrentHabit, navigation]);
 
-	const startHabit = () => {
+	const startHabit = useCallback(() => {
 		setCurrentHabit(habit);
 		startTimer(habit);
 		navigation.navigate("timerHabit");
-	};
+	}, [habit, setCurrentHabit, startTimer, navigation]);
 
-	const setHabitDone = async () => {
+	const setHabitDone = useCallback(async () => {
 		try {
 			if (completed) return;
 			setCompleted(true);
@@ -109,11 +119,9 @@ function CardCheckHabit({
 				await addXp(habit, 10 * habit.difficulty);
 			}
 
-			// Points et récompenses
 			addOdysseePoints(habit.difficulty);
 			setRewards("odyssee", habit.difficulty * 2);
 
-			// Gestion du streak
 			const streak = await incrementStreak();
 			if (streak) {
 				setStreak(streak);
@@ -126,9 +134,19 @@ function CardCheckHabit({
 		if (onHabitStatusChange) {
 			onHabitStatusChange(habit, true);
 		}
-	};
+	}, [
+		completed,
+		habit,
+		date,
+		addXp,
+		addOdysseePoints,
+		setCompletedHabitsToday,
+		setStreak,
+		onHabitStatusChange,
+	]);
 
 	const isNegative = habit.type === CategoryTypeSelect.negative;
+
 	return (
 		<Animated.View
 			style={[animatedStyles]}
@@ -144,19 +162,8 @@ function CardCheckHabit({
 				/>
 			</View>
 			<Pressable
-				onPress={() => setShowDetails(!showDetails)}
-				style={{
-					backgroundColor: completed
-						? isNegative
-							? theme.colors.redSecondary
-							: lightenColor(habit.color, 0.15)
-						: theme.colors.cardBackground,
-					borderColor: completed
-						? habit.color
-						: isNegative
-						? theme.colors.redPrimary
-						: theme.colors.border,
-				}}
+				onPress={() => setShowDetails((prev) => !prev)}
+				style={pressableStyle}
 				className="flex-1 flex flex-col rounded-xl z-10"
 			>
 				<View className="flex items-center flex-row justify-between px-3 py-[13px] w-full">
@@ -176,7 +183,7 @@ function CardCheckHabit({
 						</Text>
 					</View>
 					<Pressable
-						onPress={() => setShowDetails(!showDetails)}
+						onPress={() => setShowDetails((prev) => !prev)}
 						className="flex items-center justify-center relative"
 					>
 						{showDetails ? (
@@ -194,7 +201,6 @@ function CardCheckHabit({
 						)}
 					</Pressable>
 				</View>
-				{/* La vue animée est toujours rendue et masque son contenu via height et opacity */}
 				<Animated.View style={[detailsAnimatedStyle, { overflow: "hidden" }]}>
 					<View className="flex flex-row items-center justify-around">
 						<ZoomableView

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
 	View,
 	ScrollView,
@@ -37,48 +37,59 @@ export interface DayStatus {
 }
 
 export default function HabitDetail() {
-	const { currentHabit } = useHabits();
+	const { currentHabit, categories } = useHabits();
 	const { t } = useTranslation();
 	const { theme } = useTheme();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
-	const { categories } = useHabits();
+	const { completedHabitsToday } = useData();
+
 	const [habitLogs, setHabitLogs] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		const fetchLogs = async () => {
-			try {
-				if (!currentHabit) return;
-				const logs = await getHabitLogs(currentHabit.id);
-				setHabitLogs(logs || []);
-				setLoading(false);
-			} catch (error) {
-				console.error("Erreur lors de la récupération des logs :", error);
-			}
-		};
-
-		if (currentHabit) {
-			fetchLogs();
+	// useCallback pour mémoriser la fonction fetchLogs
+	const fetchLogs = useCallback(async () => {
+		if (!currentHabit) return;
+		try {
+			const logs = await getHabitLogs(currentHabit.id);
+			setHabitLogs(logs || []);
+		} catch (error) {
+			console.error("Erreur lors de la récupération des logs :", error);
+		} finally {
+			setLoading(false);
 		}
 	}, [currentHabit]);
 
+	useEffect(() => {
+		if (currentHabit) {
+			fetchLogs();
+		}
+	}, [currentHabit, fetchLogs]);
+
+	// Utiliser useMemo pour calculer habitCategory & slug uniquement lorsque currentHabit ou categories changent
+	const habitCategory = useMemo(() => {
+		return (
+			categories.find((c) => c.category === currentHabit?.category) ||
+			categories.find((c) => c.slug === "other")
+		);
+	}, [categories, currentHabit]);
+
+	const slug = useMemo(() => habitCategory?.slug || "sport", [habitCategory]);
+
+	// Optimiser textColor avec useMemo
+	const dark = theme.dark;
+	const textColor = useMemo(
+		() => (dark ? theme.colors.textSecondary : theme.colors.text),
+		[dark, theme.colors]
+	);
+
+	// Calculer si l'habitude est complétée en utilisant useMemo
+	const isHabitCompleted = useMemo(() => {
+		return completedHabitsToday.some((habit) => habit.id === currentHabit?.id);
+	}, [completedHabitsToday, currentHabit]);
+
 	if (!currentHabit) return <LoaderScreen text={t("loading")} />;
 
-	const habitCategory =
-		categories.find((c) => c.category === currentHabit.category) ||
-		categories.find((c) => c.slug === "other");
-
-	const dark = theme.dark;
-	const textColor = dark ? theme.colors.textSecondary : theme.colors.text;
-
-	const slug: string = habitCategory?.slug || "sport";
-
 	const screenHeight = Dimensions.get("screen").height;
-	const { completedHabitsToday } = useData();
-
-	const isHabitCompleted = completedHabitsToday.some(
-		(habit) => habit.id === currentHabit?.id
-	);
 
 	return (
 		<ScrollView
