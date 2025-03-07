@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Pressable, ActivityIndicator } from "react-native";
+import {
+	Text,
+	View,
+	Pressable,
+	ActivityIndicator,
+	TouchableOpacity,
+} from "react-native";
 import CachedImage from "@components/Shared/CachedImage";
 import { useTheme } from "@context/ThemeContext";
 import { Member } from "@type/member";
@@ -191,7 +197,7 @@ const Friend = ({ member }: Props) => {
 						marginTop: 8,
 					}}
 				>
-					<Pressable
+					<TouchableOpacity
 						onPress={handleAcceptRequest}
 						style={{
 							backgroundColor: theme.colors.primary,
@@ -203,8 +209,8 @@ const Friend = ({ member }: Props) => {
 						}}
 					>
 						<Iconify icon="material-symbols:done" size={20} color="white" />
-					</Pressable>
-					<Pressable
+					</TouchableOpacity>
+					<TouchableOpacity
 						onPress={handleDeclineRequest}
 						style={{
 							backgroundColor: theme.colors.redPrimary,
@@ -216,10 +222,10 @@ const Friend = ({ member }: Props) => {
 						}}
 					>
 						<Iconify icon="material-symbols:close" size={20} color="white" />
-					</Pressable>
+					</TouchableOpacity>
 				</View>
 			) : (
-				<Pressable
+				<TouchableOpacity
 					onPress={handleSendRequest}
 					style={{
 						backgroundColor: theme.colors.primary,
@@ -236,7 +242,7 @@ const Friend = ({ member }: Props) => {
 					<Text style={{ color: "white", fontSize: 14, marginLeft: 6 }}>
 						{t("add_friend")}
 					</Text>
-				</Pressable>
+				</TouchableOpacity>
 			)}
 		</View>
 	);

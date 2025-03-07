@@ -84,10 +84,10 @@ export default function Classement() {
 				ListHeaderComponent={
 					<>
 						<View
-							className="my-3 flex items-center justify-center flex-row gap-2 w-[95%] mx-auto p-2 rounded-xl"
+							className="my-3 flex items-center justify-center flex-row gap-2 w-[95%] mx-auto p-4 rounded-2xl"
 							style={{
 								borderColor: theme.colors.primary,
-								borderWidth: 2,
+								borderWidth: 1,
 							}}
 						>
 							<Iconify icon="mdi:trophy" size={20} color={theme.colors.primary} />
@@ -103,7 +103,7 @@ export default function Classement() {
 						</View>
 
 						<LinearGradient
-							colors={[theme.colors.redSecondary, theme.colors.blueSecondary]}
+							colors={[theme.colors.greenSecondary, theme.colors.purpleSecondary]}
 							style={{
 								borderRadius: 10,
 								padding: 5,
@@ -117,19 +117,9 @@ export default function Classement() {
 							start={[0, 0]}
 						>
 							<View className="flex flex-row items-center justify-center">
-								<Iconify
-									icon="mingcute:snow-fill"
-									size={24}
-									color={theme.colors.bluePrimary}
-								/>
-								<Text style={{}} className="text-center text-lg font-semibold mx-3">
+								<Text style={{}} className="text-center text-lg font-semibold">
 									{t("current_season")} : {maj(currentMonth)}
 								</Text>
-								<Iconify
-									icon="mingcute:snow-fill"
-									size={24}
-									color={theme.colors.bluePrimary}
-								/>
 							</View>
 						</LinearGradient>
 					</>

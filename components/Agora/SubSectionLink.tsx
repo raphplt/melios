@@ -22,7 +22,9 @@ const SubSectionLink = ({ href, children }: SubSectionLinkProps) => {
 			<Pressable
 				className="flex flex-row items-center justify-between px-6 py-3 my-2 rounded-xl w-[95%] mx-auto"
 				style={{
-					backgroundColor: theme.colors.backgroundTertiary,
+					backgroundColor: theme.colors.background,
+					borderColor: theme.colors.primary,
+					borderWidth: 1,
 					shadowColor: "#000",
 					shadowOffset: { width: 0, height: 2 },
 					shadowOpacity: 0.1,

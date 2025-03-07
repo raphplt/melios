@@ -4,7 +4,14 @@ import { getFriends } from "@db/member";
 import { Member } from "@type/member";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, Share, Text, View } from "react-native";
+import {
+	Pressable,
+	ScrollView,
+	Share,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Iconify } from "react-native-iconify";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
@@ -82,7 +89,7 @@ const FriendPreview = () => {
 					friends.map((friend, index) => (
 						<View key={index} style={{ alignItems: "center", marginRight: 12 }}>
 							<ZoomableView>
-								<Pressable
+								<TouchableOpacity
 									onPress={() => {
 										setSelectedFriend(friend);
 										setVisible(true);
@@ -119,7 +126,7 @@ const FriendPreview = () => {
 											}
 										/>
 									</LinearGradient>
-								</Pressable>
+								</TouchableOpacity>
 								<Text
 									style={{
 										color: theme.colors.text,

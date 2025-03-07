@@ -14,7 +14,11 @@ const MainSubSections = () => {
 	return (
 		<View className="flex flex-col items-center justify-center w-full">
 			<SubSectionLink href="classement">
-				<Iconify icon="mdi:trophy" size={20} color={theme.colors.primary} />
+				<Iconify
+					icon="material-symbols:trophy"
+					size={24}
+					color={theme.colors.primary}
+				/>
 				<Text
 					className="ml-3 text-lg text-center font-semibold"
 					style={{
@@ -25,7 +29,11 @@ const MainSubSections = () => {
 				</Text>
 			</SubSectionLink>
 			<SubSectionLink href="friendList">
-				<Iconify icon="mdi:users" size={20} color={theme.colors.primary} />
+				<Iconify
+					icon="fluent:people-20-filled"
+					size={24}
+					color={theme.colors.primary}
+				/>
 				<Text
 					className="ml-3 text-lg text-center font-semibold"
 					style={{

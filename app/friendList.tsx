@@ -14,6 +14,9 @@ import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
+import Filters from "@components/Agora/Filters";
+
+export type FriendFilter = "all" | "friends" | "received" | "sent";
 
 const FriendList = () => {
 	const { member } = useData();
@@ -21,12 +24,10 @@ const FriendList = () => {
 	const { t } = useTranslation();
 
 	const [members, setMembers] = useState<Member[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [lastVisibleDoc, setLastVisibleDoc] = useState<any>(null);
 	const [hasMoreMembers, setHasMoreMembers] = useState(true);
-	const [filter, setFilter] = useState<"all" | "friends" | "received" | "sent">(
-		"all"
-	);
+	const [filter, setFilter] = useState<FriendFilter>("all");
 	const [searchQuery, setSearchQuery] = useState<string>("");
 
 	const cacheRef = useRef<
@@ -34,8 +35,8 @@ const FriendList = () => {
 	>({});
 
 	const fetchMembers = async (isRefreshing = false) => {
+		if (loading) return;
 		try {
-			// Si rafraîchissement, on réinitialise
 			if (isRefreshing) {
 				setLastVisibleDoc(null);
 				setMembers([]);
@@ -43,11 +44,9 @@ const FriendList = () => {
 			}
 			setLoading(true);
 
-			// Clé du cache basée sur le filtre et la page
 			const cacheKey = `${filter}-${lastVisibleDoc ? lastVisibleDoc.id : "first"}`;
 
 			if (cacheRef.current[cacheKey]) {
-				// Utilisation des données en cache
 				const { members: cachedMembers, lastVisible } = cacheRef.current[cacheKey];
 				setMembers((prevMembers) =>
 					isRefreshing ? cachedMembers : [...prevMembers, ...cachedMembers]
@@ -58,7 +57,6 @@ const FriendList = () => {
 				return;
 			}
 
-			// Récupération des membres via l'API
 			const { members: newMembers, lastVisible } = await getMembersPaginated(
 				lastVisibleDoc,
 				10,
@@ -73,8 +71,7 @@ const FriendList = () => {
 			);
 			setLastVisibleDoc(lastVisible);
 
-			// Mise en cache de la page
-			cacheRef.current[cacheKey] = { members: newMembers as any, lastVisible };
+			cacheRef.current[cacheKey] = { members: newMembers, lastVisible } as any;
 
 			setLoading(false);
 		} catch (error) {
@@ -83,7 +80,6 @@ const FriendList = () => {
 		}
 	};
 
-	// Recharge lors du changement de filtre
 	useEffect(() => {
 		fetchMembers(true);
 	}, [filter]);
@@ -94,7 +90,6 @@ const FriendList = () => {
 		}
 	};
 
-	// Filtrage côté client pour la recherche et le filtre
 	const filteredMembers = members.filter((m) => {
 		if (!member) return false;
 		const isCurrentUser = m.uid === member.uid;
@@ -112,122 +107,35 @@ const FriendList = () => {
 		return <ActivityIndicator size="large" color="#0000ff" />;
 	}
 
-	// Style commun pour les boutons de filtre
-	const filterStyle = {
-		paddingHorizontal: 16,
-		paddingVertical: 8,
-		borderRadius: 8,
-		marginHorizontal: 8,
-	};
-
 	return (
 		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
 			{/* Boutons de filtre */}
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "center",
-					marginBottom: 16,
-				}}
-			>
-				<Pressable
-					onPress={() => setFilter("all")}
-					style={{
-						backgroundColor:
-							filter === "all" ? theme.colors.primary : theme.colors.cardBackground,
-						...filterStyle,
-					}}
-				>
-					<Text
-						style={{
-							color: filter === "all" ? theme.colors.textSecondary : theme.colors.text,
-						}}
-					>
-						{t("all")}
-					</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => setFilter("friends")}
-					style={{
-						backgroundColor:
-							filter === "friends"
-								? theme.colors.primary
-								: theme.colors.cardBackground,
-						...filterStyle,
-					}}
-				>
-					<Text
-						style={{
-							color:
-								filter === "friends" ? theme.colors.textSecondary : theme.colors.text,
-							fontSize: 14,
-						}}
-					>
-						{t("friends")} ({member?.friends?.length || 0})
-					</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => setFilter("received")}
-					style={{
-						backgroundColor:
-							filter === "received"
-								? theme.colors.primary
-								: theme.colors.cardBackground,
-						...filterStyle,
-					}}
-				>
-					<Text
-						style={{
-							color:
-								filter === "received" ? theme.colors.textSecondary : theme.colors.text,
-						}}
-					>
-						{t("received")} ({member?.friendRequestsReceived?.length || 0})
-					</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => setFilter("sent")}
-					style={{
-						backgroundColor:
-							filter === "sent" ? theme.colors.primary : theme.colors.cardBackground,
-						...filterStyle,
-					}}
-				>
-					<Text
-						style={{
-							color:
-								filter === "sent" ? theme.colors.textSecondary : theme.colors.text,
-						}}
-					>
-						{t("sent")} ({member?.friendRequestsSent?.length || 0})
-					</Text>
-				</Pressable>
-			</View>
+			<Filters filter={filter} setFilter={setFilter} member={member} />
 
 			{/* Zone de recherche */}
 			<View
 				style={{
+					backgroundColor: theme.colors.cardBackground,
+					borderColor: theme.colors.textTertiary,
+					borderWidth: 1,
+					borderRadius: 16,
 					flexDirection: "row",
 					alignItems: "center",
-					justifyContent: "center",
+					justifyContent: "space-between",
+					paddingHorizontal: 16,
+					paddingVertical: 10,
 					marginBottom: 16,
-					width: "90%",
 					alignSelf: "center",
+					width: "95%",
 				}}
 			>
 				<TextInput
 					placeholder={t("search_friend")}
 					value={searchQuery}
 					onChangeText={setSearchQuery}
-					style={{
-						flex: 1,
-						borderRadius: 8,
-						padding: 8,
-						backgroundColor: theme.colors.cardBackground,
-					}}
+					style={{ flex: 1 }}
 				/>
-				<Iconify icon="mdi:search" size={24} color={theme.colors.text} />
+				<Iconify icon="mdi:search" size={24} color={theme.colors.textTertiary} />
 			</View>
 
 			{/* Liste des membres */}
@@ -245,27 +153,32 @@ const FriendList = () => {
 						</Text>
 					) : null
 				}
+				// Affichage du bouton "Voir plus" en bas de la liste
 				ListFooterComponent={
-					hasMoreMembers && !loading ? (
-						<Pressable
-							onPress={loadMoreMembers}
-							style={{
-								alignSelf: "center",
-								marginVertical: 16,
-								padding: 10,
-								backgroundColor: theme.colors.backgroundTertiary,
-							}}
-							className="w-11/12 rounded-full flex items-center justify-center py-4"
-						>
-							<Text style={{ color: theme.colors.text }}>{t("see_more")}</Text>
-						</Pressable>
-					) : loading ? (
-						<ActivityIndicator
-							size="large"
-							color="#0000ff"
-							style={{ marginVertical: 16 }}
-						/>
-					) : null
+					<View style={{ alignItems: "center", marginVertical: 16 }}>
+						{hasMoreMembers && !loading ? (
+							<Pressable
+								onPress={loadMoreMembers}
+								style={{
+									backgroundColor: theme.colors.backgroundTertiary,
+								}}
+								className="rounded-xl p-4 w-[95%] flex items-center justify-center"
+							>
+								<Text
+									style={{ color: theme.colors.primary }}
+									className="text-lg font-semibold"
+								>
+									{t("see_more")}
+								</Text>
+							</Pressable>
+						) : loading ? (
+							<ActivityIndicator
+								size="large"
+								color="#0000ff"
+								style={{ marginVertical: 16 }}
+							/>
+						) : null}
+					</View>
 				}
 				style={{ width: "95%", alignSelf: "center" }}
 			/>

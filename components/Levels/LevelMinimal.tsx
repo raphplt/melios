@@ -18,7 +18,7 @@ const LevelMinimal = ({ level }: { level: UserLevel }) => {
 			key={level.levelId}
 			className="my-2 flex flex-col gap-y-2 items-center justify-center w-1/2"
 		>
-			<Text style={{ color: theme.colors.text }} className="font-semibold text-sm">
+			<Text style={{ color: theme.colors.text }} className="font-semibold mb-2">
 				{/* {t("level")}: {level.id} */}
 				{associatedLevel?.name}
 			</Text>
@@ -26,7 +26,7 @@ const LevelMinimal = ({ level }: { level: UserLevel }) => {
 			<View className="flex items-center justify-center flex-row">
 				<Progress.Circle
 					progress={level.currentXp / level.nextLevelXp}
-					size={50}
+					size={70}
 					color={associatedLevel?.color ?? theme.colors.primary}
 					borderWidth={0}
 					thickness={5}
