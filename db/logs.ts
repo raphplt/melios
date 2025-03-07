@@ -102,6 +102,45 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
 };
 
 /**
+ * Récupère les logs de l'utilisateur connecté sur les 7 derniers jours
+ * @param options Options de récupération
+ * @returns Logs filtrés des 7 derniers jours
+ */
+export const getRecentHabitLogs = async ({ 
+  signal, 
+  forceRefresh 
+}: GetAllHabitLogsParams = {}): Promise<Log[]> => {
+  try {
+    // Récupérer tous les logs de l'utilisateur
+    const allLogs = await getAllHabitLogs({ signal, forceRefresh });
+    
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+	  return allLogs.map(log => {
+	if (!log.logs) return null;
+      // Filtrer les dailyLogs de chaque log
+      const recentDailyLogs = log.logs.filter(dailyLog => {
+        const logDate = ensureDate(dailyLog.date);
+        return logDate >= sevenDaysAgo;
+      });
+      
+      if (recentDailyLogs.length > 0) {
+        return {
+          ...log,
+          logs: recentDailyLogs
+        };
+      }
+      
+      return null;
+    }).filter(log => log !== null) as Log[];
+  } catch (error) {
+    console.error("Erreur lors de la récupération des logs récents :", error);
+    throw error;
+  }
+};
+
+/**
  * Récupère les logs pour une habitude donnée
  * @param habitId
  * @returns
@@ -208,91 +247,6 @@ export const getAllHabitLogs = async ({
 	} catch (error) {
 		console.error(
 			"Erreur lors de la récupération des logs in getAllHabitLogs :",
-			error
-		);
-		throw error;
-	}
-};
-
-/**
- * Récupère, par pagination, la liste des logs (habitsLogs),
- * classés par mostRecentLog desc, et filtre (ou convertit) les dailyLogs
- * pour ne garder que ceux au **nouveau** format { date, reactions }.
- */
-export const getAllUsersLogsPaginated = async (
-	pageSize: number = 10,
-	lastVisibleDoc: any = null,
-	confidentiality: string = "public",
-	friends: string[] = []
-) => {
-	try {
-		const dailyLogsCollectionRef = collection(db, "dailyLogs");
-
-		let logsQuery = query(
-			dailyLogsCollectionRef,
-			orderBy("date", "desc"),
-			limit(pageSize)
-		);
-
-		if (lastVisibleDoc) {
-			logsQuery = query(logsQuery, startAfter(lastVisibleDoc));
-		}
-
-		const querySnapshot = await getDocs(logsQuery);
-
-		if (querySnapshot.empty) {
-			return { logs: [], lastVisible: null, hasMore: false };
-		}
-
-		const rawLogs = await Promise.all(
-			querySnapshot.docs.map(async (docSnap) => {
-				const logData = docSnap.data();
-				if (!logData) return null;
-
-				const memberInfo = await getMemberProfileByUid(logData.uid);
-				const habitInfo: any = await getHabitById(logData.habitId);
-
-				if (!habitInfo || habitInfo.type === CategoryTypeSelect.negative) {
-					return null;
-				}
-
-				if (!memberInfo || memberInfo.activityConfidentiality === "private") {
-					return null;
-				}
-				if (
-					memberInfo.activityConfidentiality === "friends" &&
-					!friends.includes(memberInfo.uid)
-				) {
-					return null;
-				}
-
-				if (confidentiality === "friends" && !friends.includes(memberInfo.uid)) {
-					return null;
-				}
-
-				return {
-					id: docSnap.id,
-					uid: logData.uid,
-					habitId: logData.habitId,
-					date: logData.date,
-					reactions: logData.reactions || [],
-					member: memberInfo || null,
-					habit: habitInfo || null,
-				};
-			})
-		);
-
-		const filteredLogs = rawLogs.filter((log) => log !== null);
-		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-
-		return {
-			logs: filteredLogs,
-			lastVisible,
-			hasMore: querySnapshot.size === pageSize,
-		};
-	} catch (error) {
-		console.error(
-			"Erreur lors de la récupération des logs in getAllUsersLogsPaginated :",
 			error
 		);
 		throw error;

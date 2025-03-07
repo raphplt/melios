@@ -8,6 +8,8 @@ import CalendarHabits from "@components/Progressions/Calendar";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
 import Streak from "@components/Progressions/Streak";
 import GoalSection from "@components/Progressions/GoalSection";
+import Charts from "@components/Progressions/Charts";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Progression: React.FC = () => {
 	const { theme } = useTheme();
@@ -21,16 +23,18 @@ const Progression: React.FC = () => {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
-
-				<Streak />
-				<GoalSection />
-				<Levels />
-				<CalendarHabits />
-				<Chart />
-				<View
-					className="h-20 w-full"
-					style={{ backgroundColor: theme.colors.background }}
-				></View>
+				<LinearGradient
+					colors={["#ff9a9e", "#fad0c4", "#fbc2eb", theme.colors.cardBackground]}
+					start={{ x: 0, y: 0 }}
+					end={{ x: 1, y: 1 }}
+				>
+					<Streak />
+					<GoalSection />
+					<Levels />
+					<CalendarHabits />
+					<Charts />
+					<View className="h-20 w-full"></View>
+				</LinearGradient>
 			</ScrollView>
 
 			<ModalTutorial

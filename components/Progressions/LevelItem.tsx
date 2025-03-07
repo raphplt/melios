@@ -10,6 +10,7 @@ import { useNavigation } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { lightenColor } from "@utils/colors";
+import { BlurView } from "expo-blur";
 
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
@@ -34,11 +35,9 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 		[level.color, itemSize, theme.colors.background]
 	);
 
-	// Etat pour la progression animée
 	const [progress, setProgress] = useState(0);
 
 	useEffect(() => {
-		// On initialise la progression à 0 puis on la met à jour légèrement après le montage
 		const timer = setTimeout(() => {
 			setProgress(level.currentXp / level.nextLevelXp);
 		}, 100);
@@ -47,52 +46,65 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 
 	return (
 		<ZoomableView>
-			<Pressable
-				style={pressableStyle}
-				className="p-3 rounded-xl my-2"
-				onPress={handlePress}
+			<BlurView
+				intensity={100}
+				tint={theme.dark ? "dark" : "light"}
+				style={{
+					width: itemSize,
+					height: itemSize,
+				}}
+				className="p-3 rounded-xl my-2 overflow-hidden"
 			>
-				<View className="flex flex-col items-center justify-between h-full">
-					<View className="flex flex-row items-start gap-1 px-1">
-						<FontAwesome6
-							name={level.icon || "question"}
-							size={18}
-							color={level.color || theme.colors.primary}
-						/>
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="font-bold ml-2 w-10/12 text-base"
-						>
-							{t(level.slug)}
-						</Text>
-					</View>
-
-					<View className="flex flex-col items-center justify-center flex-1 gap-y-2">
-						<Text
-							className="text-sm font-semibold"
-							style={{
-								color: theme.colors.textTertiary,
-							}}
-						>
-							{t("level_title")} :
-						</Text>
-						<View className="flex items-center justify-center">
-							<Progress.Circle
-								progress={progress}
-								color={level.color || theme.colors.primary}
-								borderWidth={0}
-								unfilledColor={theme.colors.border}
-								size={80}
-								thickness={8}
-								animated
+				<Pressable className="" onPress={handlePress}>
+					<View className="flex flex-col items-center justify-between h-full">
+						<View className="flex flex-row items-center justify-between w-full gap-1 px-1">
+							<Text
+								style={{
+									color: theme.colors.text,
+								}}
+								className="font-bold text-[14px]"
+							>
+								{t(level.slug)}
+							</Text>
+							<FontAwesome6
+								name={level.icon || "question"}
+								size={18}
+								color={theme.colors.textTertiary}
 							/>
-							<Text className="absolute font-bold text-2xl">{level.currentLevel}</Text>
+						</View>
+
+						<View className="flex flex-col items-center justify-center flex-1 gap-y-2">
+							{/* <Text
+								className="text-[14px] font-semibold"
+								style={{
+									color: theme.colors.textTertiary,
+								}}
+							>
+								{t("level_title")}
+							</Text> */}
+							<View className="flex items-center justify-center">
+								<Progress.Circle
+									progress={progress}
+									color={level.color || theme.colors.primary}
+									borderWidth={0}
+									unfilledColor={theme.colors.border}
+									size={100}
+									thickness={10}
+									animated
+								/>
+								<Text
+									className="absolute font-bold text-2xl"
+									style={{
+										color: theme.colors.text,
+									}}
+								>
+									{level.currentLevel}
+								</Text>
+							</View>
 						</View>
 					</View>
-				</View>
-			</Pressable>
+				</Pressable>
+			</BlurView>
 		</ZoomableView>
 	);
 };

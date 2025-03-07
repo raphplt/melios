@@ -32,15 +32,15 @@ const CalendarHabits = () => {
 	const colors = useMemo(() => {
 		return theme.dark
 			? {
-					agendaKnobColor: "#768390",
-					calendarBackground: theme.colors.background,
-					dayTextColor: "#f1f1f1",
-					monthTextColor: "#ffffff",
+					agendaKnobColor: "#000000",
+					calendarBackground: "transparent",
+					dayTextColor: "#000000",
+					monthTextColor: "#000000",
 					arrowColor: theme.colors.primary,
 			  }
 			: {
-					agendaKnobColor: "#f2f2f2",
-					calendarBackground: "#ffffff",
+					agendaKnobColor: "#000000",
+					calendarBackground: "transparent",
 					dayTextColor: "#000000",
 					monthTextColor: "#000000",
 					arrowColor: theme.colors.primary,

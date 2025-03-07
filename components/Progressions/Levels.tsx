@@ -43,7 +43,7 @@ export default function Levels() {
 				setShow={setShowLevels}
 				icon="levels"
 			>
-				<View className="w-[94%] mx-auto">
+				<View className="w-[94%] mx-auto mb-2">
 					<ScrollView
 						contentContainerStyle={{
 							flexDirection: "row",

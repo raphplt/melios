@@ -4,6 +4,7 @@ import { View, Text, Pressable, Dimensions } from "react-native";
 import { Iconify } from "react-native-iconify";
 import ModalAddGoal from "./ModalAddGoal";
 import { useTranslation } from "react-i18next";
+import { BlurView } from "expo-blur";
 
 export default function AddGoal() {
 	const { theme } = useTheme();
@@ -19,33 +20,37 @@ export default function AddGoal() {
 				width: width,
 			}}
 		>
-			<Pressable
-				className="mx-auto flex items-center justify-start flex-row px-2 py-1  h-14"
+			<BlurView
+				intensity={100}
+				tint={theme.dark ? "dark" : "light"}
 				style={{
-					flexGrow: 1,
-					borderStyle: "dashed",
-					borderRadius: 16,
-					borderWidth: 2,
-					borderColor: theme.colors.border,
 					width: width * 0.95,
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "center",
 				}}
-				onPress={() => setVisible(true)}
+				className="mx-auto flex items-center justify-center flex-row px-2 py-1 h-14 rounded-xl overflow-hidden"
 			>
-				<Text
-					style={{
-						color: theme.colors.primary,
-					}}
-					className="text-[14px] font-semibold mx-2"
+				<Pressable
+					onPress={() => setVisible(true)}
+					className="flex flex-row items-center justify-center w-full h-full"
 				>
-					{t("define_goal")}
-				</Text>
-				<Iconify
-					icon="charm:arrow-right"
-					size={18}
-					color={theme.colors.primary}
-					style={{ marginLeft: "auto" }}
-				/>
-			</Pressable>
+					<Text
+						style={{
+							color: theme.colors.primary,
+						}}
+						className="text-[14px] font-semibold mx-2"
+					>
+						{t("define_goal")}
+					</Text>
+					<Iconify
+						icon="charm:arrow-right"
+						size={18}
+						color={theme.colors.primary}
+						style={{ marginLeft: "auto" }}
+					/>
+				</Pressable>
+			</BlurView>
 
 			<ModalAddGoal visible={visible} setVisible={setVisible} />
 		</View>

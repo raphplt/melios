@@ -37,7 +37,7 @@ const AllLogs = () => {
 				lastVisible: newLastVisible,
 				hasMore: moreLogs,
 			} = await getAllDailyLogsPaginated(
-				10,
+				20,
 				isRefreshing ? null : lastVisible,
 				confidentiality,
 				member?.friends || []
