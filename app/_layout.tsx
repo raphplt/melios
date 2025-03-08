@@ -96,7 +96,11 @@ function MainNavigator() {
 					style={theme.dark ? "light" : "dark"}
 					backgroundColor={"transparent"}
 				/>
-				<Stack>
+				<Stack
+					screenOptions={{
+						headerShadowVisible: false,
+					}}
+				>
 					<Stack.Screen
 						name="(navbar)"
 						options={{ headerShown: false, title: "" }}
@@ -174,6 +178,7 @@ function MainNavigator() {
 						name="workSession"
 						options={{ title: "Session de travail", headerShown: false }}
 					/>
+					<Stack.Screen name="articles" options={{ title: "Articles" }} />
 					<Stack.Screen
 						name="manageNotifications"
 						options={{ title: "Gestion des notifications", headerShown: false }}

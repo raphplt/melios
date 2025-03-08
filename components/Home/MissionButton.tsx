@@ -21,16 +21,16 @@ const MissionButton = () => {
 		>
 			<View className="flex flex-row items-center gap-2">
 				<Pressable
-					className="flex flex-row items-center justify-center px-4 py-2"
+					className="flex flex-row items-center justify-center px-4 py-[10px]"
 					onPress={() => navigation.navigate("dailyRewards")}
 				>
 					<Iconify
 						icon="mdi:rocket"
-						color={isDayTime ? "black" : "white"}
+						color={isDayTime ? theme.colors.primary : "white"}
 						size={20}
 					/>
 					<Text
-						style={{ color: isDayTime ? "black" : "white" }}
+						style={{ color: isDayTime ? theme.colors.primary : "white" }}
 						className="text-[14px] font-semibold ml-2"
 					>
 						{t("missions")}

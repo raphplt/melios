@@ -5,7 +5,6 @@ import { Text, View } from "react-native";
 import { Iconify } from "react-native-iconify";
 import SubSectionLink from "./SubSectionLink";
 import { useData } from "@context/DataContext";
-import ShareApp from "./ShareApp";
 import FriendPreview from "./FriendPreview";
 
 const MainSubSections = () => {
@@ -13,9 +12,9 @@ const MainSubSections = () => {
 	const { member } = useData();
 	return (
 		<View className="flex flex-col items-center justify-center w-full">
-			<SubSectionLink href="classement">
+			<SubSectionLink href="articles">
 				<Iconify
-					icon="material-symbols:trophy"
+					icon="material-symbols:article"
 					size={24}
 					color={theme.colors.primary}
 				/>
@@ -25,7 +24,7 @@ const MainSubSections = () => {
 						color: theme.colors.primary,
 					}}
 				>
-					{t("access_ranking")}
+					{t("articles")}
 				</Text>
 			</SubSectionLink>
 			<SubSectionLink href="friendList">

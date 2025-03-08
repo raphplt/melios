@@ -27,12 +27,18 @@ const StreakBox = () => {
 		<GradientBox position={{ bottom: 20, left: 20 }} colors={colors}>
 			<View className="flex flex-row items-center gap-2">
 				<Pressable
-					className="flex flex-row items-center justify-center px-4 py-2"
+					className="flex flex-row items-center justify-center px-4 py-[10px]"
 					onPress={() => navigation.navigate("progression")}
 				>
 					<Iconify
-						icon="mdi:calendar"
-						color={isDayTime ? "black" : "white"}
+						icon="bi:fire"
+						color={
+							isDayTime
+								? streakUpdatedToday
+									? theme.colors.orangePrimary
+									: "black"
+								: "white"
+						}
 						size={20}
 					/>
 					<Text

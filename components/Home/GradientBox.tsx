@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import ZoomableView from "@components/Shared/ZoomableView";
 
 type Props = {
-	colors: [string, string, ...string[]];
+	colors?: [string, string, ...string[]];
 	position: {
 		top?: number;
 		left?: number;
@@ -19,10 +19,13 @@ type Props = {
 const GradientBox = ({ colors, position, children }: Props) => {
 	const { isDayTime } = useIndex();
 
+	const colorsSafe: [string, string, ...string[]] =
+		colors || (isDayTime ? ["#f5f5f5", "#f5f5f5"] : ["#1a1a1a", "#1a1a1a"]);
+
 	return (
 		<View style={[position, styles.container]}>
 			<ZoomableView>
-				<LinearGradient colors={colors} style={styles.gradientBorder}>
+				<LinearGradient colors={colorsSafe} style={styles.gradientBorder}>
 					<View style={styles.innerContainer}>
 						<BlurView
 							intensity={100}
