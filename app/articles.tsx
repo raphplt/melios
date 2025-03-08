@@ -12,10 +12,14 @@ import { Post } from "@type/post";
 import { supabase } from "@utils/supabase";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 export default function Articles() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const navigation: NavigationProp<ParamListBase> = useNavigation();
+
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -79,10 +83,12 @@ export default function Articles() {
 		flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
 	};
 
+	// console.log("post 0", posts[0]);
+
 	const renderItem = ({ item }: { item: Post }) => (
 		<TouchableOpacity
 			onPress={() => {
-				/* Navigation vers l'article complet peut être implémentée ici */
+				navigation.navigate("articleDetail", { article: item });
 			}}
 		>
 			<View

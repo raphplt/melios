@@ -179,6 +179,7 @@ function MainNavigator() {
 						options={{ title: "Session de travail", headerShown: false }}
 					/>
 					<Stack.Screen name="articles" options={{ title: "Articles" }} />
+					<Stack.Screen name="articleDetail" options={{ title: "Article" }} />
 					<Stack.Screen
 						name="manageNotifications"
 						options={{ title: "Gestion des notifications", headerShown: false }}
@@ -188,11 +189,6 @@ function MainNavigator() {
 						name="cosmeticShop"
 						options={{
 							title: "Boutique cosmétique",
-							headerShadowVisible: false,
-							headerTitleStyle: {
-								fontFamily: "BaskervilleBold",
-								fontSize: 18,
-							},
 						}}
 					/>
 				</Stack>
