@@ -83,8 +83,6 @@ export default function Articles() {
 		flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
 	};
 
-	// console.log("post 0", posts[0]);
-
 	const renderItem = ({ item }: { item: Post }) => (
 		<TouchableOpacity
 			onPress={() => {
