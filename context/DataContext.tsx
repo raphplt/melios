@@ -31,6 +31,17 @@ import { Streak } from "@type/streak";
 import { getUserStreak, initializeStreak } from "@db/streaks";
 import { Pack } from "@type/pack";
 import { genericLevels } from "@constants/levels";
+import { tasks } from "@utils/tasks";
+
+// Add this for Task management
+export interface DailyTask {
+	text: string;
+	completed: boolean;
+	slug: string;
+	validated: boolean;
+}
+
+const DAILY_REWARD_KEY = "CLAIMED_REWARD_DATE";
 
 interface DataProviderProps {
 	children: ReactNode;
@@ -58,10 +69,74 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 	const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
 	const [streak, setStreak] = useState<Streak | null>(null);
 
-	// Progression
+	const [dailyTasks, setDailyTasks] = useState<DailyTask[]>(tasks);
+	const [rewardClaimed, setRewardClaimed] = useState<boolean>(false);
+
 	const [todayScore, setTodayScore] = useState<number>(0);
 
 	const { AskNotification } = permissions();
+
+	// Check if reward was claimed today
+	useEffect(() => {
+		const checkRewardClaimed = async () => {
+			try {
+				const storedDate = await AsyncStorage.getItem(DAILY_REWARD_KEY);
+				if (storedDate) {
+					const claimedDate = new Date(storedDate);
+					const today = new Date();
+					if (
+						claimedDate.getFullYear() === today.getFullYear() &&
+						claimedDate.getMonth() === today.getMonth() &&
+						claimedDate.getDate() === today.getDate()
+					) {
+						setRewardClaimed(true);
+					}
+				}
+			} catch (error) {
+				console.error("Error reading reward claim date", error);
+			}
+		};
+
+		checkRewardClaimed();
+	}, []);
+
+	// Update tasks based on user actions
+	useEffect(() => {
+		const updateDailyTasks = async () => {
+			// Update habit completion task
+			const habitTaskCompleted = completedHabitsToday.length >= 3;
+
+			// Check if user has supported a member today
+			const hasSupportedMember = async () => {
+				const latestReaction = await AsyncStorage.getItem("LATEST_REACTION");
+				if (!latestReaction) return false;
+				const latestReactionDate = new Date(latestReaction);
+				const today = new Date();
+				return (
+					latestReactionDate.getDate() === today.getDate() &&
+					latestReactionDate.getMonth() === today.getMonth() &&
+					latestReactionDate.getFullYear() === today.getFullYear()
+				);
+			};
+
+			const hasSupported = await hasSupportedMember();
+
+			// Update task completion status
+			setDailyTasks((prev) =>
+				prev.map((task) => {
+					if (task.slug === "complete_habits") {
+						return { ...task, completed: habitTaskCompleted };
+					}
+					if (task.slug === "support_member") {
+						return { ...task, completed: hasSupported };
+					}
+					return task;
+				})
+			);
+		};
+
+		updateDailyTasks();
+	}, [completedHabitsToday]);
 
 	useEffect(() => {
 		const now = moment();
@@ -184,6 +259,48 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 		}
 	}, [user, genericLevels]);
 
+	// Function to validate a task
+	const validateTask = (slug: string) => {
+		setDailyTasks((prev) =>
+			prev.map((task) =>
+				task.slug === slug ? { ...task, validated: true } : task
+			)
+		);
+	};
+
+	// Function to claim reward
+	const claimDailyReward = async () => {
+		try {
+			await AsyncStorage.setItem(DAILY_REWARD_KEY, new Date().toISOString());
+			setRewardClaimed(true);
+
+			// Reset task validation status for next day
+			setDailyTasks((prev) => prev.map((task) => ({ ...task, validated: false })));
+		} catch (error) {
+			console.error("Error saving reward claim date", error);
+		}
+	};
+
+	// Check if enough tasks are completed for reward
+	const canClaimReward = useMemo(() => {
+		if (rewardClaimed) return false;
+
+		// Count required tasks (first 3)
+		const requiredTasks = dailyTasks.slice(0, 3);
+		const completedAndValidatedTasks = requiredTasks.filter(
+			(task) => task.completed && task.validated
+		);
+
+		return completedAndValidatedTasks.length === requiredTasks.length;
+	}, [dailyTasks, rewardClaimed]);
+
+	// Check if there are tasks completed but not validated
+	const hasUnvalidatedCompletedTasks = useMemo(() => {
+		if (rewardClaimed) return false;
+
+		return dailyTasks.some((task) => task.completed && !task.validated);
+	}, [dailyTasks, rewardClaimed]);
+
 	const contextValue = useMemo(
 		() => ({
 			date,
@@ -213,6 +330,13 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 			setSelectedLevel,
 			selectedPack,
 			setSelectedPack,
+			dailyTasks,
+			setDailyTasks,
+			validateTask,
+			rewardClaimed,
+			claimDailyReward,
+			canClaimReward,
+			hasUnvalidatedCompletedTasks,
 		}),
 		[
 			date,
@@ -230,6 +354,10 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 			usersLevels,
 			selectedLevel,
 			selectedPack,
+			dailyTasks,
+			rewardClaimed,
+			canClaimReward,
+			hasUnvalidatedCompletedTasks,
 		]
 	);
 

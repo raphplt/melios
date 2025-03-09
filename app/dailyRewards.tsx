@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	ScrollView,
 	StatusBar,
@@ -14,112 +14,42 @@ import { Ionicons } from "@expo/vector-icons";
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
 import MoneyMelios from "@components/Svg/MoneyMelios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ModalWrapperSimple from "@components/Modals/ModalWrapperSimple";
 import CachedImage from "@components/Shared/CachedImage";
 import { Iconify } from "react-native-iconify";
 import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
 
-const DAILY_REWARD_KEY = "CLAIMED_REWARD_DATE";
-
 const DailyRewards: React.FC = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
-	const { completedHabitsToday } = useData();
 	const { addRewardPoints } = usePoints();
+	const {
+		dailyTasks,
+		validateTask,
+		rewardClaimed,
+		claimDailyReward,
+		canClaimReward,
+	} = useData();
 
-
-	// Les 3 missions à accomplir pour récupérer la récompense
-	const [tasks, setTasks] = useState([
-		{ text: "Se connecter à Melios", completed: true, slug: "login" },
-		{ text: "Compléter 3 habitudes", completed: false, slug: "complete_habits" },
-		{
-			text: "Supporter un membre dans l'Agora",
-			completed: false,
-			slug: "support_member",
-		},
-		{
-			text: "Faire une session de travail",
-			completed: false,
-			slug: "work_session",
-		},
-	]);
-
-	const [rewardClaimed, setRewardClaimed] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 
-	const hasSupportedMemberToday = async () => {
-		const latestReaction = await AsyncStorage.getItem("LATEST_REACTION");
-		if (!latestReaction) return false;
-		const latestReactionDate = new Date(latestReaction);
-		const today = new Date();
-		return (
-			latestReactionDate.getDate() === today.getDate() &&
-			latestReactionDate.getMonth() === today.getMonth() &&
-			latestReactionDate.getFullYear() === today.getFullYear()
-		);
-	};
+	// Count validated tasks (first 3)
+	const validatedTasksCount = dailyTasks
+		.slice(0, 3)
+		.filter((task) => task.validated && task.completed).length;
 
-	// Vérifier en asynchrone si la récompense a déjà été claimée aujourd'hui
-	useEffect(() => {
-		const checkRewardClaimed = async () => {
-			try {
-				const storedDate = await AsyncStorage.getItem(DAILY_REWARD_KEY);
-				if (storedDate) {
-					const claimedDate = new Date(storedDate);
-					const today = new Date();
-					if (
-						claimedDate.getFullYear() === today.getFullYear() &&
-						claimedDate.getMonth() === today.getMonth() &&
-						claimedDate.getDate() === today.getDate()
-					) {
-						setRewardClaimed(true);
-					}
-				}
-			} catch (error) {
-				console.error("Error reading reward claim date", error);
-			}
-		};
-
-		checkRewardClaimed();
-	}, []);
-
-	useEffect(() => {
-		// Mise à jour de la tâche "Compléter 3 habitudes"
-		setTasks((prev) => {
-			const newTasks = [...prev];
-			newTasks[1].completed = completedHabitsToday.length >= 3;
-			return newTasks;
-		});
-
-		// Vérification de la tâche "Supporter un membre"
-		hasSupportedMemberToday().then((hasSupported) => {
-			setTasks((prev) => {
-				const newTasks = [...prev];
-				newTasks[2].completed = hasSupported;
-				return newTasks;
-			});
-		});
-	}, [completedHabitsToday]);
-
-	// Calcul du nombre de missions (sur les 3 premières) accomplies
-	const missionsCompleted = tasks
+	// Count completed tasks (first 3)
+	const completedTasksCount = dailyTasks
 		.slice(0, 3)
 		.filter((task) => task.completed).length;
-	const rewardAvailable = missionsCompleted === 3 && !rewardClaimed;
 
 	const claimReward = async () => {
-		if (rewardAvailable) {
-			setRewardClaimed(true);
+		if (canClaimReward) {
 			setShowModal(true);
+			await claimDailyReward();
 			setRewards("rewards", 3); // database
-			addRewardPoints(3) // local (for real time)
-			try {
-				await AsyncStorage.setItem(DAILY_REWARD_KEY, new Date().toISOString());
-			} catch (error) {
-				console.error("Error saving reward claim date", error);
-			}
+			addRewardPoints(3); // local (for real time)
 		}
 	};
 
@@ -157,7 +87,7 @@ const DailyRewards: React.FC = () => {
 								className="text-lg font-bold"
 								style={{ color: theme.colors.textTertiary }}
 							>
-								{missionsCompleted}/3
+								{validatedTasksCount}/3
 							</Text>
 							<View className="flex flex-row items-center gap-2">
 								<Text
@@ -170,7 +100,7 @@ const DailyRewards: React.FC = () => {
 							</View>
 						</View>
 						<Progress.Bar
-							progress={missionsCompleted / 3}
+							progress={validatedTasksCount / 3}
 							width={Dimensions.get("window").width * 0.85}
 							color={theme.colors.primary}
 							borderRadius={10}
@@ -194,7 +124,7 @@ const DailyRewards: React.FC = () => {
 									color: theme.colors.primary,
 								}}
 							>
-								{t("reward_claimed_title") || "Récompense récupérée !"}
+								{t("reward_claimed_title") || "Récompense récupérée !"}
 							</Text>
 						</View>
 					</View>
@@ -204,7 +134,7 @@ const DailyRewards: React.FC = () => {
 			{/* Zone des missions */}
 			{!rewardClaimed ? (
 				<View className="py-4 flex flex-col gap-4">
-					{tasks.map((task, index) => (
+					{dailyTasks.map((task, index) => (
 						<View
 							key={index}
 							className="flex-row items-center mx-4 rounded-xl overflow-hidden shadow-lg"
@@ -212,19 +142,45 @@ const DailyRewards: React.FC = () => {
 								borderWidth: 1,
 								borderColor: theme.colors.border,
 								backgroundColor: theme.colors.cardBackground,
+								opacity: task.completed ? 1 : 0.7,
 							}}
 						>
 							<View
 								className="h-full"
-								style={{ width: 6, backgroundColor: theme.colors.primary }}
+								style={{
+									width: 6,
+									backgroundColor: task.validated
+										? theme.colors.primary
+										: task.completed
+										? theme.colors.greenPrimary
+										: theme.colors.border,
+								}}
 							/>
 							<View className="flex-row items-center flex-1 p-4">
 								<Ionicons
-									name={task.completed ? "checkmark-circle" : "ellipse-outline"}
+									name={
+										task.validated
+											? "checkmark-circle"
+											: task.completed
+											? "checkbox-outline"
+											: "ellipse-outline"
+									}
 									size={30}
-									color={theme.colors.primary}
+									color={
+										task.validated
+											? theme.colors.primary
+											: task.completed
+											? theme.colors.greenPrimary
+											: theme.colors.textTertiary
+									}
 								/>
-								<Text className="ml-3 text-base" style={{ color: theme.colors.text }}>
+								<Text
+									className="ml-3 text-base"
+									style={{
+										color: theme.colors.text,
+										fontWeight: task.completed ? "bold" : "normal",
+									}}
+								>
 									{task.text}
 								</Text>
 							</View>
@@ -235,13 +191,26 @@ const DailyRewards: React.FC = () => {
 										className="text-base font-bold"
 										style={{ color: theme.colors.text }}
 									>
-										{completedHabitsToday.length}/3
+										{Math.min(3, dailyTasks[1].completed ? 3 : 0)}/3
 									</Text>
 								</View>
 							)}
+
+							{/* Validation button for completed tasks */}
+							{task.completed && !task.validated && (
+								<TouchableOpacity
+									onPress={() => validateTask(task.slug)}
+									className="px-3 py-2 mr-2 rounded-lg"
+									style={{ backgroundColor: theme.colors.greenPrimary }}
+								>
+									<Text style={{ color: "#fff", fontWeight: "bold" }}>
+										{t("validate") || "Valider"}
+									</Text>
+								</TouchableOpacity>
+							)}
 						</View>
 					))}
-					{rewardAvailable && (
+					{canClaimReward && (
 						<TouchableOpacity
 							onPress={claimReward}
 							className="mx-4 rounded-xl p-4 items-center shadow-lg"
@@ -266,7 +235,7 @@ const DailyRewards: React.FC = () => {
 						style={{ color: theme.colors.textTertiary }}
 					>
 						{t("reward_claimed_message") ||
-							"Bravo, tu as complété toutes tes missions quotidiennes !"}
+							"Bravo, tu as complété toutes tes missions quotidiennes !"}
 					</Text>
 					<CachedImage
 						imagePath="images/illustrations/character2.png"
@@ -282,7 +251,7 @@ const DailyRewards: React.FC = () => {
 						className="text-2xl font-bold mt-2"
 						style={{ color: theme.colors.primary }}
 					>
-						{t("congratulations_reward") || "Félicitations !"}
+						{t("congratulations_reward") || "Félicitations !"}
 					</Text>
 				</View>
 				<Text
@@ -290,7 +259,7 @@ const DailyRewards: React.FC = () => {
 					style={{ color: theme.colors.text }}
 				>
 					{t("reward_modal_message") ||
-						"Tu viens de recevoir ta récompense quotidienne. Continue comme ça !"}
+						"Tu viens de recevoir ta récompense quotidienne. Continue comme ça !"}
 				</Text>
 				<View className="flex flex-row items-center justify-center mb-6 gap-x-2">
 					<Text className="text-lg font-bold" style={{ color: theme.colors.text }}>

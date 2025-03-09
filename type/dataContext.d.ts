@@ -36,4 +36,11 @@ interface DataContextType {
 	setSelectedLevel: React.Dispatch<React.SetStateAction<CombinedLevel | null>>;
 	selectedPack: Pack | null;
 	setSelectedPack: React.Dispatch<React.SetStateAction<Pack | null>>;
+	dailyTasks: DailyTask[];
+	setDailyTasks: React.Dispatch<React.SetStateAction<DailyTask[]>>;
+	validateTask: (slug: string) => void;
+	rewardClaimed: boolean;
+	claimDailyReward: () => Promise<void>;
+	canClaimReward: boolean;
+	hasUnvalidatedCompletedTasks: boolean;
 }
