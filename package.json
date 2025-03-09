@@ -86,7 +86,9 @@
     "react-native-wheely": "^0.6.0",
     "react-navigation": "^5.0.0",
     "tinycolor2": "^1.6.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "react-native-view-shot": "~4.0.3",
+    "expo-sharing": "~13.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

@@ -10,6 +10,7 @@ import Streak from "@components/Progressions/Streak";
 import GoalSection from "@components/Progressions/GoalSection";
 import Charts from "@components/Progressions/Charts";
 import { LinearGradient } from "expo-linear-gradient";
+import ShareMonthlyRecap from "@components/Progressions/ShareMonthlyRecap";
 
 const Progression: React.FC = () => {
 	const { theme } = useTheme();
@@ -29,6 +30,7 @@ const Progression: React.FC = () => {
 					end={{ x: 1, y: 1 }}
 				>
 					<Streak />
+					<ShareMonthlyRecap />
 					<GoalSection />
 					<Levels />
 					<CalendarHabits />

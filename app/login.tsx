@@ -4,7 +4,6 @@ import {
 	ScrollView,
 	StatusBar,
 	Text,
-	Image,
 	TouchableOpacity,
 	Dimensions,
 	ImageBackground,
@@ -65,7 +64,7 @@ export default function Login() {
 	const signInWithGoogle = async () => {
 		try {
 			await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-			const userInfo = await GoogleSignin.signIn();
+			await GoogleSignin.signIn();
 
 			const { idToken } = await GoogleSignin.getTokens();
 			const googleCredential = GoogleAuthProvider.credential(idToken);
@@ -76,31 +75,31 @@ export default function Login() {
 
 			const membersCollectionRef = collection(db, "members");
 
-			let memberDocRef;
 			try {
-				memberDocRef = await addDoc(membersCollectionRef, {
+				await addDoc(membersCollectionRef, {
 					uid: user.uid,
 					habits: [],
-					nom: user.displayName, // Utiliser le nom du compte Google
+					nom: user.displayName,
 				});
-			} catch (error: any) {
-				throw new Error("Failed to add user data to Firestore: " + error.message);
+			} catch (error) {
+				if (error instanceof Error)
+					throw new Error("Failed to add user data to Firestore: " + error.message);
 			}
 
 			try {
 				await AsyncStorage.setItem("user", JSON.stringify(user));
 				await AsyncStorage.setItem("isAuthenticated", "true");
 				await AsyncStorage.setItem("lastFetchDate", "0");
-			} catch (error: any) {
-				throw new Error(
-					"Failed to save user data to AsyncStorage: " + String(error.message)
-				);
+			} catch (error) {
+				if (error instanceof Error)
+					throw new Error(
+						"Failed to save user data to AsyncStorage: " + String(error.message)
+					);
 			}
 
 			navigation.navigate("(navbar)");
 		} catch (error) {
-			console.error("Erreur Google Signin:", error);
-			// setError("Erreur Google Signin");
+			console.log("Erreur Google Signin:", error);
 		}
 	};
 

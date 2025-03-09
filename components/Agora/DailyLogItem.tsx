@@ -101,10 +101,7 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 								<AnimatedPlaceholder marginRight={8} width={20} height={20} />
 							}
 						/>
-						<Text
-							className="text-base font-bold mr-1"
-							style={{ color: theme.colors.text }}
-						>
+						<Text className="text-base font-bold mr-1 text-black">
 							{item.user?.nom || "??"}
 						</Text>
 					</BlurView>
@@ -120,9 +117,8 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 							color={item.habit?.color ?? theme.colors.text}
 						/>
 						<Text
-							className="text-center text-sm font-semibold"
+							className="text-center text-sm font-semibold text-black"
 							numberOfLines={2}
-							style={{ color: theme.colors.text }}
 						>
 							{reduceText(item.habit?.name, 25) || ""}
 						</Text>
