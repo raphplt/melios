@@ -44,8 +44,8 @@ export default function AddGoal() {
 						{t("define_goal")}
 					</Text>
 					<Iconify
-						icon="charm:arrow-right"
-						size={18}
+						icon="ic:baseline-plus"
+						size={24}
 						color={theme.colors.primary}
 						style={{ marginLeft: "auto" }}
 					/>

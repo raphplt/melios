@@ -4,7 +4,7 @@ import { useTheme } from "@context/ThemeContext";
 
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 
 export default function ActivitiesContainer() {
 	const { habits } = useData();
@@ -17,7 +17,7 @@ export default function ActivitiesContainer() {
 
 	// Filter positives habits only
 	const filteredHabits = habits.filter(
-		(habit) => habit.type !== CategoryTypeSelect.negative
+		(habit) => habit.type !== HabitType.negative
 	);
 
 	return (

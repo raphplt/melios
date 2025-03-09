@@ -6,7 +6,7 @@ import { useSelect } from "@context/SelectContext";
 import { customMessage } from "@utils/select/customMessage";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 
 export default function HabitsType() {
 	const { theme } = useTheme();
@@ -30,39 +30,39 @@ export default function HabitsType() {
 						<Iconify
 							size={24}
 							icon="lucide:smile-plus"
-							color={type === CategoryTypeSelect.positive ? "#fff" : theme.colors.text}
+							color={type === HabitType.positive ? "#fff" : theme.colors.text}
 						/>
 					}
 					name={t("positive")}
 					bgColorSelected={theme.colors.greenPrimary}
-					onPress={() => setType(CategoryTypeSelect.positive)}
-					typeHabit={CategoryTypeSelect.positive}
+					onPress={() => setType(HabitType.positive)}
+					typeHabit={HabitType.positive}
 				/>
 				<HabitTypeItem
 					icon={
 						<Iconify
 							size={24}
 							icon="ant-design:stop-outlined"
-							color={type === CategoryTypeSelect.negative ? "#fff" : theme.colors.text}
+							color={type === HabitType.negative ? "#fff" : theme.colors.text}
 						/>
 					}
 					name={t("negative")}
 					bgColorSelected={theme.colors.redPrimary}
-					onPress={() => setType(CategoryTypeSelect.negative)}
-					typeHabit={CategoryTypeSelect.negative}
+					onPress={() => setType(HabitType.negative)}
+					typeHabit={HabitType.negative}
 				/>
 				<HabitTypeItem
 					icon={
 						<Iconify
 							size={24}
 							icon="mdi:repeat"
-							color={type === CategoryTypeSelect.routine ? "#fff" : theme.colors.text}
+							color={type === HabitType.routine ? "#fff" : theme.colors.text}
 						/>
 					}
 					name={t("routine")}
 					bgColorSelected={theme.colors.bluePrimary}
-					onPress={() => setType(CategoryTypeSelect.routine)}
-					typeHabit={CategoryTypeSelect.routine}
+					onPress={() => setType(HabitType.routine)}
+					typeHabit={HabitType.routine}
 				/>
 			</View>
 			<View

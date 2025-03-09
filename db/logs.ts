@@ -21,7 +21,7 @@ import {
 import { db, auth } from ".";
 import { getMemberProfileByUid } from "./member";
 import { getHabitById } from "./userHabit";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 import { DailyLog, Log } from "@type/log";
 
 export const REACTION_TYPES = ["flame", "heart", "like"];
@@ -106,38 +106,40 @@ export const setHabitLog = async (habitId: string, logDate: string) => {
  * @param options Options de récupération
  * @returns Logs filtrés des 7 derniers jours
  */
-export const getRecentHabitLogs = async ({ 
-  signal, 
-  forceRefresh 
+export const getRecentHabitLogs = async ({
+	signal,
+	forceRefresh,
 }: GetAllHabitLogsParams = {}): Promise<Log[]> => {
-  try {
-    // Récupérer tous les logs de l'utilisateur
-    const allLogs = await getAllHabitLogs({ signal, forceRefresh });
-    
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
-	  return allLogs.map(log => {
-	if (!log.logs) return null;
-      // Filtrer les dailyLogs de chaque log
-      const recentDailyLogs = log.logs.filter(dailyLog => {
-        const logDate = ensureDate(dailyLog.date);
-        return logDate >= sevenDaysAgo;
-      });
-      
-      if (recentDailyLogs.length > 0) {
-        return {
-          ...log,
-          logs: recentDailyLogs
-        };
-      }
-      
-      return null;
-    }).filter(log => log !== null) as Log[];
-  } catch (error) {
-    console.error("Erreur lors de la récupération des logs récents :", error);
-    throw error;
-  }
+	try {
+		// Récupérer tous les logs de l'utilisateur
+		const allLogs = await getAllHabitLogs({ signal, forceRefresh });
+
+		const sevenDaysAgo = new Date();
+		sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+		return allLogs
+			.map((log) => {
+				if (!log.logs) return null;
+				// Filtrer les dailyLogs de chaque log
+				const recentDailyLogs = log.logs.filter((dailyLog) => {
+					const logDate = ensureDate(dailyLog.date);
+					return logDate >= sevenDaysAgo;
+				});
+
+				if (recentDailyLogs.length > 0) {
+					return {
+						...log,
+						logs: recentDailyLogs,
+					};
+				}
+
+				return null;
+			})
+			.filter((log) => log !== null) as Log[];
+	} catch (error) {
+		console.error("Erreur lors de la récupération des logs récents :", error);
+		throw error;
+	}
 };
 
 /**
@@ -381,7 +383,7 @@ export const getAllDailyLogsPaginated = async (
 			});
 
 			// -- Filtrage de base (exclure négatif, privé, etc.)
-			if (!habitInfo || habitInfo.type === CategoryTypeSelect.negative) continue;
+			if (!habitInfo || habitInfo.type === HabitType.negative) continue;
 			if (!memberInfo || memberInfo.activityConfidentiality === "private")
 				continue;
 

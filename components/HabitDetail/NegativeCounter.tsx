@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { useHabits } from "@context/HabitsContext";
 import { useTheme } from "@context/ThemeContext";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
@@ -94,7 +94,7 @@ const NegativeCounter: React.FC = () => {
 	const dayStyle = createProgressStyle(dayProgress, 30);
 	const monthStyle = createProgressStyle(monthProgress, 12);
 
-	if (!currentHabit || currentHabit.type !== CategoryTypeSelect.negative) {
+	if (!currentHabit || currentHabit.type !== HabitType.negative) {
 		return null;
 	}
 

@@ -3,7 +3,7 @@ import { FlatList, View, Text, Pressable } from "react-native";
 import CategoryItem from "../Items/CategoryItem";
 import { useSelect } from "@context/SelectContext";
 import { useState, useEffect } from "react";
-import { CategoryType, CategoryTypeSelect } from "@utils/category.type";
+import { CategoryType, HabitType } from "@utils/category.type";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -49,7 +49,7 @@ export default function CategoriesList() {
 				backgroundColor: theme.colors.background,
 			}}
 		>
-			{type === CategoryTypeSelect.positive ? (
+			{type === HabitType.positive ? (
 				<FlatList
 					data={positiveCategories}
 					renderItem={({ item }) => <CategoryItem category={item} />}
@@ -57,7 +57,7 @@ export default function CategoriesList() {
 					numColumns={2}
 					className="w-[95%] mx-auto pb-4"
 				/>
-			) : type === CategoryTypeSelect.negative ? (
+			) : type === HabitType.negative ? (
 				<FlatList
 					data={negativeCategories}
 					renderItem={({ item }) => <CategoryItem category={item} />}
@@ -65,7 +65,7 @@ export default function CategoriesList() {
 					numColumns={2}
 					className="w-[95%] mx-auto pb-4"
 				/>
-			) : type === CategoryTypeSelect.routine ? (
+			) : type === HabitType.routine ? (
 				<View className="flex items-center justify-start h-full mt-16">
 					<View className="flex flex-col gap-2 items-center py-2">
 						<Iconify size={40} icon="mdi:idea" color={theme.colors.primary} />

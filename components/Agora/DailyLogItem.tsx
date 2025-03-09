@@ -83,7 +83,7 @@ export const DailyLogItem = ({ item }: { item: DailyLogExtended }) => {
 		<>
 			<ImageBackground
 				source={catImgs[habitCategory?.slug || "sport"]}
-				style={{ flex: 1 }}
+				style={{ flex: 1, elevation: 2 }}
 				imageStyle={{ resizeMode: "cover" }}
 				className="py-2 px-2 my-[6px] rounded-xl overflow-hidden w-full"
 			>

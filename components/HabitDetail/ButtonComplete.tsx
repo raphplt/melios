@@ -12,7 +12,7 @@ import React from "react";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { useTranslation } from "react-i18next";
 import { incrementStreak } from "@db/streaks";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 import useAddXp from "@hooks/useAddXp";
 import RestartHabit from "@components/Modals/RestartHabit";
 import { Iconify } from "react-native-iconify";
@@ -34,7 +34,7 @@ export default function ButtonComplete() {
 	const handlePress = async () => {
 		setLoading(true);
 		await setHabitLog(currentHabit.id, date);
-		if (currentHabit.type !== CategoryTypeSelect.negative) {
+		if (currentHabit.type !== HabitType.negative) {
 			addXp && addXp(currentHabit, 10 * currentHabit.difficulty);
 
 			addOdysseePoints(currentHabit.difficulty);
@@ -76,7 +76,7 @@ export default function ButtonComplete() {
 										color: theme.colors.text,
 									}}
 								>
-									{currentHabit.type === CategoryTypeSelect.negative
+									{currentHabit.type === HabitType.negative
 										? t("restart")
 										: t("complete")}
 								</Text>

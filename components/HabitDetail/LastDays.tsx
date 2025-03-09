@@ -9,7 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
 import { useHabits } from "@context/HabitsContext";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 
 const DAYS_TOTAL = 365;
 const INITIAL_VISIBLE_DAYS = 30;
@@ -28,7 +28,7 @@ export default function LastDays({ logs, loading }: LastDaysProps) {
 	const [currentStreak, setCurrentStreak] = useState(0);
 	const [visibleDaysCount, setVisibleDaysCount] = useState(INITIAL_VISIBLE_DAYS);
 
-	if (!currentHabit || currentHabit.type === CategoryTypeSelect.negative) {
+	if (!currentHabit || currentHabit.type === HabitType.negative) {
 		return null;
 	}
 

@@ -3,17 +3,25 @@ import Flamme from "@components/Svg/Flamme";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { getTodayHabits } from "@utils/habitsUtils";
+// import { getTodayHabits } from "@utils/habitsUtils";
 
 export default function Streak() {
-	const { streak } = useData();
+	const { streak, completedHabitsToday, habits } = useData();
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const todayHabits = getTodayHabits(habits);
+
+	const completionPercentage = Math.round(
+		(completedHabitsToday.length / todayHabits.length) * 100
+	);
 
 	return (
 		<View
-			className="w-full mx-auto flex flex-row items-center justify-between px-5 pt-2 py-5 rounded-b-3xl"
+			className="w-full mx-auto flex flex-row items-center justify-between px-6 pt-2 py-5 rounded-b-3xl"
 			style={{
 				backgroundColor: theme.colors.backgroundTertiary,
+				elevation: 3,
 			}}
 		>
 			<View className="ml-2">
@@ -38,7 +46,25 @@ export default function Streak() {
 					</Text>
 				</View>
 			</View>
-			<Flamme color={theme.colors.redPrimary} width={100} height={120} />
+			<View className="flex flex-col items-center">
+				<Flamme color={theme.colors.redPrimary} width={80} height={96} />
+				<Text
+					style={{
+						color: theme.colors.primary,
+					}}
+					className="text-2xl font-semibold mt-1"
+				>
+					{completionPercentage} %
+				</Text>
+				<Text
+					style={{
+						color: theme.colors.primary,
+					}}
+					className="font-semibold text-sm"
+				>
+					{t("completed")}
+				</Text>
+			</View>
 		</View>
 	);
 }

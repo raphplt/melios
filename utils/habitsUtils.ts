@@ -24,7 +24,7 @@ export const calculateCompletedHabits = (
 				"seconds" in log.date &&
 				"nanoseconds" in log.date
 			) {
-				logDate = new Date(log.date.seconds * 1000);
+				logDate = new Date((log.date as { seconds: number }).seconds * 1000);
 			} else if (typeof log.date === "string") {
 				logDate = new Date(log.date);
 			} else {
@@ -39,4 +39,30 @@ export const calculateCompletedHabits = (
 	});
 
 	return completedHabits;
+};
+
+/**
+ * Return positives habits of the day
+ */
+export const getTodayHabits = (habits: UserHabit[]): UserHabit[] => {
+	const today = new Date();
+	const dayOfWeek = today
+		.toLocaleString("en-US", { weekday: "short" })
+		.toLowerCase();
+	const daysMap: { [key: string]: keyof NonNullable<UserHabit["frequency"]> } = {
+		mon: "monday",
+		tue: "tuesday",
+		wed: "wednesday",
+		thu: "thursday",
+		fri: "friday",
+		sat: "saturday",
+		sun: "sunday",
+	};
+
+	return habits.filter((habit) => {
+		const todayKey = daysMap[dayOfWeek];
+		const isScheduledToday = habit.frequency?.[todayKey];
+
+		return !habit.frequency || isScheduledToday;
+	});
 };

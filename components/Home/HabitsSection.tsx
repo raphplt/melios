@@ -8,7 +8,7 @@ import { Iconify } from "react-native-iconify";
 import { useTheme } from "@context/ThemeContext";
 import NoHabits from "./NoHabits";
 import { useTranslation } from "react-i18next";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 import FiltersHabits from "./FiltersHabits";
 import NoNegativeHabits from "./NoNegativeHabit";
 
@@ -17,9 +17,7 @@ const HabitsSection = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 
-	const [filter, setFilter] = useState<CategoryTypeSelect>(
-		CategoryTypeSelect.positive
-	);
+	const [filter, setFilter] = useState<HabitType>(HabitType.positive);
 
 	const today: DayOfWeek = useMemo(() => {
 		return new Date()
@@ -37,18 +35,17 @@ const HabitsSection = () => {
 				free: [],
 			};
 
-		// Filtrer d'abord par type et fréquence
 		const filtered = userHabits.filter((habit) => {
-			if (filter === CategoryTypeSelect.positive) {
+			if (filter === HabitType.positive) {
 				return (
-					habit.type !== CategoryTypeSelect.negative &&
+					habit.type !== HabitType.negative &&
 					habit.frequency &&
 					habit.frequency[today]
 				);
 			}
-			if (filter === CategoryTypeSelect.negative) {
+			if (filter === HabitType.negative) {
 				return (
-					habit.type === CategoryTypeSelect.negative &&
+					habit.type === HabitType.negative &&
 					habit.frequency &&
 					habit.frequency[today]
 				);
@@ -56,8 +53,7 @@ const HabitsSection = () => {
 			return false;
 		});
 
-		// Catégoriser en une seule passe si on a des habitudes positives
-		if (filter === CategoryTypeSelect.positive) {
+		if (filter === HabitType.positive) {
 			return {
 				filteredHabits: filtered,
 				morning: filtered.filter((habit) => habit.moment >= 6 && habit.moment < 12),
@@ -68,7 +64,6 @@ const HabitsSection = () => {
 				free: filtered.filter((habit) => habit.moment === -1 || habit.moment < 6),
 			};
 		} else {
-			// Pour les habitudes négatives, nous n'avons pas besoin de catégoriser
 			return {
 				filteredHabits: filtered,
 				morning: [],
@@ -96,7 +91,7 @@ const HabitsSection = () => {
 
 			{/* Liste des habitudes */}
 			<ScrollView>
-				{filter === CategoryTypeSelect.negative ? (
+				{filter === HabitType.negative ? (
 					<View className="mt-4">
 						{filteredHabits.map((habit) => (
 							<CardCheckHabit key={habit.id || habit.name} habit={habit} />
@@ -178,7 +173,7 @@ const HabitsSection = () => {
 					</>
 				)}
 
-				{filter === CategoryTypeSelect.negative && filteredHabits.length === 0 && (
+				{filter === HabitType.negative && filteredHabits.length === 0 && (
 					<NoNegativeHabits />
 				)}
 			</ScrollView>

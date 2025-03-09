@@ -3,7 +3,7 @@ export enum CategoryType {
 	negative = "negative",
 }
 
-export enum CategoryTypeSelect {
+export enum HabitType {
 	"positive" = "Positif",
 	"negative" = "Négatif",
 	"personalized" = "Personnalisé",

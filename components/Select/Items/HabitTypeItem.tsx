@@ -1,7 +1,7 @@
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 import { ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
@@ -78,11 +78,11 @@ export default function HabitTypeBox({
 	}));
 
 	const handlePress = () => {
-		if (typeHabit === CategoryTypeSelect.negative) {
+		if (typeHabit === HabitType.negative) {
 			AsyncStorage.setItem("haveSeenNegative", "true");
 			setHaveSeenNegative(true);
 		}
-		if (typeHabit === CategoryTypeSelect.routine) {
+		if (typeHabit === HabitType.routine) {
 			AsyncStorage.setItem("haveSeenRoutine", "true");
 			setHaveSeenRoutine(true);
 		}
@@ -94,7 +94,7 @@ export default function HabitTypeBox({
 	return (
 		<Animated.View style={[animatedStyle]} className="w-[30%] rounded-xl">
 			{/* Temp */}
-			{/* {!haveSeenNegative && typeHabit === CategoryTypeSelect.negative && (
+			{/* {!haveSeenNegative && typeHabit === HabitType.negative && (
 				<View
 					className="absolute top-1 right-1 px-2 py-1 rounded-xl"
 					style={{
@@ -104,7 +104,7 @@ export default function HabitTypeBox({
 					<Text className="text-white text-xs font-semibold">{t("new")}</Text>
 				</View>
 			)} */}
-			{!haveSeenRoutine && typeHabit === CategoryTypeSelect.routine && (
+			{!haveSeenRoutine && typeHabit === HabitType.routine && (
 				<View
 					className="absolute top-1 right-1 px-2 py-1 rounded-xl"
 					style={{

@@ -11,6 +11,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { lightenColor } from "@utils/colors";
 import { BlurView } from "expo-blur";
+import { getLevelName } from "@utils/levels";
 
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
@@ -53,16 +54,16 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 					width: itemSize,
 					height: itemSize,
 				}}
-				className="p-3 rounded-xl my-2 overflow-hidden"
+				className="p-2 rounded-xl my-2 overflow-hidden"
 			>
 				<Pressable className="" onPress={handlePress}>
 					<View className="flex flex-col items-center justify-between h-full">
 						<View className="flex flex-row items-center justify-between w-full gap-1 px-1">
 							<Text
 								style={{
-									color: theme.colors.text,
+									color: theme.colors.textTertiary,
 								}}
-								className="font-bold text-[14px]"
+								className="font-bold text-sm"
 							>
 								{t(level.slug)}
 							</Text>
@@ -73,15 +74,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 							/>
 						</View>
 
-						<View className="flex flex-col items-center justify-center flex-1 gap-y-2">
-							{/* <Text
-								className="text-[14px] font-semibold"
-								style={{
-									color: theme.colors.textTertiary,
-								}}
-							>
-								{t("level_title")}
-							</Text> */}
+						<View className="flex flex-col items-center justify-center flex-1 gap-y-[10px] mt-1">
 							<View className="flex items-center justify-center">
 								<Progress.Circle
 									progress={progress}
@@ -99,6 +92,16 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 									}}
 								>
 									{level.currentLevel}
+								</Text>
+							</View>
+							<View
+								className="px-3 py-[2px] rounded-full"
+								style={{
+									backgroundColor: level.color || theme.colors.primary,
+								}}
+							>
+								<Text className="text-sm font-semibold text-white">
+									{getLevelName(level.currentLevel)}
 								</Text>
 							</View>
 						</View>

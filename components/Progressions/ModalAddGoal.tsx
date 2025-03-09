@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { UserHabit } from "@type/userHabit";
 import BottomSlideModal from "@components/Modals/ModalBottom";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 
 export default function ModalAddGoal({
 	visible,
@@ -32,8 +32,7 @@ export default function ModalAddGoal({
 
 	const filteredHabits = habits.filter(
 		(habit) =>
-			!existingHabitIds.includes(habit.id) &&
-			habit.type !== CategoryTypeSelect.negative
+			!existingHabitIds.includes(habit.id) && habit.type !== HabitType.negative
 	);
 
 	const habitOptions = filteredHabits.map((habit) => ({

@@ -145,7 +145,15 @@ export default function Articles() {
 						Retrouvez tous nos articles
 					</Text>
 				}
-				ListFooterComponent={loading ? <ActivityIndicator size="large" /> : null}
+				ListFooterComponent={
+					loading ? (
+						<ActivityIndicator
+							size="large"
+							color={theme.colors.primary}
+							className="py-10 mt-10"
+						/>
+					) : null
+				}
 			/>
 			{showScrollTop && (
 				<TouchableOpacity

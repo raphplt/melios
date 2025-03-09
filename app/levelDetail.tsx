@@ -5,6 +5,7 @@ import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { lightenColor } from "@utils/colors";
+import { getLevelName } from "@utils/levels";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
@@ -93,41 +94,45 @@ const LevelDetail = () => {
 				</Text>
 				<View
 					style={{
-						backgroundColor: theme.colors.primary,
+						backgroundColor: selectedLevel.color ?? theme.colors.primary,
+						elevation: 3,
 					}}
 					className="px-5 py-2 rounded-full mt-4"
 				>
 					<Text
-						className="font-semibold "
+						className="font-semibold text-[16px] text-center"
 						style={{
 							color: theme.colors.textSecondary,
 						}}
 					>
-						{t("lvl")} {selectedLevel.currentLevel}
+						{getLevelName(selectedLevel.currentLevel)}
 					</Text>
 				</View>
 
-				<View className="mt-2 flex flex-row w-10/12 mb-1 justify-between items-center">
+				<View className="mt-2 flex flex-row w-[85%] justify-between items-center">
 					<Text
 						className="font-semibold"
 						style={{
-							color: theme.colors.textTertiary,
+							color: theme.colors.text,
 						}}
 					>
-						{t("xp")}
+						{t("lvl")} {selectedLevel.currentLevel}
 					</Text>
-					<Text
-						className="font-semibold"
-						style={{
-							color: theme.colors.textTertiary,
-						}}
-					>
-						{selectedLevel.currentXp} / {selectedLevel.nextLevelXp}
-					</Text>
+					<View className="flex flex-row items-center gap-2">
+						<Text
+							className="font-bold"
+							style={{
+								color: theme.colors.text,
+							}}
+						>
+							{selectedLevel.currentLevel + 2}
+						</Text>
+						<MoneyMelios width={18} />
+					</View>
 				</View>
 				<Progress.Bar
 					progress={selectedLevel.currentXp / selectedLevel.nextLevelXp}
-					height={12}
+					height={14}
 					width={Dimensions.get("window").width * 0.8}
 					unfilledColor={theme.colors.border}
 					borderColor="transparent"
@@ -135,21 +140,6 @@ const LevelDetail = () => {
 					borderRadius={10}
 					color={selectedLevel.color || theme.colors.primary}
 				/>
-
-				<View className="my-3 flex flex-row w-10/12 justify-between items-center">
-					<Text
-						className="font-semibold"
-						style={{
-							color: theme.colors.textTertiary,
-						}}
-					>
-						{t("next_level_reward")} :
-					</Text>
-					<View className="flex flex-row items-center gap-2">
-						<Text className="font-semibold">{selectedLevel.currentLevel + 2}</Text>
-						<MoneyMelios width={22} />
-					</View>
-				</View>
 			</BlurView>
 
 			<Tasks />

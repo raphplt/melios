@@ -82,6 +82,7 @@ export default function SectionHeader({
 				className="flex flex-row w-[95%] rounded-xl px-3 py-3 mx-auto items-center justify-between my-1"
 				style={{
 					backgroundColor: theme.colors.cardBackground,
+					elevation: 2,
 				}}
 				onPress={toggleShow}
 			>

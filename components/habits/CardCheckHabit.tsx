@@ -22,7 +22,7 @@ import useHabitTimer from "@hooks/useHabitTimer";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { setRewards } from "@db/rewards";
 import useAddXp from "@hooks/useAddXp";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 import { incrementStreak } from "@db/streaks";
 import RestartHabit from "@components/Modals/RestartHabit";
 import { useNavigation } from "expo-router";
@@ -66,13 +66,13 @@ function CardCheckHabit({
 	const pressableStyle = useMemo(
 		() => ({
 			backgroundColor: completed
-				? habit.type === CategoryTypeSelect.negative
+				? habit.type === HabitType.negative
 					? theme.colors.redSecondary
 					: lightenColor(habit.color, 0.15)
 				: theme.colors.cardBackground,
 			borderColor: completed
 				? habit.color
-				: habit.type === CategoryTypeSelect.negative
+				: habit.type === HabitType.negative
 				? theme.colors.redPrimary
 				: theme.colors.border,
 		}),
@@ -145,7 +145,7 @@ function CardCheckHabit({
 		onHabitStatusChange,
 	]);
 
-	const isNegative = habit.type === CategoryTypeSelect.negative;
+	const isNegative = habit.type === HabitType.negative;
 
 	return (
 		<Animated.View
@@ -248,7 +248,7 @@ function CardCheckHabit({
 										<Iconify icon="bi:play" color="white" size={20} />
 									)}
 									<Text className="text-[16px] text-white font-semibold ml-2">
-										{habit.type === CategoryTypeSelect.negative
+										{habit.type === HabitType.negative
 											? t("relaunch")
 											: t("start")}
 									</Text>

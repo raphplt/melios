@@ -1,6 +1,6 @@
 import { Category } from "@type/category";
-import { Habit, HabitType } from "@type/habit";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { Habit } from "@type/habit";
+import { HabitType } from "@utils/category.type";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 export type SelectContextProps = {
@@ -15,7 +15,7 @@ export type SelectContextProps = {
 };
 
 export const SelectContext = createContext<SelectContextProps>({
-	type: CategoryTypeSelect.positive,
+	type: HabitType.positive,
 	setType: () => {},
 	category: null,
 	setCategory: () => {},
@@ -26,7 +26,7 @@ export const SelectContext = createContext<SelectContextProps>({
 });
 
 export const SelectProvider = ({ children }: { children: ReactNode }) => {
-	const [type, setType] = useState<HabitType>("Positif");
+	const [type, setType] = useState<HabitType>(HabitType.positive);
 	const [category, setCategory] = useState<Category | null>(null);
 	const [habit, setHabit] = useState<Habit | null>(null);
 	const [customHabit, setCustomHabit] = useState(false);

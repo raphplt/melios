@@ -2,7 +2,6 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { GoalProvider } from "@context/GoalsContext";
-import Chart from "@components/Progressions/Chart";
 import Levels from "@components/Progressions/Levels";
 import CalendarHabits from "@components/Progressions/Calendar";
 import ModalTutorial from "@components/Modals/ModalTutoriel";
@@ -30,7 +29,7 @@ const Progression: React.FC = () => {
 					end={{ x: 1, y: 1 }}
 				>
 					<Streak />
-					<ShareMonthlyRecap />
+					{/* <ShareMonthlyRecap /> */}
 					<GoalSection />
 					<Levels />
 					<CalendarHabits />

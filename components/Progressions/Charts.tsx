@@ -91,7 +91,7 @@ const Charts = () => {
 			icon="graph"
 		>
 			<BlurView
-				className="flex flex-col items-center mx-auto w-[95%] p-2 rounded-xl my-4 overflow-hidden"
+				className="flex flex-col items-center mx-auto w-[95%] p-2 rounded-xl my-4 overflow-hidden mb-6"
 				tint={theme.dark ? "dark" : "light"}
 				intensity={100}
 			>

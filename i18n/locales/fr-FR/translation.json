@@ -275,5 +275,7 @@
     "notification_message": "Message de notification",
     "edit": "Éditer",
     "trophies": "Trophées",
-    "articles": "Articles"
+    "articles": "Articles",
+    "habits_completed_today": "Complétées aujourd'hui",
+    "completed": "Complétées"
 }

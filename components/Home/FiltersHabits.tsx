@@ -1,13 +1,13 @@
 import { useTheme } from "@context/ThemeContext";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 import { t } from "i18next";
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import AddHabits from "./AddHabits";
 
 type Props = {
-	filter: CategoryTypeSelect;
-	setFilter: (filter: CategoryTypeSelect) => void;
+	filter: HabitType;
+	setFilter: (filter: HabitType) => void;
 };
 
 const FiltersHabits = ({ filter, setFilter }: Props) => {
@@ -16,10 +16,10 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 		<View className="flex flex-row items-center justify-center pt-3">
 			<View className="flex flex-row items-center gap-x-1 mr-4">
 				<TouchableOpacity
-					onPress={() => setFilter(CategoryTypeSelect.positive)}
+					onPress={() => setFilter(HabitType.positive)}
 					style={{
 						borderColor:
-							filter === CategoryTypeSelect.positive
+							filter === HabitType.positive
 								? theme.colors.primary
 								: theme.colors.border,
 						borderWidth: 2,
@@ -29,7 +29,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 					<Text
 						style={{
 							color:
-								filter === CategoryTypeSelect.positive
+								filter === HabitType.positive
 									? theme.colors.primary
 									: theme.colors.textTertiary,
 						}}
@@ -40,10 +40,10 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 				</TouchableOpacity>
 
 				<TouchableOpacity
-					onPress={() => setFilter(CategoryTypeSelect.negative)}
+					onPress={() => setFilter(HabitType.negative)}
 					style={{
 						borderColor:
-							filter === CategoryTypeSelect.negative
+							filter === HabitType.negative
 								? theme.colors.redPrimary
 								: theme.colors.border,
 						borderWidth: 2,
@@ -53,7 +53,7 @@ const FiltersHabits = ({ filter, setFilter }: Props) => {
 					<Text
 						style={{
 							color:
-								filter === CategoryTypeSelect.negative
+								filter === HabitType.negative
 									? theme.colors.redPrimary
 									: theme.colors.textTertiary,
 						}}

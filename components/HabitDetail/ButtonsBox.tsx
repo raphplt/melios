@@ -3,7 +3,7 @@ import ButtonComplete from "./ButtonComplete";
 import ButtonStartHabit from "./ButtonStartHabit";
 import { useHabits } from "@context/HabitsContext";
 import { useData } from "@context/DataContext";
-import { CategoryTypeSelect } from "@utils/category.type";
+import { HabitType } from "@utils/category.type";
 
 export default function ButtonsBox() {
 	const { currentHabit } = useHabits();
@@ -14,7 +14,7 @@ export default function ButtonsBox() {
 	);
 
 	const habitHasDuration = currentHabit && currentHabit.duration;
-	const isNegativeHabit = currentHabit?.type === CategoryTypeSelect.negative;
+	const isNegativeHabit = currentHabit?.type === HabitType.negative;
 
 	return (
 		<View className="py-6 mb-10">

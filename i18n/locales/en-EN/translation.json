@@ -273,5 +273,7 @@
     "notification_message": "Notification message",
     "edit": "Edit",
     "trophies": "Trophies",
-    "articles": "Articles"
+    "articles": "Articles",
+    "habits_completed_today": "Completed today",
+    "completed": "Completed"
 }
