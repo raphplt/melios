@@ -114,25 +114,15 @@ export default function Trophies({ logs, loading }: LastDaysProps) {
 }
 
 const styles = StyleSheet.create({
-	blurContainer: {
-		padding: 10,
-		borderRadius: 12,
-		width: "95%",
-		alignSelf: "center",
-		alignItems: "center",
-		overflow: "hidden",
-	},
-
 	badgeImage: {
-		width: 100,
-		height: 100,
+		width: 90,
+		height: 90,
 	},
 	badgeText: {
 		position: "absolute",
 		textAlign: "center",
 		fontWeight: "bold",
 		color: "#fff",
-		// Pour centrer verticalement et horizontalement
 		top: "50%",
 		left: "50%",
 		transform: [{ translateX: -50 }, { translateY: -10 }],

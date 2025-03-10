@@ -178,6 +178,10 @@ function MainNavigator() {
 						name="workSession"
 						options={{ title: "Session de travail", headerShown: false }}
 					/>
+					<Stack.Screen
+						name="levels"
+						options={{ title: "Mes niveaux", headerShown: false }}
+					/>
 					<Stack.Screen name="articles" options={{ title: "Articles" }} />
 					<Stack.Screen name="articleDetail" options={{ title: "Article" }} />
 					<Stack.Screen

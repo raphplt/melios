@@ -39,11 +39,6 @@ const DailyRewards: React.FC = () => {
 		.slice(0, 3)
 		.filter((task) => task.validated && task.completed).length;
 
-	// Count completed tasks (first 3)
-	const completedTasksCount = dailyTasks
-		.slice(0, 3)
-		.filter((task) => task.completed).length;
-
 	const claimReward = async () => {
 		if (canClaimReward) {
 			setShowModal(true);

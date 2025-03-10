@@ -9,7 +9,6 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ZoomableView from "@components/Shared/ZoomableView";
-import { lightenColor } from "@utils/colors";
 import { BlurView } from "expo-blur";
 import { getLevelName } from "@utils/levels";
 
@@ -26,15 +25,6 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 		setSelectedLevel(level);
 		navigation.navigate("levelDetail");
 	}, [level, navigation, setSelectedLevel]);
-
-	const pressableStyle = useMemo(
-		() => ({
-			backgroundColor: lightenColor(level.color) ?? theme.colors.background,
-			width: itemSize,
-			height: itemSize,
-		}),
-		[level.color, itemSize, theme.colors.background]
-	);
 
 	const [progress, setProgress] = useState(0);
 

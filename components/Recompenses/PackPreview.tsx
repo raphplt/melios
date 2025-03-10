@@ -75,12 +75,70 @@ const PackPreview = ({ unlocked, setUnlocked }: Props) => {
 							{selectedPack.description}
 						</Text>
 
-						<Text
+						{/* <Text
 							className="font-semibold text-lg"
 							style={{ color: theme.colors.text }}
 						>
 							{selectedPack.content.sections.length} {t("chapters")}
+						</Text> */}
+					</View>
+
+					{/* Key Results Section */}
+					<View className="w-11/12 mt-6">
+						<Text
+							className="text-xl font-bold mb-3"
+							style={{ color: theme.colors.text }}
+						>
+							{t("key_results")}
 						</Text>
+						<View className="flex-row flex-wrap justify-between">
+							{selectedPack.promises?.keyResults.map((result, index) => (
+								<View
+									key={index}
+									className="w-[48%] mb-4 p-4 rounded-xl"
+									style={{ backgroundColor: theme.colors.cardBackground }}
+								>
+									{/* <Icon
+										name={getKeyResultIcon(index)}
+										size={24}
+										color={theme.colors.primary}
+										style={{ marginBottom: 8 }}
+									/> */}
+									<Text className="text-sm" style={{ color: theme.colors.text }}>
+										{result}
+									</Text>
+								</View>
+							))}
+						</View>
+					</View>
+
+					{/* Expectations Section */}
+					<View className="w-11/12 mt-4 mb-4">
+						<Text
+							className="text-xl font-bold mb-3"
+							style={{ color: theme.colors.text }}
+						>
+							{t("expectations")}
+						</Text>
+						<View className="flex-row flex-wrap justify-between">
+							{selectedPack.promises?.expectations.map((expectation, index) => (
+								<View
+									key={index}
+									className="w-[48%] mb-4 p-4 rounded-xl"
+									style={{ backgroundColor: theme.colors.cardBackground }}
+								>
+									{/* <Icon
+										name={getExpectationIcon(index)}
+										size={24}
+										color={theme.colors.primary}
+										style={{ marginBottom: 8 }}
+									/> */}
+									<Text className="text-sm" style={{ color: theme.colors.text }}>
+										{expectation}
+									</Text>
+								</View>
+							))}
+						</View>
 					</View>
 
 					<View className="flex flex-col items-start justify-start gap-y-1 mt-2 w-full mx-auto">

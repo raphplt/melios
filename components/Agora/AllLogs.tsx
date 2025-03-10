@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Text, FlatList, View, RefreshControl, Pressable } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
@@ -22,37 +22,40 @@ const AllLogs = () => {
 	const [confidentiality, setConfidentiality] = useState("public");
 	const [refreshing, setRefreshing] = useState(false);
 
-	const fetchDailyLogs = async (isRefreshing = false) => {
-		if (loading || (!hasMore && !isRefreshing)) return;
-		setLoading(true);
+	const fetchDailyLogs = useCallback(
+		async (isRefreshing = false) => {
+			if (loading || (!hasMore && !isRefreshing)) return;
+			setLoading(true);
 
-		try {
-			if (isRefreshing) {
-				setLastVisible(null);
-				setDailyLogs([]);
+			try {
+				if (isRefreshing) {
+					setLastVisible(null);
+					setDailyLogs([]);
+				}
+
+				const {
+					dailyLogs: newDailyLogs,
+					lastVisible: newLastVisible,
+					hasMore: moreLogs,
+				} = await getAllDailyLogsPaginated(
+					20,
+					isRefreshing ? null : lastVisible,
+					confidentiality,
+					member?.friends || []
+				);
+
+				setDailyLogs((prev) => [...(isRefreshing ? [] : prev), ...newDailyLogs]);
+				setLastVisible(newLastVisible);
+				setHasMore(moreLogs);
+			} catch (error) {
+				console.error("Erreur lors de la récupération des dailyLogs :", error);
+			} finally {
+				setLoading(false);
+				if (isRefreshing) setRefreshing(false);
 			}
-
-			const {
-				dailyLogs: newDailyLogs,
-				lastVisible: newLastVisible,
-				hasMore: moreLogs,
-			} = await getAllDailyLogsPaginated(
-				20,
-				isRefreshing ? null : lastVisible,
-				confidentiality,
-				member?.friends || []
-			);
-
-			setDailyLogs((prev) => [...(isRefreshing ? [] : prev), ...newDailyLogs]);
-			setLastVisible(newLastVisible);
-			setHasMore(moreLogs);
-		} catch (error) {
-			console.error("Erreur lors de la récupération des dailyLogs :", error);
-		} finally {
-			setLoading(false);
-			if (isRefreshing) setRefreshing(false);
-		}
-	};
+		},
+		[loading, lastVisible, confidentiality, member?.friends]
+	);
 
 	useEffect(() => {
 		fetchDailyLogs(true);

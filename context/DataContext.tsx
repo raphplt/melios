@@ -281,11 +281,9 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 		}
 	};
 
-	// Check if enough tasks are completed for reward
 	const canClaimReward = useMemo(() => {
 		if (rewardClaimed) return false;
 
-		// Count required tasks (first 3)
 		const requiredTasks = dailyTasks.slice(0, 3);
 		const completedAndValidatedTasks = requiredTasks.filter(
 			(task) => task.completed && task.validated
@@ -294,7 +292,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 		return completedAndValidatedTasks.length === requiredTasks.length;
 	}, [dailyTasks, rewardClaimed]);
 
-	// Check if there are tasks completed but not validated
 	const hasUnvalidatedCompletedTasks = useMemo(() => {
 		if (rewardClaimed) return false;
 

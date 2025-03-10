@@ -2,6 +2,8 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import Constants from "expo-constants";
+import { auth, db } from "@db/index";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
 const handleRegistrationError = (errorMessage: string) => {
 	console.log(errorMessage);
@@ -44,6 +46,18 @@ const usePermissions = () => {
 						projectId,
 					})
 				).data;
+
+				if (auth.currentUser) {
+					await setDoc(
+						doc(db, "userTokens", auth.currentUser.uid),
+						{
+							token: pushTokenString,
+							updatedAt: serverTimestamp(),
+						},
+						{ merge: true }
+					);
+				}
+
 				return pushTokenString;
 			} catch (e: unknown) {
 				handleRegistrationError(`${e}`);

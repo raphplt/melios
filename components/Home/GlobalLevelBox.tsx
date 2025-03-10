@@ -27,7 +27,7 @@ const GlobalLevelBox = () => {
 			<View className="flex flex-row items-center gap-2">
 				<Pressable
 					className="flex flex-row items-center justify-center px-3 py-[6px]"
-					onPress={() => navigation.navigate("progression")}
+					onPress={() => navigation.navigate("levels")}
 				>
 					<View className="flex flex-col gap-1">
 						<Text

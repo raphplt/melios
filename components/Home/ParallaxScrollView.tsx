@@ -1,19 +1,16 @@
 import React, { type PropsWithChildren, type ReactElement } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
 import Animated, {
 	interpolate,
 	useAnimatedRef,
 	useAnimatedStyle,
 	useScrollViewOffset,
 } from "react-native-reanimated";
-import BlurBox from "./ParallaxBlurBox";
 import { useTabBarPadding } from "@hooks/useTabBar";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
-import WelcomeRow from "./WelcomeRow";
 import { useTranslation } from "react-i18next";
-import * as Progress from "react-native-progress";
 import MissionButton from "./MissionButton";
 import StreakBox from "./StreakBox";
 import GlobalLevelBox from "./GlobalLevelBox";

@@ -142,10 +142,10 @@ export default function InfosPanel() {
 				</View>
 			</View>
 
-			<Separator />
+			{/* <Separator /> */}
 
 			{/* Notifications */}
-			<View className={rowStyle}>
+			{/* <View className={rowStyle}>
 				<View className={rowBox}>
 					<Iconify size={24} color={textColor} icon="mdi:bell" />
 					<Text style={{ color: textColor }} className="font-semibold">
@@ -158,7 +158,7 @@ export default function InfosPanel() {
 						: currentHabit.reminderMoment}{" "}
 					{t("minutes_before")}
 				</Text>
-			</View>
+			</View> */}
 		</BlurView>
 	);
 }

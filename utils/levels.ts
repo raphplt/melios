@@ -1,3 +1,5 @@
+import { UserLevel } from "@type/levels";
+
 export const getLevelName = (level: number): string => {
 	if (level > 20) return "Divinité";
 
@@ -25,4 +27,8 @@ export const getLevelName = (level: number): string => {
 	};
 
 	return levelNames[level] || "Inconnu";
+};
+
+export const getGlobalLevel = (usersLevels: UserLevel[]): UserLevel => {
+	return usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
 };

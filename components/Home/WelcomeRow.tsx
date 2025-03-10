@@ -37,7 +37,7 @@ export default function WelcomeRow() {
 			style={{
 				backgroundColor: "transparent",
 			}}
-			className="flex justify-between flex-row items-center mx-auto gap-x-1 p-2"
+			className="flex justify-between flex-row items-center mx-auto gap-x-1 px-3 py-2"
 		>
 			{renderIcon()}
 			<Text
@@ -46,7 +46,7 @@ export default function WelcomeRow() {
 				}}
 				className="font-semibold text-[15px]"
 			>
-				{message + (member?.nom && ", " + member.nom)} !
+				{message + (member?.nom && ", " + member.nom)}
 			</Text>
 		</View>
 	);
