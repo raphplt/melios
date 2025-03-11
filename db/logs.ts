@@ -486,3 +486,52 @@ export const deleteLogsByHabitId = async (habitId: string) => {
 		throw error;
 	}
 };
+
+
+/**
+ * Récupère les logs de l'utilisateur connecté du premier jour du mois au jour actuel
+ * @param options Options de récupération
+ * @returns Logs filtrés du mois en cours (max 30 jours)
+ */
+export const getCurrentMonthHabitLogs = async ({
+  signal,
+  forceRefresh,
+}: GetAllHabitLogsParams = {}): Promise<Log[]> => {
+  try {
+    const allLogs = await getAllHabitLogs({ signal, forceRefresh });
+
+    // Calcul du premier jour du mois courant
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    // Limite à 30 jours si nécessaire
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    // On prend la date la plus récente entre le début du mois et il y a 30 jours
+    const startDate = firstDayOfMonth > thirtyDaysAgo ? firstDayOfMonth : thirtyDaysAgo;
+
+    return allLogs
+      .map((log) => {
+        if (!log.logs) return null;
+        
+        const filteredDailyLogs = log.logs.filter((dailyLog) => {
+          const logDate = ensureDate(dailyLog.date);
+          return logDate >= startDate && logDate <= today;
+        });
+
+        if (filteredDailyLogs.length > 0) {
+          return {
+            ...log,
+            logs: filteredDailyLogs,
+          };
+        }
+
+        return null;
+      })
+      .filter((log) => log !== null) as Log[];
+  } catch (error) {
+    console.error("Erreur lors de la récupération des logs du mois :", error);
+    throw error;
+  }
+};

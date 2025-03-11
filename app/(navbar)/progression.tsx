@@ -29,7 +29,7 @@ const Progression: React.FC = () => {
 					end={{ x: 1, y: 1 }}
 				>
 					<Streak />
-					{/* <ShareMonthlyRecap /> */}
+					<ShareMonthlyRecap />
 					<GoalSection />
 					<Levels />
 					<CalendarHabits />

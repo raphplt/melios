@@ -277,5 +277,11 @@
     "trophies": "Trophées",
     "articles": "Articles",
     "habits_completed_today": "Complétées aujourd'hui",
-    "completed": "Complétées"
+    "completed": "Complétées",
+    "monthly_recap": "Récap' mensuel",
+    "completion_rate": "Taux de complétion",
+    "max_streak": "Série maximale",
+    "current_level": "Niveau actuel",
+    "streak_progress": "Progression de la série",
+    "share_monthly_recap": "Partager le récap' mensuel"
 }

@@ -1,12 +1,18 @@
 import React, { useRef } from "react";
-import { View, Button, StyleSheet, Alert } from "react-native";
+import { View, Alert, Pressable, Text } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import MonthlyRecap from "./MonthlyRecap";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "@context/ThemeContext";
+import { Iconify } from "react-native-iconify";
+import ZoomableView from "@components/Shared/ZoomableView";
 
 const ShareMonthlyRecap = () => {
+	const { t } = useTranslation();
+	const { theme } = useTheme();
+
 	const LAST_DAYS_TO_SHOW = 2;
-	const FIRST_DAYS_TO_SHOW = 2;
 
 	const today = new Date();
 	const currentMonthLastDay = new Date(
@@ -16,13 +22,12 @@ const ShareMonthlyRecap = () => {
 	).getDate();
 	const isInLastDays =
 		today.getDate() >= currentMonthLastDay - LAST_DAYS_TO_SHOW + 1;
-	const isInFirstDays = today.getDate() <= FIRST_DAYS_TO_SHOW;
 
-	if (!(isInLastDays || isInFirstDays)) {
+	if (!isInLastDays) {
 		return null;
 	}
 
-	const recapRef = useRef();
+	const recapRef: any = useRef();
 
 	const generateAndShareImage = async () => {
 		try {
@@ -44,29 +49,42 @@ const ShareMonthlyRecap = () => {
 	};
 
 	return (
-		<View style={styles.container}>
-			<View ref={recapRef} collapsable={false} style={styles.recapContainer}>
+		<View className="flex-1 p-3 w-full items-center justify-center">
+			<View
+				ref={recapRef}
+				collapsable={false}
+				className="w-full py-3 flex items-center justify-center"
+			>
 				<MonthlyRecap />
 			</View>
-			<Button title="Partager le récap du mois" onPress={generateAndShareImage} />
+
+			<ZoomableView className="w-full items-center justify-center">
+				<Pressable
+					onPress={generateAndShareImage}
+					style={{
+						backgroundColor: theme.colors.primary,
+					}}
+					className="mt-4 w-[95%] p-4 rounded-2xl flex flex-row items-center justify-center space-x-2"
+				>
+					<Text
+						style={{
+							color: theme.colors.textSecondary,
+						}}
+						className="text-center font-semibold px-2"
+					>
+						{t("share_monthly_recap")}
+					</Text>
+					<Iconify
+						icon="material-symbols:share"
+						size={20}
+						color={theme.colors.textSecondary}
+					/>
+				</Pressable>
+			</ZoomableView>
 		</View>
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 20,
-		justifyContent: "center",
-		alignItems: "center",
-		backgroundColor: "#f2f2f2",
-	},
-	recapContainer: {
-		marginBottom: 20,
-		backgroundColor: "#ffffff",
-		padding: 10,
-		borderRadius: 10,
-	},
-});
+
 
 export default ShareMonthlyRecap;

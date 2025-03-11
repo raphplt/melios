@@ -275,5 +275,11 @@
     "trophies": "Trophies",
     "articles": "Articles",
     "habits_completed_today": "Completed today",
-    "completed": "Completed"
+    "completed": "Completed",
+    "monthly_recap": "Monthly recap",
+    "max_streak": "Max streak",
+    "current_level": "Current level",
+    "streak_progress": "Streak progress",
+    "completion_rate": "Completion rate",
+    "share_monthly_recap": "Share monthly recap"
 }
