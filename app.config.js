@@ -39,7 +39,7 @@ export default {
 				"WRITE_EXTERNAL_STORAGE",
 				"INTERNET",
 			],
-			minSdkVersion: 24,
+			minSdkVersion: 25,
 		},
 		web: {
 			bundler: "metro",
