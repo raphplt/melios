@@ -58,7 +58,14 @@ export default function Preferences() {
 	const goAbout = () => {
 		Alert.alert(
 			t("about"),
-			"Melios v1.1.10 - © 2025 Melios" + "\n" + t("all_rights_reserved")
+			"Melios a été créée par Raphaël Plassart et Thibault Delaune." +
+				"\n" +
+				"\n" +
+				"Remerciements : Remy, Justine, Abdel, ESSEC Ventures." +
+				"\n" +
+				"\n" +
+				"Melios v1.1.10 - © 2025 Melios" +
+				t("all_rights_reserved")
 		);
 	};
 

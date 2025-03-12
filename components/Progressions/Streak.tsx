@@ -4,7 +4,7 @@ import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { getTodayHabits } from "@utils/habitsUtils";
-// import { getTodayHabits } from "@utils/habitsUtils";
+import { getFlammeColor } from "@utils/colors";
 
 export default function Streak() {
 	const { streak, completedHabitsToday, habits } = useData();
@@ -44,10 +44,27 @@ export default function Streak() {
 					>
 						{t("days_in_a_row")}
 					</Text>
+					{streak && streak?.value > 0 && streak?.value == streak?.maxValue ? (
+						<View
+							className="flex flex-row items-center mt-1 px-2 gap-2 rounded-full"
+							style={{ backgroundColor: theme.colors.background }}
+						>
+							<Text
+								className="text-xs font-semibold"
+								style={{ color: theme.colors.primary, padding: 2 }}
+							>
+								{t("best_streak")} !
+							</Text>
+						</View>
+					) : null}
 				</View>
 			</View>
 			<View className="flex flex-col items-center">
-				<Flamme color={theme.colors.redPrimary} width={80} height={96} />
+				<Flamme
+					color={getFlammeColor(completionPercentage)}
+					width={80}
+					height={96}
+				/>
 				<Text
 					style={{
 						color: theme.colors.primary,
@@ -60,9 +77,9 @@ export default function Streak() {
 					style={{
 						color: theme.colors.primary,
 					}}
-					className="font-semibold text-sm"
+					className="font-semibold text-sm w-3/4 text-center"
 				>
-					{t("completed")}
+					{t("completed_today")}
 				</Text>
 			</View>
 		</View>

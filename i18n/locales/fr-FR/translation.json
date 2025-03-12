@@ -283,5 +283,7 @@
     "max_streak": "Série maximale",
     "current_level": "Niveau actuel",
     "streak_progress": "Progression de la série",
-    "share_monthly_recap": "Partager le récap' mensuel"
+    "share_monthly_recap": "Partager le récap' mensuel",
+    "best_streak": "Meilleure série",
+    "completed_today": "Complétées aujourd'hui"
 }

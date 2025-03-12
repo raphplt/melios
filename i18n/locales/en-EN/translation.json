@@ -281,5 +281,7 @@
     "current_level": "Current level",
     "streak_progress": "Streak progress",
     "completion_rate": "Completion rate",
-    "share_monthly_recap": "Share monthly recap"
+    "share_monthly_recap": "Share monthly recap",
+    "best_streak": "Best streak",
+    "completed_today": "Completed today"
 }
