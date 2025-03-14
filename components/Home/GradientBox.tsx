@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 	},
 	gradientBorder: {
 		borderRadius: 10,
-		padding: 1,
+		// padding: 1,
 	},
 	innerContainer: {
 		borderRadius: 10,

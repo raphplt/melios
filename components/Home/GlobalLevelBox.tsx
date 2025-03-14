@@ -8,12 +8,13 @@ import useIndex from "@hooks/useIndex";
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
 import * as Progress from "react-native-progress";
+import { getGlobalLevel } from "@utils/levels";
 
 const GlobalLevelBox = () => {
 	const { usersLevels } = useData();
 	const { t } = useTranslation();
 
-	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
+	const globalLevel = getGlobalLevel(usersLevels);
 
 	const xpPercentage = globalLevel
 		? (globalLevel.currentXp / globalLevel.nextLevelXp) * 100

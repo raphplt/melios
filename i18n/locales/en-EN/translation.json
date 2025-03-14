@@ -283,5 +283,8 @@
     "completion_rate": "Completion rate",
     "share_monthly_recap": "Share monthly recap",
     "best_streak": "Best streak",
-    "completed_today": "Completed today"
+    "completed_today": "Completed today",
+    "accept_terms": "I accept the terms of use and privacy policy",
+    "accept_terms_link": "Terms of use and privacy policy",
+    "accept_and_continue": "Accept and continue"
 }
