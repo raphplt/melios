@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import { useData } from "@context/DataContext";
 import SectionHeader from "./SectionHeader";
 import LevelItem from "./LevelItem";
@@ -11,6 +11,10 @@ export default function Levels() {
 	const { usersLevels, member } = useData();
 	const { t } = useTranslation();
 	const [showLevels, setShowLevels] = useState(true);
+
+	const { width } = Dimensions.get("screen");
+
+	const isTablet = width > 600;
 
 	if (!member) return null;
 	const combinedLevels: CombinedLevel[] = Object.entries(usersLevels)
@@ -48,7 +52,7 @@ export default function Levels() {
 						contentContainerStyle={{
 							flexDirection: "row",
 							flexWrap: "wrap",
-							justifyContent: "space-between",
+							justifyContent: isTablet ? "space-evenly" : "space-between",
 						}}
 					>
 						{filteredLevels.map((item) => (

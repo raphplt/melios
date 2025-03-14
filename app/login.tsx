@@ -210,8 +210,8 @@ export default function Login() {
 				</Text>
 			</ImageBackground>
 
-			<View className="flex flex-col items-center w-full py-3 rounded-xl">
-				<View className="flex flex-col justify-center items-start w-11/12 mt-3">
+			<View className="flex flex-col items-center w-full py-3 rounded-xl lg:w-2/3 mx-auto">
+				<View className="flex flex-col justify-center items-start w-11/12  mt-3">
 					<CustomTextInput
 						label={t("email")}
 						placeholder="melios@gmail.com"
@@ -311,7 +311,7 @@ export default function Login() {
 
 			<Pressable
 				onPress={signInWithGoogle}
-				className="py-4 rounded-xl mt-3 items-center justify-center flex flex-row w-11/12 mx-auto gap-4"
+				className="py-4 rounded-xl mt-3 items-center justify-center flex flex-row w-11/12 lg:w-2/3 mx-auto gap-4"
 				style={{
 					borderColor: theme.colors.border,
 					borderWidth: 1,

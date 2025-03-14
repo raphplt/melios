@@ -105,7 +105,7 @@ export default function HabitDetail() {
 				style={[StyleSheet.absoluteFillObject]}
 			/>
 			<View
-				className="flex flex-row items-center justify-between w-11/12 mx-auto p-2 mb-2"
+				className="flex flex-row items-center justify-between w-11/12 lg:w-10/12 mx-auto p-2 mb-2"
 				style={{
 					paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 50,
 				}}
@@ -117,7 +117,7 @@ export default function HabitDetail() {
 				<SettingsButton />
 			</View>
 			<View
-				className="w-full h-full mx-auto flex justify-start flex-col gap-2 "
+				className="w-full lg:w-10/12 h-screen mx-auto flex justify-start flex-col gap-2 "
 				style={{ flexGrow: 1 }}
 			>
 				<HabitDetailHeader />

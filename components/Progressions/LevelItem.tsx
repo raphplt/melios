@@ -15,12 +15,18 @@ import { getLevelName } from "@utils/levels";
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
-	const { width } = Dimensions.get("window");
+	const { width } = Dimensions.get("screen");
+
+	const isTablet = width > 600;
+
 	const { setSelectedLevel } = useData();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-	const itemSize = useMemo(() => (width - 40) / 2, [width]);
-
+	const itemSize = useMemo(
+		() => (isTablet ? (width - 40) / 3 : (width - 40) / 2),
+		[width]
+	);
+	
 	const handlePress = useCallback(() => {
 		setSelectedLevel(level);
 		navigation.navigate("levelDetail");
