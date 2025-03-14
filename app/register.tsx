@@ -9,6 +9,7 @@ import {
 	Text,
 	Pressable,
 	ActivityIndicator,
+	TouchableOpacity,
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@context/ThemeContext";
@@ -22,6 +23,8 @@ import { useNavigation } from "expo-router";
 import { useData } from "@context/DataContext";
 import ButtonNavigate from "@components/LoginRegister/ButtonNavigate";
 import { isUsernameAlreadyUsed } from "@db/member";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import ModalTermsOfUse from "@components/Modals/ModalTermsOfUse";
 
 export default function Register() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -32,8 +35,10 @@ export default function Register() {
 	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	const { setMember } = useData();
+	const [acceptedTerms, setAcceptedTerms] = useState(false);
+	const [openModal, setOpenModal] = useState(false);
 
+	const { setMember } = useData();
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const scrollViewRef = useRef<ScrollView>(null);
@@ -47,7 +52,7 @@ export default function Register() {
 		setError("");
 
 		// Vérification de la présence de tous les champs
-		if (!nom || !email || !password || !verifyPassword) {
+		if (!nom || !email || !password || !verifyPassword || !acceptedTerms) {
 			setError("Tous les champs sont obligatoires.");
 			return;
 		}
@@ -142,7 +147,7 @@ export default function Register() {
 			</ImageBackground>
 
 			<View className="flex flex-col items-center w-full py-3 rounded-xl">
-				<View className="flex flex-col justify-center items-start w-11/12 mt-3">
+				<View className="flex flex-col justify-center items-start w-11/12">
 					<CustomTextInput
 						label={t("pseudo")}
 						placeholder="Dyonisos"
@@ -187,6 +192,28 @@ export default function Register() {
 					/>
 				</View>
 
+				<View className="flex flex-row items-center justify-between  w-[95%] relative mt-5 ">
+					<TouchableOpacity onPress={() => setOpenModal(true)}>
+						<Text
+							className="text-sm"
+							style={{
+								color: theme.colors.primary,
+							}}
+						>
+							{t("accept_terms")}
+						</Text>
+					</TouchableOpacity>
+					<View>
+						<BouncyCheckbox
+							size={20}
+							fillColor={theme.colors.primary}
+							useBuiltInState={false}
+							isChecked={acceptedTerms}
+							onPress={() => setAcceptedTerms(!acceptedTerms)}
+						/>
+					</View>
+				</View>
+
 				<Pressable
 					disabled={isDisabled || isLoading}
 					style={{
@@ -195,7 +222,7 @@ export default function Register() {
 							: theme.colors.primary,
 					}}
 					onPress={register}
-					className="w-11/12 mx-auto py-4 rounded-xl mt-6 flex items-center"
+					className="w-11/12 mx-auto py-4 rounded-xl mt-4 flex items-center"
 				>
 					{isLoading ? (
 						<ActivityIndicator size="small" color="#F8F9FF" />
@@ -231,6 +258,17 @@ export default function Register() {
 					onPress={() => navigation.navigate("login")}
 				/>
 			</View>
+
+			{openModal && (
+				<ModalTermsOfUse
+					visible={openModal}
+					setVisible={setOpenModal}
+					onAccept={() => {
+						setAcceptedTerms(true);
+						setOpenModal(false);
+					}}
+				/>
+			)}
 		</ScrollView>
 	);
 }

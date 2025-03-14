@@ -8,6 +8,7 @@ import { useData } from "@context/DataContext";
 
 export default function DailyQuote() {
 	const [quote, setQuote] = useState<Quote | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const { member } = useData();
@@ -16,19 +17,25 @@ export default function DailyQuote() {
 		const getQuote = async () => {
 			try {
 				if (!member) return;
+				setIsLoading(true);
+
 				const dailyQuote = await fetchDailyQuote();
 				setQuote(dailyQuote);
 			} catch (error) {
 				console.error("Error fetching daily quote: ", error);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
 		getQuote();
-	}, []);
+	}, [member]);
+
+	if (!member) return null;
 
 	return (
 		<View
-			className="w-[95%] mx-auto flex flex-col items-center justify-center rounded-lg mt-2 mb-8"
+			className="w-[95%] mx-auto flex flex-col items-start justify-start rounded-lg mt-2 mb-8"
 			style={{
 				backgroundColor: theme.colors.blueSecondary,
 			}}
@@ -41,10 +48,10 @@ export default function DailyQuote() {
 						fontFamily: "Baskerville",
 					}}
 				>
-					"{quote ? quote.text : t("loading")}"
+					"{isLoading ? t("loading") : quote?.text}"
 				</Text>
 				<Text style={{ color: theme.colors.text }} className="mt-2">
-					- {quote ? quote.author : t("loading")}
+					- {isLoading ? t("loading") : quote?.author}
 				</Text>
 			</View>
 		</View>
