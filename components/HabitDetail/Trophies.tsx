@@ -3,7 +3,7 @@ import { Image, Text, View, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { BlurView } from "expo-blur";
 import { useTranslation } from "react-i18next";
-import CardPlaceHolder from "@components/Habits/CardPlaceHolder";
+import CardPlaceHolder from "@components/Habit/CardPlaceHolder";
 import { badges } from "@utils/renderBadge";
 import { Iconify } from "react-native-iconify";
 

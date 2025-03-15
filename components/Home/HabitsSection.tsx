@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { ScrollView, View } from "react-native";
-import CardCheckHabit from "@components/Habits/CardCheckHabit";
+import CardCheckHabit from "@components/Habit/CardCheckHabit";
 import useIndex from "@hooks/useIndex";
 import { DayOfWeek } from "@type/days";
 import SectionWrapper from "./SectionWrapper";

@@ -1,4 +1,4 @@
-import CardCheckHabit from "@components/Habits/CardCheckHabit";
+import CardCheckHabit from "@components/Habit/CardCheckHabit";
 import { useData } from "@context/DataContext";
 import { useHabits } from "@context/HabitsContext";
 import { useTheme } from "@context/ThemeContext";
