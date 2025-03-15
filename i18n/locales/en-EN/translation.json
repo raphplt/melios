@@ -286,5 +286,6 @@
     "completed_today": "Completed today",
     "accept_terms": "I accept the terms of use and privacy policy",
     "accept_terms_link": "Terms of use and privacy policy",
-    "accept_and_continue": "Accept and continue"
+    "accept_and_continue": "Accept and continue",
+    "sign_in_with_apple": "Sign in with Apple"
 }

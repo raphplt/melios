@@ -16,8 +16,9 @@ export default {
 
 		assetBundlePatterns: ["**/*"],
 		ios: {
-			buildNumber: "23",
+			buildNumber: "24",
 			bundleIdentifier: "com.raphplt.melios",
+			usesAppleSignIn: true,
 			supportsTablet: true,
 			googleServicesFile: process.env.GOOGLE_SERVICES_INFOPLIST,
 			infoPlist: {
