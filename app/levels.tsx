@@ -11,7 +11,16 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import {
+	Dimensions,
+	Image,
+	Platform,
+	ScrollView,
+	StatusBar,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 const levels = () => {
 	const { t } = useTranslation();
@@ -25,124 +34,137 @@ const levels = () => {
 		(level) => level.levelId !== globalLevel.levelId
 	);
 
-	console.log("dark mode", theme.dark);
-
 	const colors: any = theme.dark
 		? ["#a1c4fd", "#c2e9fb", theme.colors.cardBackground]
 		: ["#d4fc79", "#96e6a1", "#a1c4fd", theme.colors.cardBackground];
 
 	return (
-		<LinearGradient
-			className="flex flex-col items-start justify-start gap-1 h-screen pt-10"
-			colors={colors}
+		<ScrollView
+			style={{
+				backgroundColor: theme.colors.background,
+				flexGrow: 1,
+			}}
+			showsVerticalScrollIndicator={false}
 		>
-			<ButtonClose />
-
-			<BlurView
-				intensity={100}
-				tint="light"
+			<LinearGradient
 				style={{
-					padding: 10,
-					borderRadius: 12,
-					alignSelf: "center",
-					alignItems: "center",
-					overflow: "hidden",
-					width: "95%",
+					height: Dimensions.get("screen").height,
+					width: "100%",
 				}}
+				colors={colors}
 			>
-				<View className="flex flex-row items-center justify-center gap-2 relative">
-					<Image
-						source={levelsBadge(globalLevel.currentLevel)}
-						style={{
-							width: 150,
-							height: 150,
-						}}
-					/>
-					<Text
-						className="text-4xl absolute"
-						style={{
-							fontFamily: "BaskervilleBold",
-							color: theme.colors.text,
-						}}
-					>
-						{globalLevel.currentLevel}
-					</Text>
+				<View
+					style={{
+						paddingTop: 40,
+						zIndex: 10,
+					}}
+				>
+					<ButtonClose />
 				</View>
-				<Text
-					className="text-2xl font-semibold text-center"
+
+				<BlurView
+					intensity={100}
+					tint="light"
 					style={{
-						color: theme.colors.text,
+						padding: 10,
+						borderRadius: 12,
+						alignSelf: "center",
+						alignItems: "center",
+						overflow: "hidden",
+						width: "95%",
 					}}
 				>
-					{getLevelName(globalLevel.currentLevel)}
-				</Text>
-				<Text
-					className="text-[16px] mt-1 font-semibold text-center"
-					style={{
-						color: theme.colors.textTertiary,
-					}}
-				>
-					{t("level_general")}
-				</Text>
-			</BlurView>
-			<View className="mt-4 flex flex-row flex-wrap justify-center">
-				{otherLevels.map((level, index) => (
-					<BlurView
-						intensity={100}
-						tint="light"
-						style={{
-							padding: 10,
-							borderRadius: 12,
-							alignSelf: "center",
-							alignItems: "center",
-							overflow: "hidden",
-							width: "45%",
-							margin: "2.5%",
-						}}
-						key={level.levelId}
-						className="flex flex-col items-center justify-center gap-2 mt-2"
-					>
-						<TouchableOpacity
-							onPress={() => navigation.navigate("levelDetail")}
-							className="flex flex-row items-center justify-center gap-2 relative"
-						>
-							<Image
-								source={levelsBadge(level.currentLevel)}
-								style={{
-									width: 100,
-									height: 100,
-								}}
-							/>
-							<Text
-								className="text-2xl absolute"
-								style={{
-									fontFamily: "BaskervilleBold",
-									color: theme.colors.text,
-								}}
-							>
-								{level.currentLevel}
-							</Text>
-						</TouchableOpacity>
-						<Text
-							className="text-xl font-semibold text-center"
+					<View className="flex flex-row items-center justify-center gap-2 relative">
+						<Image
+							source={levelsBadge(globalLevel.currentLevel)}
 							style={{
+								width: 150,
+								height: 150,
+							}}
+						/>
+						<Text
+							className="text-4xl absolute"
+							style={{
+								fontFamily: "BaskervilleBold",
 								color: theme.colors.text,
 							}}
 						>
-							{genericLevels[index].name}
+							{globalLevel.currentLevel}
 						</Text>
-						<Text
-							className=" font-semibold text-center"
+					</View>
+					<Text
+						className="text-2xl font-semibold text-center"
+						style={{
+							color: theme.colors.text,
+						}}
+					>
+						{t("level_general")}
+					</Text>
+					<Text
+						className="text-[16px] mt-1 font-semibold text-center"
+						style={{
+							color: theme.colors.textTertiary,
+						}}
+					>
+						{getLevelName(globalLevel.currentLevel)}
+					</Text>
+				</BlurView>
+				<View className="mt-4 flex flex-row flex-wrap justify-center">
+					{otherLevels.map((level, index) => (
+						<BlurView
+							intensity={100}
+							tint="light"
 							style={{
-								color: theme.colors.textTertiary,
+								padding: 10,
+								borderRadius: 12,
+								alignSelf: "center",
+								alignItems: "center",
+								overflow: "hidden",
+								width: "45%",
+								margin: "2.5%",
 							}}
+							key={level.levelId}
+							className="flex flex-col items-center justify-center gap-2 mt-2"
 						>
-							{getLevelName(level.currentLevel)}
-						</Text>
-					</BlurView>
-				))}
-			</View>
-		</LinearGradient>
+							<View className="flex flex-row items-center justify-center gap-2 relative">
+								<Image
+									source={levelsBadge(level.currentLevel)}
+									style={{
+										width: 100,
+										height: 100,
+									}}
+								/>
+								<Text
+									className="text-2xl absolute"
+									style={{
+										fontFamily: "BaskervilleBold",
+										color: theme.colors.text,
+									}}
+								>
+									{level.currentLevel}
+								</Text>
+							</View>
+							<Text
+								className="text-xl font-semibold text-center"
+								style={{
+									color: theme.colors.text,
+								}}
+							>
+								{genericLevels[index].name}
+							</Text>
+							<Text
+								className=" font-semibold text-center"
+								style={{
+									color: theme.colors.textTertiary,
+								}}
+							>
+								{getLevelName(level.currentLevel)}
+							</Text>
+						</BlurView>
+					))}
+				</View>
+			</LinearGradient>
+		</ScrollView>
 	);
 };
 

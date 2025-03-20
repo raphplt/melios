@@ -58,7 +58,7 @@ const LevelDetail = () => {
 					top: 0,
 					left: 0,
 					right: 0,
-					height: Dimensions.get("window").height * 0.5,
+					height: Dimensions.get("screen").height * 0.5,
 					width: "100%",
 				}}
 			/>

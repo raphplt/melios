@@ -8,6 +8,7 @@ import {
 	removeReactionFromLog,
 } from "@db/logs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useData } from "@context/DataContext";
 
 interface ReactionModalProps {
 	visible: boolean;
@@ -110,10 +111,19 @@ export default function ReactionModal({
 	setReactions,
 	safeDate,
 }: ReactionModalProps) {
+	const { setDailyTasks } = useData();
+
 	const handleReaction = async (type: string) => {
 		if (!member?.uid) return;
 		try {
 			await AsyncStorage.setItem("LATEST_REACTION", new Date().toISOString());
+
+			setDailyTasks((prev) =>
+				prev.map((task) =>
+					task.slug === "support_member" ? { ...task, completed: true } : task
+				)
+			);
+
 			const habitLogId = item.logDocId;
 			const dailyLogId = item.id;
 			const logDateISO = safeDate.toISOString();
