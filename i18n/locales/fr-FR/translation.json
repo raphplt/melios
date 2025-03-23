@@ -289,5 +289,8 @@
     "accept_terms": "J'accepte les conditions d'utilisation",
     "accept_terms_link": "Conditions d'utilisation",
     "accept_and_continue": "Accepter et continuer",
-    "sign_in_with_apple": "Se connecter avec Apple"
+    "sign_in_with_apple": "Se connecter avec Apple",
+    "tasks_completed": "Tâches complétées",
+    "key_results": "Résultats clés",
+    "expectations": "Attentes"
 }

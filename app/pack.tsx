@@ -21,7 +21,7 @@ const Pack = () => {
 	};
 
 	if (!unlocked)
-		return <PackPreview unlocked={unlocked} setUnlocked={setUnlocked} />;
+		return <PackPreview />;
 
 	return (
 		<ScrollView

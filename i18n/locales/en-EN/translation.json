@@ -287,5 +287,8 @@
     "accept_terms": "I accept the terms of use and privacy policy",
     "accept_terms_link": "Terms of use and privacy policy",
     "accept_and_continue": "Accept and continue",
-    "sign_in_with_apple": "Sign in with Apple"
+    "sign_in_with_apple": "Sign in with Apple",
+    "tasks_completed": "Tasks completed",
+    "key_results": "Key results",
+    "expectations": "Expectations"
 }

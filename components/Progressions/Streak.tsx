@@ -59,11 +59,11 @@ export default function Streak() {
 					) : null}
 				</View>
 			</View>
-			<View className="flex flex-col items-center">
+			<View className="flex flex-col items-center justify-center">
 				<Flamme
 					color={getFlammeColor(completionPercentage)}
-					width={80}
-					height={96}
+					width={64}
+					height={77}
 				/>
 				<Text
 					style={{
