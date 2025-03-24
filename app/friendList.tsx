@@ -6,6 +6,7 @@ import {
 	ActivityIndicator,
 	Pressable,
 	TextInput,
+	StyleSheet,
 } from "react-native";
 import { getMembersPaginated } from "@db/member";
 import { Member } from "@type/member";
@@ -15,8 +16,22 @@ import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 import Filters from "@components/Agora/Filters";
+import { AddFriendModal } from "@components/Modals/AddFriendModal";
 
-export type FriendFilter = "all" | "friends" | "received" | "sent";
+// Hook de debounce pour éviter trop d'appels API
+const useDebounce = (value: string, delay: number) => {
+	const [debouncedValue, setDebouncedValue] = useState(value);
+	useEffect(() => {
+		const handler = setTimeout(() => {
+			setDebouncedValue(value);
+		}, delay);
+		return () => clearTimeout(handler);
+	}, [value, delay]);
+	return debouncedValue;
+};
+
+// Pour la liste principale, nous ne gardons que ces filtres
+export type FriendFilter = "friends" | "received" | "sent";
 
 const FriendList = () => {
 	const { member } = useData();
@@ -27,8 +42,11 @@ const FriendList = () => {
 	const [loading, setLoading] = useState(false);
 	const [lastVisibleDoc, setLastVisibleDoc] = useState<any>(null);
 	const [hasMoreMembers, setHasMoreMembers] = useState(true);
-	const [filter, setFilter] = useState<FriendFilter>("all");
+	// Par défaut, on affiche uniquement les amis (pas "all")
+	const [filter, setFilter] = useState<FriendFilter>("friends");
 	const [searchQuery, setSearchQuery] = useState<string>("");
+	const debouncedSearchQuery = useDebounce(searchQuery, 300);
+	const [showAddFriendModal, setShowAddFriendModal] = useState(false);
 
 	const cacheRef = useRef<
 		Record<string, { members: Member[]; lastVisible: any }>
@@ -44,13 +62,13 @@ const FriendList = () => {
 			}
 			setLoading(true);
 
-			const cacheKey = `${filter}-${lastVisibleDoc ? lastVisibleDoc.id : "first"}`;
-
+			// Clé de cache intégrant le filtre et la recherche
+			const cacheKey = `${filter}-${debouncedSearchQuery}-${
+				lastVisibleDoc ? lastVisibleDoc.id : "first"
+			}`;
 			if (cacheRef.current[cacheKey]) {
 				const { members: cachedMembers, lastVisible } = cacheRef.current[cacheKey];
-				setMembers((prevMembers) =>
-					isRefreshing ? cachedMembers : [...prevMembers, ...cachedMembers]
-				);
+				setMembers(isRefreshing ? cachedMembers : [...members, ...cachedMembers]);
 				setLastVisibleDoc(lastVisible);
 				if (cachedMembers.length < 10) setHasMoreMembers(false);
 				setLoading(false);
@@ -61,18 +79,13 @@ const FriendList = () => {
 				lastVisibleDoc,
 				10,
 				filter,
-				member
+				member,
+				debouncedSearchQuery
 			);
-
 			if (newMembers && newMembers.length < 10) setHasMoreMembers(false);
-
-			setMembers((prevMembers: any) =>
-				isRefreshing ? newMembers : [...prevMembers, ...newMembers]
-			);
+			setMembers(isRefreshing ? newMembers : [...members, ...newMembers]);
 			setLastVisibleDoc(lastVisible);
-
-			cacheRef.current[cacheKey] = { members: newMembers, lastVisible } as any;
-
+			cacheRef.current[cacheKey] = { members: newMembers, lastVisible };
 			setLoading(false);
 		} catch (error) {
 			console.log("Erreur lors de la récupération des membres: ", error);
@@ -82,7 +95,7 @@ const FriendList = () => {
 
 	useEffect(() => {
 		fetchMembers(true);
-	}, [filter]);
+	}, [filter, debouncedSearchQuery]);
 
 	const loadMoreMembers = () => {
 		if (hasMoreMembers && !loading) {
@@ -90,55 +103,66 @@ const FriendList = () => {
 		}
 	};
 
-	const filteredMembers = members.filter((m) => {
-		if (!member) return false;
-		const isCurrentUser = m.uid === member.uid;
-		const isFriend = member.friends?.includes(m.uid);
-		const matchesFilter =
-			(filter === "all" && !isFriend) ||
-			(filter === "friends" && isFriend) ||
-			(filter === "received" && member.friendRequestsReceived?.includes(m.uid)) ||
-			(filter === "sent" && member.friendRequestsSent?.includes(m.uid));
-		const matchesSearch = m.nom.toLowerCase().includes(searchQuery.toLowerCase());
-		return !isCurrentUser && matchesFilter && matchesSearch;
-	});
+	// On exclut le profil courant
+	const filteredMembers = members.filter((m) =>
+		member ? m.uid !== member.uid : false
+	);
 
 	if (loading && members.length === 0) {
-		return <ActivityIndicator size="large" color="#0000ff" />;
+		return (
+			<View style={{ paddingVertical: 20 }}>
+				<ActivityIndicator size="large" color={theme.colors.primary} />
+			</View>
+		);
 	}
 
 	return (
 		<View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-			{/* Boutons de filtre */}
+			{/* Boutons de filtres : amis, demandes reçues et envoyées */}
 			<Filters filter={filter} setFilter={setFilter} member={member} />
 
-			{/* Zone de recherche */}
-			<View
-				style={{
-					backgroundColor: theme.colors.cardBackground,
-					borderColor: theme.colors.textTertiary,
-					borderWidth: 1,
-					borderRadius: 16,
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-					paddingHorizontal: 16,
-					paddingVertical: 10,
-					marginBottom: 16,
-					alignSelf: "center",
-					width: "95%",
-				}}
+			{/* Bouton dédié pour ajouter un ami */}
+			<Pressable
+				onPress={() => setShowAddFriendModal(true)}
+				style={[styles.addFriendButton, { backgroundColor: theme.colors.primary }]}
 			>
+				<Iconify
+					icon="mdi:account-plus"
+					size={20}
+					color={theme.colors.textSecondary}
+				/>
+				<Text
+					style={{
+						color: theme.colors.textSecondary,
+						fontWeight: "bold",
+						marginLeft: 8,
+					}}
+				>
+					{t("add_friend")}
+				</Text>
+			</Pressable>
+
+			{/* Zone de recherche pour affiner le filtre de la liste principale */}
+			<View
+				style={[
+					styles.searchContainer,
+					{
+						backgroundColor: theme.colors.cardBackground,
+						borderColor: theme.colors.textTertiary,
+					},
+				]}
+			>
+				<Iconify icon="mdi:search" size={24} color={theme.colors.textTertiary} />
 				<TextInput
 					placeholder={t("search_friend")}
 					value={searchQuery}
 					onChangeText={setSearchQuery}
 					style={{ flex: 1 }}
+					placeholderTextColor={theme.colors.textTertiary}
 				/>
-				<Iconify icon="mdi:search" size={24} color={theme.colors.textTertiary} />
 			</View>
 
-			{/* Liste des membres */}
+			{/* Liste des membres filtrés (amis, demandes reçues, demandes envoyées) */}
 			<FlatList
 				data={filteredMembers}
 				numColumns={2}
@@ -148,25 +172,31 @@ const FriendList = () => {
 				contentContainerStyle={{ paddingBottom: 20 }}
 				ListEmptyComponent={
 					!loading ? (
-						<Text style={{ textAlign: "center", marginTop: 20 }}>
-							{t("no_results")}
+						<Text style={[styles.emptyText, { color: theme.colors.textTertiary }]}>
+							{filter === "friends"
+								? t("no_friends")
+								: filter === "received"
+								? t("no_friend_requests")
+								: t("no_sent_requests")}
 						</Text>
 					) : null
 				}
-				// Affichage du bouton "Voir plus" en bas de la liste
 				ListFooterComponent={
-					<View style={{ alignItems: "center", marginVertical: 16 }}>
+					<View style={styles.footer}>
 						{hasMoreMembers && !loading ? (
 							<Pressable
 								onPress={loadMoreMembers}
-								style={{
-									backgroundColor: theme.colors.backgroundTertiary,
-								}}
-								className="rounded-xl p-4 w-[95%] flex items-center justify-center"
+								style={[
+									styles.loadMoreButton,
+									{ backgroundColor: theme.colors.backgroundTertiary },
+								]}
 							>
 								<Text
-									style={{ color: theme.colors.primary }}
-									className="text-lg font-semibold"
+									style={{
+										color: theme.colors.primary,
+										fontSize: 16,
+										fontWeight: "bold",
+									}}
 								>
 									{t("see_more")}
 								</Text>
@@ -174,7 +204,7 @@ const FriendList = () => {
 						) : loading ? (
 							<ActivityIndicator
 								size="large"
-								color="#0000ff"
+								color={theme.colors.primary}
 								style={{ marginVertical: 16 }}
 							/>
 						) : null}
@@ -182,8 +212,53 @@ const FriendList = () => {
 				}
 				style={{ width: "95%", alignSelf: "center" }}
 			/>
+
+			{/* Modal pour l'ajout d'ami par code */}
+			<AddFriendModal
+				visible={showAddFriendModal}
+				onClose={() => setShowAddFriendModal(false)}
+				currentMember={member}
+			/>
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	addFriendButton: {
+		marginHorizontal: 16,
+		marginBottom: 16,
+		padding: 12,
+		borderRadius: 8,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	searchContainer: {
+		borderWidth: 1,
+		borderRadius: 16,
+		flexDirection: "row",
+		alignItems: "center",
+		paddingHorizontal: 16,
+		paddingVertical: 10,
+		marginBottom: 16,
+		alignSelf: "center",
+		width: "95%",
+	},
+	emptyText: {
+		textAlign: "center",
+		marginTop: 40,
+		fontSize: 16,
+	},
+	footer: {
+		alignItems: "center",
+		marginVertical: 16,
+	},
+	loadMoreButton: {
+		padding: 12,
+		borderRadius: 8,
+		width: "95%",
+		alignItems: "center",
+	},
+});
 
 export default FriendList;

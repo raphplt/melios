@@ -1,3 +1,4 @@
+// Filters.tsx
 import { useTheme } from "@context/ThemeContext";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -5,7 +6,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { FriendFilter } from "../../app/friendList";
 
 type FiltersProps = {
-	filter: string;
+	filter: FriendFilter;
 	setFilter: (filter: FriendFilter) => void;
 	member: any;
 };
@@ -30,22 +31,6 @@ const Filters = ({ filter, setFilter, member }: FiltersProps) => {
 			}}
 		>
 			<TouchableOpacity
-				onPress={() => setFilter("all")}
-				style={{
-					backgroundColor:
-						filter === "all" ? theme.colors.primary : theme.colors.cardBackground,
-					...filterStyle,
-				}}
-			>
-				<Text
-					style={{
-						color: filter === "all" ? theme.colors.textSecondary : theme.colors.text,
-					}}
-				>
-					{t("all")}
-				</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
 				onPress={() => setFilter("friends")}
 				style={{
 					backgroundColor:
@@ -57,7 +42,6 @@ const Filters = ({ filter, setFilter, member }: FiltersProps) => {
 					style={{
 						color:
 							filter === "friends" ? theme.colors.textSecondary : theme.colors.text,
-						fontSize: 14,
 					}}
 				>
 					{t("friends")} ({member?.friends?.length || 0})

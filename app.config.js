@@ -39,6 +39,7 @@ export default {
 				"READ_EXTERNAL_STORAGE",
 				"WRITE_EXTERNAL_STORAGE",
 				"INTERNET",
+				"CAMERA",
 			],
 			minSdkVersion: 25,
 		},

@@ -4,7 +4,6 @@ import {
 	where,
 	collection,
 	doc,
-	setDoc,
 	updateDoc,
 	arrayUnion,
 	getDoc,
@@ -12,15 +11,12 @@ import {
 	limit,
 	orderBy,
 	startAfter,
-	runTransaction,
 } from "firebase/firestore";
 import { db } from ".";
 import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
 import { Member } from "../type/member";
-import { UserHabit } from "../type/userHabit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Habit } from "@type/habit";
 import { UserLevel } from "@type/levels";
 import { getUserLevelsByUserId } from "./levels";
 
@@ -248,64 +244,73 @@ export const updateProfilePicture = async (slug: string) => {
  * Récupère les membres avec pagination.
  * @param lastVisibleDoc Document de référence pour la pagination
  * @param pageSize Nombre d'éléments à récupérer
- * @param filter Type de filtre à appliquer
+ * @param filter Type de filtre à appliquer ("all", "friends", "received", "sent")
  * @param member Membre courant pour les filtres
+ * @param searchQuery Terme de recherche (optionnel)
  * @returns { members, lastVisible }
  */
 export const getMembersPaginated = async (
 	lastVisibleDoc: any = null,
 	pageSize: number = 10,
 	filter: "all" | "friends" | "received" | "sent" = "all",
-	member?: any
+	member?: any,
+	searchQuery: string = ""
 ) => {
 	try {
 		const membersCollectionRef = collection(db, "members");
-
-		let membersQuery = query(
-			membersCollectionRef,
-			orderBy("nom"),
-			limit(pageSize)
-		);
-
-		if (lastVisibleDoc) {
-			membersQuery = query(membersQuery, startAfter(lastVisibleDoc));
-		}
-
-		if (filter === "friends" && member?.friends) {
+		let membersQuery;
+		if (filter === "friends" && member?.friends && member.friends.length > 0) {
 			membersQuery = query(
 				membersCollectionRef,
 				where("uid", "in", member.friends),
 				orderBy("nom"),
 				limit(pageSize)
 			);
-		} else if (filter === "received" && member?.friendRequestsReceived) {
+		} else if (
+			filter === "received" &&
+			member?.friendRequestsReceived &&
+			member.friendRequestsReceived.length > 0
+		) {
 			membersQuery = query(
 				membersCollectionRef,
 				where("uid", "in", member.friendRequestsReceived),
 				orderBy("nom"),
 				limit(pageSize)
 			);
-		} else if (filter === "sent" && member?.friendRequestsSent) {
+		} else if (
+			filter === "sent" &&
+			member?.friendRequestsSent &&
+			member.friendRequestsSent.length > 0
+		) {
 			membersQuery = query(
 				membersCollectionRef,
 				where("uid", "in", member.friendRequestsSent),
 				orderBy("nom"),
 				limit(pageSize)
 			);
+		} else {
+			// Cas par défaut pour le filtre "all"
+			membersQuery = query(membersCollectionRef, orderBy("nom"), limit(pageSize));
 		}
-
+		if (lastVisibleDoc) {
+			membersQuery = query(membersQuery, startAfter(lastVisibleDoc));
+		}
 		const querySnapshot = await getDocs(membersQuery);
 		const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-
 		const uniqueMembers = new Set();
-		const members = querySnapshot.docs
+		let members = querySnapshot.docs
 			.map((doc) => ({ id: doc.id, ...doc.data() }))
-			.filter((member: any) => {
-				if (uniqueMembers.has(member.uid)) return false;
-				uniqueMembers.add(member.uid);
+			.filter((m: any) => {
+				if (uniqueMembers.has(m.uid)) return false;
+				uniqueMembers.add(m.uid);
+				if (
+					searchQuery &&
+					!m.nom.toLowerCase().includes(searchQuery.toLowerCase())
+				) {
+					return false;
+				}
 				return true;
 			});
-
 		return { members, lastVisible };
 	} catch (error) {
 		console.log(
@@ -315,7 +320,6 @@ export const getMembersPaginated = async (
 		throw error;
 	}
 };
-
 
 /**
  *
@@ -597,6 +601,109 @@ export const getFriends = async (): Promise<
 		return friends;
 	} catch (error) {
 		console.error("Erreur lors de la récupération des amis :", error);
+		throw error;
+	}
+};
+
+/**
+ * Génère un code d'ami unique pour un membre
+ * @returns Un code unique de 8 caractères
+ */
+export const generateFriendCode = (): string => {
+	// Caractères autorisés pour le code (éviter les caractères ambigus comme 0/O ou 1/I)
+	const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+	let result = "";
+
+	// Générer un code de 8 caractères
+	for (let i = 0; i < 8; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+
+	return result;
+};
+
+/**
+ * Récupère un membre par son code d'ami
+ * @param friendCode Le code d'ami à rechercher
+ * @returns Le membre correspondant ou null si non trouvé
+ */
+export const getMemberByFriendCode = async (
+	friendCode: string
+): Promise<Member | null> => {
+	try {
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("friendCode", "==", friendCode))
+		);
+
+		if (!querySnapshot.empty) {
+			const memberDoc = querySnapshot.docs[0];
+			const memberData = memberDoc.data();
+
+			return {
+				uid: memberData.uid,
+				nom: memberData.nom,
+				motivation: memberData.motivation,
+				objectifs: memberData.objectifs,
+				temps: memberData.temps,
+				aspects: memberData.aspects,
+				profilePicture: memberData.profilePicture,
+				friendCode: memberData.friendCode,
+				friends: memberData.friends || [],
+				friendRequestsReceived: memberData.friendRequestsReceived || [],
+				friendRequestsSent: memberData.friendRequestsSent || [],
+				activityConfidentiality: memberData.activityConfidentiality,
+			};
+		}
+
+		return null;
+	} catch (error) {
+		console.error("Erreur lors de la recherche par code d'ami:", error);
+		throw error;
+	}
+};
+
+/**
+ * Régénère le code d'ami d'un membre
+ * @returns Le nouveau code d'ami
+ */
+export const regenerateFriendCode = async (): Promise<string> => {
+	try {
+		const currentUid = auth.currentUser?.uid;
+		if (!currentUid) throw new Error("Utilisateur non authentifié");
+
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", currentUid))
+		);
+
+		if (querySnapshot.empty) {
+			throw new Error("Membre non trouvé");
+		}
+
+		const memberDoc = querySnapshot.docs[0];
+		const newFriendCode = generateFriendCode();
+
+		await updateDoc(memberDoc.ref, {
+			friendCode: newFriendCode,
+		});
+
+		// Mise à jour du stockage local
+		const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
+		if (storedData) {
+			const memberData = JSON.parse(storedData);
+			memberData.friendCode = newFriendCode;
+			await AsyncStorage.setItem(
+				LOCAL_STORAGE_MEMBER_INFO_KEY,
+				JSON.stringify(memberData)
+			);
+		}
+
+		return newFriendCode;
+	} catch (error) {
+		console.error("Erreur lors de la régénération du code d'ami:", error);
 		throw error;
 	}
 };

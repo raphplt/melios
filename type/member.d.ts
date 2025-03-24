@@ -15,4 +15,5 @@ export interface Member {
 	friendRequestsReceived?: string[];
 	activityConfidentiality?: "public" | "private" | "friends";
 	levels?: UserLevel[];
+	friendCode?: string;
 }

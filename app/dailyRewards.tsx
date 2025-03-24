@@ -6,8 +6,8 @@ import {
 	View,
 	Dimensions,
 	TouchableOpacity,
-	Animated,
 } from "react-native";
+import * as Progress from "react-native-progress";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useTheme } from "@context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,7 +19,6 @@ import CachedImage from "@components/Shared/CachedImage";
 import { Iconify } from "react-native-iconify";
 import { setRewards } from "@db/rewards";
 import usePoints from "@hooks/usePoints";
-import { LinearGradient } from "expo-linear-gradient";
 
 const DailyRewards: React.FC = () => {
 	const { theme } = useTheme();
@@ -44,29 +43,10 @@ const DailyRewards: React.FC = () => {
 		if (canClaimReward) {
 			setShowModal(true);
 			await claimDailyReward();
-			setRewards("rewards", 3);
-			addRewardPoints(3);
+			setRewards("rewards", 3); // database
+			addRewardPoints(3); // local (for real time)
 		}
 	};
-
-	const translateX = new Animated.Value(0);
-
-	React.useEffect(() => {
-		Animated.loop(
-			Animated.sequence([
-				Animated.timing(translateX, {
-					toValue: 100,
-					duration: 1000,
-					useNativeDriver: true,
-				}),
-				Animated.timing(translateX, {
-					toValue: 0,
-					duration: 0,
-					useNativeDriver: true,
-				}),
-			])
-		).start();
-	}, []);
 
 	return (
 		<ScrollView
@@ -97,16 +77,13 @@ const DailyRewards: React.FC = () => {
 
 				{!rewardClaimed ? (
 					<>
-						<View className="w-11/12 mx-auto px-1 items-center font-semibold mb-2 flex flex-row justify-between">
-							<Text
-								className="text-lg font-semibold"
-								style={{ color: theme.colors.text }}
-							>
-								{validatedTasksCount}/3 {t("tasks_completed")}
+						<View className="w-11/12 mx-auto font-semibold flex flex-row justify-between items-center mb-2">
+							<Text className="text-lg font-bold" style={{ color: theme.colors.text }}>
+								{validatedTasksCount}/3
 							</Text>
 							<View
-								className="flex flex-row items-center gap-1 p-1 rounded-xl"
-								style={{ backgroundColor: theme.colors.background }}
+								className="flex flex-row items-center gap-1 p-1 py-[2px] rounded-lg"
+								style={{ backgroundColor: theme.colors.cardBackground }}
 							>
 								<Text
 									className="text-md font-semibold"
@@ -117,56 +94,16 @@ const DailyRewards: React.FC = () => {
 								<MoneyMelios width={18} />
 							</View>
 						</View>
-						<View
-							style={{
-								width: Dimensions.get("window").width * 0.85,
-								height: 14,
-								backgroundColor: theme.colors.cardBackground,
-								borderRadius: 8,
-								overflow: "hidden",
-								marginBottom: 16,
-								marginHorizontal: "auto",
-							}}
-						>
-							<View
-								style={{
-									width: `${(validatedTasksCount / 3) * 100}%`,
-									height: "100%",
-									overflow: "hidden",
-								}}
-							>
-								<LinearGradient
-									colors={[
-										theme.colors.purplePrimary,
-										theme.colors.bluePrimary,
-										theme.colors.orangePrimary,
-									]}
-									start={{ x: 0, y: 0 }}
-									end={{ x: 1, y: 0 }}
-									style={{ width: "100%", height: "100%" }}
-								>
-									<Animated.View
-										style={{
-											position: "absolute",
-											top: 0,
-											left: 0,
-											right: 0,
-											bottom: 0,
-											opacity: 0.4,
-											transform: [
-												{
-													translateX: translateX.interpolate({
-														inputRange: [0, 100],
-														outputRange: ["-100%", "100%"],
-													}),
-												},
-											],
-											backgroundColor: "rgba(255, 255, 255, 0.5)",
-										}}
-									/>
-								</LinearGradient>
-							</View>
-						</View>
+						<Progress.Bar
+							progress={validatedTasksCount / 3}
+							width={Dimensions.get("window").width * 0.85}
+							color={theme.colors.primary}
+							borderRadius={10}
+							height={12}
+							borderWidth={0}
+							className="mx-auto mb-4"
+							unfilledColor={theme.colors.cardBackground}
+						/>
 					</>
 				) : (
 					<View className="py-2">
