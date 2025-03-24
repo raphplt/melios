@@ -38,7 +38,7 @@ const FriendList = () => {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 
-	const [members, setMembers] = useState<Member[]>([]);
+	const [members, setMembers] = useState<any[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [lastVisibleDoc, setLastVisibleDoc] = useState<any>(null);
 	const [hasMoreMembers, setHasMoreMembers] = useState(true);
