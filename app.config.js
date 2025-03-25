@@ -51,6 +51,7 @@ export default {
 		plugins: [
 			"@react-native-google-signin/google-signin",
 			"expo-router",
+
 			"expo-secure-store",
 			[
 				"expo-notifications",
@@ -62,6 +63,14 @@ export default {
 				"expo-font",
 				{
 					fonts: ["assets/fonts/LibreBaskerville-Regular.ttf"],
+				},
+			],
+			[
+				"expo-camera",
+				{
+					cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
+					microphonePermission: "Allow $(PRODUCT_NAME) to access your microphone",
+					recordAudioAndroid: true,
 				},
 			],
 		],

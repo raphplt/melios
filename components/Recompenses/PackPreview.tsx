@@ -7,7 +7,6 @@ import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
-import { setUserPack } from "@db/userPacks";
 import { UserPack } from "@type/userPack";
 
 const PackPreview = () => {
@@ -31,14 +30,7 @@ const PackPreview = () => {
 			id: selectedPack.id,
 			unlocked: true,
 		};
-
-		// setUserPack({
-		// 	id: selectedPack.id,
-		// 	unlocked: true,
-		// });
 	};
-
-	console.log(selectedPack);
 
 	return (
 		<ScrollView

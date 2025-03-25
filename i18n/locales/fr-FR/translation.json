@@ -292,5 +292,9 @@
     "sign_in_with_apple": "Se connecter avec Apple",
     "tasks_completed": "Tâches complétées",
     "key_results": "Résultats clés",
-    "expectations": "Attentes"
+    "expectations": "Attentes",
+    "my_friend_code": "Mon code ami",
+    "show_my_code": "Afficher mon code",
+    "scan_qr_code": "Scanner un code QR",
+    "enter_friend_code": "Entrer un code ami"
 }

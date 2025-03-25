@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { Iconify } from "react-native-iconify";
 import QRCode from "react-native-qrcode-svg";
-import { Camera, BarcodeScanningResult } from "expo-camera";
+import { Camera, BarcodeScanningResult, CameraView } from "expo-camera";
 
 export const AddFriendModal = ({
 	visible,
@@ -133,9 +133,10 @@ export const AddFriendModal = ({
 						<Text>{t("no_camera_access")}</Text>
 					) : (
 						<>
-							<Camera
+							<CameraView
 								onBarcodeScanned={handleBarCodeScanned}
 								style={styles.scanner}
+								facing="back"
 								// type={Camera.Constants.Type.back}
 							/>
 							<TouchableOpacity

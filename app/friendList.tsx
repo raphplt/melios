@@ -143,7 +143,7 @@ const FriendList = () => {
 			</Pressable>
 
 			{/* Zone de recherche pour affiner le filtre de la liste principale */}
-			<View
+			{/* <View
 				style={[
 					styles.searchContainer,
 					{
@@ -160,7 +160,7 @@ const FriendList = () => {
 					style={{ flex: 1 }}
 					placeholderTextColor={theme.colors.textTertiary}
 				/>
-			</View>
+			</View> */}
 
 			{/* Liste des membres filtrés (amis, demandes reçues, demandes envoyées) */}
 			<FlatList

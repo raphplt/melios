@@ -10,7 +10,6 @@ import {
 	where,
 } from "firebase/firestore";
 import { auth, db } from ".";
-import { faker } from "@faker-js/faker";
 
 export const getRewards = async (
 	options: {
@@ -131,10 +130,10 @@ export const getAllRewardsPaginated = async (
 				if (!userSnapshot.empty) {
 					const userDoc = userSnapshot.docs[0];
 					const userData = userDoc.data();
-					userName = userData.nom || faker.person.firstName();
+					userName = userData.nom || "Unknown User";
 					profilePicture = userData.profilePicture || null;
 				} else {
-					userName = faker.person.firstName();
+					userName = "Unknown User";
 				}
 
 				return {
