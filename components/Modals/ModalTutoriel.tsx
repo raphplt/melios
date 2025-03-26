@@ -1,6 +1,6 @@
 import { useTheme } from "@context/ThemeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { View, Pressable, Text, ScrollView } from "react-native";
 import ZoomableView from "@components/Shared/ZoomableView";
@@ -23,11 +23,15 @@ export default function ModalTutorial({
 	const { t } = useTranslation();
 
 	const [isTutorialVisible, setTutorialVisible] = useState(false);
+	const hasCheckedStorage = useRef(false);
 
 	const fetchLocalNew = useCallback(async () => {
-		const alreadyView = await AsyncStorage.getItem(slug);
-		if (!alreadyView) {
-			setTutorialVisible(true);
+		if (!hasCheckedStorage.current) {
+			const alreadyView = await AsyncStorage.getItem(slug);
+			if (!alreadyView) {
+				setTutorialVisible(true);
+			}
+			hasCheckedStorage.current = true;
 		}
 	}, [slug]);
 

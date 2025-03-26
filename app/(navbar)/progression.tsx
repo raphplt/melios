@@ -23,11 +23,7 @@ const Progression: React.FC = () => {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
-				<LinearGradient
-					colors={["#ff9a9e", "#fad0c4", "#fbc2eb", theme.colors.cardBackground]}
-					start={{ x: 0, y: 0 }}
-					end={{ x: 1, y: 1 }}
-				>
+				<View>
 					<Streak />
 					<ShareMonthlyRecap />
 					<GoalSection />
@@ -35,7 +31,7 @@ const Progression: React.FC = () => {
 					<CalendarHabits />
 					<Charts />
 					<View className="h-20 w-full"></View>
-				</LinearGradient>
+				</View>
 			</ScrollView>
 
 			<ModalTutorial

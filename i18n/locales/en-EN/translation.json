@@ -294,5 +294,6 @@
     "my_friend_code": "Mon code ami",
     "show_my_code": "Show my code",
     "scan_qr_code": "Scan QR code",
-    "enter_friend_code": "Enter friend code"
+    "enter_friend_code": "Enter friend code",
+    "select_confidentiality_text": "Select confidentiality of your habits for other members"
 }

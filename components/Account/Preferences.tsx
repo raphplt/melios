@@ -10,8 +10,6 @@ import { useTheme } from "@context/ThemeContext";
 import AccountBlock from "./AccountBlock";
 import RowBlock from "./RowBlock";
 import ToggleButton from "./Switch";
-import useNotifications from "@hooks/useNotifications";
-import { useData } from "@context/DataContext";
 import { disconnectUser } from "@db/users";
 import CustomPressable from "@components/Shared/CustomPressable";
 import LanguageSelector from "./LanguageSelector";
@@ -23,10 +21,6 @@ export default function Preferences() {
 	const { theme, toggleTheme } = useTheme();
 	const { t } = useTranslation();
 	const [isDarkTheme, setIsDarkTheme] = useState(theme.dark);
-	const { setNotificationToggle, notificationToggle } = useData();
-
-	const { scheduleDailyNotification, cancelAllNotifications } =
-		useNotifications();
 
 	const [modalVisible, setModalVisible] = useState(false);
 
@@ -36,7 +30,6 @@ export default function Preferences() {
 		setIsDarkTheme(newTheme);
 		await AsyncStorage.setItem("theme", newTheme ? "dark" : "light");
 	};
-
 
 	const confirmLogout = async () => {
 		await disconnectUser();
@@ -91,12 +84,6 @@ export default function Preferences() {
 					<Iconify icon="mdi:bell-outline" size={20} color={theme.colors.primary} />
 				}
 				title={t("notifications")}
-				// rightContent={
-				// 	<ToggleButton
-				// 		onToggle={handleToggleNotifications}
-				// 		value={notificationToggle}
-				// 	/>
-				// }
 				rightContent={
 					<Iconify
 						icon="ion:chevron-forward"

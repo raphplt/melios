@@ -131,7 +131,7 @@ const Pack = () => {
 
 	return (
 		<View style={{ flex: 1 }}>
-			<ScrollView style={{ flex: 1 }}>
+			<ScrollView style={{ flex: 1, paddingTop: 40 }}>
 				<ButtonClose />
 
 				<View

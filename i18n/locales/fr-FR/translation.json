@@ -296,5 +296,6 @@
     "my_friend_code": "Mon code ami",
     "show_my_code": "Afficher mon code",
     "scan_qr_code": "Scanner un code QR",
-    "enter_friend_code": "Entrer un code ami"
+    "enter_friend_code": "Entrer un code ami",
+    "select_confidentiality_text": "Sélectionnez la confidentialité de vos activités pour les autres membres."
 }
