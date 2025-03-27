@@ -297,5 +297,6 @@
     "show_my_code": "Afficher mon code",
     "scan_qr_code": "Scanner un code QR",
     "enter_friend_code": "Entrer un code ami",
-    "select_confidentiality_text": "Sélectionnez la confidentialité de vos activités pour les autres membres."
+    "select_confidentiality_text": "Sélectionnez la confidentialité de vos activités pour les autres membres.",
+    "select_language_text": "Sélectionnez la langue de l'application"
 }

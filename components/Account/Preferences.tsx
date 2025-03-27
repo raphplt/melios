@@ -96,18 +96,18 @@ export default function Preferences() {
 			<View className="w-full h-[1px] bg-gray-300"></View>
 
 			<RowBlock
+				title={t("language")}
+				icon={<Iconify icon="mdi:earth" size={20} color={theme.colors.primary} />}
+				rightContent={<LanguageSelector />}
+			/>
+			<View className="w-full h-[1px] bg-gray-300"></View>
+
+			<RowBlock
 				icon={
 					<Iconify icon="iconoir:community" size={20} color={theme.colors.primary} />
 				}
 				title={t("confidentiality")}
 				rightContent={<ConfidentialitySelector />}
-			/>
-			<View className="w-full h-[1px] bg-gray-300"></View>
-
-			<RowBlock
-				title={t("language")}
-				icon={<Iconify icon="mdi:earth" size={20} color={theme.colors.primary} />}
-				rightContent={<LanguageSelector />}
 			/>
 			<View className="w-full h-[1px] bg-gray-300"></View>
 

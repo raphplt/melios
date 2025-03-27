@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	FlatList,
 	Pressable,
@@ -12,16 +12,31 @@ import { updateMemberField } from "@db/member";
 import { useTheme } from "@context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 import BottomSlideModal from "@components/Modals/ModalBottom";
+import Monicon from "@monicon/native";
 
 type Confidentialities = "public" | "private" | "friends";
 
 const ConfidentialitySelector = () => {
-	const { member, setMember } = useData();
 	const { theme } = useTheme();
-	const [selectedConfidentiality, setSelectedConfidentiality] =
-		useState<Confidentialities>(member?.activityConfidentiality || "private");
 	const { t } = useTranslation();
+	const { member, setMember } = useData();
 	const [visible, setVisible] = useState(false);
+	const [selectedConfidentiality, setSelectedConfidentiality] =
+		useState<Confidentialities>("private");
+
+	console.log("member", member?.activityConfidentiality);
+
+	useEffect(() => {
+		if (member) {
+			setSelectedConfidentiality(member.activityConfidentiality || "private");
+		}
+	}, [member]);
+
+	const values = [
+		{ label: t("public"), value: "public", icon: "material-symbols:globe" },
+		{ label: t("private"), value: "private", icon: "material-symbols:lock" },
+		{ label: t("friends"), value: "friends", icon: "material-symbols:groups" },
+	];
 
 	const changeConfidentiality = async (confidentiality: Confidentialities) => {
 		setSelectedConfidentiality(confidentiality);
@@ -40,42 +55,30 @@ const ConfidentialitySelector = () => {
 		setVisible(false);
 	};
 
-	const renderIcon = (name: string) => {
-		switch (name) {
+	const renderIcon = (value: Confidentialities) => {
+		switch (value) {
 			case "public":
 				return (
 					<Iconify
-						icon="mynaui:globe"
-						size={18}
-						color={
-							selectedConfidentiality === "public"
-								? theme.colors.text
-								: theme.colors.textTertiary
-						}
+						icon="material-symbols:globe"
+						size={24}
+						color={theme.colors.text}
 					/>
 				);
 			case "private":
 				return (
 					<Iconify
 						icon="material-symbols:lock"
-						size={18}
-						color={
-							selectedConfidentiality === "private"
-								? theme.colors.text
-								: theme.colors.textTertiary
-						}
+						size={24}
+						color={theme.colors.text}
 					/>
 				);
 			case "friends":
 				return (
 					<Iconify
-						icon="ion:people"
-						size={18}
-						color={
-							selectedConfidentiality === "friends"
-								? theme.colors.text
-								: theme.colors.textTertiary
-						}
+						icon="material-symbols:groups"
+						size={24}
+						color={theme.colors.text}
 					/>
 				);
 		}
@@ -97,23 +100,13 @@ const ConfidentialitySelector = () => {
 				</View>
 			</Pressable>
 
-			<BottomSlideModal visible={visible} setVisible={handleClose}>
+			<BottomSlideModal
+				visible={visible}
+				setVisible={handleClose}
+				title={t("select_confidentiality_text")}
+			>
 				<FlatList
-					ListHeaderComponent={
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-lg font-semibold mb-4"
-						>
-							{t("select_confidentiality_text")}
-						</Text>
-					}
-					data={[
-						{ label: t("public"), value: "public" },
-						{ label: t("private"), value: "private" },
-						{ label: t("friends"), value: "friends" },
-					]}
+					data={values}
 					renderItem={({ item }) => (
 						<TouchableOpacity
 							onPress={() => changeConfidentiality(item.value as Confidentialities)}
@@ -126,12 +119,20 @@ const ConfidentialitySelector = () => {
 							}}
 							className="flex-row items-center rounded-xl py-5"
 						>
-							{renderIcon(item.value)}
+							<Monicon
+								name={item.icon as any}
+								size={18}
+								color={
+									selectedConfidentiality === item.value
+										? theme.colors.textSecondary
+										: theme.colors.textTertiary
+								}
+							/>
 							<Text
 								style={{
 									color:
 										selectedConfidentiality === item.value
-											? theme.colors.text
+											? theme.colors.textSecondary
 											: theme.colors.textTertiary,
 								}}
 								className="ml-4 font-semibold"

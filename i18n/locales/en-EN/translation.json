@@ -295,5 +295,6 @@
     "show_my_code": "Show my code",
     "scan_qr_code": "Scan QR code",
     "enter_friend_code": "Enter friend code",
-    "select_confidentiality_text": "Select confidentiality of your habits for other members"
+    "select_confidentiality_text": "Select confidentiality of your habits for other members",
+    "select_language_text": "Select your language"
 }

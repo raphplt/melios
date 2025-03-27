@@ -49,21 +49,23 @@ const LanguageSelector = () => {
 		return value === "fr-FR" ? "Français" : "English";
 	};
 
-	const renderIcon = () => {
-		return (
-			<Iconify
-				icon="material-symbols:language"
-				size={18}
-				color={theme.colors.text}
-			/>
+	const getFlagIcon = (value: string) => {
+		return value === "fr-FR" ? (
+			<Iconify icon="twemoji:flag-france" size={24} />
+		) : (
+			<Iconify icon="twemoji:flag-for-united-states" size={24} />
 		);
+	};
+
+	const renderLanguageItem = (value: string, selected: boolean) => {
+		return <View className="flex-row items-center">{getFlagIcon(value)}</View>;
 	};
 
 	return (
 		<View>
 			<Pressable onPress={handleOpen}>
 				<View className="flex-row items-center">
-					{renderIcon()}
+					{renderLanguageItem(selectedLanguage, false)}
 					<Text
 						className="ml-2"
 						style={{
@@ -75,18 +77,12 @@ const LanguageSelector = () => {
 				</View>
 			</Pressable>
 
-			<BottomSlideModal visible={visible} setVisible={handleClose}>
+			<BottomSlideModal
+				visible={visible}
+				setVisible={handleClose}
+				title={t("select_language_text")}
+			>
 				<FlatList
-					ListHeaderComponent={
-						<Text
-							style={{
-								color: theme.colors.text,
-							}}
-							className="text-lg font-semibold mb-4"
-						>
-							{t("select_language_text")}
-						</Text>
-					}
 					data={[
 						{ label: "English", value: "en-US" },
 						{ label: "Français", value: "fr-FR" },
@@ -101,12 +97,12 @@ const LanguageSelector = () => {
 							}}
 							className="flex-row items-center rounded-xl py-5"
 						>
-							{renderIcon()}
+							{renderLanguageItem(item.value, selectedLanguage === item.value)}
 							<Text
 								style={{
 									color:
 										selectedLanguage === item.value
-											? theme.colors.text
+											? theme.colors.textSecondary
 											: theme.colors.textTertiary,
 								}}
 								className="ml-4 font-semibold"
