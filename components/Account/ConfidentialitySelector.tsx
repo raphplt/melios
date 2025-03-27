@@ -24,8 +24,6 @@ const ConfidentialitySelector = () => {
 	const [selectedConfidentiality, setSelectedConfidentiality] =
 		useState<Confidentialities>("private");
 
-	console.log("member", member?.activityConfidentiality);
-
 	useEffect(() => {
 		if (member) {
 			setSelectedConfidentiality(member.activityConfidentiality || "private");
