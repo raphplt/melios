@@ -4,7 +4,6 @@ import { View, Text, Pressable, Dimensions } from "react-native";
 import { Iconify } from "react-native-iconify";
 import ModalAddGoal from "./ModalAddGoal";
 import { useTranslation } from "react-i18next";
-import { BlurView } from "expo-blur";
 
 export default function AddGoal() {
 	const { theme } = useTheme();
@@ -20,16 +19,17 @@ export default function AddGoal() {
 				width: width,
 			}}
 		>
-			<BlurView
-				intensity={100}
-				tint={theme.dark ? "dark" : "light"}
+			<View
 				style={{
 					width: width * 0.95,
 					flexDirection: "row",
 					alignItems: "center",
 					justifyContent: "center",
+					borderColor: theme.colors.primary,
+					borderWidth: 1,
+					borderStyle: "dashed",
 				}}
-				className="mx-auto flex items-center justify-center flex-row px-2 py-1 h-14 rounded-xl overflow-hidden"
+				className="mx-auto flex items-center justify-center flex-row px-2 py-1 h-14 rounded-xl"
 			>
 				<Pressable
 					onPress={() => setVisible(true)}
@@ -50,7 +50,7 @@ export default function AddGoal() {
 						style={{ marginLeft: "auto" }}
 					/>
 				</Pressable>
-			</BlurView>
+			</View>
 
 			<ModalAddGoal visible={visible} setVisible={setVisible} />
 		</View>

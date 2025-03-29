@@ -11,6 +11,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import ZoomableView from "@components/Shared/ZoomableView";
 import { BlurView } from "expo-blur";
 import { getLevelName } from "@utils/levels";
+import { lightenColor } from "@utils/colors";
 
 const LevelItem = ({ level }: { level: CombinedLevel }) => {
 	const { theme } = useTheme();
@@ -26,7 +27,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 		() => (isTablet ? (width - 40) / 3 : (width - 40) / 2),
 		[width]
 	);
-	
+
 	const handlePress = useCallback(() => {
 		setSelectedLevel(level);
 		navigation.navigate("levelDetail");
@@ -43,14 +44,13 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 
 	return (
 		<ZoomableView>
-			<BlurView
-				intensity={100}
-				tint={theme.dark ? "dark" : "light"}
+			<View
 				style={{
 					width: itemSize,
 					height: itemSize,
+					backgroundColor: lightenColor(level.color || theme.colors.primary, 0.1),
 				}}
-				className="p-2 rounded-xl my-2 overflow-hidden"
+				className="p-2 rounded-xl my-2"
 			>
 				<Pressable className="" onPress={handlePress}>
 					<View className="flex flex-col items-center justify-between h-full">
@@ -103,7 +103,7 @@ const LevelItem = ({ level }: { level: CombinedLevel }) => {
 						</View>
 					</View>
 				</Pressable>
-			</BlurView>
+			</View>
 		</ZoomableView>
 	);
 };
