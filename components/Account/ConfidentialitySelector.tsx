@@ -117,15 +117,7 @@ const ConfidentialitySelector = () => {
 							}}
 							className="flex-row items-center rounded-xl py-5"
 						>
-							<Monicon
-								name={item.icon as any}
-								size={18}
-								color={
-									selectedConfidentiality === item.value
-										? theme.colors.textSecondary
-										: theme.colors.textTertiary
-								}
-							/>
+							{renderIcon(item.value as Confidentialities)}
 							<Text
 								style={{
 									color:
