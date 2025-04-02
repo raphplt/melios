@@ -25,12 +25,12 @@ const PackPreview = () => {
 		);
 	};
 
-	const handleUnlock = () => {
-		const userPack: UserPack = {
-			id: selectedPack.id,
-			unlocked: true,
-		};
-	};
+	// const handleUnlock = () => {
+	// 	const userPack: UserPack = {
+	// 		id: selectedPack.id,
+	// 		unlocked: true,
+	// 	};
+	// };
 
 	return (
 		<ScrollView
@@ -178,7 +178,7 @@ const PackPreview = () => {
 
 				<Pressable
 					style={{
-						backgroundColor: theme.colors.primary,
+						backgroundColor: theme.colors.grayPrimary,
 						opacity: 0.9,
 					}}
 					className="mt-4 p-3 rounded-xl flex flex-row justify-center items-center my-2 w-11/12 mb-6 "

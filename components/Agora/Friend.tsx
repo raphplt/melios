@@ -1,23 +1,17 @@
 import React, { useEffect, useState } from "react";
-import {
-	Text,
-	View,
-	Pressable,
-	ActivityIndicator,
-	TouchableOpacity,
-} from "react-native";
+import { Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
 import CachedImage from "@components/Shared/CachedImage";
 import { useTheme } from "@context/ThemeContext";
 import { Member } from "@type/member";
-import {
-	sendFriendRequest,
-	acceptFriendRequest,
-	declineFriendRequest,
-} from "@db/member";
 import getIcon from "@utils/cosmeticsUtils";
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
+import {
+	sendFriendRequest,
+	acceptFriendRequest,
+	declineFriendRequest,
+} from "@db/friend";
 
 type Props = {
 	member: Member;

@@ -296,5 +296,9 @@
     "scan_qr_code": "Scan QR code",
     "enter_friend_code": "Enter friend code",
     "select_confidentiality_text": "Select confidentiality of your habits for other members",
-    "select_language_text": "Select your language"
+    "select_language_text": "Select your language",
+    "add": "Add",
+    "share": "Share",
+    "share_code_to_connect": "Share this code to connect with your friends",
+    "no_friend_requests": "No friend requests"
 }

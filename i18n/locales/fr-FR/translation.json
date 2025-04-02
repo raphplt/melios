@@ -298,5 +298,9 @@
     "scan_qr_code": "Scanner un code QR",
     "enter_friend_code": "Entrer un code ami",
     "select_confidentiality_text": "Sélectionnez la confidentialité de vos activités pour les autres membres.",
-    "select_language_text": "Sélectionnez la langue de l'application"
+    "select_language_text": "Sélectionnez la langue de l'application",
+    "add": "Ajouter",
+    "share": "Partager",
+    "share_code_to_connect": "Partagez ce code pour vous connecter avec vos amis",
+    "no_friend_requests": "Aucune demande d'ami"
 }
