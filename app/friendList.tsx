@@ -17,7 +17,8 @@ import { useTheme } from "@context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Iconify } from "react-native-iconify";
 import Filters from "@components/Agora/Filters";
-import { Camera, CameraView, BarcodeScanningResult } from "expo-camera";
+import { Camera, CameraView } from "expo-camera";
+import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
 import { getMemberProfileByUid } from "../db/member";
 import { getMemberByFriendCode, sendFriendRequest } from "@db/friend";
 import QRCode from "react-native-qrcode-svg";
@@ -78,7 +79,7 @@ const FriendList = () => {
 		}
 	};
 
-	const handleBarCodeScanned = (result: BarcodeScanningResult) => {
+	const handleBarCodeScanned = (result: BarCodeScannerResult) => {
 		setShowScanner(false);
 		try {
 			const scannedData = JSON.parse(result.data);
