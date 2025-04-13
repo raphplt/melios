@@ -7,10 +7,8 @@ import Animated, {
 	useScrollViewOffset,
 } from "react-native-reanimated";
 import { useTabBarPadding } from "@hooks/useTabBar";
-import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
-import { useTranslation } from "react-i18next";
 import MissionButton from "./MissionButton";
 import StreakBox from "./StreakBox";
 import GlobalLevelBox from "./GlobalLevelBox";
@@ -29,9 +27,8 @@ export default function ParallaxScrollView({
 	const scrollRef = useAnimatedRef<Animated.ScrollView>();
 	const scrollOffset = useScrollViewOffset(scrollRef);
 
+	const { imageTemple } = useIndex();
 	const { theme } = useTheme();
-	const { isDayTime, imageTemple } = useIndex();
-	const { t } = useTranslation();
 
 	const paddingBottom = useTabBarPadding();
 
@@ -55,14 +52,6 @@ export default function ParallaxScrollView({
 			],
 		};
 	}, [scrollOffset]);
-
-	const { usersLevels } = useData();
-
-	const globalLevel = usersLevels["P0gwsxEYNJATbmCoOdhc" as any];
-
-	const xpPercentage = globalLevel
-		? (globalLevel.currentXp / globalLevel.nextLevelXp) * 100
-		: 0;
 
 	return (
 		<>

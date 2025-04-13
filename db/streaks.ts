@@ -46,7 +46,6 @@ export const initializeStreak = async () => {
  */
 export const incrementStreak = async (): Promise<Streak | null> => {
 	try {
-		// Récupération de l'utilisateur actuel
 		const user = auth.currentUser;
 		if (!user || !user.uid) throw new Error("Utilisateur non authentifié");
 
@@ -87,6 +86,25 @@ export const incrementStreak = async (): Promise<Streak | null> => {
 		// Ne pas incrémenter si la streak a déjà été mise à jour dans les 24 dernières heures
 		if (hoursSinceLastUpdate < 24) {
 			return currentStreak;
+		}
+
+		// Cas spécial: si le streak est à 0, l'incrémenter immédiatement
+		// sans tenir compte de la règle des 24h
+		if (currentStreak.value === 0) {
+			const updatedStreak: Streak = {
+				...currentStreak,
+				value: 1, // Commencer un nouveau streak
+				updatedAt: now.toISOString(),
+				maxValue: Math.max(currentStreak.maxValue, 1),
+			};
+
+			await updateDoc(streakDocRef, {
+				value: updatedStreak.value,
+				updatedAt: updatedStreak.updatedAt,
+				maxValue: updatedStreak.maxValue,
+			});
+
+			return updatedStreak;
 		}
 
 		// Incrémente la streak et met à jour le maxValue si nécessaire

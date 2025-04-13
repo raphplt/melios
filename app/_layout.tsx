@@ -22,6 +22,7 @@ import { StatusBar } from "expo-status-bar";
 import notifee from "@notifee/react-native";
 export { ErrorBoundary } from "expo-router";
 import * as Notifications from "expo-notifications";
+import * as NavigationBar from "expo-navigation-bar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,7 +48,6 @@ function MainNavigator() {
 		deviceColorScheme === "dark" ? DarkTheme : DefaultTheme
 	);
 
-	// Récupération du thème sauvegardé
 	useEffect(() => {
 		(async () => {
 			const savedTheme = await AsyncStorage.getItem("theme");
@@ -57,7 +57,6 @@ function MainNavigator() {
 		})();
 	}, []);
 
-	// Stabilisation de toggleTheme
 	const toggleTheme = useCallback(() => {
 		setTheme((prevTheme) => {
 			const newTheme = prevTheme === DefaultTheme ? DarkTheme : DefaultTheme;
@@ -66,13 +65,11 @@ function MainNavigator() {
 		});
 	}, []);
 
-	// Mémorisation de la valeur du contexte
 	const themeContextValue = useMemo(
 		() => ({ theme, toggleTheme }),
 		[theme, toggleTheme]
 	);
 
-	// Enregistrer le service de notifications une seule fois
 	useEffect(() => {
 		notifee.registerForegroundService((notification) => {
 			return new Promise(() => {});
@@ -87,6 +84,11 @@ function MainNavigator() {
 				shouldSetBadge: false,
 			}),
 		});
+	}, []);
+
+	useEffect(() => {
+		NavigationBar.setBackgroundColorAsync("#00000000");
+		NavigationBar.setButtonStyleAsync("light");
 	}, []);
 
 	return (
