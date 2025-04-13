@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next";
 import ViewToggle, { ViewMode } from "./ViewToggle";
 import CalendarView from "./CalendarView";
 import AddHabits from "./AddHabits";
+import HabitToggle, { HabitFilterMode } from "./HabitToggle";
+import { HabitType } from "@type/habit";
 
 const HabitsSection = () => {
 	const { userHabits } = useIndex();
@@ -18,6 +20,9 @@ const HabitsSection = () => {
 	const { t } = useTranslation();
 
 	const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.LIST);
+	const [filterMode, setFilterMode] = useState<HabitFilterMode>(
+		HabitFilterMode.ALL
+	);
 
 	const today: DayOfWeek = useMemo(() => {
 		return new Date()
@@ -34,9 +39,18 @@ const HabitsSection = () => {
 				free: [],
 			};
 
-		const filtered = userHabits.filter(
+		let filtered = userHabits.filter(
 			(habit) => habit.frequency && habit.frequency[today]
 		);
+
+		// Apply type filtering
+		if (filterMode === HabitFilterMode.POSITIVE) {
+			// Affiche toutes les habitudes sauf celles explicitement négatives
+			filtered = filtered.filter((habit) => habit.type !== "Négatif");
+		} else if (filterMode === HabitFilterMode.NEGATIVE) {
+			// Pour les habitudes négatives, garde le comportement d'origine
+			filtered = filtered.filter((habit) => habit.type === "Négatif");
+		}
 
 		return {
 			morning: filtered.filter((habit) => habit.moment >= 6 && habit.moment < 12),
@@ -46,8 +60,7 @@ const HabitsSection = () => {
 			evening: filtered.filter((habit) => habit.moment >= 18),
 			free: filtered.filter((habit) => habit.moment === -1 || habit.moment < 6),
 		};
-	}, [userHabits, today]);
-
+	}, [userHabits, today, filterMode]);
 	if (!userHabits || userHabits.length === 0) return <NoHabits />;
 
 	const {
@@ -77,6 +90,10 @@ const HabitsSection = () => {
 				<AddHabits />
 			</View>
 
+			<View style={{ paddingHorizontal: 10 }}>
+				<HabitToggle filterMode={filterMode} setFilterMode={setFilterMode} />
+			</View>
+
 			{viewMode === ViewMode.CALENDAR ? (
 				<CalendarView habits={userHabits} />
 			) : (
@@ -84,7 +101,9 @@ const HabitsSection = () => {
 					{noHabitsToday ? (
 						<View style={{ padding: 20, alignItems: "center" }}>
 							<Text style={{ color: theme.colors.textSecondary, fontSize: 16 }}>
-								{t("no_habits_for_today")}
+								{filterMode !== HabitFilterMode.ALL
+									? t("no_filtered_habits_for_today")
+									: t("no_habits_for_today")}
 							</Text>
 						</View>
 					) : (

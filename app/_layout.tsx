@@ -87,8 +87,8 @@ function MainNavigator() {
 	}, []);
 
 	useEffect(() => {
-		NavigationBar.setBackgroundColorAsync("#00000000");
-		NavigationBar.setButtonStyleAsync("light");
+NavigationBar.setPositionAsync("absolute");
+NavigationBar.setBackgroundColorAsync("#ffffff01");
 	}, []);
 
 	return (

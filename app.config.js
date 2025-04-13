@@ -51,7 +51,6 @@ export default {
 		plugins: [
 			"@react-native-google-signin/google-signin",
 			"expo-router",
-			"expo-barcode-scanner",
 			"expo-secure-store",
 			[
 				"expo-notifications",
