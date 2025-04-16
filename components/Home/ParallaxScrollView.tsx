@@ -67,7 +67,7 @@ export default function ParallaxScrollView({
 					{/* Texte de bienvenue */}
 					<WelcomeBox />
 					{/* Niveau actuel */}
-					<GlobalLevelBox />
+					{/* <GlobalLevelBox /> */}
 
 					{/* Série */}
 					<StreakBox />

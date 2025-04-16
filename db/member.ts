@@ -273,3 +273,50 @@ export const isUsernameAlreadyUsed = async (username: string) => {
 	}
 };
 
+
+// Méthode pour récupérer les amis du membre
+export const getFriends = async () => {
+	try {
+		const uid: any = auth.currentUser?.uid;
+
+		const membersCollectionRef = collection(db, "members");
+
+		const querySnapshot = await getDocs(
+			query(membersCollectionRef, where("uid", "==", uid))
+		);
+
+		if (!querySnapshot.empty) {
+			const memberDoc = querySnapshot.docs[0];
+			const friends: string[] = memberDoc.data().friends || [];
+			console.log("friends here", friends);
+
+			const friendsData: (Partial<Member> & { currentLevel?: string })[] = [];
+
+			for (const friendUid of friends) {
+				const friendQuerySnapshot = await getDocs(
+					query(membersCollectionRef, where("uid", "==", friendUid))
+				);
+				if (!friendQuerySnapshot.empty) {
+					const friendDoc = friendQuerySnapshot.docs[0];
+					const friendData = friendDoc.data();
+					friendsData.push({
+						uid: friendUid,
+						nom: friendData.nom,
+						profilePicture: friendData.profilePicture,
+						currentLevel: await getUserLevelsByUserId(friendUid),
+					});
+				} else {
+					console.log("friendDoc not found for uid", friendUid);
+				}
+			}
+
+			return friendsData;
+		} else {
+			console.log("Member not found");
+			return [];
+		}
+	} catch (error) {
+		console.error("Error fetching friends: ", error);
+		throw error;
+	}
+};

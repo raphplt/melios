@@ -30,27 +30,6 @@ export default function Points() {
 				onPress={toggleHelp}
 				className="flex items-center flex-row rounded-full"
 			>
-				{/* <View className="flex items-center justify-center flex-row px-2 mx-2 rounded-l-full">
-					<View className="flex items-center justify-center">
-						<Progress.Circle
-							size={28}
-							progress={xpPercentage / 100}
-							color={theme.colors.primary}
-							unfilledColor={theme.colors.border}
-							borderWidth={0}
-							thickness={4}
-						/>
-						<Text
-							style={{
-								fontSize: 12,
-								color: theme.colors.primary,
-							}}
-							className="font-bold absolute"
-						>
-							{globalLevel?.currentLevel || "1"}
-						</Text>
-					</View>
-				</View> */}
 				<View
 					className="flex items-center justify-center flex-row py-1 px-4 rounded-full"
 					style={{

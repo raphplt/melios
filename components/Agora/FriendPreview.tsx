@@ -19,7 +19,6 @@ import ZoomableView from "@components/Shared/ZoomableView";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import FriendModal from "@components/Modals/FriendModal";
-import AnimatedPlaceholder from "@components/Shared/AnimatedPlaceholder";
 
 const FriendPreview = () => {
 	const [friends, setFriends] = useState<
@@ -74,6 +73,8 @@ const FriendPreview = () => {
 			}}
 		/>
 	);
+
+	console.log("friends", friends);
 
 	return (
 		<>
