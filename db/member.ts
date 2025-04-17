@@ -288,7 +288,6 @@ export const getFriends = async () => {
 		if (!querySnapshot.empty) {
 			const memberDoc = querySnapshot.docs[0];
 			const friends: string[] = memberDoc.data().friends || [];
-			console.log("friends here", friends);
 
 			const friendsData: (Partial<Member> & { currentLevel?: string })[] = [];
 

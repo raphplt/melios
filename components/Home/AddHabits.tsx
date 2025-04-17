@@ -5,7 +5,7 @@ import { Animated, Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
 
 export default function AddHabits() {
-	const { theme, handlePressIn, rotate, handlePressOut } = useIndex();
+	const { theme, handlePressIn, rotate, handlePressOut, isDayTime } = useIndex();
 
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 
@@ -19,13 +19,15 @@ export default function AddHabits() {
 				}}
 				className="rounded-full p-2"
 				style={{
-					backgroundColor: theme.colors.primary,
+					backgroundColor: isDayTime
+						? theme.colors.primary
+						: theme.colors.background,
 				}}
 			>
 				<Iconify
 					icon="ic:round-plus"
 					size={24}
-					color={theme.colors.textSecondary}
+					color={isDayTime ? "white" : theme.colors.primary}
 				/>
 			</Pressable>
 		</Animated.View>

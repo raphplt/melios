@@ -10,6 +10,7 @@ import { Category } from "@type/category";
 import { getHabitsWithCategories } from "@db/fetch";
 import { Habit } from "@type/habit";
 import { UserHabit } from "@type/userHabit";
+import { ViewMode } from "@components/Home/ViewToggle";
 
 interface HabitsContextProps {
 	habitsData: Habit[];
@@ -20,6 +21,8 @@ interface HabitsContextProps {
 	showHabitDetail: boolean;
 	setShowHabitDetail: React.Dispatch<React.SetStateAction<boolean>>;
 	categories: Category[];
+	viewMode: ViewMode;
+	setViewMode: React.Dispatch<React.SetStateAction<ViewMode>>;
 }
 
 export const HabitsContext = createContext<HabitsContextProps>({
@@ -31,6 +34,8 @@ export const HabitsContext = createContext<HabitsContextProps>({
 	showHabitDetail: false,
 	setShowHabitDetail: () => {},
 	categories: [],
+	viewMode: ViewMode.LIST,
+	setViewMode: () => {},
 });
 
 type HabitsProviderProps = {
@@ -43,6 +48,7 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 	const [currentHabit, setCurrentHabit] = useState<UserHabit | null>(null);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [showHabitDetail, setShowHabitDetail] = useState(false);
+	const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.LIST);
 
 	const fetchHabitsData = useCallback(
 		async (signal: AbortSignal, forceRefresh = false) => {
@@ -78,7 +84,6 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 
 	const refreshHabits = useCallback(
 		(forceRefresh = false) => {
-			// Crée un nouveau AbortController pour chaque appel
 			fetchHabitsData(new AbortController().signal, forceRefresh);
 		},
 		[fetchHabitsData]
@@ -94,6 +99,8 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 			showHabitDetail,
 			setShowHabitDetail,
 			categories,
+			viewMode,
+			setViewMode,
 		}),
 		[
 			habitsData,
@@ -102,6 +109,8 @@ export const HabitsProvider = ({ children }: HabitsProviderProps) => {
 			currentHabit,
 			showHabitDetail,
 			categories,
+			viewMode,
+			setViewMode,
 		]
 	);
 

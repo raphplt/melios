@@ -47,8 +47,8 @@ const MissionButton = () => {
 
 	return (
 		<GradientBox
-			position={{ bottom: 20, right: 20 }}
-			colors={[theme.colors.primary, theme.colors.backgroundTertiary]}
+			position={{ top: 20, right: 20 }}
+			colors={[theme.colors.purplePrimary, theme.colors.backgroundTertiary]}
 		>
 			<View className="flex flex-row items-center gap-2 relative">
 				<Pressable
@@ -56,7 +56,7 @@ const MissionButton = () => {
 					onPress={() => navigation.navigate("dailyRewards")}
 				>
 					<Iconify
-						icon="mdi:rocket"
+						icon="material-symbols:target"
 						color={isDayTime ? theme.colors.primary : "white"}
 						size={20}
 					/>

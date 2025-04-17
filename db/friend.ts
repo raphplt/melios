@@ -150,9 +150,6 @@ export const acceptFriendRequest = async (friendUid: string) => {
 		const currentUid = auth.currentUser?.uid;
 		if (!currentUid) throw new Error("Utilisateur non authentifié");
 
-		console.log("currentUid:", currentUid);
-		console.log("friendUid:", friendUid);
-
 		const membersCollectionRef = collection(db, "members");
 
 		// Rechercher le document du membre courant basé sur la propriété `uid`

@@ -11,8 +11,8 @@ import { useTheme } from "@context/ThemeContext";
 import useIndex from "@hooks/useIndex";
 import MissionButton from "./MissionButton";
 import StreakBox from "./StreakBox";
-import GlobalLevelBox from "./GlobalLevelBox";
-import WelcomeBox from "./WelcomeBox";
+import AddHabitsBox from "./AddHabitsBox";
+import WelcomeBox from "./ViewBox";
 
 const HEADER_HEIGHT = 250;
 
@@ -64,22 +64,16 @@ export default function ParallaxScrollView({
 				<Animated.View
 					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 				>
-					{/* Texte de bienvenue */}
 					<WelcomeBox />
-					{/* Niveau actuel */}
-					{/* <GlobalLevelBox /> */}
-
-					{/* Série */}
+					<AddHabitsBox />
 					<StreakBox />
-
-					{/* Missions */}
 					<MissionButton />
 
 					{imageTemple ? (
 						<Image
 							source={{ uri: imageTemple }}
 							style={{ width: "100%", height: 220, resizeMode: "cover" }}
-							className="rounded-b-md"
+							className="rounded-b-lg"
 						/>
 					) : (
 						<View

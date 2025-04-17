@@ -13,6 +13,11 @@ type ViewToggleProps = {
 	setViewMode: (mode: ViewMode) => void;
 };
 
+const BUTTON_WIDTH = 36;
+const BUTTON_HEIGHT = 36;
+const INDICATOR_MARGIN = 2;
+const INDICATOR_RADIUS = 12;
+
 const ViewToggle = ({ viewMode, setViewMode }: ViewToggleProps) => {
 	const { theme } = useTheme();
 
@@ -28,44 +33,46 @@ const ViewToggle = ({ viewMode, setViewMode }: ViewToggleProps) => {
 		}).start();
 	}, [viewMode]);
 
-	const buttonWidth = 42;
 	const indicatorPosition = translateX.interpolate({
 		inputRange: [0, 1],
-		outputRange: [0, buttonWidth],
+		outputRange: [0, BUTTON_WIDTH + INDICATOR_MARGIN],
 	});
 
 	return (
 		<View
-			style={[styles.container, { backgroundColor: theme.colors.cardBackground }]}
+			style={[
+				styles.container,
+				{
+					height: BUTTON_HEIGHT + INDICATOR_MARGIN * 2 + 2,
+					padding: INDICATOR_MARGIN,
+				},
+			]}
 		>
 			<Animated.View
 				style={[
 					styles.indicator,
 					{
 						backgroundColor: theme.colors.primary,
+						width: BUTTON_WIDTH,
+						height: BUTTON_HEIGHT,
+						borderRadius: INDICATOR_RADIUS,
 						transform: [{ translateX: indicatorPosition }],
+						top: (BUTTON_HEIGHT + INDICATOR_MARGIN * 2 + 2 - BUTTON_HEIGHT) / 2,
+						left: INDICATOR_MARGIN,
 					},
 				]}
 			/>
-
-			<Pressable style={styles.button} onPress={() => setViewMode(ViewMode.LIST)}>
-				<Iconify
-					icon="mdi:format-list-bulleted"
-					size={22}
-					color={viewMode === ViewMode.LIST ? "white" : theme.colors.textTertiary}
-				/>
+			<Pressable
+				style={[styles.button, { width: BUTTON_WIDTH, height: BUTTON_HEIGHT }]}
+				onPress={() => setViewMode(ViewMode.LIST)}
+			>
+				<Iconify icon="mdi:format-list-bulleted" size={20} color="white" />
 			</Pressable>
 			<Pressable
-				style={styles.button}
+				style={[styles.button, { width: BUTTON_WIDTH, height: BUTTON_HEIGHT }]}
 				onPress={() => setViewMode(ViewMode.CALENDAR)}
 			>
-				<Iconify
-					icon="mdi:calendar-month"
-					size={22}
-					color={
-						viewMode === ViewMode.CALENDAR ? "white" : theme.colors.textTertiary
-					}
-				/>
+				<Iconify icon="mdi:calendar-month" size={20} color="white" />
 			</Pressable>
 		</View>
 	);
@@ -74,27 +81,21 @@ const ViewToggle = ({ viewMode, setViewMode }: ViewToggleProps) => {
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
-		borderRadius: 20,
-		margin: 6,
-		padding: 4,
+		borderRadius: 999,
+		margin: 0,
 		position: "relative",
 		justifyContent: "space-between",
+		alignItems: "center",
 	},
 	indicator: {
 		position: "absolute",
-		width: 42,
-		height: 38,
-		borderRadius: 10,
-		top: 4,
-		left: 4,
+		zIndex: 0,
 	},
 	button: {
 		alignItems: "center",
 		justifyContent: "center",
-		padding: 8,
-		borderRadius: 10,
+		borderRadius: 8,
 		zIndex: 1,
-		width: 42,
 	},
 });
 

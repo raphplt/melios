@@ -74,8 +74,6 @@ const FriendPreview = () => {
 		/>
 	);
 
-	console.log("friends", friends);
-
 	return (
 		<>
 			<ScrollView

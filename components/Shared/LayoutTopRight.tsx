@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState, useMemo } from "react";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { View, Pressable, Text } from "react-native";
 import Points from "./Points";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { useData } from "@context/DataContext";
 import getIcon from "@utils/cosmeticsUtils";
@@ -10,7 +10,6 @@ import AnimatedPlaceholder from "./AnimatedPlaceholder";
 import * as Progress from "react-native-progress";
 import { getGlobalLevel } from "@utils/levels";
 import { useTheme } from "@context/ThemeContext";
-import useIndex from "@hooks/useIndex";
 
 function LayoutTopRight() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
@@ -43,7 +42,6 @@ function LayoutTopRight() {
 		? (globalLevel.currentXp / globalLevel.nextLevelXp) * 100
 		: 0;
 	const { theme } = useTheme();
-	const { isDayTime } = useIndex();
 
 	return (
 		<View style={{ flexDirection: "row", alignItems: "center" }} className="mb-1">
@@ -52,7 +50,7 @@ function LayoutTopRight() {
 					<Progress.Circle
 						size={30}
 						progress={xpPercentage / 100}
-						color={isDayTime ? theme.colors.primary : theme.colors.tertiary}
+						color={theme.colors.primary}
 						unfilledColor={theme.colors.border}
 						borderWidth={0}
 						thickness={4}
@@ -60,7 +58,7 @@ function LayoutTopRight() {
 					<Text
 						style={{
 							fontSize: 14,
-							color: isDayTime ? theme.colors.primary : theme.colors.tertiary,
+							color: theme.colors.primary,
 						}}
 						className="font-bold absolute text-lg"
 					>

@@ -12,14 +12,14 @@ import ViewToggle, { ViewMode } from "./ViewToggle";
 import CalendarView from "./CalendarView";
 import AddHabits from "./AddHabits";
 import HabitToggle, { HabitFilterMode } from "./HabitToggle";
-import { HabitType } from "@type/habit";
+import { useHabits } from "@context/HabitsContext";
 
 const HabitsSection = () => {
 	const { userHabits } = useIndex();
 	const { theme } = useTheme();
 	const { t } = useTranslation();
+	const { viewMode } = useHabits();
 
-	const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.LIST);
 	const [filterMode, setFilterMode] = useState<HabitFilterMode>(
 		HabitFilterMode.ALL
 	);
@@ -43,12 +43,9 @@ const HabitsSection = () => {
 			(habit) => habit.frequency && habit.frequency[today]
 		);
 
-		// Apply type filtering
 		if (filterMode === HabitFilterMode.POSITIVE) {
-			// Affiche toutes les habitudes sauf celles explicitement négatives
 			filtered = filtered.filter((habit) => habit.type !== "Négatif");
 		} else if (filterMode === HabitFilterMode.NEGATIVE) {
-			// Pour les habitudes négatives, garde le comportement d'origine
 			filtered = filtered.filter((habit) => habit.type === "Négatif");
 		}
 
@@ -86,8 +83,7 @@ const HabitsSection = () => {
 					paddingHorizontal: 10,
 				}}
 			>
-				<ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
-				<AddHabits />
+				{/* <AddHabits /> */}
 			</View>
 
 			<View style={{ paddingHorizontal: 10 }}>

@@ -24,10 +24,10 @@ const StreakBox = () => {
 		: [theme.colors.border, theme.colors.textSecondary];
 
 	return (
-		<GradientBox position={{ bottom: 20, left: 20 }} colors={colors}>
+		<GradientBox position={{ top: 20, left: 20 }} colors={colors}>
 			<View className="flex flex-row items-center gap-2">
 				<Pressable
-					className="flex flex-row items-center justify-center px-4 py-[10px]"
+					className="flex flex-row items-center justify-center px-4 py-2"
 					onPress={() => navigation.navigate("progression")}
 				>
 					<Iconify
@@ -42,11 +42,12 @@ const StreakBox = () => {
 						size={20}
 					/>
 					<Text
-						className="font-semibold text-[14px] ml-2"
+						className="font-semibold text-lg ml-2"
 						style={{ color: isDayTime ? "black" : "white" }}
 					>
-						{t("streak")} : {streak?.value}{" "}
-						{streak && streak?.value > 1 ? t("days") : t("day")}
+						{/* {t("streak")} :{" "} */}
+						{streakUpdatedToday ? (streak?.value ?? 0) + 1 : streak?.value ?? 0}{" "}
+						{/* {streak && streak?.value > 1 ? t("days") : t("day")} */}
 					</Text>
 				</Pressable>
 			</View>
