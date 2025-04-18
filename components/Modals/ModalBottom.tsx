@@ -1,5 +1,5 @@
 import { useTheme } from "@context/ThemeContext";
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import {
 	Modal,
 	View,
@@ -26,7 +26,53 @@ export default function BottomSlideModal({
 }) {
 	const { theme } = useTheme();
 	const slideAnim = React.useRef(new Animated.Value(0)).current;
+	const opacityAnim = React.useRef(new Animated.Value(0)).current;
 	const [showModal, setShowModal] = React.useState(visible);
+
+	const animateIn = useCallback(() => {
+		// Réinitialiser les valeurs si nécessaire
+		slideAnim.setValue(0);
+		opacityAnim.setValue(0);
+
+		// Lancer les animations en parallèle
+		Animated.parallel([
+			Animated.timing(slideAnim, {
+				toValue: 1,
+				duration: 250,
+				easing: Easing.bezier(0.0, 0.0, 0.2, 1), // Ease-out optimisé
+				useNativeDriver: true,
+			}),
+			Animated.timing(opacityAnim, {
+				toValue: 1,
+				duration: 200,
+				easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+				useNativeDriver: true,
+			}),
+		]).start();
+	}, [slideAnim, opacityAnim]);
+
+	const animateOut = useCallback(() => {
+		Animated.parallel([
+			Animated.timing(slideAnim, {
+				toValue: 0,
+				duration: 200,
+				easing: Easing.bezier(0.4, 0.0, 1, 1), // Ease-in optimisé
+				useNativeDriver: true,
+			}),
+			Animated.timing(opacityAnim, {
+				toValue: 0,
+				duration: 150,
+				easing: Easing.bezier(0.4, 0.0, 1, 1),
+				useNativeDriver: true,
+			}),
+		]).start(() => {
+			setShowModal(false);
+			if (Platform.OS === "android") {
+				StatusBar.setBackgroundColor("transparent");
+			}
+			StatusBar.setBarStyle(theme.dark ? "light-content" : "dark-content");
+		});
+	}, [slideAnim, opacityAnim, theme.dark]);
 
 	useEffect(() => {
 		if (visible) {
@@ -35,31 +81,21 @@ export default function BottomSlideModal({
 				StatusBar.setBackgroundColor("rgba(0,0,0,0.4)");
 			}
 			StatusBar.setBarStyle("light-content");
-			Animated.timing(slideAnim, {
-				toValue: 1,
-				duration: 200,
-				easing: Easing.out(Easing.ease),
-				useNativeDriver: true,
-			}).start();
-		} else {
-			Animated.timing(slideAnim, {
-				toValue: 0,
-				duration: 200,
-				easing: Easing.in(Easing.ease),
-				useNativeDriver: true,
-			}).start(() => {
-				setShowModal(false);
-				if (Platform.OS === "android") {
-					StatusBar.setBackgroundColor("transparent");
-				}
-				StatusBar.setBarStyle(theme.dark ? "light-content" : "dark-content");
-			});
+			// Lancer l'animation après le prochain cycle de rendu
+			requestAnimationFrame(animateIn);
+		} else if (showModal) {
+			animateOut();
 		}
-	}, [visible, theme.dark, slideAnim]);
+	}, [visible, showModal, animateIn, animateOut]);
 
 	const translateY = slideAnim.interpolate({
 		inputRange: [0, 1],
-		outputRange: [200, 0],
+		outputRange: [300, 0], // Augmenter la distance pour une animation plus visible
+	});
+
+	const backdropOpacity = opacityAnim.interpolate({
+		inputRange: [0, 1],
+		outputRange: [0, 1],
 	});
 
 	if (!showModal) return null;
@@ -72,13 +108,15 @@ export default function BottomSlideModal({
 			onRequestClose={() => {
 				setVisible(false);
 			}}
+			animationType="none"
 		>
 			<TouchableWithoutFeedback onPress={() => setVisible(false)}>
-				<View
+				<Animated.View
 					style={{
 						flex: 1,
 						justifyContent: "flex-end",
 						backgroundColor: "rgba(0,0,0,0.4)",
+						opacity: backdropOpacity,
 					}}
 				>
 					<TouchableWithoutFeedback>
@@ -86,7 +124,7 @@ export default function BottomSlideModal({
 							style={{
 								transform: [{ translateY }],
 								backgroundColor: theme.colors.cardBackground,
-								padding: 20,
+								padding: 10,
 								borderTopLeftRadius: 20,
 								borderTopRightRadius: 20,
 								borderColor: theme.dark ? "#B0B0B0" : theme.colors.border,
@@ -96,6 +134,7 @@ export default function BottomSlideModal({
 								shadowOpacity: 0.3,
 								shadowRadius: 4,
 								elevation: 5,
+								maxHeight: "80%",
 							}}
 						>
 							<View
@@ -103,15 +142,17 @@ export default function BottomSlideModal({
 									flexDirection: "row",
 									justifyContent: "space-between",
 									alignItems: "center",
+									marginBottom: 10,
 								}}
 							>
 								{title && (
 									<Text
 										style={{
 											color: theme.colors.text,
-											fontSize: 18,
+											fontSize: 16,
 											fontWeight: "bold",
 										}}
+										className="w-11/12 mx-1"
 									>
 										{title}
 									</Text>
@@ -128,10 +169,10 @@ export default function BottomSlideModal({
 								</Pressable>
 							</View>
 
-							{children}
+							<View style={{ flex: 1 }}>{children}</View>
 						</Animated.View>
 					</TouchableWithoutFeedback>
-				</View>
+				</Animated.View>
 			</TouchableWithoutFeedback>
 		</Modal>
 	);

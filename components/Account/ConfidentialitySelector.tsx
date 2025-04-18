@@ -12,7 +12,6 @@ import { updateMemberField } from "@db/member";
 import { useTheme } from "@context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 import BottomSlideModal from "@components/Modals/ModalBottom";
-import Monicon from "@monicon/native";
 
 type Confidentialities = "public" | "private" | "friends";
 
@@ -60,7 +59,7 @@ const ConfidentialitySelector = () => {
 					<Iconify
 						icon="material-symbols:globe"
 						size={24}
-						color={theme.colors.text}
+						color={theme.colors.primary}
 					/>
 				);
 			case "private":
@@ -68,7 +67,7 @@ const ConfidentialitySelector = () => {
 					<Iconify
 						icon="material-symbols:lock"
 						size={24}
-						color={theme.colors.text}
+						color={theme.colors.primary}
 					/>
 				);
 			case "friends":
@@ -76,7 +75,7 @@ const ConfidentialitySelector = () => {
 					<Iconify
 						icon="material-symbols:groups"
 						size={24}
-						color={theme.colors.text}
+						color={theme.colors.primary}
 					/>
 				);
 		}
@@ -86,15 +85,15 @@ const ConfidentialitySelector = () => {
 		<View>
 			<Pressable onPress={handleOpen}>
 				<View className="flex-row items-center">
-					{renderIcon(selectedConfidentiality)}
 					<Text
-						className="ml-2"
+						className="mr-2 font-semibold"
 						style={{
 							color: theme.colors.text,
 						}}
 					>
 						{t(selectedConfidentiality)}
 					</Text>
+					{renderIcon(selectedConfidentiality)}
 				</View>
 			</Pressable>
 
@@ -115,7 +114,7 @@ const ConfidentialitySelector = () => {
 										? theme.colors.primary
 										: "transparent",
 							}}
-							className="flex-row items-center rounded-xl py-5"
+							className="flex-row items-center rounded-xl py-4"
 						>
 							{renderIcon(item.value as Confidentialities)}
 							<Text
@@ -125,7 +124,7 @@ const ConfidentialitySelector = () => {
 											? theme.colors.textSecondary
 											: theme.colors.textTertiary,
 								}}
-								className="ml-4 font-semibold"
+								className="ml-3 font-semibold"
 							>
 								{item.label}
 							</Text>
