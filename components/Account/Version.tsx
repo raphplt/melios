@@ -12,7 +12,7 @@ export default function Version() {
 			style={{ backgroundColor: theme.colors.background }}
 		>
 			<Text className=" text-center text-sm" style={{ color: theme.colors.text }}>
-				Melios v1.1.28 - © 2025 Melios. {t("all_rights_reserved")}
+				Melios v1.1.29 - © 2025 Melios. {t("all_rights_reserved")}
 			</Text>
 		</View>
 	);
