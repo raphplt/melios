@@ -45,14 +45,14 @@ export default function PackItem({ pack }: { pack: Pack }) {
 							{pack.name}
 						</Text>
 
-						<Text
+						{/* <Text
 							style={{
 								color: theme.colors.text,
 							}}
 							className="font-semibold text-lg ml-2"
 						>
 							{pack.description}
-						</Text>
+						</Text> */}
 					</View>
 					<View className="w-1/2 h-full relative">
 						<CachedImage

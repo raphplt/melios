@@ -65,15 +65,15 @@ const LanguageSelector = () => {
 		<View>
 			<Pressable onPress={handleOpen}>
 				<View className="flex-row items-center">
-					{renderLanguageItem(selectedLanguage, false)}
 					<Text
-						className="ml-2"
+						className="mr-2 font-semibold"
 						style={{
 							color: theme.colors.text,
 						}}
 					>
 						{getLanguageLabel(selectedLanguage)}
 					</Text>
+					{renderLanguageItem(selectedLanguage, false)}
 				</View>
 			</Pressable>
 
