@@ -8,7 +8,6 @@ import ModalTutorial from "@components/Modals/ModalTutoriel";
 import Streak from "@components/Progressions/Streak";
 import GoalSection from "@components/Progressions/GoalSection";
 import Charts from "@components/Progressions/Charts";
-import { LinearGradient } from "expo-linear-gradient";
 import ShareMonthlyRecap from "@components/Progressions/ShareMonthlyRecap";
 
 const Progression: React.FC = () => {

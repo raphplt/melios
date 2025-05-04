@@ -62,7 +62,6 @@ function CardCheckHabit({
 		opacity: progress.value,
 	}));
 
-	// Mémoriser les objets de style inline
 	const pressableStyle = useMemo(
 		() => ({
 			backgroundColor: completed

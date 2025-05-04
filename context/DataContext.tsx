@@ -143,6 +143,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 		const nextUpdate = moment().endOf("day").diff(now);
 		const timer = setTimeout(() => {
 			setDate(moment().format("YYYY-MM-DD"));
+			setCompletedHabitsToday([]);
 		}, nextUpdate);
 		return () => clearTimeout(timer);
 	}, [date]);
@@ -268,13 +269,11 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 		);
 	};
 
-	// Function to claim reward
 	const claimDailyReward = async () => {
 		try {
 			await AsyncStorage.setItem(DAILY_REWARD_KEY, new Date().toISOString());
 			setRewardClaimed(true);
 
-			// Reset task validation status for next day
 			setDailyTasks((prev) => prev.map((task) => ({ ...task, validated: false })));
 		} catch (error) {
 			console.error("Error saving reward claim date", error);

@@ -45,9 +45,7 @@ const StreakBox = () => {
 						className="font-semibold text-lg ml-2"
 						style={{ color: isDayTime ? "black" : "white" }}
 					>
-						{/* {t("streak")} :{" "} */}
-						{streakUpdatedToday ? (streak?.value ?? 0) + 1 : streak?.value ?? 0}{" "}
-						{/* {streak && streak?.value > 1 ? t("days") : t("day")} */}
+						{streak?.value ?? "0"}
 					</Text>
 				</Pressable>
 			</View>
