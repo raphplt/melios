@@ -5,7 +5,6 @@ import {
 	ScrollView,
 	ActivityIndicator,
 	ImageBackground,
-	StatusBar,
 	Dimensions,
 } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +15,6 @@ import {
 	FieldValues,
 	SubmitHandler,
 } from "react-hook-form";
-
 import HabitMoment from "@components/Select/Containers/HabitMoment";
 import HabitInfos from "@components/Select/Containers/HabitInfos";
 import Notifications from "@components/Select/Items/Notifications";
@@ -28,6 +26,7 @@ import {
 	createHabitSchema,
 	frequencyDefaultValues,
 } from "@utils/schemas/createHabit.schema";
+import { StyleSheet } from "react-native";
 import HabitTitle from "@components/Select/Containers/HabitTitle";
 import { useData } from "@context/DataContext";
 import { setMemberHabit } from "@db/userHabit";
@@ -38,7 +37,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import ConfidentialitySelectorHabit from "@components/Select/Items/Confidentiality";
 import { catImgs } from "@utils/categoriesBg";
-import { StyleSheet } from "react-native";
 
 export default function CustomHabit() {
 	const navigation: NavigationProp<ParamListBase> = useNavigation();

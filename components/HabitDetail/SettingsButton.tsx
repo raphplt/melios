@@ -92,9 +92,9 @@ export default function ButtonBack() {
 					>
 						<Pressable
 							className={buttonStyle}
-							onPress={() => {
-								setModalDeleteVisible(true);
-							}}
+							onPress={() =>
+								navigation.navigate("editHabit", { habitId: currentHabit.id })
+							}
 						>
 							<Iconify icon="mdi:pencil" size={24} color={theme.colors.text} />
 						</Pressable>

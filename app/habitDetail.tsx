@@ -46,7 +46,6 @@ export default function HabitDetail() {
 	const [habitLogs, setHabitLogs] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	// useCallback pour mémoriser la fonction fetchLogs
 	const fetchLogs = useCallback(async () => {
 		if (!currentHabit) return;
 		try {
@@ -65,7 +64,6 @@ export default function HabitDetail() {
 		}
 	}, [currentHabit, fetchLogs]);
 
-	// Utiliser useMemo pour calculer habitCategory & slug uniquement lorsque currentHabit ou categories changent
 	const habitCategory = useMemo(() => {
 		return (
 			categories.find((c) => c.category === currentHabit?.category) ||
@@ -75,14 +73,12 @@ export default function HabitDetail() {
 
 	const slug = useMemo(() => habitCategory?.slug || "sport", [habitCategory]);
 
-	// Optimiser textColor avec useMemo
 	const dark = theme.dark;
 	const textColor = useMemo(
 		() => (dark ? theme.colors.textSecondary : theme.colors.text),
 		[dark, theme.colors]
 	);
 
-	// Calculer si l'habitude est complétée en utilisant useMemo
 	const isHabitCompleted = useMemo(() => {
 		return completedHabitsToday.some((habit) => habit.id === currentHabit?.id);
 	}, [completedHabitsToday, currentHabit]);

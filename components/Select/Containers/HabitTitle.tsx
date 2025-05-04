@@ -58,6 +58,9 @@ export default function HabitTitle({
 					onChangeText={(value) => setValue("name", value)}
 					defaultValue={habit?.name}
 				/>
+				<Text>
+					{habit?.name} {JSON.stringify(habit)}
+				</Text>
 				<Pressable
 					onPress={() => toggleFocus("name", isEditingName, setIsEditingName)}
 				>

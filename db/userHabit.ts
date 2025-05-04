@@ -123,3 +123,23 @@ export const resetHabit = async (habitId: string) => {
 		throw error;
 	}
 };
+
+// Fonction pour mettre à jour une habitude
+
+export const updateMemberHabit = async (habit: FieldValues) => {
+	try {
+		const habitDocRef = doc(db, "userHabits", habit.habitId);
+		await updateDoc(habitDocRef, {
+			...habit,
+		});
+		console.log("Document userHabit mis à jour avec succès");
+
+		return { id: habit.habitId, ...habit };
+	} catch (error) {
+		console.error(
+			"Erreur lors de la mise à jour du document dans la collection 'userHabits': ",
+			error
+		);
+		throw error;
+	}
+};

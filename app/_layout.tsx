@@ -145,6 +145,10 @@ NavigationBar.setBackgroundColorAsync("#ffffff01");
 						options={{ title: "Éditer mes habitudes", headerShadowVisible: false }}
 					/>
 					<Stack.Screen
+						name="editHabit"
+						options={{ title: "Éditer mes habitudes", headerShown: false }}
+					/>
+					<Stack.Screen
 						name="editGoals"
 						options={{ title: "Éditer mes objectifs", headerShadowVisible: false }}
 					/>
