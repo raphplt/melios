@@ -302,5 +302,8 @@
     "add": "Ajouter",
     "share": "Partager",
     "share_code_to_connect": "Partagez ce code pour vous connecter avec vos amis",
-    "no_friend_requests": "Aucune demande d'ami"
+    "no_friend_requests": "Aucune demande d'ami",
+    "save_changes": "Enregistrer les modifications",
+    "success": "Succès",
+    "habit_updated_successfully": "Habitude mise à jour avec succès"
 }

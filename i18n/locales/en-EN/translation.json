@@ -300,5 +300,8 @@
     "add": "Add",
     "share": "Share",
     "share_code_to_connect": "Share this code to connect with your friends",
-    "no_friend_requests": "No friend requests"
+    "no_friend_requests": "No friend requests",
+    "save_changes": "Save changes",
+    "success": "Success",
+    "habit_updated_successfully": "Habit updated successfully"
 }

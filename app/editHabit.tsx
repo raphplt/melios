@@ -55,10 +55,7 @@ export default function EditHabit() {
 	const [currentHabit, setCurrentHabit] = useState<UserHabit | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
-	console.log("currentHabit", currentHabit);
-
 	useEffect(() => {
-		// Find the habit to edit from the habits list
 		if (habitId && habits.length > 0) {
 			const habitToEdit = habits.find((h) => h.id === habitId);
 			if (habitToEdit) {
@@ -106,7 +103,6 @@ export default function EditHabit() {
 	const [isEditingDescription, setIsEditingDescription] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	// Set form values when current habit data is available
 	useEffect(() => {
 		if (currentHabit) {
 			reset({
@@ -150,33 +146,6 @@ export default function EditHabit() {
 		}
 	};
 
-	const handleDeleteHabit = () => {
-		Alert.alert(t("delete_habit"), t("delete_habit_confirmation"), [
-			{
-				text: t("cancel"),
-				style: "cancel",
-			},
-			{
-				text: t("delete"),
-				style: "destructive",
-				onPress: async () => {
-					try {
-						// Implement your delete function in the database
-						// await deleteMemberHabit(habitId);
-
-						// Update habits state by removing the deleted habit
-						setHabits((prev: UserHabit[]) => prev.filter((h) => h.id !== habitId));
-
-						navigation.navigate("(navbar)");
-					} catch (error) {
-						console.error("Error deleting habit: ", error);
-						Alert.alert(t("error"), t("error_deleting_habit"));
-					}
-				},
-			},
-		]);
-	};
-
 	if (isLoading || !currentHabit) {
 		return (
 			<View className="flex-1 items-center justify-center">
@@ -215,6 +184,8 @@ export default function EditHabit() {
 						setFocus={setFocus}
 						setValue={setValue}
 						errors={errors}
+						currentHabitName={currentHabit.name}
+						currentHabitDescription={currentHabit.description}
 					/>
 
 					{/* INFORMATIONS */}
@@ -264,19 +235,6 @@ export default function EditHabit() {
 						{t("save_changes")}
 					</Text>
 				)}
-			</Pressable>
-
-			{/* Delete Button */}
-			<Pressable
-				style={{
-					backgroundColor: theme.colors.redPrimary || "#FF3B30",
-				}}
-				onPress={handleDeleteHabit}
-				className="rounded-xl flex flex-row items-center justify-center absolute bottom-4 left-5 right-5 p-4 z-10"
-			>
-				<Text style={{ color: "white" }} className="text-lg">
-					{t("delete_habit")}
-				</Text>
 			</Pressable>
 		</ScrollView>
 	);

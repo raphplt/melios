@@ -1,5 +1,5 @@
 import { SelectProvider } from "@context/SelectContext";
-import { Stack, Tabs } from "expo-router";
+import { Stack } from "expo-router";
 
 const SelectLayout = () => {
 	return (

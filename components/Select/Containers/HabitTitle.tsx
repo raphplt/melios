@@ -2,7 +2,7 @@ import EditButton from "@components/Shared/EditButton";
 import { View, TextInput, Pressable, Keyboard, Text } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import { useSelect } from "@context/SelectContext";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function HabitTitle({
@@ -14,6 +14,8 @@ export default function HabitTitle({
 	setFocus,
 	setValue,
 	errors,
+	currentHabitName,
+	currentHabitDescription,
 }: {
 	register: any;
 	isEditingName: boolean;
@@ -23,10 +25,28 @@ export default function HabitTitle({
 	setFocus: any;
 	setValue: any;
 	errors: any;
+	currentHabitName?: string;
+	currentHabitDescription?: string;
 }) {
 	const { theme } = useTheme();
 	const { habit } = useSelect();
 	const { t } = useTranslation();
+
+	// Use currentHabitName and currentHabitDescription if provided (for edit mode)
+	// otherwise fallback to habit from context (for create mode)
+	const nameToDisplay = currentHabitName || habit?.name || "";
+	const descriptionToDisplay =
+		currentHabitDescription || habit?.description || "";
+
+	// Set the values when component mounts to ensure fields display current values
+	useEffect(() => {
+		if (currentHabitName) {
+			setValue("name", currentHabitName);
+		}
+		if (currentHabitDescription) {
+			setValue("description", currentHabitDescription);
+		}
+	}, [currentHabitName, currentHabitDescription, setValue]);
 
 	const toggleFocus = (
 		fieldName: string,
@@ -56,11 +76,8 @@ export default function HabitTitle({
 					onFocus={() => setIsEditingName(true)}
 					onBlur={() => setIsEditingName(false)}
 					onChangeText={(value) => setValue("name", value)}
-					defaultValue={habit?.name}
+					defaultValue={nameToDisplay}
 				/>
-				<Text>
-					{habit?.name} {JSON.stringify(habit)}
-				</Text>
 				<Pressable
 					onPress={() => toggleFocus("name", isEditingName, setIsEditingName)}
 				>
@@ -86,7 +103,7 @@ export default function HabitTitle({
 					onBlur={() => setIsEditingDescription(false)}
 					onChangeText={(value) => setValue("description", value)}
 					placeholderTextColor={theme.colors.textTertiary}
-					defaultValue={habit?.description}
+					defaultValue={descriptionToDisplay}
 					multiline={true}
 					numberOfLines={2}
 					cursorColor={theme.colors.textTertiary}
