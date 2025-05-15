@@ -16,13 +16,15 @@ import { HabitType } from "@utils/category.type";
 import useAddXp from "@hooks/useAddXp";
 import RestartHabit from "@components/Modals/RestartHabit";
 import { Iconify } from "react-native-iconify";
+import { updateMemberLeaguePoints } from "@db/member";
 
 export default function ButtonComplete() {
 	const { theme } = useTheme();
 	const { t } = useTranslation();
 	const navigation: NavigationProp<ParamListBase> = useNavigation();
 	const { currentHabit } = useHabits();
-	const { date, setCompletedHabitsToday, setStreak } = useData();
+	const { date, setCompletedHabitsToday, setStreak, member, setMember } =
+		useData();
 	const { addOdysseePoints } = usePoints();
 	const addXp = useAddXp()?.addXp;
 	const [showModalNegative, setShowModalNegative] = useState(false);
@@ -41,6 +43,17 @@ export default function ButtonComplete() {
 			setRewards("odyssee", currentHabit.difficulty * 2);
 
 			setCompletedHabitsToday((prev) => [...prev, currentHabit]);
+
+			if (member && member.uid) {
+				const pointsToAdd = currentHabit.difficulty * 10;
+				const updatedLeague = await updateMemberLeaguePoints(
+					member.uid,
+					pointsToAdd
+				);
+				if (setMember) {
+					setMember({ ...member, league: updatedLeague });
+				}
+			}
 
 			const streak = await incrementStreak();
 			if (streak) {

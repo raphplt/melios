@@ -28,6 +28,8 @@ import RestartHabit from "@components/Modals/RestartHabit";
 import { useNavigation } from "expo-router";
 import { lightenColor } from "@utils/colors";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { updateMemberLeaguePoints } from "@db/member";
+
 function CardCheckHabit({
 	habit,
 	onHabitStatusChange,
@@ -35,8 +37,14 @@ function CardCheckHabit({
 	habit: UserHabit;
 	onHabitStatusChange?: (habit: UserHabit, completed: boolean) => void;
 }) {
-	const { date, completedHabitsToday, setCompletedHabitsToday, setStreak } =
-		useData();
+	const {
+		date,
+		completedHabitsToday,
+		setCompletedHabitsToday,
+		setStreak,
+		member,
+		setMember,
+	} = useData();
 	const { theme } = useTheme();
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
@@ -121,6 +129,17 @@ function CardCheckHabit({
 			addOdysseePoints(habit.difficulty);
 			setRewards("odyssee", habit.difficulty * 2);
 
+			if (habit.type !== HabitType.negative && member && member.uid) {
+				const pointsToAdd = habit.difficulty * 10;
+				const updatedLeague = await updateMemberLeaguePoints(
+					member.uid,
+					pointsToAdd
+				);
+				if (setMember) {
+					setMember({ ...member, league: updatedLeague });
+				}
+			}
+
 			const streak = await incrementStreak();
 			if (streak) {
 				setStreak(streak);
@@ -142,6 +161,8 @@ function CardCheckHabit({
 		setCompletedHabitsToday,
 		setStreak,
 		onHabitStatusChange,
+		member,
+		setMember,
 	]);
 
 	const isNegative = habit.type === HabitType.negative;
@@ -247,9 +268,7 @@ function CardCheckHabit({
 										<Iconify icon="bi:play" color="white" size={20} />
 									)}
 									<Text className="text-[16px] text-white font-semibold ml-2">
-										{habit.type === HabitType.negative
-											? t("relaunch")
-											: t("start")}
+										{habit.type === HabitType.negative ? t("relaunch") : t("start")}
 									</Text>
 								</Pressable>
 							</ZoomableView>

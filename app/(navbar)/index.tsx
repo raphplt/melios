@@ -1,5 +1,5 @@
 import React from "react";
-import { RefreshControl } from "react-native";
+import { Button, RefreshControl } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import ParallaxScrollView from "@components/Home/ParallaxScrollView";
@@ -14,8 +14,8 @@ import NextLevelHandler from "@components/Progressions/NextLevelHandler";
 import WorkSession from "@components/Home/WorkSession";
 
 export default function Index() {
-const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
-const { t } = useTranslation();
+	const { loading, refreshing, isLoading, userHabits, onRefresh } = useIndex();
+	const { t } = useTranslation();
 
 	if (loading || !userHabits || isLoading) {
 		return <LoaderScreen text={t("loading")} />;

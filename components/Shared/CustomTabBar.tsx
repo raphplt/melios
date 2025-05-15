@@ -26,6 +26,10 @@ const CustomTabBar = ({ state, navigation }: Props) => {
 			switch (name) {
 				case "index":
 					return <Home color={color} />;
+				case "leagues":
+					return (
+						<Iconify icon="material-symbols:trophy-outline" size={30} color={color} />
+					);
 				case "progression":
 					return <Progress color={color} />;
 				case "recompenses":

@@ -82,9 +82,7 @@ const HabitsSection = () => {
 					justifyContent: "space-between",
 					paddingHorizontal: 10,
 				}}
-			>
-				{/* <AddHabits /> */}
-			</View>
+			></View>
 
 			<View style={{ paddingHorizontal: 10 }}>
 				<HabitToggle filterMode={filterMode} setFilterMode={setFilterMode} />

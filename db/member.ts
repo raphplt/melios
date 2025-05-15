@@ -319,3 +319,22 @@ export const getFriends = async () => {
 		throw error;
 	}
 };
+
+// Ajoute des points à member.league.points pour un utilisateur donné
+export const updateMemberLeaguePoints = async (uid: string, pointsToAdd: number) => {
+	const membersCollectionRef = collection(db, "members");
+	const querySnapshot = await getDocs(query(membersCollectionRef, where("uid", "==", uid)));
+	if (!querySnapshot.empty) {
+		const memberDoc = querySnapshot.docs[0];
+		const memberData = memberDoc.data();
+		const currentLeague = memberData.league || { points: 0, leagueId: "", localLeagueId: "", rank: 0 };
+		const updatedLeague = {
+			...currentLeague,
+			points: (currentLeague.points || 0) + pointsToAdd,
+		};
+		await updateDoc(memberDoc.ref, { league: updatedLeague });
+		return updatedLeague;
+	} else {
+		throw new Error("Member not found");
+	}
+};

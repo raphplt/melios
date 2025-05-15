@@ -65,6 +65,7 @@ const HabitToggle = ({ filterMode, setFilterMode }: HabitToggleProps) => {
 					width: containerWidth,
 				},
 			]}
+			className="mt-2"
 		>
 			<Animated.View
 				style={[

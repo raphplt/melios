@@ -16,4 +16,13 @@ export interface Member {
 	activityConfidentiality?: "public" | "private" | "friends";
 	levels?: UserLevel[];
 	friendCode?: string;
+	league?: MemberLeague;
 }
+
+export interface MemberLeague {
+	points: number;
+	leagueId: string;
+	localLeagueId: string;
+	rank: number;
+}
+

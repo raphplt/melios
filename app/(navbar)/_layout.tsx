@@ -81,6 +81,22 @@ const TabLayout: React.FC = () => {
 					)}
 				/>
 				<Tabs.Screen
+					name="leagues"
+					options={createTabOptions(
+						"",
+						() => (
+							<View style={{ marginLeft: 15 }}>
+								<Melios fill={theme.colors.text} />
+							</View>
+						),
+						() => (
+							<LayoutTopRight />
+						),
+						undefined,
+						theme.colors.backgroundTertiary
+					)}
+				/>
+				<Tabs.Screen
 					name="recompenses"
 					options={createTabOptions(
 						"",
