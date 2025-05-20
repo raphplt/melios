@@ -7,7 +7,7 @@ import {
 } from "../../db/leagueRoom";
 import { League } from "../../type/league";
 import { LeagueRoom } from "../../type/leagueRoom";
-import { ScrollView, View, Text, StyleSheet, Image } from "react-native";
+import { ScrollView, View, Text, Image } from "react-native";
 import { useData } from "@context/DataContext";
 import { updateMemberField } from "../../db/member";
 import type { Member } from "../../type/member";
@@ -15,137 +15,242 @@ import type { Member } from "../../type/member";
 const LeagueCurrent = () => {
 	const { member, setMember } = useData();
 	const [leagues, setLeagues] = useState<League[]>([]);
-	const [league, setLeague] = useState<League | null>(null);
+	const [currentLeague, setCurrentLeague] = useState<League | null>(null);
 	const [leagueRoom, setLeagueRoom] = useState<LeagueRoom | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [creatingRoom, setCreatingRoom] = useState(false);
 
-	// console.log("member", member);
-
+	// Initial setup - load leagues only if needed
 	useEffect(() => {
-		getAllLeagues().then(setLeagues);
-	}, []);
+		const setupMember = async () => {
+			try {
+				// Only fetch all leagues if needed for assignment or display
+				if (!member?.league?.leagueId) {
+					console.log("No league assigned, fetching leagues for initial assignment");
+					const allLeagues = await getAllLeagues();
+					setLeagues(allLeagues);
 
-	useEffect(() => {
-		if (member && !member.league) {
-			getAllLeagues().then((leagues) => {
-				if (leagues.length > 0) {
-					const lowestLeague = leagues.reduce(
-						(min, l) => (l.rank < min.rank ? l : min),
-						leagues[0]
-					);
-					const newLeague = {
-						leagueId: lowestLeague.id,
-						localLeagueId: "",
-						points: 0,
-						rank: 0,
-					};
-					updateMemberField("league", newLeague).then(() => {
-						if (setMember) setMember({ ...member, league: newLeague });
-					});
+					// If user exists but has no league, assign the lowest one
+					if (member && !member.league && allLeagues.length > 0) {
+						const lowestLeague = allLeagues.reduce(
+							(min, l) => (l.rank < min.rank ? l : min),
+							allLeagues[0]
+						);
+						console.log("Assigning initial league:", lowestLeague.name);
+						const newLeague = {
+							leagueId: lowestLeague.id,
+							localLeagueId: "",
+							points: 0,
+							rank: 0,
+						};
+						await updateMemberField("league", newLeague);
+						if (setMember) {
+							setMember({ ...member, league: newLeague });
+						}
+						setCurrentLeague(lowestLeague);
+					}
+				} else {
+					// If user already has a league, just load that one and the options
+					console.log("Loading current league:", member.league.leagueId);
+					const userLeague = await getLeagueById(member.league.leagueId);
+					if (userLeague) {
+						setCurrentLeague(userLeague);
+						// Fetch all leagues just for the display bar
+						const allLeagues = await getAllLeagues();
+						setLeagues(allLeagues);
+					}
 				}
-			});
-		}
-	}, [member, setMember]);
+			} catch (error) {
+				console.error("Error in league setup:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
 
+		setupMember();
+	}, [member?.uid, member?.league?.leagueId, setMember]);
+
+	// Load or create league room
 	useEffect(() => {
-		if (
-			member &&
-			member.league &&
-			!member.league.localLeagueId &&
-			leagues.length > 0
-		) {
-			const memberLeague = member.league;
-			if (!memberLeague || !memberLeague.leagueId) return;
-			const league = leagues.find((l) => l.id === memberLeague.leagueId);
-			if (!league) return;
-			const weekId = new Date().toISOString().slice(0, 10);
+		const setupLeagueRoom = async () => {
+			if (!member?.league?.leagueId || creatingRoom || !currentLeague) {
+				return;
+			}
 
-			// 1. Chercher une room existante
-			getAllLeagueRooms().then((rooms) => {
+			try {
+				// If we already have a room ID, load that room
+				if (member.league.localLeagueId) {
+					const room = await getLeagueRoomById(member.league.localLeagueId);
+					if (room) {
+						setLeagueRoom(room);
+						console.log("Loaded existing room:", room.id);
+						return;
+					} else {
+						console.warn("Room not found despite having ID, will create a new one");
+						// Reset the room ID since it doesn't exist
+						if (member.league) {
+							const updatedLeague = {
+								...member.league,
+								localLeagueId: "",
+							};
+							await updateMemberField("league", updatedLeague);
+							if (setMember) {
+								setMember({ ...member, league: updatedLeague });
+							}
+						}
+					}
+				}
+
+				// No valid room ID, create or join one
+				setCreatingRoom(true);
+				console.log("Finding or creating room for league:", currentLeague.name);
+
+				const weekId = new Date().toISOString().slice(0, 10);
+				const rooms = await getAllLeagueRooms();
 				const sameLeagueRooms = rooms.filter(
-					(r) => r.leagueId === league.id && r.weekId === weekId
+					(r) => r.leagueId === currentLeague.id && r.weekId === weekId
 				);
+
 				let targetRoom = sameLeagueRooms.find((r) => r.members.length < 10);
 
 				if (targetRoom) {
-					// 2. Ajouter le membre à la room existante
-					// Vérifier qu'il n'est pas déjà dedans (sécurité)
+					// Join existing room if we're not already in it
 					if (!targetRoom.members.some((m) => m.uid === member.uid)) {
-						const userMember: Member = {
+						console.log("Joining existing room:", targetRoom.id);
+						const userMember = {
 							...member,
 							league: {
-								...memberLeague,
+								...member.league,
 								localLeagueId: targetRoom.id,
 							},
 						};
 						targetRoom.members = [...targetRoom.members, userMember];
-						createOrUpdateLeagueRoom(targetRoom).then(() => {
-							updateMemberField("league", {
-								...memberLeague,
-								localLeagueId: targetRoom.id,
-							}).then(() => {
-								if (setMember)
-									setMember({
-										...member,
-										league: { ...memberLeague, localLeagueId: targetRoom.id },
-									});
-							});
+						await createOrUpdateLeagueRoom(targetRoom);
+						await updateMemberField("league", {
+							...member.league,
+							localLeagueId: targetRoom.id,
 						});
+
+						if (setMember) {
+							setMember({
+								...member,
+								league: { ...member.league, localLeagueId: targetRoom.id },
+							});
+						}
+
+						setLeagueRoom(targetRoom);
+					} else {
+						// We're already in this room
+						setLeagueRoom(targetRoom);
 					}
 				} else {
-					// 3. Créer une nouvelle room avec bots
+					// Create a new room
+					console.log("Creating new room for league:", currentLeague.name);
 					const roomId = `room_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
-					const bots = Array.from({ length: 9 }, (_, i) => generateBot(league, i));
-					const userMember: Member = {
+					const bots = Array.from({ length: 9 }, (_, i) =>
+						generateBot(currentLeague, i)
+					);
+
+					const userMember = {
 						...member,
 						league: {
-							...memberLeague,
+							...member.league,
 							localLeagueId: roomId,
 						},
 					};
+
 					const allMembers = [userMember, ...bots];
-					const room: LeagueRoom = {
+					const newRoom = {
 						id: roomId,
-						leagueId: league.id,
+						leagueId: currentLeague.id,
 						weekId,
 						createdAt: new Date().toISOString(),
 						members: allMembers,
 					};
-					createOrUpdateLeagueRoom(room).then(() => {
-						updateMemberField("league", {
-							...memberLeague,
-							localLeagueId: roomId,
-						}).then(() => {
-							if (setMember)
-								setMember({
-									...member,
-									league: { ...memberLeague, localLeagueId: roomId },
-								});
-						});
+
+					await createOrUpdateLeagueRoom(newRoom);
+					await updateMemberField("league", {
+						...member.league,
+						localLeagueId: roomId,
 					});
+
+					if (setMember) {
+						setMember({
+							...member,
+							league: { ...member.league, localLeagueId: roomId },
+						});
+					}
+
+					setLeagueRoom(newRoom);
+					console.log("Created new room:", roomId);
 				}
-			});
-		}
-	}, [member, leagues, setMember]);
+			} catch (error) {
+				console.error("Error creating/joining league room:", error);
+				// Reset creating room state on error
+				setCreatingRoom(false);
+				// Clear any invalid room ID
+				if (member?.league?.localLeagueId) {
+					const updatedLeague = {
+						...member.league,
+						localLeagueId: "",
+					};
+					await updateMemberField("league", updatedLeague);
+					if (setMember) {
+						setMember({ ...member, league: updatedLeague });
+					}
+				}
+			} finally {
+				setCreatingRoom(false);
+			}
+		};
 
-	useEffect(() => {
-		if (member?.league?.leagueId) {
-			getLeagueById(member.league.leagueId).then(setLeague);
-		}
-		if (member?.league?.localLeagueId) {
-			getLeagueRoomById(member.league.localLeagueId).then(setLeagueRoom);
-		}
-	}, [member]);
+		setupLeagueRoom();
+	}, [member?.league, currentLeague, creatingRoom, setMember]);
 
-	if (!member?.league)
-		return <Text style={styles.info}>Aucune ligue en cours</Text>;
+	if (loading) {
+		return (
+			<Text className="text-gray-500 text-lg mt-10 text-center">
+				Chargement des ligues...
+			</Text>
+		);
+	}
+
+	if (!member) {
+		return (
+			<Text className="text-gray-500 text-lg mt-10 text-center">
+				Aucun utilisateur connecté
+			</Text>
+		);
+	}
 
 	return (
-		<ScrollView contentContainerStyle={{ padding: 8 }}>
+		<ScrollView className="p-2">
+			{/* Debug Info */}
+			<View className="bg-gray-800 rounded p-2 mb-4">
+				<Text className="text-gray-300 text-xs">
+					League ID: {member?.league?.leagueId || "None"}
+				</Text>
+				<Text className="text-gray-300 text-xs">
+					Room ID: {member?.league?.localLeagueId || "None"}
+				</Text>
+				<Text className="text-gray-300 text-xs">
+					Points: {member?.league?.points || 0}
+				</Text>
+				<Text className="text-gray-300 text-xs">
+					Creating Room: {creatingRoom ? "Yes" : "No"}
+				</Text>
+			</View>
+
 			{/* BARRE DES LIGUES */}
 			<ScrollView
-				contentContainerStyle={styles.leagueScroll}
 				horizontal
 				showsHorizontalScrollIndicator={false}
+				contentContainerStyle={{
+					flexDirection: "row",
+					alignItems: "center",
+					paddingHorizontal: 8,
+					marginBottom: 24,
+				}}
 			>
 				{leagues
 					.sort((a, b) => a.rank - b.rank)
@@ -153,65 +258,91 @@ const LeagueCurrent = () => {
 						<Image
 							key={l.id}
 							source={{ uri: l.iconUrl || "https://fakeimg.pl/48x48?text=?" }}
-							style={[
-								styles.leagueBadge,
-								member?.league?.leagueId === l.id && styles.leagueBadgeActive,
-							]}
+							className={`w-12 h-12 mx-1.5 ${
+								member?.league?.leagueId === l.id
+									? "opacity-100 scale-110"
+									: "opacity-30"
+							}`}
 						/>
 					))}
 			</ScrollView>
 
 			{/* LIGUE ACTUELLE */}
-			{league && (
-				<View style={[styles.leagueBox, { borderColor: league.color }]}>
+			{currentLeague && (
+				<View
+					className={`flex-row items-center rounded-2xl border-3 p-4 mb-6`}
+					style={{ borderColor: currentLeague.color }}
+				>
 					<Image
-						source={{ uri: league.iconUrl || "https://fakeimg.pl/48x48?text=?" }}
-						style={styles.icon}
+						source={{
+							uri: currentLeague.iconUrl || "https://fakeimg.pl/48x48?text=?",
+						}}
+						className="w-12 h-12 mr-4 rounded-xl bg-white/10"
 					/>
-					<View style={{ flex: 1 }}>
-						<Text style={styles.leagueName}>{league.name}</Text>
-						<Text style={styles.leagueRank}>Rang {league.rank}</Text>
-						<Text style={styles.leaguePoints}>
-							{member.league.points} points cette semaine
+					<View className="flex-1">
+						<Text className="text-xl font-bold">{currentLeague.name}</Text>
+						<Text className="text-base text-gray-400 mt-1">
+							Rang {currentLeague.rank}
+						</Text>
+						<Text className="text-base text-yellow-400 font-bold mt-1">
+							{member.league?.points || 0} points cette semaine
 						</Text>
 					</View>
 				</View>
 			)}
 
 			{/* CLASSEMENT ROOM */}
-			<Text style={styles.sectionTitle}>Classement hebdomadaire</Text>
+			<Text className="text-2xl font-bold mb-3">Classement hebdomadaire</Text>
 			{leagueRoom ? (
-				<View style={styles.roomBox}>
+				<View className="w-full rounded-2xl p-2">
 					{leagueRoom.members
 						.slice()
 						.sort((a, b) => (b.league?.points || 0) - (a.league?.points || 0))
 						.map((m, idx) => (
 							<View
 								key={m.uid}
-								style={[
-									styles.memberRow,
-									m.uid === member.uid && styles.currentUserRow,
-								]}
+								className={`flex-row items-center py-2 border-b border-gray-700 ${
+									m.uid === member.uid ? "bg-[#2E3A59] rounded-lg p-1" : ""
+								}`}
 							>
-								<Text style={styles.rank}>
+								<Text className="w-7 text-lg font-bold text-yellow-400 text-center">
 									{idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}
 								</Text>
 								<Image
 									source={{
 										uri: m.profilePicture || "https://fakeimg.pl/36x36?text=Bot",
 									}}
-									style={styles.avatar}
+									className="w-9 h-9 mx-2 rounded-full bg-gray-600"
 								/>
-								<Text style={styles.memberName} numberOfLines={1}>
+								<Text className="flex-1 text-base text-white" numberOfLines={1}>
 									{m.nom}
 								</Text>
-								<Text style={styles.memberPoints}>{m.league?.points || 0} pts</Text>
-								{m.uid === member.uid && <Text style={styles.youTag}>Vous</Text>}
+								<Text className="text-base text-yellow-400 mr-2">
+									{m.league?.points || 0} pts
+								</Text>
+								{m.uid === member.uid && (
+									<Text className="bg-yellow-400 text-[#23263A] font-bold rounded-md px-2 py-0.5 ml-1.5 text-sm">
+										Vous
+									</Text>
+								)}
 							</View>
 						))}
 				</View>
 			) : (
-				<Text style={styles.info}>Aucune ligue en cours</Text>
+				<View className="mt-4">
+					<Text className="text-gray-500 text-lg mb-4 text-center">
+						{creatingRoom
+							? "Création d'une nouvelle salle en cours..."
+							: "Aucune salle de ligue cette semaine"}
+					</Text>
+					{currentLeague && !creatingRoom && (
+						<View className="items-center">
+							<Text className="text-gray-400 text-base mb-2">
+								Recherche d'une salle à rejoindre...
+							</Text>
+						</View>
+					)}
+				</View>
 			)}
 		</ScrollView>
 	);
@@ -259,124 +390,18 @@ function generateBot(league: League, idx: number): Member {
 		friends: [],
 		friendRequestsSent: [],
 		friendRequestsReceived: [],
-		motivation: undefined,
+		motivation: {
+			answer: "Modéré",
+			value: 2,
+		},
 		objectifs: [],
 		aspects: [],
-		temps: undefined,
+		temps: {
+			answer: "Moyen",
+			value: 2,
+		},
 		levels: [],
 	};
 }
-
-const styles = StyleSheet.create({
-	leagueScroll: {
-		paddingHorizontal: 8,
-		marginBottom: 24,
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	leagueBadge: {
-		width: 48,
-		height: 48,
-		marginHorizontal: 6,
-		opacity: 0.3,
-	},
-	leagueBadgeActive: {
-		opacity: 1,
-		transform: [{ scale: 1.15 }],
-	},
-	leagueBox: {
-		flexDirection: "row",
-		alignItems: "center",
-		borderRadius: 16,
-		borderWidth: 3,
-		padding: 16,
-		marginBottom: 24,
-	},
-	icon: {
-		width: 48,
-		height: 48,
-		marginRight: 16,
-		borderRadius: 12,
-		backgroundColor: "#fff2",
-	},
-	leagueName: {
-		fontSize: 20,
-		fontWeight: "bold",
-	},
-	leagueRank: {
-		fontSize: 16,
-		color: "#C7C7C7",
-		marginTop: 4,
-	},
-	leaguePoints: {
-		fontSize: 16,
-		color: "#FFD700",
-		marginTop: 4,
-		fontWeight: "bold",
-	},
-	sectionTitle: {
-		fontSize: 22,
-		fontWeight: "bold",
-		marginBottom: 12,
-		alignSelf: "flex-start",
-	},
-	roomBox: {
-		width: 320,
-		backgroundColor: "#181A20",
-		borderRadius: 16,
-		padding: 8,
-	},
-	memberRow: {
-		flexDirection: "row",
-		alignItems: "center",
-		paddingVertical: 8,
-		borderBottomWidth: 1,
-		borderBottomColor: "#333",
-	},
-	currentUserRow: {
-		backgroundColor: "#2E3A59",
-		borderRadius: 8,
-	},
-	rank: {
-		width: 28,
-		fontSize: 18,
-		fontWeight: "bold",
-		color: "#FFD700",
-		textAlign: "center",
-	},
-	avatar: {
-		width: 36,
-		height: 36,
-		borderRadius: 18,
-		marginHorizontal: 8,
-		backgroundColor: "#444",
-	},
-	memberName: {
-		flex: 1,
-		fontSize: 16,
-		color: "#fff",
-	},
-	memberPoints: {
-		fontSize: 16,
-		color: "#FFD700",
-		marginRight: 8,
-	},
-	youTag: {
-		backgroundColor: "#FFD700",
-		color: "#23263A",
-		fontWeight: "bold",
-		borderRadius: 6,
-		paddingHorizontal: 8,
-		paddingVertical: 2,
-		marginLeft: 6,
-		fontSize: 13,
-	},
-	info: {
-		color: "#888",
-		fontSize: 18,
-		marginTop: 40,
-		textAlign: "center",
-	},
-});
 
 export default LeagueCurrent;
