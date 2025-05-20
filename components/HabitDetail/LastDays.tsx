@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Text, View, FlatList } from "react-native";
 import { Iconify } from "react-native-iconify";
@@ -37,19 +37,15 @@ export default function LastDays({ logs, loading }: LastDaysProps) {
 
 	useEffect(() => {
 		if (!loading) {
-			// Création d'un Set pour un accès rapide aux dates de log
 			const loggedDates = new Set(
 				logs.map((log) =>
-					moment(log.date?.toDate ? log.date.toDate() : log.date).format(
-						"YYYY-MM-DD"
-					)
+					dayjs(log.date?.toDate ? log.date.toDate() : log.date).format("YYYY-MM-DD")
 				)
 			);
 
 			const daysArray: DayStatus[] = [];
-			// On itère de 0 (aujourd'hui) à DAYS_TOTAL
 			for (let i = 0; i <= DAYS_TOTAL; i++) {
-				const day = moment().subtract(i, "days").format("YYYY-MM-DD");
+				const day = dayjs().subtract(i, "day").format("YYYY-MM-DD");
 				daysArray.push({
 					date: day,
 					done: loggedDates.has(day),
@@ -58,7 +54,6 @@ export default function LastDays({ logs, loading }: LastDaysProps) {
 
 			setAllDays(daysArray);
 
-			// Calcul du streak à partir d'aujourd'hui
 			let streak = 0;
 			for (let day of daysArray) {
 				if (day.done) {
@@ -91,7 +86,7 @@ export default function LastDays({ logs, loading }: LastDaysProps) {
 					<Iconify size={24} color={theme.colors.text} icon="mdi:close" />
 				)}
 				<Text style={{ color: theme.colors.text, marginTop: 4, fontWeight: "600" }}>
-					{moment(item.date, "YYYY-MM-DD").format("DD/MM")}
+					{dayjs(item.date, "YYYY-MM-DD").format("DD/MM")}
 				</Text>
 			</View>
 		),
@@ -108,7 +103,6 @@ export default function LastDays({ logs, loading }: LastDaysProps) {
 
 	const placeholders = useMemo(() => Array(5).fill(null), []);
 
-	// Fonction pour charger plus de jours
 	const handleLoadMore = () => {
 		setVisibleDaysCount((prev) =>
 			Math.min(prev + INCREMENT_DAYS, allDays.length)
@@ -128,7 +122,6 @@ export default function LastDays({ logs, loading }: LastDaysProps) {
 			}}
 			tint="extraLight"
 		>
-			{/* En-tête avec icône et streak */}
 			<View
 				style={{
 					flexDirection: "row",
@@ -181,7 +174,6 @@ export default function LastDays({ logs, loading }: LastDaysProps) {
 				</View>
 			</View>
 
-			{/* Liste horizontale des jours */}
 			{!loading ? (
 				<>
 					<FlatList

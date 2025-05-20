@@ -2,7 +2,7 @@ import { DayOfWeek } from "@type/days";
 import { GenericLevel } from "@type/levels";
 import { DailyLog } from "@type/log";
 import { UserHabit } from "@type/userHabit";
-import moment from "moment";
+import dayjs from "dayjs";
 import { HabitType } from "./category.type";
 
 /**
@@ -11,21 +11,21 @@ import { HabitType } from "./category.type";
  * @returns
  */
 export const calculateStreak = (logs: DailyLog[]): number => {
-	const today = moment().format("YYYY-MM-DD");
+	const today = dayjs().format("YYYY-MM-DD");
 	let maxStreak = 0;
 	if (logs.length === 0) {
 		return 0;
 	}
 
-	const sortedLogs = logs.sort((a, b) => moment(b.date).diff(moment(a.date)));
+	const sortedLogs = logs.sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
 	let currentStreak = 0;
-	let expectedDate = moment(today);
+	let expectedDate = dayjs(today);
 
 	for (const log of sortedLogs) {
-		const logDate = moment(log.date).format("YYYY-MM-DD");
+		const logDate = dayjs(log.date).format("YYYY-MM-DD");
 		if (logDate === expectedDate.format("YYYY-MM-DD")) {
 			currentStreak++;
-			expectedDate.subtract(1, "days");
+			expectedDate = expectedDate.subtract(1, "day");
 		} else {
 			break;
 		}
@@ -45,20 +45,20 @@ export const calculateWeeklyStreak = (logs: DailyLog[]): number => {
 		return 0;
 	}
 
-	const today = moment().format("YYYY-MM-DD");
-	const sevenDaysAgo = moment().subtract(7, "days").format("YYYY-MM-DD");
+	const today = dayjs().format("YYYY-MM-DD");
+	const sevenDaysAgo = dayjs().subtract(7, "day").format("YYYY-MM-DD");
 	let maxStreak = 0;
 
-	const sortedLogs = logs.sort((a, b) => moment(b.date).diff(moment(a.date)));
+	const sortedLogs = logs.sort((a, b) => dayjs(b.date).diff(dayjs(a.date)));
 	let currentStreak = 0;
-	let expectedDate = moment(today);
+	let expectedDate = dayjs(today);
 
 	for (const log of sortedLogs) {
-		const logDate = moment(log.date).format("YYYY-MM-DD");
+		const logDate = dayjs(log.date).format("YYYY-MM-DD");
 		if (logDate >= sevenDaysAgo && logDate <= today) {
 			if (logDate === expectedDate.format("YYYY-MM-DD")) {
 				currentStreak++;
-				expectedDate.subtract(1, "days");
+				expectedDate = expectedDate.subtract(1, "day");
 			} else {
 				break;
 			}

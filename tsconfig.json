@@ -26,8 +26,7 @@
 		".expo/types/**/*.ts",
 		"expo-env.d.ts",
 		"db/index.ts",
-		"nativewind-env.d.ts",
-		".monicon/*.d.ts"
+		"nativewind-env.d.ts"
 	],
 	"exclude": [
 		"node_modules",

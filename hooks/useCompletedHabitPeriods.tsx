@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useTheme } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
 import { Log, DailyLog } from "@type/log";
@@ -19,16 +19,12 @@ const useCompletedHabitPeriods = () => {
 		const completedDates = new Set<string>();
 		const logsByDate: Record<string, DailyLog[]> = {};
 
-		// On parcourt tous les logs et sous-logs
 		logs.forEach((logEntry: Log) => {
 			logEntry.logs?.forEach((dailyLog: DailyLog) => {
 				if (!dailyLog.date) return; // sécurité
 
-				// dailyLog.date est maintenant une Date JavaScript
-				const logDate = moment(dailyLog.date).format("YYYY-MM-DD");
-
+				const logDate = dayjs(dailyLog.date).format("YYYY-MM-DD");
 				completedDates.add(logDate);
-
 				if (!logsByDate[logDate]) {
 					logsByDate[logDate] = [];
 				}
@@ -36,10 +32,7 @@ const useCompletedHabitPeriods = () => {
 			});
 		});
 
-		// On trie toutes les dates complétées
 		const sortedDates = Array.from(completedDates).sort();
-
-		// Construction des périodes pour le calendrier
 		const periods: Record<string, any> = {};
 		if (sortedDates.length === 0) {
 			return { periods, logsByDate };
@@ -51,8 +44,8 @@ const useCompletedHabitPeriods = () => {
 		sortedDates.forEach((currentDate, index) => {
 			if (index === 0) return;
 
-			const previousDate = moment(sortedDates[index - 1]);
-			if (moment(currentDate).diff(previousDate, "days") === 1) {
+			const previousDate = dayjs(sortedDates[index - 1]);
+			if (dayjs(currentDate).diff(previousDate, "day") === 1) {
 				end = currentDate;
 			} else {
 				addPeriod(start, end, periods, bgColor);
@@ -61,11 +54,9 @@ const useCompletedHabitPeriods = () => {
 			}
 		});
 
-		// Dernière période
 		addPeriod(start, end, periods, bgColor);
 
-		// Mise en surbrillance du jour en cours
-		const today = moment().format("YYYY-MM-DD");
+		const today = dayjs().format("YYYY-MM-DD");
 		const highlightColor = theme.dark ? "#ffcc00" : "#C95355";
 		if (periods[today]) {
 			periods[today].color = highlightColor;
@@ -121,16 +112,13 @@ const addPeriod = (
 			textColor: "white",
 		};
 
-		// On marque toutes les dates intermédiaires
-		for (
-			let day = moment(start).add(1, "days");
-			day.isBefore(end);
-			day.add(1, "days")
-		) {
+		let day = dayjs(start).add(1, "day");
+		while (day.isBefore(dayjs(end))) {
 			periods[day.format("YYYY-MM-DD")] = {
 				color: bgColor,
 				textColor: "white",
 			};
+			day = day.add(1, "day");
 		}
 	}
 };

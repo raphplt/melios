@@ -1,7 +1,7 @@
 import { useData } from "@context/DataContext";
 import { setRewards } from "@db/rewards";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useHabits } from "@context/HabitsContext";
 import { UserHabit } from "@type/userHabit";
 import { useTimer } from "@context/TimerContext";
@@ -10,7 +10,7 @@ import useAddXp from "./useAddXp";
 import { setHabitLog } from "@db/logs";
 
 const useHabitTimer = () => {
-	const date = moment().format("YYYY-MM-DD");
+	const date = dayjs().format("YYYY-MM-DD");
 	const { setShowHabitDetail } = useHabits();
 
 	const {

@@ -1,7 +1,7 @@
 import { useSelect } from "@context/SelectContext";
 import { useTheme } from "@context/ThemeContext";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import { View, Text, Pressable } from "react-native";
 import { Iconify } from "react-native-iconify";
@@ -31,7 +31,6 @@ export default function HabitMoment({
 	const [customMoment, setCustomMoment] = useState<Date | null>(null);
 	const [isCustom, setIsCustom] = useState(false);
 
-	// Création d'une valeur partagée pour chaque bloc
 	const progressCustom = useSharedValue(customMoment ? 1 : 0);
 	const progressFree = useSharedValue(
 		selectedMoment === -1 && !customMoment ? 1 : 0
@@ -50,7 +49,6 @@ export default function HabitMoment({
 		setValue("moment", selectedMoment);
 	}, [selectedMoment, setValue]);
 
-	// À chaque modification de l'état, on anime les valeurs partagées
 	useEffect(() => {
 		progressCustom.value = withTiming(customMoment ? 1 : 0, { duration: 300 });
 		progressFree.value = withTiming(
@@ -98,7 +96,6 @@ export default function HabitMoment({
 	const itemStyle =
 		"w-full flex flex-row items-center justify-between px-3 py-2 rounded-xl";
 
-	// Styles animés pour chaque bloc grâce à leur valeur partagée
 	const animatedStyleCustom = useAnimatedStyle(() => ({
 		backgroundColor: interpolateColor(
 			progressCustom.value,
@@ -151,7 +148,7 @@ export default function HabitMoment({
 								color: isCustom ? theme.colors.background : theme.colors.text,
 							}}
 						>
-							{(customMoment && moment(customMoment).format("HH:mm")) ||
+							{(customMoment && dayjs(customMoment).format("HH:mm")) ||
 								"Personnalisée"}
 						</Text>
 						<Iconify
