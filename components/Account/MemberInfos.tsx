@@ -8,6 +8,7 @@ import { useTheme } from "@context/ThemeContext";
 import CachedImage from "@components/Shared/CachedImage";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import UserBadge from "@components/Shared/UserBadge";
 
 export default function MemberInfos({
 	member,
@@ -41,15 +42,12 @@ export default function MemberInfos({
 			>
 				<ZoomableView>
 					<Pressable onPress={() => navigation.navigate("cosmeticShop")}>
-						<CachedImage
-							imagePath={profilePictureUri || "images/cosmetics/man.png"}
-							style={{ width: 144, height: 144 }}
-						/>
+						<UserBadge width={144} height={144} />
 					</Pressable>
 				</ZoomableView>
 
 				<View
-					className="mx-auto flex flex-col items-center justify-center"
+					className="mx-auto flex flex-col items-center justify-center mt-2"
 					style={{
 						backgroundColor: theme.colors.background,
 					}}
