@@ -1,4 +1,4 @@
-import { useData } from "@context/DataContext";
+import { useNotification } from "@context/NotificationContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { useContext } from "react";
 import { Pressable, Text, View, StyleSheet } from "react-native";
@@ -6,8 +6,8 @@ import { Iconify } from "react-native-iconify";
 
 export default function NotificationBox() {
 	const { theme } = useContext(ThemeContext);
-	const { popup } = useData();
-	const { isOpen, message, type, closePopup } = popup;
+        const { popup, closePopup } = useNotification();
+        const { isOpen, message, type } = popup;
 
 	const backgroundColor: any = {
 		success: theme.colors.greenSecondary,

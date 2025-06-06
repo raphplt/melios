@@ -15,6 +15,7 @@ import { SessionProvider, useSession } from "@context/UserContext";
 import { ThemeContext } from "@context/ThemeContext";
 import { DarkTheme, DefaultTheme } from "@constants/Theme";
 import { DataProvider } from "@context/DataContext";
+import { NotificationProvider } from "@context/NotificationContext";
 import "../i18n";
 import "../global.css";
 import { useTranslation } from "react-i18next";
@@ -235,13 +236,15 @@ function RootLayoutContent() {
 
 	if (isLoading) return <LoaderScreen text={t("loading")} />;
 
-	return (
-		<DataProvider>
-			<HabitsProvider>
-				<MainNavigator />
-			</HabitsProvider>
-		</DataProvider>
-	);
+        return (
+                <NotificationProvider>
+                        <DataProvider>
+                                <HabitsProvider>
+                                        <MainNavigator />
+                                </HabitsProvider>
+                        </DataProvider>
+                </NotificationProvider>
+        );
 }
 
 export default function RootLayout() {
