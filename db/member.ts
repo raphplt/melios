@@ -3,21 +3,13 @@ import {
 	query,
 	where,
 	collection,
-	doc,
 	updateDoc,
-	arrayUnion,
-	getDoc,
-	arrayRemove,
-	limit,
-	orderBy,
-	startAfter,
 } from "firebase/firestore";
 import { db } from ".";
 import { auth } from ".";
 import { onAuthStateChanged } from "firebase/auth";
 import { Member } from "../type/member";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserLevel } from "@type/levels";
 import { getUserLevelsByUserId } from "./levels";
 
 export const LOCAL_STORAGE_MEMBER_INFO_KEY = "member_info";

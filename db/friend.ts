@@ -13,8 +13,6 @@ import { auth, db } from ".";
 import { UserLevel } from "@type/levels";
 import { Member } from "@type/member";
 import { getUserLevelsByUserId } from "./levels";
-import { LOCAL_STORAGE_MEMBER_INFO_KEY } from "./member";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  *
