@@ -3,7 +3,8 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
-    "deploy": "firebase deploy --only functions"
+    "deploy": "firebase deploy --only functions",
+    "lint": "echo 'No linting configured'"
   },
   "engines": {
     "node": "18"
