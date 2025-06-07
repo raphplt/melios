@@ -89,3 +89,7 @@ Si vous souhaitez rejoindre ce projet, contactez-moi directement pour plus d'inf
 
 
 Merci d'utiliser Melios ! Nous espérons que cette application vous aidera à atteindre vos objectifs et à vivre une vie plus épanouissante.
+
+## Automatisation des ligues
+
+Une procédure détaillée d'installation d'une fonction planifiée Firebase pour clôturer automatiquement les ligues est disponible dans [docs/league-scheduler.md](docs/league-scheduler.md).
