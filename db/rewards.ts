@@ -52,8 +52,8 @@ export const getRewards = async (
 };
 
 export const setRewards = async (
-	type: "odyssee" | "rewards",
-	points: number
+        type: "odyssee" | "rewards",
+        points: number
 ) => {
 	try {
 		const uid: any = auth.currentUser?.uid;
@@ -90,7 +90,32 @@ export const setRewards = async (
 	} catch (error) {
 		console.log("Erreur lors de la récupération des récompenses : ", error);
 		throw error;
-	}
+        }
+};
+
+// Add rewards to a specific member by uid
+export const addRewardsToMember = async (
+        uid: string,
+        type: "odyssee" | "rewards",
+        points: number,
+) => {
+        const rewardsCollectionRef = collection(db, "rewards");
+        const querySnapshot = await getDocs(
+                query(rewardsCollectionRef, where("uid", "==", uid)),
+        );
+        if (!querySnapshot.empty) {
+                const rewardDoc = querySnapshot.docs[0];
+                const updateData =
+                        type === "odyssee"
+                                ? { odyssee: (rewardDoc.data().odyssee || 0) + points }
+                                : { rewards: (rewardDoc.data().rewards || 0) + points };
+                await updateDoc(rewardDoc.ref, updateData);
+        } else {
+                const newData: any = { uid };
+                if (type === "odyssee") newData["odyssee"] = points;
+                else newData["rewards"] = points;
+                await addDoc(collection(db, "rewards"), newData);
+        }
 };
 
 export const getAllRewardsPaginated = async (

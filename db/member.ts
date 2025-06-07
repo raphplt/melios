@@ -326,7 +326,34 @@ export const updateMemberLeaguePoints = async (uid: string, pointsToAdd: number)
 		};
 		await updateDoc(memberDoc.ref, { league: updatedLeague });
 		return updatedLeague;
-	} else {
-		throw new Error("Member not found");
-	}
+        } else {
+                throw new Error("Member not found");
+        }
+};
+
+// Fetch random members of a league. Optionally exclude certain uids
+export const getMembersByLeague = async (
+        leagueId: string,
+        exclude: string[] = [],
+        limitCount = 10,
+) => {
+        const membersCollectionRef = collection(db, "members");
+        const snapshot = await getDocs(
+                query(membersCollectionRef, where("league.leagueId", "==", leagueId)),
+        );
+        const allMembers = snapshot.docs.map((doc) => doc.data() as Member);
+        const filtered = allMembers.filter((m) => !exclude.includes(m.uid));
+        const shuffled = filtered.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, limitCount);
+};
+
+// Update the league field of any member by uid
+export const setMemberLeagueByUid = async (uid: string, league: any) => {
+        const membersCollectionRef = collection(db, "members");
+        const q = query(membersCollectionRef, where("uid", "==", uid));
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+                const docRef = snapshot.docs[0].ref;
+                await updateDoc(docRef, { league });
+        }
 };

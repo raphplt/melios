@@ -24,6 +24,7 @@ import notifee from "@notifee/react-native";
 export { ErrorBoundary } from "expo-router";
 import * as Notifications from "expo-notifications";
 import * as NavigationBar from "expo-navigation-bar";
+import GlobalGradient from "@components/Shared/GlobalGradient";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -92,10 +93,11 @@ NavigationBar.setPositionAsync("absolute");
 NavigationBar.setBackgroundColorAsync("#ffffff01");
 	}, []);
 
-	return (
-		<ThemeContext.Provider value={themeContextValue}>
-			<ThemeProvider value={theme}>
-				<StatusBar
+        return (
+                <ThemeContext.Provider value={themeContextValue}>
+                        <ThemeProvider value={theme}>
+                                <GlobalGradient />
+                                <StatusBar
 					style={theme.dark ? "light" : "dark"}
 					backgroundColor={"transparent"}
 				/>
