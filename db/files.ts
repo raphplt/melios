@@ -1,6 +1,6 @@
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import * as FileSystem from "expo-file-system";
-import { Audio } from "expo-av";
+import { AudioPlayer } from "expo-audio";
 import { app } from "./index";
 
 const storage = getStorage(app);
@@ -89,8 +89,8 @@ export const getCachedSound = async (soundPath: string): Promise<string> => {
  */
 export const playSound = async (soundPath: string) => {
 	try {
-		const { sound } = await Audio.Sound.createAsync({ uri: soundPath });
-		await sound.playAsync();
+		const sound = new AudioPlayer(soundPath, 100);
+		await sound.play();
 	} catch (error) {
 		console.error("Error playing sound:", error);
 	}

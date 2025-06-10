@@ -1,4 +1,3 @@
-// Register.tsx
 import React, { useRef, useState } from "react";
 import {
 	View,

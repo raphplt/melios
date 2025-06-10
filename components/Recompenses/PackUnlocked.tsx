@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { Iconify } from "react-native-iconify";
-import { Audio } from "expo-av";
+import { AudioPlayer } from "expo-audio";
 import ButtonClose from "@components/Shared/ButtonClose";
 import { useData } from "@context/DataContext";
 import { useTheme } from "@context/ThemeContext";
@@ -10,7 +10,7 @@ const PackUnlocked = () => {
 	const { selectedPack } = useData();
 	const { theme } = useTheme();
 	const [currentChapter, setCurrentChapter] = useState(0);
-	const [sound, setSound] = useState<Audio.Sound | null>(null);
+	const [sound, setSound] = useState<AudioPlayer | null>(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [duration, setDuration] = useState(0);
 	const [position, setPosition] = useState(0);
@@ -24,48 +24,28 @@ const PackUnlocked = () => {
 	useEffect(() => {
 		return () => {
 			if (sound) {
-				sound.unloadAsync();
+				sound.remove();
 			}
 		};
 	}, []);
 
 	const loadAudio = async (chapterIndex: number) => {
-		// Unload previous audio if exists
+		// Remove previous audio if exists
 		if (sound) {
-			await sound.unloadAsync();
+			sound.remove();
 		}
 
 		try {
 			const audioUrl = getAudioUrl(chapterIndex);
-			const { sound: newSound } = await Audio.Sound.createAsync(
-				{ uri: audioUrl },
-				{ shouldPlay: false },
-				onPlaybackStatusUpdate
-			);
+			const newSound = new AudioPlayer(audioUrl, 100);
 
 			setSound(newSound);
 			setIsPlaying(false);
 			setPosition(0);
 
-			// Get duration
-			const status = await newSound.getStatusAsync();
-			if (status.isLoaded) {
-				setDuration(status.durationMillis || 0);
-			}
+			setDuration(newSound.duration * 1000); 
 		} catch (error) {
 			console.error("Error loading audio:", error);
-		}
-	};
-
-	const onPlaybackStatusUpdate = (status: any) => {
-		if (status.isLoaded) {
-			setPosition(status.positionMillis);
-			setIsPlaying(status.isPlaying);
-
-			// Auto advance to next chapter when current one finishes
-			if (status.didJustFinish) {
-				handleNextChapter();
-			}
 		}
 	};
 
@@ -73,9 +53,9 @@ const PackUnlocked = () => {
 		if (!sound) return;
 
 		if (isPlaying) {
-			await sound.pauseAsync();
+			await sound.pause();
 		} else {
-			await sound.playAsync();
+			await sound.play();
 		}
 	};
 

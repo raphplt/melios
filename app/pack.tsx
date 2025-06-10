@@ -3,7 +3,7 @@ import PackUnlocked from "@components/Recompenses/PackUnlocked";
 import { useData } from "@context/DataContext";
 import React, { useState } from "react";
 
-const Pack = () => {
+export default function Pack() {
 	const { selectedPack } = useData();
 	const [unlocked, setUnlocked] = useState(false);
 
@@ -12,6 +12,4 @@ const Pack = () => {
 	if (!unlocked) return <PackPreview />;
 
 	return <PackUnlocked />;
-};
-
-export default Pack;
+}

@@ -3,10 +3,10 @@ import { useTheme } from "@context/ThemeContext";
 import { useSound, Sound } from "@context/SoundContext";
 import { Modal, View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Audio } from "expo-av";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import BottomSlideModal from "./ModalBottom";
+import { AudioPlayer } from "expo-audio";
 
 export default function SoundsModal({
 	visible,
@@ -21,37 +21,30 @@ export default function SoundsModal({
 	const { t } = useTranslation();
 	const { sounds, soundMap, loadingSounds, currentSound, setCurrentSound } =
 		useSound();
-	const [soundObject, setSoundObject] = useState<Audio.Sound | null>(null);
+	const [soundObject, setSoundObject] = useState<AudioPlayer | null>(null);
 
 	useEffect(() => {
 		return () => {
 			if (soundObject) {
-				soundObject.unloadAsync();
+				soundObject.remove();
 			}
 		};
 	}, [soundObject]);
+
 	const handleSoundPress = async (sound: Sound) => {
 		try {
 			if (soundObject) {
-				await soundObject.stopAsync();
-				await soundObject.unloadAsync();
+				soundObject.remove();
 				setSoundObject(null);
 			}
 
 			if (sound.file) {
 				const soundUri = soundMap[sound.file];
-				const { sound: newSound, status } = await Audio.Sound.createAsync({
-					uri: soundUri,
-				});
+				const newSound = new AudioPlayer(soundUri, 100);
 				setSoundObject(newSound);
 
-				await newSound.setIsLoopingAsync(true);
-
-				if (status.isLoaded) {
-					await newSound.playAsync();
-				} else {
-					console.error("Sound is not loaded");
-				}
+				newSound.loop = true;
+				await newSound.play();
 			}
 
 			// Mettre à jour l'état
