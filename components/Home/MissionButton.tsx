@@ -71,10 +71,10 @@ const MissionButton = () => {
 						<Animated.View
 							style={{
 								position: "absolute",
-								top: 2,
-								right: 2,
-								width: 10,
-								height: 10,
+								top: 5,
+								right: 5,
+								width: 8,
+								height: 8,
 								borderRadius: 5,
 								backgroundColor: canClaimReward
 									? theme.colors.greenPrimary
