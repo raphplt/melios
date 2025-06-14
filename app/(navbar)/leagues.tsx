@@ -1,18 +1,29 @@
-import { ScrollView, Text, View, Animated } from "react-native";
-import { useData } from "@context/DataContext";
-import { useLeague } from "../../hooks/useLeague";
-import { LeagueBar } from "../../components/LeagueBar";
-import { CurrentLeague } from "../../components/CurrentLeague";
-import { WeeklyRanking } from "../../components/WeeklyRanking";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useEffect, useRef } from "react";
+import { View, Text, ScrollView, StatusBar, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useRef } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useData } from "../../context/DataContext";
+import { useTheme } from "../../context/ThemeContext";
+import { useLeague } from "../../hooks/useLeague";
+import { OlympicPodium } from "../../components/OlympicPodium";
+import { LeagueCarousel } from "../../components/LeagueCarousel";
+import { CurrentLeagueCard } from "../../components/CurrentLeagueCard";
+import { LeagueStats } from "../../components/LeagueStats";
+import { PersonalProgressCard } from "../../components/PersonalProgressCard";
+import { LeagueInfoButton } from "../../components/LeagueInfoModal";
+import { LeagueDebugPanel } from "../../components/LeagueDebugPanel";
+
+if (__DEV__) {
+	import("../../utils/LeagueDebugUtils");
+}
 
 const LeagueCurrent = () => {
 	const { member, setMember } = useData();
-	const { leagues, currentLeague, leagueRoom, loading, creatingRoom } =
-		useLeague(member || null, setMember);
-
+	const { theme } = useTheme();
+	const { leagues, currentLeague, topMembers, loading } = useLeague(
+		member || null,
+		setMember
+	);
 	const loadingAnimation = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
@@ -29,10 +40,26 @@ const LeagueCurrent = () => {
 
 	if (loading) {
 		return (
-			<View className="flex-1 justify-center items-center">
+			<View
+				className="flex-1 justify-center items-center px-4 pb-24"
+				style={{ backgroundColor: theme.colors.background }}
+			>
+				<StatusBar
+					backgroundColor={theme.colors.background}
+					barStyle={theme.dark ? "light-content" : "dark-content"}
+				/>
 				<LinearGradient
-					colors={["#1F2937", "#374151"]}
-					className="rounded-2xl p-8 items-center"
+					colors={[theme.colors.purplePrimary, theme.colors.purpleSecondary]}
+					style={{
+						shadowColor: theme.colors.purplePrimary,
+						shadowOffset: { width: 0, height: 8 },
+						shadowOpacity: 0.3,
+						shadowRadius: 12,
+						elevation: 10,
+						alignItems: "center",
+						borderRadius: 24,
+						padding: 24,
+					}}
 				>
 					<Animated.View
 						style={{
@@ -46,10 +73,20 @@ const LeagueCurrent = () => {
 							],
 						}}
 					>
-						<MaterialCommunityIcons name="loading" size={48} color="#7C3AED" />
+						<MaterialCommunityIcons
+							name="loading"
+							size={48}
+							color={theme.colors.mythologyGold}
+						/>
 					</Animated.View>
-					<Text className="text-gray-300 text-lg mt-4 font-medium">
-						Chargement des ligues...
+					<Text
+						className="text-lg mt-4 font-medium text-center"
+						style={{
+							color: theme.colors.textSecondary,
+							fontFamily: theme.fonts.medium.fontFamily,
+						}}
+					>
+						Chargement de l'Olympe...
 					</Text>
 				</LinearGradient>
 			</View>
@@ -58,49 +95,184 @@ const LeagueCurrent = () => {
 
 	if (!member) {
 		return (
-			<View className="flex-1 justify-center items-center p-8">
-				<MaterialCommunityIcons name="account-off" size={64} color="#6B7280" />
-				<Text className="text-gray-500 text-lg mt-4 text-center">
-					Aucun utilisateur connecté
-				</Text>
+			<View
+				className="flex-1 justify-center items-center p-8"
+				style={{ backgroundColor: theme.colors.background }}
+			>
+				<StatusBar
+					backgroundColor={theme.colors.background}
+					barStyle={theme.dark ? "light-content" : "dark-content"}
+				/>
+				<View
+					className="rounded-3xl p-8 items-center"
+					style={{
+						backgroundColor: theme.colors.cardBackground,
+						shadowColor: theme.colors.border,
+						shadowOffset: { width: 0, height: 4 },
+						shadowOpacity: 0.1,
+						shadowRadius: 8,
+						elevation: 5,
+					}}
+				>
+					<MaterialCommunityIcons
+						name="account-off"
+						size={64}
+						color={theme.colors.textTertiary}
+					/>
+					<Text
+						className="text-lg mt-4 text-center"
+						style={{
+							color: theme.colors.textTertiary,
+							fontFamily: theme.fonts.medium.fontFamily,
+						}}
+					>
+						Aucun dieu connecté à l'Olympe
+					</Text>
+				</View>
 			</View>
 		);
 	}
 
+	const currentLeagueIndex = leagues.findIndex(
+		(l) => l.id === currentLeague?.id
+	);
+	const nextLeague =
+		currentLeagueIndex >= 0 && currentLeagueIndex < leagues.length - 1
+			? leagues.sort((a, b) => a.rank - b.rank)[currentLeagueIndex + 1]
+			: undefined;
+
+	const maxPoints =
+		topMembers.length > 0 ? topMembers[0]?.league?.points ?? 0 : 0;
+	const averagePoints =
+		topMembers.length > 0
+			? Math.round(
+					topMembers.reduce((acc, m) => acc + (m.league?.points ?? 0), 0) /
+						topMembers.length
+			  )
+			: 0;
+
 	return (
-		<ScrollView
-			className="flex-1 bg-gray-950"
-			showsVerticalScrollIndicator={false}
-		>
-			{/* Header */}
-			<LinearGradient
-				colors={["#7C3AED", "#A855F7", "transparent"]}
-				className="pt-12 pb-6"
-			>
-				<Text className="text-3xl font-bold text-white text-center mb-2">
-					🏆 Ligues
-				</Text>
-				<Text className="text-gray-200 text-center text-base">
-					Montez en grade et dominez le classement !
-				</Text>
-			</LinearGradient>
-
-			{/* League Bar */}
-			<LeagueBar leagues={leagues} currentLeagueId={member?.league?.leagueId} />
-
-			{/* Current League */}
-			{currentLeague && <CurrentLeague league={currentLeague} member={member} />}
-
-			{/* Weekly Ranking */}
-			<WeeklyRanking
-				leagueRoom={leagueRoom}
-				currentMember={member}
-				creatingRoom={creatingRoom}
+		<View className="flex-1" style={{ backgroundColor: theme.colors.background }}>
+			<StatusBar
+				backgroundColor={theme.colors.purplePrimary}
+				barStyle="light-content"
 			/>
 
-			{/* Bottom spacing */}
-			<View className="h-8" />
-		</ScrollView>
+			{/* Header avec bouton d'information */}
+			<View className="flex-row items-center justify-between px-4 py-3">
+				<Text
+					className="text-2xl font-bold"
+					style={{
+						color: theme.colors.text,
+						fontFamily: theme.fonts.bold.fontFamily,
+					}}
+				>
+					🏛️ Ligues Olympiques
+				</Text>
+				<LeagueInfoButton />
+			</View>
+
+			<ScrollView
+				className="flex-1"
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={{ paddingBottom: 20 }}
+			>
+				{/* Carrousel des ligues */}
+				<LeagueCarousel
+					leagues={leagues}
+					currentLeagueId={member?.league?.leagueId}
+				/>
+
+				{/* Carte de ligue actuelle */}
+				{currentLeague && (
+					<CurrentLeagueCard
+						league={currentLeague}
+						member={member}
+						nextLeague={nextLeague}
+					/>
+				)}
+
+				{/* Progression personnelle */}
+				{currentLeague && member && (
+					<PersonalProgressCard
+						league={currentLeague}
+						member={member}
+						nextLeague={nextLeague}
+					/>
+				)}
+
+				{/* Podium olympique */}
+				{/* TODO à garder */}
+				{topMembers.length > 0 && (
+					<View className="mb-6">
+						<Text
+							className="text-xl font-bold mb-4 px-4"
+							style={{
+								color: theme.colors.text,
+								fontFamily: theme.fonts.bold.fontFamily,
+							}}
+						>
+							🏆 Podium Olympique
+						</Text>
+						<OlympicPodium topMembers={topMembers} currentMember={member} />
+					</View>
+				)}
+
+				{/* Statistiques */}
+				{topMembers.length > 0 && (
+					<LeagueStats
+						participants={topMembers.length}
+						record={maxPoints}
+						average={averagePoints}
+					/>
+				)}
+
+				{/* Message informatif si pas de top membres */}
+				{topMembers.length === 0 && currentLeague && (
+					<View className="mx-4 mb-6">
+						<LinearGradient
+							colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
+							className="rounded-3xl p-8 items-center"
+							style={{
+								shadowColor: theme.colors.border,
+								shadowOffset: { width: 0, height: 8 },
+								shadowOpacity: 0.1,
+								shadowRadius: 12,
+								elevation: 8,
+							}}
+						>
+							<MaterialCommunityIcons
+								name="trophy-outline"
+								size={48}
+								color={theme.colors.textTertiary}
+							/>
+							<Text
+								className="text-lg font-bold mt-4 text-center"
+								style={{
+									color: theme.colors.text,
+									fontFamily: theme.fonts.bold.fontFamily,
+								}}
+							>
+								Ligue en développement
+							</Text>
+							<Text
+								className="text-base mt-2 text-center"
+								style={{
+									color: theme.colors.textTertiary,
+									fontFamily: theme.fonts.regular.fontFamily,
+									lineHeight: 20,
+								}}
+							>
+								Continuez à gagner des points pour voir apparaître les champions de
+								cette ligue !
+							</Text>
+						</LinearGradient>
+					</View>
+				)}
+			</ScrollView>
+
+			{/* <LeagueDebugPanel /> */}
+		</View>
 	);
 };
 

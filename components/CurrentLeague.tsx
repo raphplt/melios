@@ -4,6 +4,7 @@ import { Member } from "../type/member";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef } from "react";
+import { useTheme } from "@context/ThemeContext";
 
 interface CurrentLeagueProps {
 	league: League;
@@ -11,6 +12,7 @@ interface CurrentLeagueProps {
 }
 
 export const CurrentLeague = ({ league, member }: CurrentLeagueProps) => {
+	const { theme } = useTheme();
 	const shimmerAnimation = useRef(new Animated.Value(0)).current;
 	const pulseAnimation = useRef(new Animated.Value(1)).current;
 
@@ -54,20 +56,20 @@ export const CurrentLeague = ({ league, member }: CurrentLeagueProps) => {
 	return (
 		<View className="mx-4 mb-6">
 			<View
-				className="rounded-3xl border-2"
+				className="rounded-3xl border-2 overflow-hidden"
 				style={{
 					borderColor: league.color,
-					backgroundColor: `${league.color}05`, // Solid background color for shadow
+					backgroundColor: theme.colors.cardBackground,
 					shadowColor: league.color,
-					shadowOffset: { width: 0, height: 8 },
-					shadowOpacity: 0.3,
-					shadowRadius: 12,
-					elevation: 10,
+					shadowOffset: { width: 0, height: 12 },
+					shadowOpacity: 0.25,
+					shadowRadius: 16,
+					elevation: 12,
 				}}
 			>
 				<LinearGradient
-					colors={[`${league.color}20`, `${league.color}10`, "transparent"]}
-					className="rounded-3xl p-6"
+					colors={[`${league.color}15`, `${league.color}08`, "transparent"]}
+					className="p-6"
 				>
 					{/* Shimmer overlay */}
 					<Animated.View
@@ -77,83 +79,169 @@ export const CurrentLeague = ({ league, member }: CurrentLeagueProps) => {
 						<Animated.View
 							className="w-20 h-full"
 							style={{
-								backgroundColor: "white",
+								backgroundColor: theme.colors.textSecondary,
 								transform: [{ translateX: shimmerTranslate }],
-								opacity: 0.3,
+								opacity: 0.2,
 							}}
 						/>
 					</Animated.View>
 
 					<View className="flex-row items-center">
 						{/* Trophy with gradient background */}
-						<View className="mr-5">
+						<View className="mr-6">
 							<View
-								className="w-16 h-16 rounded-2xl items-center justify-center"
+								className="w-18 h-18 rounded-3xl items-center justify-center"
 								style={{
-									backgroundColor: `${league.color}20`, // Solid background for shadow
+									backgroundColor: theme.colors.background,
 									shadowColor: league.color,
-									shadowOffset: { width: 0, height: 4 },
-									shadowOpacity: 0.4,
-									shadowRadius: 8,
-									elevation: 6,
+									shadowOffset: { width: 0, height: 6 },
+									shadowOpacity: 0.3,
+									shadowRadius: 10,
+									elevation: 8,
+									borderWidth: 2,
+									borderColor: `${league.color}40`,
 								}}
 							>
 								<LinearGradient
 									colors={[league.color, `${league.color}DD`]}
 									className="w-16 h-16 rounded-2xl items-center justify-center"
 								>
-									<MaterialCommunityIcons name="trophy" size={32} color="white" />
+									<MaterialCommunityIcons name="trophy" size={36} color="white" />
 								</LinearGradient>
 							</View>
 
 							{/* Rank badge */}
 							<View
-								className="absolute -top-2 -right-2 w-8 h-8 rounded-full items-center justify-center"
-								style={{ backgroundColor: "#FFD700" }}
+								className="absolute -top-2 -right-2 w-9 h-9 rounded-full items-center justify-center"
+								style={{
+									backgroundColor: theme.colors.mythologyGold,
+									borderWidth: 2,
+									borderColor: theme.colors.background,
+								}}
 							>
-								<Text className="text-sm font-bold text-black">{league.rank}</Text>
+								<Text
+									className="text-sm font-bold"
+									style={{
+										color: theme.colors.textSecondary,
+										fontFamily: theme.fonts.bold.fontFamily,
+									}}
+								>
+									{league.rank}
+								</Text>
 							</View>
 						</View>
 
 						{/* League info */}
 						<View className="flex-1">
-							<Text className="text-2xl font-bold text-white mb-1">{league.name}</Text>
+							<Text
+								className="text-2xl font-bold mb-1"
+								style={{
+									color: theme.colors.text,
+									fontFamily: theme.fonts.bold.fontFamily,
+								}}
+							>
+								{league.name}
+							</Text>
 
-							<View className="flex-row items-center mb-3">
-								<MaterialCommunityIcons name="medal" size={16} color="#FFD700" />
-								<Text className="text-base text-gray-300 ml-1">Rang {league.rank}</Text>
+							<View className="flex-row items-center mb-4">
+								<MaterialCommunityIcons
+									name="medal"
+									size={18}
+									color={theme.colors.mythologyGold}
+								/>
+								<Text
+									className="text-base ml-2"
+									style={{
+										color: theme.colors.textTertiary,
+										fontFamily: theme.fonts.medium.fontFamily,
+									}}
+								>
+									Rang {league.rank}
+								</Text>
 							</View>
 
 							{/* Points with animation */}
 							<Animated.View
-								style={{ transform: [{ scale: pulseAnimation }] }}
-								className="bg-yellow-400 rounded-xl px-4 py-2 self-start"
+								style={{
+									transform: [{ scale: pulseAnimation }],
+									backgroundColor: theme.colors.mythologyGold,
+									borderRadius: 16,
+									paddingHorizontal: 16,
+									paddingVertical: 10,
+									alignSelf: "flex-start",
+									shadowColor: theme.colors.mythologyGold,
+									shadowOffset: { width: 0, height: 4 },
+									shadowOpacity: 0.3,
+									shadowRadius: 8,
+									elevation: 6,
+								}}
 							>
 								<View className="flex-row items-center">
-									<MaterialCommunityIcons name="star" size={18} color="#000" />
-									<Text className="text-lg font-bold text-black ml-1">
-										{member.league?.points || 0} points
+									<MaterialCommunityIcons
+										name="star"
+										size={20}
+										color={theme.colors.textSecondary}
+									/>
+									<Text
+										className="text-lg font-bold ml-2"
+										style={{
+											color: theme.colors.textSecondary,
+											fontFamily: theme.fonts.bold.fontFamily,
+										}}
+									>
+										{member.league?.points ?? 0} points
 									</Text>
 								</View>
-								<Text className="text-xs text-black opacity-70">cette semaine</Text>
+								<Text
+									className="text-xs opacity-80"
+									style={{
+										color: theme.colors.textSecondary,
+										fontFamily: theme.fonts.regular.fontFamily,
+									}}
+								>
+									cette semaine
+								</Text>
 							</Animated.View>
 						</View>
 					</View>
 
 					{/* Progress indicator */}
-					<View className="mt-4 pt-4 border-t border-gray-600">
+					<View
+						className="mt-6 pt-4 border-t"
+						style={{ borderColor: theme.colors.border }}
+					>
 						<View className="flex-row justify-between items-center">
-							<Text className="text-gray-300 text-sm">Progression</Text>
-							<Text className="text-yellow-400 text-sm font-bold">
-								+{member.league?.points || 0} pts
+							<Text
+								className="text-sm"
+								style={{
+									color: theme.colors.textTertiary,
+									fontFamily: theme.fonts.medium.fontFamily,
+								}}
+							>
+								Progression Divine
+							</Text>
+							<Text
+								className="text-sm font-bold"
+								style={{
+									color: theme.colors.mythologyGold,
+									fontFamily: theme.fonts.bold.fontFamily,
+								}}
+							>
+								+{member.league?.points ?? 0} pts
 							</Text>
 						</View>
-						<View className="w-full h-2 bg-gray-700 rounded-full mt-2">
+						<View
+							className="w-full h-3 rounded-full mt-3"
+							style={{ backgroundColor: theme.colors.backgroundSecondary }}
+						>
 							<LinearGradient
-								colors={["#FFD700", "#FFA500"]}
-								className="h-2 rounded-full"
+								colors={[
+									theme.colors.mythologyGold || "#F4E4A6",
+									theme.colors.orangePrimary,
+								]}
+								className="h-3 rounded-full"
 								style={{
-									width: `${Math.min(((member.league?.points || 0) / 100) * 100, 100)}%`,
+									width: `${Math.min(((member.league?.points ?? 0) / 100) * 100, 100)}%`,
 								}}
 							/>
 						</View>

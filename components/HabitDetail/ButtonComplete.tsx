@@ -16,7 +16,7 @@ import { HabitType } from "@utils/category.type";
 import useAddXp from "@hooks/useAddXp";
 import RestartHabit from "@components/Modals/RestartHabit";
 import { Iconify } from "react-native-iconify";
-import { updateMemberLeaguePoints } from "@db/member";
+import { useLeaguePointsWithPromotion } from "@hooks/useLeaguePointsWithPromotion";
 
 export default function ButtonComplete() {
 	const { theme } = useTheme();
@@ -27,6 +27,7 @@ export default function ButtonComplete() {
 		useData();
 	const { addOdysseePoints } = usePoints();
 	const addXp = useAddXp()?.addXp;
+	const { addPointsAndCheckPromotion } = useLeaguePointsWithPromotion();
 	const [showModalNegative, setShowModalNegative] = useState(false);
 
 	const [loading, setLoading] = useState(false);
@@ -46,13 +47,7 @@ export default function ButtonComplete() {
 
 			if (member && member.uid) {
 				const pointsToAdd = currentHabit.difficulty * 10;
-				const updatedLeague = await updateMemberLeaguePoints(
-					member.uid,
-					pointsToAdd
-				);
-				if (setMember) {
-					setMember({ ...member, league: updatedLeague });
-				}
+				await addPointsAndCheckPromotion(member, pointsToAdd, setMember);
 			}
 
 			const streak = await incrementStreak();

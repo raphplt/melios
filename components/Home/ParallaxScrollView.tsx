@@ -12,12 +12,12 @@ import useIndex from "@hooks/useIndex";
 import MissionButton from "./MissionButton";
 import StreakBox from "./StreakBox";
 import AddHabitsBox from "./AddHabitsBox";
-import WelcomeBox from "./ViewBox";
+import ViewBox from "./ViewBox";
 
 const HEADER_HEIGHT = 250;
 
 type Props = PropsWithChildren<{
-	refreshControl?: ReactElement;
+	refreshControl: ReactElement;
 }>;
 
 export default function ParallaxScrollView({
@@ -64,7 +64,7 @@ export default function ParallaxScrollView({
 				<Animated.View
 					style={[{ backgroundColor: theme.colors.background }, headerAnimatedStyle]}
 				>
-					<WelcomeBox />
+					<ViewBox />
 					<AddHabitsBox />
 					<StreakBox />
 					<MissionButton />

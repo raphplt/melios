@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ScrollView, View, Vibration } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "expo-router";
 import { useTheme } from "@context/ThemeContext";
 import { useData } from "@context/DataContext";
 import { useTranslation } from "react-i18next";
@@ -28,6 +29,16 @@ const DailyRewardsScreen: React.FC = () => {
 	} = useData();
 
 	const [showModal, setShowModal] = useState(false);
+
+	// Gestion de la StatusBar spécifique à cette page
+	useFocusEffect(
+		React.useCallback(() => {
+			// Cette page utilise un style de StatusBar différent
+			return () => {
+				// Restaurer le style par défaut quand on quitte la page
+			};
+		}, [])
+	);
 
 	// Constantes pour la configuration
 	const TOTAL_TASKS = 3;
@@ -65,86 +76,91 @@ const DailyRewardsScreen: React.FC = () => {
 	};
 
 	return (
-		<SafeAreaView
+		<View
 			className="flex-1"
-			style={{ backgroundColor: theme.colors.background }}
+			style={{ backgroundColor: theme.colors.backgroundTertiary }}
 		>
-			<StatusBar
-				backgroundColor={theme.colors.backgroundTertiary}
-				translucent={false}
-			/>
-
-			<ScrollView
+			<SafeAreaView
 				className="flex-1"
-				showsVerticalScrollIndicator={false}
-				style={{ backgroundColor: theme.colors.background }}
+				style={{ backgroundColor: theme.colors.backgroundTertiary }}
 			>
-				{/* Header */}
-				<View
-					className="relative"
-					style={{ backgroundColor: theme.colors.backgroundTertiary }}
-				>
-					<MotivationHeader rewardClaimed={rewardClaimed} />
-				</View>
+				<StatusBar
+					style={theme.dark ? "light" : "dark"}
+					backgroundColor="transparent"
+				/>
 
-				{/* Barre de progression  */}
-				<View className="px-6 py-4">
-					<AnimatedProgressBar
-						validatedTasksCount={validatedTasksCount}
-						totalTasks={TOTAL_TASKS}
-						rewardAmount={REWARD_AMOUNT}
+				<ScrollView
+					className="flex-1"
+					showsVerticalScrollIndicator={false}
+					style={{ backgroundColor: theme.colors.background }}
+				>
+					{/* Header */}
+					<View
+						className="relative"
+						style={{ backgroundColor: theme.colors.backgroundTertiary }}
+					>
+						<MotivationHeader rewardClaimed={rewardClaimed} />
+					</View>
+
+					{/* Barre de progression  */}
+					<View className="px-6 py-4">
+						<AnimatedProgressBar
+							validatedTasksCount={validatedTasksCount}
+							totalTasks={TOTAL_TASKS}
+							rewardAmount={REWARD_AMOUNT}
+							rewardClaimed={rewardClaimed}
+						/>
+					</View>
+
+					{/* Liste des missions */}
+					{!rewardClaimed && (
+						<View className="px-6 pb-4">
+							{dailyTasks.slice(0, TOTAL_TASKS).map((task, index) => (
+								<View key={task.slug || index} className="mb-4">
+									<MissionCard
+										mission={task}
+										onValidate={handleValidateTask}
+										showProgress={task.slug === "complete_habits"}
+										progressValue={
+											task.slug === "complete_habits"
+												? `${Math.min(3, task.completed ? 3 : 0)}/3`
+												: undefined
+										}
+									/>
+								</View>
+							))}
+						</View>
+					)}
+
+					<CompletionIllustration rewardClaimed={rewardClaimed} />
+
+					<View style={{ height: 120 }} />
+				</ScrollView>
+
+				<View
+					className="absolute bottom-0 left-0 right-0"
+					style={{
+						backgroundColor: theme.colors.background,
+						paddingBottom: 34,
+						borderTopWidth: 1,
+						borderTopColor: theme.colors.border,
+					}}
+				>
+					<ActionFooter
+						canClaimReward={canClaimReward}
+						onClaimReward={claimReward}
 						rewardClaimed={rewardClaimed}
 					/>
 				</View>
 
-				{/* Liste des missions */}
-				{!rewardClaimed && (
-					<View className="px-6 pb-4">
-						{dailyTasks.slice(0, TOTAL_TASKS).map((task, index) => (
-							<View key={task.slug || index} className="mb-4">
-								<MissionCard
-									mission={task}
-									onValidate={handleValidateTask}
-									showProgress={task.slug === "complete_habits"}
-									progressValue={
-										task.slug === "complete_habits"
-											? `${Math.min(3, task.completed ? 3 : 0)}/3`
-											: undefined
-									}
-								/>
-							</View>
-						))}
-					</View>
-				)}
-
-				<CompletionIllustration rewardClaimed={rewardClaimed} />
-
-				<View style={{ height: 120 }} />
-			</ScrollView>
-
-			<View
-				className="absolute bottom-0 left-0 right-0"
-				style={{
-					backgroundColor: theme.colors.background,
-					paddingBottom: 34,
-					borderTopWidth: 1,
-					borderTopColor: theme.colors.border,
-				}}
-			>
-				<ActionFooter
-					canClaimReward={canClaimReward}
-					onClaimReward={claimReward}
-					rewardClaimed={rewardClaimed}
+				{/* Modale de récompense */}
+				<RewardModal
+					visible={showModal}
+					onClose={() => setShowModal(false)}
+					rewardAmount={REWARD_AMOUNT}
 				/>
-			</View>
-
-			{/* Modale de récompense */}
-			<RewardModal
-				visible={showModal}
-				onClose={() => setShowModal(false)}
-				rewardAmount={REWARD_AMOUNT}
-			/>
-		</SafeAreaView>
+			</SafeAreaView>
+		</View>
 	);
 };
 

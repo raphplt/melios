@@ -29,7 +29,10 @@ export const getMemberInfos = async (
 		if (!options.forceRefresh) {
 			const storedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
 			if (storedData) {
-				return JSON.parse(storedData);
+				const parsedData = JSON.parse(storedData);
+				// Nettoyer le timestamp du cache avant de retourner les données
+				const { cacheTimestamp, ...memberData } = parsedData;
+				return memberData as Member;
 			}
 		}
 
@@ -89,11 +92,18 @@ export const getMemberInfos = async (
 				friendRequestsReceived: memberData.friendRequestsReceived || [],
 				friendRequestsSent: memberData.friendRequestsSent || [],
 				friendCode: memberData.friendCode,
+				league: memberData.league || null,
+			};
+
+			// Ajouter un timestamp pour la gestion du cache
+			const cacheData = {
+				...structureMember,
+				cacheTimestamp: Date.now(),
 			};
 
 			await AsyncStorage.setItem(
 				LOCAL_STORAGE_MEMBER_INFO_KEY,
-				JSON.stringify(structureMember)
+				JSON.stringify(cacheData)
 			);
 
 			return structureMember;
@@ -143,6 +153,7 @@ export const getMemberProfileByUid = async (
 				friendRequestsSent: memberDoc.data().friendRequestsSent,
 				friendRequestsReceived: memberDoc.data().friendRequestsReceived,
 				activityConfidentiality: memberDoc.data().activityConfidentiality,
+				league: memberDoc.data().league || null,
 			};
 
 			return memberProfile;
@@ -201,6 +212,18 @@ export const updateMemberField = async (field: keyof Member, value: any) => {
 			const updates: any = { [field]: value };
 
 			await updateDoc(memberDoc.ref, updates);
+
+			// Mettre à jour le cache local si c'est le membre actuel
+			const cachedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
+			if (cachedData) {
+				const parsedData = JSON.parse(cachedData);
+				const updatedData = { ...parsedData, [field]: value };
+				await AsyncStorage.setItem(
+					LOCAL_STORAGE_MEMBER_INFO_KEY,
+					JSON.stringify(updatedData)
+				);
+			}
+
 			console.log(`Member ${field} updated successfully`);
 		} else {
 			console.log("Member not found");
@@ -265,7 +288,6 @@ export const isUsernameAlreadyUsed = async (username: string) => {
 	}
 };
 
-
 // Méthode pour récupérer les amis du membre
 export const getFriends = async () => {
 	try {
@@ -312,48 +334,86 @@ export const getFriends = async () => {
 	}
 };
 
-// Ajoute des points à member.league.points pour un utilisateur donné
-export const updateMemberLeaguePoints = async (uid: string, pointsToAdd: number) => {
-	const membersCollectionRef = collection(db, "members");
-	const querySnapshot = await getDocs(query(membersCollectionRef, where("uid", "==", uid)));
-	if (!querySnapshot.empty) {
-		const memberDoc = querySnapshot.docs[0];
-		const memberData = memberDoc.data();
-		const currentLeague = memberData.league || { points: 0, leagueId: "", localLeagueId: "", rank: 0 };
-		const updatedLeague = {
-			...currentLeague,
-			points: (currentLeague.points || 0) + pointsToAdd,
-		};
-		await updateDoc(memberDoc.ref, { league: updatedLeague });
-		return updatedLeague;
-        } else {
-                throw new Error("Member not found");
-        }
-};
-
 // Fetch random members of a league. Optionally exclude certain uids
 export const getMembersByLeague = async (
-        leagueId: string,
-        exclude: string[] = [],
-        limitCount = 10,
+	leagueId: string,
+	exclude: string[] = [],
+	limitCount = 10
 ) => {
-        const membersCollectionRef = collection(db, "members");
-        const snapshot = await getDocs(
-                query(membersCollectionRef, where("league.leagueId", "==", leagueId)),
-        );
-        const allMembers = snapshot.docs.map((doc) => doc.data() as Member);
-        const filtered = allMembers.filter((m) => !exclude.includes(m.uid));
-        const shuffled = filtered.sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, limitCount);
+	const membersCollectionRef = collection(db, "members");
+	const snapshot = await getDocs(
+		query(membersCollectionRef, where("league.leagueId", "==", leagueId))
+	);
+	const allMembers = snapshot.docs.map((doc) => doc.data() as Member);
+	const filtered = allMembers.filter((m) => !exclude.includes(m.uid));
+	const shuffled = filtered.sort(() => 0.5 - Math.random());
+	return shuffled.slice(0, limitCount);
+};
+
+// Get all members in a specific league (for podium display)
+export const getAllMembersInLeague = async (
+	leagueId: string
+): Promise<Member[]> => {
+	const membersCollectionRef = collection(db, "members");
+	const snapshot = await getDocs(
+		query(membersCollectionRef, where("league.leagueId", "==", leagueId))
+	);
+	return snapshot.docs.map((doc) => doc.data() as Member);
 };
 
 // Update the league field of any member by uid
 export const setMemberLeagueByUid = async (uid: string, league: any) => {
-        const membersCollectionRef = collection(db, "members");
-        const q = query(membersCollectionRef, where("uid", "==", uid));
-        const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-                const docRef = snapshot.docs[0].ref;
-                await updateDoc(docRef, { league });
-        }
+	const membersCollectionRef = collection(db, "members");
+	const q = query(membersCollectionRef, where("uid", "==", uid));
+	const snapshot = await getDocs(q);
+	if (!snapshot.empty) {
+		const docRef = snapshot.docs[0].ref;
+		await updateDoc(docRef, { league });
+	}
+};
+
+// Ajouter des points à la ligue d'un membre (points totaux + points hebdomadaires)
+export const addLeaguePoints = async (uid: string, pointsToAdd: number) => {
+	const membersCollectionRef = collection(db, "members");
+	const querySnapshot = await getDocs(
+		query(membersCollectionRef, where("uid", "==", uid))
+	);
+
+	if (!querySnapshot.empty) {
+		const memberDoc = querySnapshot.docs[0];
+		const memberData = memberDoc.data();
+		const currentLeague = memberData.league || {
+			points: 0,
+			leagueId: "",
+			rank: 1,
+			weeklyPoints: 0,
+			lastWeeklyReset: new Date().toISOString(),
+		};
+
+		const updatedLeague = {
+			...currentLeague,
+			points: (currentLeague.points || 0) + pointsToAdd,
+			weeklyPoints: (currentLeague.weeklyPoints || 0) + pointsToAdd,
+		};
+
+		await updateDoc(memberDoc.ref, { league: updatedLeague });
+
+		// Mettre à jour le cache local si c'est le membre actuel
+		const currentUid = auth.currentUser?.uid;
+		if (currentUid === uid) {
+			const cachedData = await AsyncStorage.getItem(LOCAL_STORAGE_MEMBER_INFO_KEY);
+			if (cachedData) {
+				const parsedData = JSON.parse(cachedData);
+				const updatedData = { ...parsedData, league: updatedLeague };
+				await AsyncStorage.setItem(
+					LOCAL_STORAGE_MEMBER_INFO_KEY,
+					JSON.stringify(updatedData)
+				);
+			}
+		}
+
+		return updatedLeague;
+	} else {
+		throw new Error("Member not found");
+	}
 };

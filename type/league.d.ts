@@ -4,7 +4,6 @@ export interface League {
 	rank: number;
 	color: string;
 	iconUrl?: string;
-	promotionCount: number;
-	relegationCount: number;
-	botScoreRange: [number, number];
+	pointsRequired: number; // Points requis pour atteindre cette ligue
+	weeklyPointsRequired: number; // Points requis par semaine pour maintenir/progresser
 }

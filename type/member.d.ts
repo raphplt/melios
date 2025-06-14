@@ -22,7 +22,8 @@ export interface Member {
 export interface MemberLeague {
 	points: number;
 	leagueId: string;
-	localLeagueId: string;
 	rank: number;
+	weeklyPoints: number;
+	lastWeeklyReset: string;
 }
 

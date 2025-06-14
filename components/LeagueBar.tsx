@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getContrastingColor } from "@utils/colors";
 import { useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTheme } from "@context/ThemeContext";
 
 interface LeagueBarProps {
 	leagues: League[];
@@ -11,6 +12,7 @@ interface LeagueBarProps {
 }
 
 export const LeagueBar = ({ leagues, currentLeagueId }: LeagueBarProps) => {
+	const { theme } = useTheme();
 	const animatedValues = useRef(
 		leagues.reduce((acc, league) => {
 			acc[league.id] = {
@@ -67,7 +69,7 @@ export const LeagueBar = ({ leagues, currentLeagueId }: LeagueBarProps) => {
 					flexDirection: "row",
 					alignItems: "center",
 					paddingHorizontal: 16,
-					paddingVertical: 8,
+					paddingVertical: 12,
 				}}
 			>
 				{leagues
@@ -82,41 +84,46 @@ export const LeagueBar = ({ leagues, currentLeagueId }: LeagueBarProps) => {
 								style={{
 									transform: [{ scale }],
 									opacity,
-									marginHorizontal: 8,
+									marginHorizontal: 10,
 								}}
 							>
 								<View className="items-center">
 									{/* Glow effect for active league */}
 									{isActive && (
 										<Animated.View
-											className="absolute w-16 h-16 rounded-full"
+											className="absolute w-20 h-20 rounded-full"
 											style={{
 												backgroundColor: league.color,
-												opacity: glow,
-												transform: [{ scale: 1.3 }],
+												opacity: glow.interpolate({
+													inputRange: [0, 1],
+													outputRange: [0.1, 0.3],
+												}),
+												transform: [{ scale: 1.2 }],
 											}}
 										/>
 									)}
 
 									{/* Main trophy container */}
 									<View
-										className="w-14 h-14 rounded-full items-center justify-center"
+										className="w-16 h-16 rounded-2xl items-center justify-center"
 										style={{
-											backgroundColor: `${league.color}20`, // Solid background for shadow
+											backgroundColor: theme.colors.cardBackground,
 											shadowColor: league.color,
-											shadowOffset: { width: 0, height: 4 },
-											shadowOpacity: isActive ? 0.5 : 0.2,
-											shadowRadius: isActive ? 8 : 4,
-											elevation: isActive ? 8 : 4,
+											shadowOffset: { width: 0, height: 6 },
+											shadowOpacity: isActive ? 0.4 : 0.2,
+											shadowRadius: isActive ? 12 : 6,
+											elevation: isActive ? 10 : 6,
+											borderWidth: 2,
+											borderColor: isActive ? league.color : theme.colors.border,
 										}}
 									>
 										<LinearGradient
-											colors={[league.color, `${league.color}CC`]}
-											className="w-14 h-14 rounded-full items-center justify-center"
+											colors={[league.color, `${league.color}DD`]}
+											className="w-14 h-14 rounded-xl items-center justify-center"
 										>
 											<MaterialCommunityIcons
 												name="trophy"
-												size={isActive ? 28 : 24}
+												size={isActive ? 30 : 26}
 												color={getContrastingColor(league.color)}
 											/>
 										</LinearGradient>
@@ -124,21 +131,44 @@ export const LeagueBar = ({ leagues, currentLeagueId }: LeagueBarProps) => {
 
 									{/* League rank badge */}
 									<View
-										className="absolute -top-1 -right-1 w-6 h-6 rounded-full items-center justify-center"
-										style={{ backgroundColor: "#FFD700" }}
+										className="absolute -top-2 -right-2 w-7 h-7 rounded-full items-center justify-center"
+										style={{
+											backgroundColor: theme.colors.mythologyGold,
+											borderWidth: 2,
+											borderColor: theme.colors.background,
+										}}
 									>
-										<Text className="text-xs font-bold text-black">{league.rank}</Text>
+										<Text
+											className="text-xs font-bold"
+											style={{
+												color: theme.colors.textSecondary,
+												fontFamily: theme.fonts.bold.fontFamily,
+											}}
+										>
+											{league.rank}
+										</Text>
 									</View>
 
 									{/* League name */}
 									<Text
-										className={`text-xs mt-2 font-medium ${
-											isActive ? "text-white" : "text-gray-400"
-										}`}
+										className={`text-sm mt-3 font-medium text-center`}
+										style={{
+											color: isActive ? theme.colors.text : theme.colors.textTertiary,
+											fontFamily: theme.fonts.medium.fontFamily,
+											maxWidth: 80,
+										}}
 										numberOfLines={1}
 									>
 										{league.name}
 									</Text>
+
+									{/* Active indicator */}
+									{isActive && (
+										<View
+											className="w-2 h-2 rounded-full mt-1"
+											style={{ backgroundColor: league.color }}
+										/>
+									)}
 								</View>
 							</Animated.View>
 						);

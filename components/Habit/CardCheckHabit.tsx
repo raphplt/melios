@@ -28,7 +28,7 @@ import RestartHabit from "@components/Modals/RestartHabit";
 import { useNavigation } from "expo-router";
 import { lightenColor } from "@utils/colors";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { updateMemberLeaguePoints } from "@db/member";
+import { useLeaguePointsWithPromotion } from "@hooks/useLeaguePointsWithPromotion";
 
 function CardCheckHabit({
 	habit,
@@ -48,6 +48,7 @@ function CardCheckHabit({
 	const { theme } = useTheme();
 	const { setCurrentHabit } = useHabits();
 	const { addOdysseePoints } = usePoints();
+	const { addPointsAndCheckPromotion } = useLeaguePointsWithPromotion();
 	const { startTimer } = useHabitTimer();
 	const addXp = useAddXp()?.addXp;
 	const { t } = useTranslation();
@@ -131,13 +132,7 @@ function CardCheckHabit({
 
 			if (habit.type !== HabitType.negative && member && member.uid) {
 				const pointsToAdd = habit.difficulty * 10;
-				const updatedLeague = await updateMemberLeaguePoints(
-					member.uid,
-					pointsToAdd
-				);
-				if (setMember) {
-					setMember({ ...member, league: updatedLeague });
-				}
+				await addPointsAndCheckPromotion(member, pointsToAdd, setMember);
 			}
 
 			const streak = await incrementStreak();

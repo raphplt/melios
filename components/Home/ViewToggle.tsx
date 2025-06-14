@@ -72,7 +72,11 @@ const ViewToggle = ({ viewMode, setViewMode }: ViewToggleProps) => {
 				style={[styles.button, { width: BUTTON_WIDTH, height: BUTTON_HEIGHT }]}
 				onPress={() => setViewMode(ViewMode.CALENDAR)}
 			>
-				<Iconify icon="mdi:calendar-month" size={20} color="white" />
+				<Iconify
+					icon="mdi:calendar-month"
+					size={20}
+					color={theme.colors.textTertiary}
+				/>
 			</Pressable>
 		</View>
 	);
