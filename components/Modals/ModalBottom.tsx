@@ -10,7 +10,9 @@ import {
 	StatusBar,
 	Platform,
 	Text,
+	Dimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Iconify } from "react-native-iconify";
 
 export default function BottomSlideModal({
@@ -25,64 +27,47 @@ export default function BottomSlideModal({
 	title?: string;
 }) {
 	const { theme } = useTheme();
+	const insets = useSafeAreaInsets();
 	const slideAnim = React.useRef(new Animated.Value(0)).current;
-	const opacityAnim = React.useRef(new Animated.Value(0)).current;
 	const [showModal, setShowModal] = React.useState(visible);
 
-	const animateIn = useCallback(() => {
-		// Réinitialiser les valeurs si nécessaire
-		slideAnim.setValue(0);
-		opacityAnim.setValue(0);
+	const { height: screenHeight } = Dimensions.get("window");
 
-		// Lancer les animations en parallèle
-		Animated.parallel([
-			Animated.timing(slideAnim, {
-				toValue: 1,
-				duration: 250,
-				easing: Easing.bezier(0.0, 0.0, 0.2, 1), // Ease-out optimisé
-				useNativeDriver: true,
-			}),
-			Animated.timing(opacityAnim, {
-				toValue: 1,
-				duration: 200,
-				easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-				useNativeDriver: true,
-			}),
-		]).start();
-	}, [slideAnim, opacityAnim]);
+	const animateIn = useCallback(() => {
+		slideAnim.setValue(0);
+
+		Animated.timing(slideAnim, {
+			toValue: 1,
+			duration: 300,
+			easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+			useNativeDriver: true,
+		}).start();
+	}, [slideAnim]);
 
 	const animateOut = useCallback(() => {
-		Animated.parallel([
-			Animated.timing(slideAnim, {
-				toValue: 0,
-				duration: 200,
-				easing: Easing.bezier(0.4, 0.0, 1, 1), // Ease-in optimisé
-				useNativeDriver: true,
-			}),
-			Animated.timing(opacityAnim, {
-				toValue: 0,
-				duration: 150,
-				easing: Easing.bezier(0.4, 0.0, 1, 1),
-				useNativeDriver: true,
-			}),
-		]).start(() => {
+		Animated.timing(slideAnim, {
+			toValue: 0,
+			duration: 250,
+			easing: Easing.bezier(0.55, 0.06, 0.68, 0.19),
+			useNativeDriver: true,
+		}).start(() => {
 			setShowModal(false);
 			if (Platform.OS === "android") {
 				StatusBar.setBackgroundColor("transparent");
 			}
 			StatusBar.setBarStyle(theme.dark ? "light-content" : "dark-content");
 		});
-	}, [slideAnim, opacityAnim, theme.dark]);
+	}, [slideAnim, theme.dark]);
 
 	useEffect(() => {
 		if (visible) {
 			setShowModal(true);
 			if (Platform.OS === "android") {
-				StatusBar.setBackgroundColor("rgba(0,0,0,0.4)");
+				StatusBar.setBackgroundColor("rgba(0,0,0,0.5)");
 			}
 			StatusBar.setBarStyle("light-content");
-			// Lancer l'animation après le prochain cycle de rendu
-			requestAnimationFrame(animateIn);
+			// Délai pour permettre au modal de s'afficher avant l'animation
+			setTimeout(animateIn, 50);
 		} else if (showModal) {
 			animateOut();
 		}
@@ -90,10 +75,10 @@ export default function BottomSlideModal({
 
 	const translateY = slideAnim.interpolate({
 		inputRange: [0, 1],
-		outputRange: [300, 0], // Augmenter la distance pour une animation plus visible
+		outputRange: [screenHeight, 0],
 	});
 
-	const backdropOpacity = opacityAnim.interpolate({
+	const backdropOpacity = slideAnim.interpolate({
 		inputRange: [0, 1],
 		outputRange: [0, 1],
 	});
@@ -109,67 +94,105 @@ export default function BottomSlideModal({
 				setVisible(false);
 			}}
 			animationType="none"
+			statusBarTranslucent={Platform.OS === "android"}
 		>
 			<TouchableWithoutFeedback onPress={() => setVisible(false)}>
 				<Animated.View
 					style={{
 						flex: 1,
 						justifyContent: "flex-end",
-						backgroundColor: "rgba(0,0,0,0.4)",
-						opacity: backdropOpacity,
+						backgroundColor: "transparent",
 					}}
 				>
+					{/* Backdrop avec opacité animée */}
+					<Animated.View
+						style={{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							right: 0,
+							bottom: 0,
+							backgroundColor: "rgba(0,0,0,0.5)",
+							opacity: backdropOpacity,
+						}}
+					/>
+
 					<TouchableWithoutFeedback>
 						<Animated.View
 							style={{
 								transform: [{ translateY }],
 								backgroundColor: theme.colors.cardBackground,
-								padding: 10,
 								borderTopLeftRadius: 20,
 								borderTopRightRadius: 20,
-								borderColor: theme.dark ? "#B0B0B0" : theme.colors.border,
-								borderWidth: 1,
+								borderColor: theme.dark ? "#333" : theme.colors.border,
+								borderTopWidth: 1,
+								borderLeftWidth: 1,
+								borderRightWidth: 1,
 								shadowColor: "#000",
-								shadowOffset: { width: 0, height: 2 },
-								shadowOpacity: 0.3,
-								shadowRadius: 4,
-								elevation: 5,
-								maxHeight: "80%",
+								shadowOffset: { width: 0, height: -2 },
+								shadowOpacity: 0.25,
+								shadowRadius: 10,
+								elevation: 10,
+								maxHeight: screenHeight * 0.9,
+								paddingBottom: insets.bottom || 10,
 							}}
 						>
+							{/* Handle bar pour iOS */}
 							<View
 								style={{
-									flexDirection: "row",
-									justifyContent: "space-between",
-									alignItems: "center",
-									marginBottom: 10,
+									width: 40,
+									height: 4,
+									backgroundColor: theme.colors.textTertiary,
+									borderRadius: 2,
+									alignSelf: "center",
+									marginTop: 8,
+									marginBottom: 12,
+									opacity: 0.3,
 								}}
-							>
-								{title && (
-									<Text
-										style={{
-											color: theme.colors.text,
-											fontSize: 16,
-											fontWeight: "bold",
-										}}
-										className="w-11/12 mx-1"
-									>
-										{title}
-									</Text>
-								)}
-								<Pressable
-									style={{ marginLeft: "auto" }}
-									onPress={() => setVisible(false)}
-								>
-									<Iconify
-										icon="material-symbols:close"
-										color={theme.colors.textTertiary}
-										size={24}
-									/>
-								</Pressable>
-							</View>
+							/>
 
-							<View style={{ flex: 1 }}>{children}</View>
+							<View style={{ paddingHorizontal: 16 }}>
+								{/* Header */}
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+										marginBottom: 16,
+									}}
+								>
+									{title && (
+										<Text
+											style={{
+												color: theme.colors.text,
+												fontSize: 18,
+												fontWeight: "600",
+												flex: 1,
+												marginRight: 16,
+											}}
+										>
+											{title}
+										</Text>
+									)}
+									<Pressable
+										onPress={() => setVisible(false)}
+										style={{
+											padding: 4,
+											borderRadius: 20,
+											backgroundColor: theme.colors.background,
+										}}
+									>
+										<Iconify
+											icon="material-symbols:close"
+											color={theme.colors.textTertiary}
+											size={20}
+										/>
+									</Pressable>
+								</View>
+
+								{/* Content */}
+								<View style={{ maxHeight: screenHeight * 0.7 }}>{children}</View>
+							</View>
 						</Animated.View>
 					</TouchableWithoutFeedback>
 				</Animated.View>

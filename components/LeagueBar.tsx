@@ -99,10 +99,10 @@ export const LeagueBar = ({ leagues, currentLeagueId }: LeagueBarProps) => {
 									)}
 
 									{/* Main trophy container */}
-									<LinearGradient
-										colors={[league.color, `${league.color}CC`]}
-										className="w-14 h-14 rounded-full items-center justify-center shadow-lg"
+									<View
+										className="w-14 h-14 rounded-full items-center justify-center"
 										style={{
+											backgroundColor: `${league.color}20`, // Solid background for shadow
 											shadowColor: league.color,
 											shadowOffset: { width: 0, height: 4 },
 											shadowOpacity: isActive ? 0.5 : 0.2,
@@ -110,12 +110,17 @@ export const LeagueBar = ({ leagues, currentLeagueId }: LeagueBarProps) => {
 											elevation: isActive ? 8 : 4,
 										}}
 									>
-										<MaterialCommunityIcons
-											name="trophy"
-											size={isActive ? 28 : 24}
-											color={getContrastingColor(league.color)}
-										/>
-									</LinearGradient>
+										<LinearGradient
+											colors={[league.color, `${league.color}CC`]}
+											className="w-14 h-14 rounded-full items-center justify-center"
+										>
+											<MaterialCommunityIcons
+												name="trophy"
+												size={isActive ? 28 : 24}
+												color={getContrastingColor(league.color)}
+											/>
+										</LinearGradient>
+									</View>
 
 									{/* League rank badge */}
 									<View

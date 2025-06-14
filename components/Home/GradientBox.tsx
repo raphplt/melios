@@ -26,22 +26,24 @@ const GradientBox = ({ colors, position, children }: Props) => {
 
 	return (
 		<View style={[position, styles.container]}>
-			<LinearGradient
-				colors={colorsSafe}
-				style={styles.gradientBorder}
-				start={{ x: 0.1, y: 0.1 }}
-				end={{ x: 0.9, y: 0.9 }}
-			>
-				<View style={styles.innerContainer}>
-					<BlurView
-						intensity={90}
-						style={styles.blurView}
-						tint={isDayTime ? "light" : "dark"}
-					/>
-					<View style={styles.glowOverlay} />
-					{children}
-				</View>
-			</LinearGradient>
+			<View style={styles.shadowContainer}>
+				<LinearGradient
+					colors={colorsSafe}
+					style={styles.gradientBorder}
+					start={{ x: 0.1, y: 0.1 }}
+					end={{ x: 0.9, y: 0.9 }}
+				>
+					<View style={styles.innerContainer}>
+						<BlurView
+							intensity={90}
+							style={styles.blurView}
+							tint={isDayTime ? "light" : "dark"}
+						/>
+						<View style={styles.glowOverlay} />
+						{children}
+					</View>
+				</LinearGradient>
+			</View>
 		</View>
 	);
 };
@@ -53,13 +55,17 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		zIndex: 30,
 	},
-	gradientBorder: {
+	shadowContainer: {
 		borderRadius: 20,
-		padding: 2,
+		backgroundColor: "rgba(255, 223, 0, 0.05)", // Solid background for shadow
 		shadowColor: "#FFD700",
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.3,
 		shadowRadius: 10,
+	},
+	gradientBorder: {
+		borderRadius: 20,
+		padding: 2,
 	},
 	innerContainer: {
 		borderRadius: 18,

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Platform } from "react-native";
 import {
 	NavigationProp,
 	ParamListBase,
@@ -84,20 +84,25 @@ function MainNavigator() {
 				shouldShowAlert: true,
 				shouldPlaySound: true,
 				shouldSetBadge: false,
+				shouldShowBanner: true,
+				shouldShowList: true,
 			}),
 		});
 	}, []);
 
 	useEffect(() => {
-NavigationBar.setPositionAsync("absolute");
-NavigationBar.setBackgroundColorAsync("#ffffff01");
+		// Only call NavigationBar APIs on Android
+		if (Platform.OS === "android") {
+			NavigationBar.setPositionAsync("absolute");
+			NavigationBar.setBackgroundColorAsync("#ffffff01");
+		}
 	}, []);
 
-        return (
-                <ThemeContext.Provider value={themeContextValue}>
-                        <ThemeProvider value={theme}>
-                                <GlobalGradient />
-                                <StatusBar
+	return (
+		<ThemeContext.Provider value={themeContextValue}>
+			<ThemeProvider value={theme}>
+				<GlobalGradient />
+				<StatusBar
 					style={theme.dark ? "light" : "dark"}
 					backgroundColor={"transparent"}
 				/>
