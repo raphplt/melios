@@ -30,6 +30,11 @@ export type Theme = {
 		purplePrimary: string;
 		purpleSecondary: string;
 		grayPrimary: string;
+		// Nouvelles couleurs pour l'ambiance mythologie grecque
+		mythologyGold?: string;
+		mythologyBlue?: string;
+		mythologyPurple?: string;
+		mythologyGreen?: string;
 	};
 	fonts: {
 		regular: FontStyle;

@@ -15,7 +15,7 @@ const DefaultTheme: Theme = {
 		border: "rgb(213, 213, 221)",
 		notification: "rgb(255, 59, 48)",
 		backgroundSecondary: "rgb(240, 240, 240)",
-		backgroundTertiary: "rgb(200, 200, 255)",
+		backgroundTertiary: "#e5d8ff", // Couleur pastel douce pour les headers
 		cardBackground: "#F6F6F6",
 		greenPrimary: "#47A86C",
 		greenSecondary: "#CDEAD6",
@@ -31,6 +31,11 @@ const DefaultTheme: Theme = {
 		purplePrimary: "#955CD3",
 		purpleSecondary: "#E5D1F7",
 		grayPrimary: "#B0B0B0",
+		// Nouvelles couleurs pastel pour l'ambiance mythologie grecque
+		mythologyGold: "#F4E4A6",
+		mythologyBlue: "#B8D4F0",
+		mythologyPurple: "#D8C7E8",
+		mythologyGreen: "#C8E6C9",
 	},
 	fonts: {
 		regular: {
@@ -83,6 +88,11 @@ const DarkTheme: Theme = {
 		purplePrimary: "#955CD3",
 		purpleSecondary: "#F5EAFB",
 		grayPrimary: "#808080",
+		// Nouvelles couleurs pastel adaptées au thème sombre
+		mythologyGold: "#8B7355",
+		mythologyBlue: "#4A5568",
+		mythologyPurple: "#553C6B",
+		mythologyGreen: "#2D5B3D",
 	},
 	fonts: {
 		regular: {

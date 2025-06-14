@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import { Tabs } from "expo-router";
 import { Text, View } from "react-native";
 import CustomTabBar from "@components/Shared/CustomTabBar";

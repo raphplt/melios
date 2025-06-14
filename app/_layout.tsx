@@ -186,7 +186,10 @@ function MainNavigator() {
 					/>
 					<Stack.Screen
 						name="dailyRewards"
-						options={{ title: "Récompenses journalières", headerShown: false }}
+						options={{
+							title: "Récompenses journalières",
+							headerShown: false,
+						}}
 					/>
 					<Stack.Screen
 						name="workSession"

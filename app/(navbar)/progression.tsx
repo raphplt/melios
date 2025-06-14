@@ -22,15 +22,13 @@ const Progression: React.FC = () => {
 				}}
 				showsVerticalScrollIndicator={false}
 			>
-				<View>
-					<Streak />
-					<ShareMonthlyRecap />
-					<GoalSection />
-					<Levels />
-					<CalendarHabits />
-					<Charts />
-					<View className="h-20 w-full"></View>
-				</View>
+				<Streak />
+				<ShareMonthlyRecap />
+				<GoalSection />
+				<Levels />
+				<CalendarHabits />
+				<Charts />
+				<View className="h-20 w-full"></View>
 			</ScrollView>
 
 			<ModalTutorial
