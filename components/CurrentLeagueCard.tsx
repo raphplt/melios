@@ -6,6 +6,7 @@ import { useTheme } from "@context/ThemeContext";
 import { League } from "../type/league";
 import { Member } from "../type/member";
 import { LeagueDataValidator } from "../utils/LeagueDataValidator";
+import CachedImage from "./Shared/CachedImage";
 
 interface CurrentLeagueCardProps {
 	league: League;
@@ -25,7 +26,6 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 
 	const currentPoints = member.league?.points ?? 0;
 	const weeklyPoints = member.league?.weeklyPoints ?? 0;
-	// Points requis pour la prochaine ligue
 	const pointsForNext = nextLeague?.pointsRequired ?? currentPoints;
 	const progressPercentage = LeagueDataValidator.safePercentage(
 		currentPoints,
@@ -62,19 +62,6 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 		}).start();
 	}, [progressPercentage]);
 
-	const getLeagueIcon = (leagueName: string) => {
-		const name = leagueName.toLowerCase();
-		if (name.includes("terre") || name.includes("earth")) return "🌍";
-		if (name.includes("bronze")) return "🟤";
-		if (name.includes("fer") || name.includes("iron")) return "⚫";
-		if (name.includes("argent") || name.includes("silver")) return "⚪";
-		if (name.includes("or") || name.includes("gold")) return "🟡";
-		if (name.includes("platine") || name.includes("platinum")) return "💎";
-		if (name.includes("diamant") || name.includes("diamond")) return "💠";
-		if (name.includes("maître") || name.includes("master")) return "👑";
-		return "🏆";
-	};
-
 	return (
 		<View className="mx-4 mb-6">
 			<LinearGradient
@@ -104,15 +91,22 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 							<View
 								className="w-16 h-16 rounded-2xl items-center justify-center"
 								style={{
-									backgroundColor: league.color,
 									shadowColor: league.color,
 									shadowOffset: { width: 0, height: 6 },
 									shadowOpacity: 0.4,
 									shadowRadius: 10,
-									elevation: 8,
+									elevation: 2,
 								}}
 							>
-								<Text className="text-3xl">{getLeagueIcon(league.name)}</Text>
+								<CachedImage
+									imagePath={
+										"images/badges/" + league.iconUrl || "images/cosmetics/man.png"
+									}
+									style={{
+										width: 80,
+										height: 80,
+									}}
+								/>
 							</View>
 
 							{/* Badge de rang */}
@@ -268,7 +262,15 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 								{Math.round(progressPercentage)}% complété
 							</Text>
 							<View className="flex-row items-center">
-								<Text className="text-lg mr-1">{getLeagueIcon(nextLeague.name)}</Text>
+								<CachedImage
+									imagePath={
+										"images/badges/" + nextLeague.iconUrl || "images/cosmetics/man.png"
+									}
+									style={{
+										width: 30,
+										height: 30,
+									}}
+								/>
 								<MaterialCommunityIcons
 									name="arrow-right"
 									size={16}

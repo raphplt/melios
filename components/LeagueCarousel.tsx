@@ -13,6 +13,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@context/ThemeContext";
 import { League } from "../type/league";
+import CachedImage from "./Shared/CachedImage";
+import { getContrastingColor } from "@utils/colors";
 
 interface LeagueCarouselProps {
 	leagues: League[];
@@ -111,19 +113,6 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 		});
 	}, [currentLeagueId, leagues]);
 
-	const getLeagueIcon = (leagueName: string) => {
-		const name = leagueName.toLowerCase();
-		if (name.includes("terre") || name.includes("earth")) return "🌍";
-		if (name.includes("bronze")) return "🟤";
-		if (name.includes("fer") || name.includes("iron")) return "⚫";
-		if (name.includes("argent") || name.includes("silver")) return "⚪";
-		if (name.includes("or") || name.includes("gold")) return "🟡";
-		if (name.includes("platine") || name.includes("platinum")) return "💎";
-		if (name.includes("diamant") || name.includes("diamond")) return "💠";
-		if (name.includes("maître") || name.includes("master")) return "👑";
-		return "🏆";
-	};
-
 	const getLeagueGradient = (league: League): [string, string, string] => {
 		return [`${league.color}E6`, `${league.color}B3`, `${league.color}66`];
 	};
@@ -209,7 +198,15 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 													borderColor: "rgba(255, 255, 255, 0.3)",
 												}}
 											>
-												<Text className="text-3xl">{getLeagueIcon(league.name)}</Text>
+												<CachedImage
+													imagePath={
+														"images/badges/" + league.iconUrl || "images/cosmetics/man.png"
+													}
+													style={{
+														width: 60,
+														height: 60,
+													}}
+												/>
 											</View>
 
 											{/* Badge de rang */}
@@ -222,7 +219,7 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 												}}
 											>
 												<Text
-													className="text-xs font-bold"
+													className="text-sm font-bold"
 													style={{
 														color: "black",
 														fontSize: 10,
@@ -234,10 +231,9 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 										</View>
 
 										<Text
-											className="text-base font-bold text-center mb-1"
+											className="text-base font-bold text-center mb-1 mt-2"
 											style={{
-												color: "white",
-												fontFamily: theme.fonts.bold.fontFamily,
+												color: getContrastingColor(league.color),
 											}}
 											numberOfLines={1}
 											adjustsFontSizeToFit
@@ -257,13 +253,13 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 													<MaterialCommunityIcons
 														name="check-circle"
 														size={12}
-														color="white"
+														color={getContrastingColor(league.color)}
 													/>
 													<Text
 														className="text-xs font-medium ml-1"
 														style={{
-															color: "white",
-															fontSize: 10,
+															color: getContrastingColor(league.color),
+															fontSize: 12,
 														}}
 													>
 														Actuelle
@@ -274,13 +270,17 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 											{/* Flèche de progression */}
 											{currentIndex >= 0 && index === currentIndex + 1 && (
 												<View className="flex-row items-center">
-													<MaterialCommunityIcons name="arrow-up" size={12} color="white" />
+													<MaterialCommunityIcons
+														name="arrow-up"
+														size={12}
+														color={getContrastingColor(league.color)}
+													/>
 													<Text
-														className="text-xs font-medium ml-1"
+														className="text-sm font-medium ml-1"
 														style={{
-															color: "white",
+															color: getContrastingColor(league.color),
 															opacity: 0.9,
-															fontSize: 10,
+															fontSize: 12,
 														}}
 													>
 														Suivante

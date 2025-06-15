@@ -20,7 +20,6 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 }) => {
 	const { theme } = useTheme();
 
-	// Valider les données de ligue pour éviter les NaN
 	const validatedLeague = LeagueDataValidator.validateLeagueData(member.league);
 	const currentPoints = validatedLeague?.points ?? 0;
 	const weeklyPoints = validatedLeague?.weeklyPoints ?? 0;
@@ -36,7 +35,6 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 		weeklyRequirement
 	);
 
-	// Calculer les jours depuis le dernier reset
 	const lastReset = new Date(validatedLeague?.lastWeeklyReset || new Date());
 	const now = new Date();
 	const daysSinceReset = Math.floor(
@@ -48,7 +46,6 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 		<View className="mx-4 mb-6">
 			<LinearGradient
 				colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
-				className="rounded-3xl p-6"
 				style={{
 					shadowColor: league.color,
 					shadowOffset: { width: 0, height: 8 },
@@ -57,16 +54,17 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 					elevation: 8,
 					borderWidth: 1,
 					borderColor: `${league.color}20`,
+					borderRadius: 20,
+					padding: 16,
 				}}
 			>
 				<Text
 					className="text-xl font-bold mb-4"
 					style={{
 						color: theme.colors.text,
-						fontFamily: theme.fonts.bold.fontFamily,
 					}}
 				>
-					📊 Ma Progression Personnelle
+					Ma Progression Personnelle
 				</Text>
 
 				{/* Progression hebdomadaire */}
@@ -76,16 +74,14 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 							className="text-base font-medium"
 							style={{
 								color: theme.colors.text,
-								fontFamily: theme.fonts.medium.fontFamily,
 							}}
 						>
-							🗓️ Objectif Hebdomadaire
+							Objectif Hebdomadaire
 						</Text>
 						<Text
 							className="text-sm"
 							style={{
 								color: theme.colors.textTertiary,
-								fontFamily: theme.fonts.regular.fontFamily,
 							}}
 						>
 							{daysUntilReset} jour{daysUntilReset !== 1 ? "s" : ""} restant
@@ -98,7 +94,6 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 							className="text-sm"
 							style={{
 								color: theme.colors.textTertiary,
-								fontFamily: theme.fonts.regular.fontFamily,
 							}}
 						>
 							{LeagueDataValidator.formatPoints(weeklyPoints)} /{" "}
@@ -109,9 +104,8 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 							style={{
 								color:
 									weeklyProgress >= 100
-										? theme.colors.mythologyGreen || "#00C853"
+										? theme.colors.textTertiary || "#00C853"
 										: theme.colors.textTertiary,
-								fontFamily: theme.fonts.bold.fontFamily,
 							}}
 						>
 							{Math.round(weeklyProgress)}%
@@ -128,7 +122,7 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 								width: `${weeklyProgress}%`,
 								backgroundColor:
 									weeklyProgress >= 100
-										? theme.colors.mythologyGreen || "#00C853"
+										? theme.colors.primary || "#00C853"
 										: league.color,
 							}}
 						/>
@@ -139,13 +133,12 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 							<MaterialCommunityIcons
 								name="check-circle"
 								size={16}
-								color={theme.colors.mythologyGreen || "#00C853"}
+								color={theme.colors.primary || "#00C853"}
 							/>
 							<Text
 								className="text-sm ml-1"
 								style={{
-									color: theme.colors.mythologyGreen || "#00C853",
-									fontFamily: theme.fonts.medium.fontFamily,
+									color: theme.colors.primary || "#00C853",
 								}}
 							>
 								Objectif hebdomadaire atteint !
@@ -162,16 +155,14 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 								className="text-base font-medium"
 								style={{
 									color: theme.colors.text,
-									fontFamily: theme.fonts.medium.fontFamily,
 								}}
 							>
-								🎯 Progression vers {nextLeague.name}
+								Progression vers {nextLeague.name}
 							</Text>
 							<Text
 								className="text-sm font-bold"
 								style={{
 									color: nextLeague.color,
-									fontFamily: theme.fonts.bold.fontFamily,
 								}}
 							>
 								{LeagueDataValidator.formatPoints(pointsForNext - currentPoints)} pts
@@ -184,7 +175,7 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 								className="text-sm"
 								style={{
 									color: theme.colors.textTertiary,
-									fontFamily: theme.fonts.regular.fontFamily,
+									// fontFamily: theme.fonts.regular.fontFamily,
 								}}
 							>
 								{LeagueDataValidator.formatPoints(currentPoints)} /{" "}
@@ -194,7 +185,7 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 								className="text-sm font-bold"
 								style={{
 									color: theme.colors.text,
-									fontFamily: theme.fonts.bold.fontFamily,
+									// fontFamily: theme.fonts.bold.fontFamily,
 								}}
 							>
 								{Math.round(progressPercentage)}%

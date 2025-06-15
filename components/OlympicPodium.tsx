@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@context/ThemeContext";
 import UserBadge from "./Shared/UserBadge";
 import { Member } from "../type/member";
+import { Iconify } from "react-native-iconify";
 
 interface PodiumProps {
 	topMembers: Member[];
@@ -88,11 +89,11 @@ export const OlympicPodium: React.FC<PodiumProps> = ({
 	const getPodiumHeight = (position: number) => {
 		switch (position) {
 			case 0:
-				return 120; // 1er
+				return 120;
 			case 1:
-				return 100; // 2e
+				return 100;
 			case 2:
-				return 80; // 3e
+				return 80;
 			default:
 				return 60;
 		}
@@ -101,11 +102,11 @@ export const OlympicPodium: React.FC<PodiumProps> = ({
 	const getPodiumColors = (position: number): [string, string] => {
 		switch (position) {
 			case 0:
-				return [theme.colors.mythologyGold || "#FFD700", "#FFA500"]; // Or
+				return [theme.colors.mythologyGold || "#FFD700", "#FFA500"];
 			case 1:
-				return ["#C0C0C0", "#A8A8A8"]; // Argent
+				return ["#C0C0C0", "#A8A8A8"];
 			case 2:
-				return ["#CD7F32", "#B8860B"]; // Bronze
+				return ["#CD7F32", "#B8860B"];
 			default:
 				return [theme.colors.border, theme.colors.backgroundSecondary];
 		}
@@ -128,6 +129,19 @@ export const OlympicPodium: React.FC<PodiumProps> = ({
 
 	return (
 		<View className="px-4 mb-6">
+			<View className="flex-row items-center mb-4">
+				<Iconify icon="mdi:podium-gold" size={24} color={theme.colors.text} />
+				<Text
+					className="text-lg font-bold px-2"
+					style={{
+						color: theme.colors.text,
+						// fontFamily: theme.fonts.bold.fontFamily,
+					}}
+				>
+					Podium Olympique
+				</Text>
+			</View>
+
 			<View className="flex-row justify-center items-end space-x-2">
 				{/* 2e place */}
 				{topMembers[1] && (

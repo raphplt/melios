@@ -11,7 +11,6 @@ import { CurrentLeagueCard } from "../../components/CurrentLeagueCard";
 import { LeagueStats } from "../../components/LeagueStats";
 import { PersonalProgressCard } from "../../components/PersonalProgressCard";
 import { LeagueInfoButton } from "../../components/LeagueInfoModal";
-import { LeagueDebugPanel } from "../../components/LeagueDebugPanel";
 
 if (__DEV__) {
 	import("../../utils/LeagueDebugUtils");
@@ -152,7 +151,10 @@ const LeagueCurrent = () => {
 			: 0;
 
 	return (
-		<View className="flex-1" style={{ backgroundColor: theme.colors.background }}>
+		<View
+			className="flex-1 mb-24"
+			style={{ backgroundColor: theme.colors.background }}
+		>
 			<StatusBar
 				backgroundColor={theme.colors.purplePrimary}
 				barStyle="light-content"
@@ -202,18 +204,9 @@ const LeagueCurrent = () => {
 				)}
 
 				{/* Podium olympique */}
-				{/* TODO à garder */}
+
 				{topMembers.length > 0 && (
-					<View className="mb-6">
-						<Text
-							className="text-xl font-bold mb-4 px-4"
-							style={{
-								color: theme.colors.text,
-								fontFamily: theme.fonts.bold.fontFamily,
-							}}
-						>
-							🏆 Podium Olympique
-						</Text>
+					<View className="mb-6 mt-2">
 						<OlympicPodium topMembers={topMembers} currentMember={member} />
 					</View>
 				)}

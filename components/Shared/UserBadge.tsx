@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useData } from "@context/DataContext";
 import getIcon from "@utils/cosmeticsUtils";

@@ -4,6 +4,6 @@ export interface League {
 	rank: number;
 	color: string;
 	iconUrl?: string;
-	pointsRequired: number; // Points requis pour atteindre cette ligue
-	weeklyPointsRequired: number; // Points requis par semaine pour maintenir/progresser
+	pointsRequired: number;
+	weeklyPointsRequired: number;
 }

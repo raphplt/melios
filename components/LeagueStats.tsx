@@ -3,6 +3,7 @@ import { View, Text, Animated } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@context/ThemeContext";
+import { Iconify } from "react-native-iconify";
 
 interface StatCardProps {
 	icon: string;
@@ -53,8 +54,7 @@ const StatCard: React.FC<StatCardProps> = ({
 			className="flex-1 mx-1"
 		>
 			<LinearGradient
-				colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
-				className="rounded-2xl p-4 items-center"
+				colors={[theme.colors.backgroundSecondary, theme.colors.backgroundTertiary]}
 				style={{
 					shadowColor: color,
 					shadowOffset: { width: 0, height: 4 },
@@ -63,6 +63,9 @@ const StatCard: React.FC<StatCardProps> = ({
 					elevation: 6,
 					borderWidth: 1,
 					borderColor: `${color}20`,
+					borderRadius: 12,
+					padding: 16,
+					alignItems: "center",
 				}}
 			>
 				<View
@@ -77,10 +80,9 @@ const StatCard: React.FC<StatCardProps> = ({
 				</View>
 
 				<Text
-					className="text-xs text-center mb-1"
+					className="text-sm text-center mb-1"
 					style={{
 						color: theme.colors.textTertiary,
-						fontFamily: theme.fonts.regular.fontFamily,
 					}}
 				>
 					{title}
@@ -90,7 +92,6 @@ const StatCard: React.FC<StatCardProps> = ({
 					className="text-xl font-bold text-center"
 					style={{
 						color: theme.colors.text,
-						fontFamily: theme.fonts.bold.fontFamily,
 					}}
 				>
 					{value}
@@ -98,10 +99,9 @@ const StatCard: React.FC<StatCardProps> = ({
 
 				{subtitle && (
 					<Text
-						className="text-xs text-center mt-1"
+						className="text-sm text-center mt-1"
 						style={{
 							color: theme.colors.textTertiary,
-							fontFamily: theme.fonts.regular.fontFamily,
 							opacity: 0.8,
 						}}
 					>
@@ -128,15 +128,23 @@ export const LeagueStats: React.FC<LeagueStatsProps> = ({
 
 	return (
 		<View className="mx-4 mb-6">
-			<Text
-				className="text-lg font-bold mb-4 px-2"
-				style={{
-					color: theme.colors.text,
-					fontFamily: theme.fonts.bold.fontFamily,
-				}}
-			>
-				📊 Statistiques Olympiques
-			</Text>
+			<View className="flex-row items-center mb-4">
+				<Iconify
+					icon="mingcute:laurel-wreath-line"
+					size={24}
+					color={theme.colors.text}
+				/>
+
+				<Text
+					className="text-lg font-bold px-2"
+					style={{
+						color: theme.colors.text,
+						// fontFamily: theme.fonts.bold.fontFamily,
+					}}
+				>
+					Statistiques Olympiques
+				</Text>
+			</View>
 
 			<View className="flex-row">
 				<StatCard
@@ -153,7 +161,7 @@ export const LeagueStats: React.FC<LeagueStatsProps> = ({
 					title="Record Divin"
 					value={record}
 					subtitle="points"
-					color={theme.colors.mythologyGold || "#FFD700"}
+					color={theme.colors.orangePrimary || "#FFD700"}
 					delay={100}
 				/>
 
