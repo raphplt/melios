@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, Animated, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, Text, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@context/ThemeContext";
 import UserBadge from "./Shared/UserBadge";
 import { Member } from "../type/member";
@@ -16,6 +16,7 @@ export const OlympicPodium: React.FC<PodiumProps> = ({
 	topMembers,
 	currentMember,
 }) => {
+	const { t } = useTranslation();
 	const { theme } = useTheme();
 	const animationValues = useRef(
 		topMembers.map(() => ({
@@ -112,19 +113,6 @@ export const OlympicPodium: React.FC<PodiumProps> = ({
 		}
 	};
 
-	const getMedalIcon = (position: number) => {
-		switch (position) {
-			case 0:
-				return "👑";
-			case 1:
-				return "🥈";
-			case 2:
-				return "🥉";
-			default:
-				return "🏅";
-		}
-	};
-
 	if (topMembers.length === 0) return null;
 
 	return (
@@ -135,10 +123,9 @@ export const OlympicPodium: React.FC<PodiumProps> = ({
 					className="text-lg font-bold px-2"
 					style={{
 						color: theme.colors.text,
-						// fontFamily: theme.fonts.bold.fontFamily,
 					}}
 				>
-					Podium Olympique
+					{t("olympic_podium")}
 				</Text>
 			</View>
 

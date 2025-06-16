@@ -179,7 +179,7 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 										shadowOffset: { width: 0, height: 6 },
 										shadowOpacity: isActive ? 0.4 : 0.2,
 										shadowRadius: isActive ? 12 : 6,
-										elevation: isActive ? 10 : 4,
+										// elevation: isActive ? 10 : 4,
 										borderWidth: isActive ? 2 : 1,
 										borderColor: isActive ? league.color : `${league.color}40`,
 										padding: 12,

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View, Text, Animated } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@context/ThemeContext";
 import { Iconify } from "react-native-iconify";
 
@@ -124,6 +125,7 @@ export const LeagueStats: React.FC<LeagueStatsProps> = ({
 	record,
 	average,
 }) => {
+	const { t } = useTranslation();
 	const { theme } = useTheme();
 
 	return (
@@ -139,17 +141,15 @@ export const LeagueStats: React.FC<LeagueStatsProps> = ({
 					className="text-lg font-bold px-2"
 					style={{
 						color: theme.colors.text,
-						// fontFamily: theme.fonts.bold.fontFamily,
 					}}
 				>
-					Statistiques Olympiques
+					{t("league_stats")}
 				</Text>
 			</View>
-
 			<View className="flex-row">
 				<StatCard
 					icon="account-group"
-					title="Participants"
+					title={t("participants")}
 					value={participants}
 					subtitle="dieux"
 					color={theme.colors.bluePrimary}
@@ -158,16 +158,16 @@ export const LeagueStats: React.FC<LeagueStatsProps> = ({
 
 				<StatCard
 					icon="trophy"
-					title="Record Divin"
+					title={t("record")}
 					value={record}
-					subtitle="points"
+					subtitle={t("points")}
 					color={theme.colors.orangePrimary || "#FFD700"}
 					delay={100}
 				/>
 
 				<StatCard
 					icon="trending-up"
-					title="Moyenne"
+					title={t("average")}
 					value={average}
 					subtitle="pts/dieu"
 					color={theme.colors.greenPrimary}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View, Text, Animated, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@context/ThemeContext";
 import { League } from "../type/league";
 import { Member } from "../type/member";
@@ -19,6 +20,7 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 	member,
 	nextLeague,
 }) => {
+	const { t } = useTranslation();
 	const { theme } = useTheme();
 	const pulseAnimation = useRef(new Animated.Value(1)).current;
 	const progressAnimation = useRef(new Animated.Value(0)).current;
@@ -74,7 +76,7 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 					shadowOffset: { width: 0, height: 12 },
 					shadowOpacity: 0.3,
 					shadowRadius: 20,
-					elevation: 15,
+					elevation: 10,
 					borderRadius: 16,
 					padding: 20,
 				}}
@@ -168,21 +170,21 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 				</View>
 
 				{/* Points actuels */}
-				<View className="flex-row items-center justify-between mb-6">
+				<View className="flex-row items-center justify-between mb-6 mt-2">
 					<Animated.View
 						style={{
 							transform: [{ scale: pulseAnimation }],
 							backgroundColor: theme.colors.mythologyGold,
 							borderRadius: 20,
 							paddingHorizontal: 16,
-							paddingVertical: 10,
+							paddingVertical: 8,
 							flexDirection: "row",
 							alignItems: "center",
 							shadowColor: theme.colors.mythologyGold,
 							shadowOffset: { width: 0, height: 6 },
 							shadowOpacity: 0.3,
 							shadowRadius: 10,
-							elevation: 8,
+							elevation: 2,
 						}}
 					>
 						<MaterialCommunityIcons name="star" size={24} color={theme.colors.text} />
@@ -192,7 +194,7 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 								color: theme.colors.text,
 							}}
 						>
-							{currentPoints} points
+							{currentPoints} {t("points")}
 						</Text>
 					</Animated.View>
 
@@ -230,7 +232,7 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 									// fontFamily: theme.fonts.bold.fontFamily,
 								}}
 							>
-								{pointsForNext - currentPoints} pts restants
+								{pointsForNext - currentPoints} {t("points")} {t("points_remaining")}
 							</Text>
 						</View>
 
@@ -259,7 +261,7 @@ export const CurrentLeagueCard: React.FC<CurrentLeagueCardProps> = ({
 									color: theme.colors.textTertiary,
 								}}
 							>
-								{Math.round(progressPercentage)}% complété
+								{Math.round(progressPercentage)}% {t("progress_completed")}
 							</Text>
 							<View className="flex-row items-center">
 								<CachedImage

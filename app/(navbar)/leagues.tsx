@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View, Text, ScrollView, StatusBar, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { useData } from "../../context/DataContext";
 import { useTheme } from "../../context/ThemeContext";
 import { useLeague } from "../../hooks/useLeague";
@@ -17,6 +18,7 @@ if (__DEV__) {
 }
 
 const LeagueCurrent = () => {
+	const { t } = useTranslation();
 	const { member, setMember } = useData();
 	const { theme } = useTheme();
 	const { leagues, currentLeague, topMembers, loading } = useLeague(
@@ -43,51 +45,40 @@ const LeagueCurrent = () => {
 				className="flex-1 justify-center items-center px-4 pb-24"
 				style={{ backgroundColor: theme.colors.background }}
 			>
-				<StatusBar
-					backgroundColor={theme.colors.background}
-					barStyle={theme.dark ? "light-content" : "dark-content"}
-				/>
-				<LinearGradient
-					colors={[theme.colors.purplePrimary, theme.colors.purpleSecondary]}
+				<Animated.View
 					style={{
-						shadowColor: theme.colors.purplePrimary,
+						shadowColor: theme.colors.background,
 						shadowOffset: { width: 0, height: 8 },
 						shadowOpacity: 0.3,
 						shadowRadius: 12,
 						elevation: 10,
 						alignItems: "center",
-						borderRadius: 24,
-						padding: 24,
+						padding: 14,
+						transform: [
+							{
+								rotate: loadingAnimation.interpolate({
+									inputRange: [0, 1],
+									outputRange: ["0deg", "360deg"],
+								}),
+							},
+						],
 					}}
 				>
-					<Animated.View
-						style={{
-							transform: [
-								{
-									rotate: loadingAnimation.interpolate({
-										inputRange: [0, 1],
-										outputRange: ["0deg", "360deg"],
-									}),
-								},
-							],
-						}}
-					>
-						<MaterialCommunityIcons
-							name="loading"
-							size={48}
-							color={theme.colors.mythologyGold}
-						/>
-					</Animated.View>
-					<Text
-						className="text-lg mt-4 font-medium text-center"
-						style={{
-							color: theme.colors.textSecondary,
-							fontFamily: theme.fonts.medium.fontFamily,
-						}}
-					>
-						Chargement de l'Olympe...
-					</Text>
-				</LinearGradient>
+					<MaterialCommunityIcons
+						name="loading"
+						size={48}
+						color={theme.colors.mythologyGold}
+					/>
+				</Animated.View>
+				<Text
+					className="text-lg mt-4 font-medium text-center"
+					style={{
+						color: theme.colors.textSecondary,
+						fontFamily: theme.fonts.medium.fontFamily,
+					}}
+				>
+					{t("loading_olympus")}
+				</Text>
 			</View>
 		);
 	}
@@ -98,10 +89,6 @@ const LeagueCurrent = () => {
 				className="flex-1 justify-center items-center p-8"
 				style={{ backgroundColor: theme.colors.background }}
 			>
-				<StatusBar
-					backgroundColor={theme.colors.background}
-					barStyle={theme.dark ? "light-content" : "dark-content"}
-				/>
 				<View
 					className="rounded-3xl p-8 items-center"
 					style={{
@@ -125,7 +112,7 @@ const LeagueCurrent = () => {
 							fontFamily: theme.fonts.medium.fontFamily,
 						}}
 					>
-						Aucun dieu connecté à l'Olympe
+						{t("no_god_connected")}
 					</Text>
 				</View>
 			</View>
@@ -155,11 +142,6 @@ const LeagueCurrent = () => {
 			className="flex-1 mb-24"
 			style={{ backgroundColor: theme.colors.background }}
 		>
-			<StatusBar
-				backgroundColor={theme.colors.purplePrimary}
-				barStyle="light-content"
-			/>
-
 			{/* Header avec bouton d'information */}
 			<View className="flex-row items-center justify-between px-4 py-3">
 				<Text
@@ -169,7 +151,7 @@ const LeagueCurrent = () => {
 						fontFamily: theme.fonts.bold.fontFamily,
 					}}
 				>
-					🏛️ Ligues Olympiques
+					{t("olympic_leagues")}
 				</Text>
 				<LeagueInfoButton />
 			</View>
@@ -246,7 +228,7 @@ const LeagueCurrent = () => {
 									fontFamily: theme.fonts.bold.fontFamily,
 								}}
 							>
-								Ligue en développement
+								{t("league_in_development")}
 							</Text>
 							<Text
 								className="text-base mt-2 text-center"
@@ -256,15 +238,12 @@ const LeagueCurrent = () => {
 									lineHeight: 20,
 								}}
 							>
-								Continuez à gagner des points pour voir apparaître les champions de
-								cette ligue !
+								{t("continue_earning_points")}
 							</Text>
 						</LinearGradient>
 					</View>
 				)}
 			</ScrollView>
-
-			{/* <LeagueDebugPanel /> */}
 		</View>
 	);
 };

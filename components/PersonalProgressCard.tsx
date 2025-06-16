@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@context/ThemeContext";
 import { League } from "../type/league";
 import { Member } from "../type/member";
@@ -18,6 +19,7 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 	member,
 	nextLeague,
 }) => {
+	const { t } = useTranslation();
 	const { theme } = useTheme();
 
 	const validatedLeague = LeagueDataValidator.validateLeagueData(member.league);
@@ -64,9 +66,8 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 						color: theme.colors.text,
 					}}
 				>
-					Ma Progression Personnelle
+					{t("personal_progress")}
 				</Text>
-
 				{/* Progression hebdomadaire */}
 				<View className="mb-6">
 					<View className="flex-row items-center justify-between mb-2">
@@ -76,7 +77,7 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 								color: theme.colors.text,
 							}}
 						>
-							Objectif Hebdomadaire
+							{t("weekly_objective")}
 						</Text>
 						<Text
 							className="text-sm"
@@ -84,8 +85,8 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 								color: theme.colors.textTertiary,
 							}}
 						>
-							{daysUntilReset} jour{daysUntilReset !== 1 ? "s" : ""} restant
-							{daysUntilReset !== 1 ? "s" : ""}
+							{daysUntilReset}{" "}
+							{daysUntilReset !== 1 ? t("days_remaining") : t("day_remaining")}
 						</Text>
 					</View>
 
@@ -97,7 +98,7 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 							}}
 						>
 							{LeagueDataValidator.formatPoints(weeklyPoints)} /{" "}
-							{LeagueDataValidator.formatPoints(weeklyRequirement)} points
+							{LeagueDataValidator.formatPoints(weeklyRequirement)} {t("points")}
 						</Text>
 						<Text
 							className="text-sm font-bold"
@@ -141,12 +142,11 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 									color: theme.colors.primary || "#00C853",
 								}}
 							>
-								Objectif hebdomadaire atteint !
+								{t("weekly_objective_reached")}
 							</Text>
 						</View>
 					)}
 				</View>
-
 				{/* Progression vers la prochaine ligue */}
 				{nextLeague && (
 					<View>
@@ -157,7 +157,7 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 									color: theme.colors.text,
 								}}
 							>
-								Progression vers {nextLeague.name}
+								{t("progress_towards")} {nextLeague.name}
 							</Text>
 							<Text
 								className="text-sm font-bold"
@@ -165,8 +165,8 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 									color: nextLeague.color,
 								}}
 							>
-								{LeagueDataValidator.formatPoints(pointsForNext - currentPoints)} pts
-								restants
+								{LeagueDataValidator.formatPoints(pointsForNext - currentPoints)}{" "}
+								{t("points")} {t("points_remaining")}
 							</Text>
 						</View>
 
@@ -175,17 +175,15 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 								className="text-sm"
 								style={{
 									color: theme.colors.textTertiary,
-									// fontFamily: theme.fonts.regular.fontFamily,
 								}}
 							>
 								{LeagueDataValidator.formatPoints(currentPoints)} /{" "}
-								{LeagueDataValidator.formatPoints(pointsForNext)} points
+								{LeagueDataValidator.formatPoints(pointsForNext)} {t("points")}
 							</Text>
 							<Text
 								className="text-sm font-bold"
 								style={{
 									color: theme.colors.text,
-									// fontFamily: theme.fonts.bold.fontFamily,
 								}}
 							>
 								{Math.round(progressPercentage)}%
@@ -206,7 +204,6 @@ export const PersonalProgressCard: React.FC<PersonalProgressCardProps> = ({
 						</View>
 					</View>
 				)}
-
 				{/* Message si pas de ligue suivante */}
 				{!nextLeague && (
 					<View className="items-center p-4">

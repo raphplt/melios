@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "@context/ThemeContext";
 import BottomSlideModal from "./Modals/ModalBottom";
 
@@ -9,28 +10,25 @@ export const LeagueInfoModal: React.FC<{
 	visible: boolean;
 	onClose: () => void;
 }> = ({ visible, onClose }) => {
+	const { t } = useTranslation();
 	const { theme } = useTheme();
 
 	return (
 		<BottomSlideModal
 			visible={visible}
 			setVisible={(v) => !v && onClose()}
-			title="🏆 Système de Ligues Personnelles"
+			title={t("league_system_title")}
 		>
-			<ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
+			<ScrollView className="px-4" showsVerticalScrollIndicator={false}>
 				{/* Introduction */}
 				<View className="mb-6">
 					<Text
 						className="text-base leading-6"
 						style={{
 							color: theme.colors.text,
-							fontFamily: theme.fonts.regular.fontFamily,
-							lineHeight: 24,
 						}}
 					>
-						Le nouveau système de ligues est entièrement personnel ! Progressez à
-						votre rythme selon votre activité, sans compétition directe avec d'autres
-						utilisateurs.
+						{t("league_system_intro")}
 					</Text>
 				</View>
 
@@ -43,7 +41,7 @@ export const LeagueInfoModal: React.FC<{
 							fontFamily: theme.fonts.bold.fontFamily,
 						}}
 					>
-						📚 Comment ça fonctionne
+						{t("league_how_it_works")}
 					</Text>
 
 					<View className="space-y-3">
@@ -59,14 +57,13 @@ export const LeagueInfoModal: React.FC<{
 									className="text-sm font-medium mb-1"
 									style={{ color: theme.colors.text }}
 								>
-									Gagnez des points
+									{t("points_explanation")}
 								</Text>
 								<Text
 									className="text-sm"
 									style={{ color: theme.colors.textTertiary, lineHeight: 20 }}
 								>
-									Complétez vos habitudes pour gagner des points de ligue (10 points ×
-									difficulté)
+									{t("complete_habits_explanation")}
 								</Text>
 							</View>
 						</View>
@@ -83,13 +80,13 @@ export const LeagueInfoModal: React.FC<{
 									className="text-sm font-medium mb-1"
 									style={{ color: theme.colors.text }}
 								>
-									Montez de ligue
+									{t("promotion_explanation")}
 								</Text>
 								<Text
 									className="text-sm"
 									style={{ color: theme.colors.textTertiary, lineHeight: 20 }}
 								>
-									Atteignez le seuil de points requis pour accéder à la ligue supérieure
+									{t("league_promotion_detail")}
 								</Text>
 							</View>
 						</View>
@@ -106,13 +103,13 @@ export const LeagueInfoModal: React.FC<{
 									className="text-sm font-medium mb-1"
 									style={{ color: theme.colors.text }}
 								>
-									Maintenez votre niveau
+									{t("weekly_objectives_explanation")}
 								</Text>
 								<Text
 									className="text-sm"
 									style={{ color: theme.colors.textTertiary, lineHeight: 20 }}
 								>
-									Atteignez l'objectif hebdomadaire pour rester dans votre ligue
+									{t("weekly_objectives_detail")}
 								</Text>
 							</View>
 						</View>
@@ -128,7 +125,7 @@ export const LeagueInfoModal: React.FC<{
 							fontFamily: theme.fonts.bold.fontFamily,
 						}}
 					>
-						🗓️ Objectifs Hebdomadaires
+						🗓️ {t("weekly_objectives_title")}
 					</Text>
 
 					<LinearGradient
@@ -191,7 +188,7 @@ export const LeagueInfoModal: React.FC<{
 							</View>
 							<Text
 								className="text-sm font-bold"
-								style={{ color: theme.colors.mythologyGold }}
+								style={{ color: theme.colors.primary }}
 							>
 								+20 récompenses
 							</Text>
@@ -206,7 +203,7 @@ export const LeagueInfoModal: React.FC<{
 							</View>
 							<Text
 								className="text-sm font-bold"
-								style={{ color: theme.colors.mythologyGold }}
+								style={{ color: theme.colors.primary }}
 							>
 								+10 récompenses
 							</Text>
@@ -221,7 +218,7 @@ export const LeagueInfoModal: React.FC<{
 							</View>
 							<Text
 								className="text-sm font-bold"
-								style={{ color: theme.colors.mythologyGold }}
+								style={{ color: theme.colors.primary }}
 							>
 								+5 récompenses
 							</Text>
@@ -250,7 +247,6 @@ export const LeagueInfoModal: React.FC<{
 							style={{
 								color: theme.colors.text,
 								lineHeight: 20,
-								fontFamily: theme.fonts.regular.fontFamily,
 							}}
 						>
 							Le podium affiche les 3 meilleurs joueurs de votre ligue actuelle. C'est
