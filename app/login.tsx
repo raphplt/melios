@@ -39,7 +39,7 @@ import { db } from "@db/index";
 
 // Import pour Apple Sign In
 import * as AppleAuthentication from "expo-apple-authentication";
-import { generateFriendCode } from "@db/member";
+import { generateFriendCode } from "@db/friend";
 
 export default function Login() {
 	const { theme } = useTheme();
@@ -189,13 +189,13 @@ export default function Login() {
 			setError("Erreur lors de la connexion avec Apple.");
 		}
 	};
-
 	useEffect(() => {
-		return navigation.addListener("beforeRemove", (e: any) => {
+		const unsubscribe = navigation.addListener("beforeRemove", (e: any) => {
 			if (!user) {
 				e.preventDefault();
 			}
 		});
+		return unsubscribe;
 	}, [navigation, user]);
 
 	useEffect(() => {

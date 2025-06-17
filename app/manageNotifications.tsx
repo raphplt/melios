@@ -40,10 +40,8 @@ const ManageNotifications = () => {
 		useState(false);
 	const [confirmationMessage, setConfirmationMessage] = useState("");
 
-	// Animation du bouton avec useRef pour éviter la recréation
 	const scaleValue = useRef(new Animated.Value(1)).current;
 
-	// Chargement groupé des préférences utilisateur
 	useEffect(() => {
 		const loadPreferences = async () => {
 			try {
@@ -195,14 +193,21 @@ const ManageNotifications = () => {
 		<SafeAreaView className="flex-1 bg-background">
 			<ScrollView className="px-5 pt-10">
 				<ButtonClose />
-				<Text className="text-3xl font-bold mb-6">{t("manage_notifications")}</Text>
+				<Text
+					className="text-2xl font-bold mb-6"
+					style={{ color: theme.colors.text }}
+				>
+					{t("manage_notifications")}
+				</Text>
 
 				{/* Activation globale des notifications */}
 				<View
 					className="flex flex-row justify-between items-center p-4 rounded-xl shadow-sm mb-4"
 					style={{ backgroundColor: theme.colors.cardBackground }}
 				>
-					<Text className="text-lg">{t("set_notifications")}</Text>
+					<Text className="text-lg" style={{ color: theme.colors.text }}>
+						{t("set_notifications")}
+					</Text>
 					<ToggleButton
 						onToggle={handleToggleNotifications}
 						value={notificationToggle}
@@ -214,7 +219,9 @@ const ManageNotifications = () => {
 					className="flex flex-row justify-between items-center p-4 rounded-xl shadow-sm mb-4"
 					style={{ backgroundColor: theme.colors.cardBackground }}
 				>
-					<Text className="text-lg">{t("daily_reminder")}</Text>
+					<Text className="text-lg" style={{ color: theme.colors.text }}>
+						{t("daily_reminder")}
+					</Text>
 					<ToggleButton
 						onToggle={handleToggleDailyNotifications}
 						value={dailyNotificationEnabled}
@@ -230,7 +237,10 @@ const ManageNotifications = () => {
 						{isCustomEditing ? (
 							<>
 								<View className="flex flex-row justify-between items-center  mb-2">
-									<Text className="text-xl font-semibold">
+									<Text
+										className="text-xl font-semibold"
+										style={{ color: theme.colors.text }}
+									>
 										{t("custom_notification")}
 									</Text>
 

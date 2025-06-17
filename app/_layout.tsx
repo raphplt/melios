@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useColorScheme, Platform } from "react-native";
-import {
-	NavigationProp,
-	ParamListBase,
-	ThemeProvider,
-} from "@react-navigation/native";
+import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack, useNavigation } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoaderScreen from "@components/Shared/LoaderScreen";
@@ -111,6 +107,7 @@ function MainNavigator() {
 						headerShadowVisible: false,
 					}}
 				>
+					<Stack.Screen name="index" options={{ headerShown: false, title: "" }} />
 					<Stack.Screen
 						name="(navbar)"
 						options={{ headerShown: false, title: "" }}
@@ -220,41 +217,20 @@ function MainNavigator() {
 
 function RootLayoutContent() {
 	const { user, isLoading: isSessionLoading } = useSession();
-	const navigation: NavigationProp<ParamListBase> = useNavigation();
-	const [isNavigationReady, setIsNavigationReady] = useState(false);
 	const { t } = useTranslation();
 
-	useEffect(() => {
-		return navigation.addListener("state", () => {
-			setIsNavigationReady(true);
-		});
-	}, [navigation]);
+	// Afficher le loader tant que la session n'est pas chargée
+	if (isSessionLoading) return <LoaderScreen text={t("loading")} />;
 
-	useEffect(() => {
-		if (!isSessionLoading && !user && isNavigationReady) {
-			navigation.navigate("login");
-		}
-	}, [isSessionLoading, user, isNavigationReady]);
-
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		if (!isSessionLoading) {
-			setIsLoading(false);
-		}
-	}, [isSessionLoading]);
-
-	if (isLoading) return <LoaderScreen text={t("loading")} />;
-
-        return (
-                <NotificationProvider>
-                        <DataProvider>
-                                <HabitsProvider>
-                                        <MainNavigator />
-                                </HabitsProvider>
-                        </DataProvider>
-                </NotificationProvider>
-        );
+	return (
+		<NotificationProvider>
+			<DataProvider>
+				<HabitsProvider>
+					<MainNavigator />
+				</HabitsProvider>
+			</DataProvider>
+		</NotificationProvider>
+	);
 }
 
 export default function RootLayout() {
