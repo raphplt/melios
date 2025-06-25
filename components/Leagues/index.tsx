@@ -1,4 +1,4 @@
-export { LigueBadgeProgression } from "./LigueBadgeProgression";
-export { ObjectifHebdoProgression } from "./ObjectifHebdoProgression";
-export { PodiumOlympique } from "./PodiumOlympique";
-export { StatistiquesLigue } from "./StatistiquesLigue";
+export { LeagueBadgeProgression } from "./LeagueBadgeProgression";
+export { WeeklyObjectiveProgression } from "./WeeklyObjectiveProgression";
+export { OlympicPodium } from "./OlympicPodium";
+export { LeagueStatistics } from "./LeagueStatistics";

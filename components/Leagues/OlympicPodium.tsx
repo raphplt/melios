@@ -15,12 +15,12 @@ interface PodiumParticipant {
 	isCurrentUser?: boolean;
 }
 
-interface PodiumOlympiqueProps {
+interface OlympicPodiumProps {
 	participants: PodiumParticipant[];
 	currentLeague?: League | null;
 }
 
-export const PodiumOlympique: React.FC<PodiumOlympiqueProps> = ({
+export const OlympicPodium: React.FC<OlympicPodiumProps> = ({
 	participants,
 	currentLeague,
 }) => {
@@ -47,11 +47,11 @@ export const PodiumOlympique: React.FC<PodiumOlympiqueProps> = ({
 	const getPodiumColors = (rank: number): [string, string] => {
 		switch (rank) {
 			case 1:
-				return [theme.colors.mythologyGold || "#F4E4A6", "#FFD700"];
+				return [theme.colors.mythologyGold || "#F4E4A6", theme.colors.mythologyGold || "#F4E4A6"];
 			case 2:
-				return ["#C0C0C0", "#E8E8E8"];
+				return [theme.colors.grayPrimary || "#C0C0C0", theme.colors.backgroundSecondary || "#E8E8E8"];
 			case 3:
-				return ["#CD7F32", "#D2B48C"];
+				return [theme.colors.orangePrimary || "#CD7F32", theme.colors.orangeSecondary || "#D2B48C"];
 			default:
 				return [
 					theme.colors.grayPrimary || "#B0B0B0",
@@ -84,7 +84,31 @@ export const PodiumOlympique: React.FC<PodiumOlympiqueProps> = ({
 		orderedParticipants.find((p) => p.rank === 3),
 	].filter(Boolean) as PodiumParticipant[];
 	return (
-		<View className="mx-4 mb-6">
+		<View className="mx-4 mb-8">
+			{/* Séparateur visuel décoratif */}
+			<View className="flex-row items-center mb-6">
+				<View
+					className="flex-1 h-px"
+					style={{ backgroundColor: theme.colors.border + "40" }}
+				/>
+				<View
+					className="mx-4 px-3 py-1 rounded-full"
+					style={{
+						backgroundColor: theme.colors.mythologyGold + "20",
+					}}
+				>
+					<MaterialCommunityIcons
+						name="trophy"
+						size={16}
+						color={theme.colors.mythologyGold}
+					/>
+				</View>
+				<View
+					className="flex-1 h-px"
+					style={{ backgroundColor: theme.colors.border + "40" }}
+				/>
+			</View>
+
 			<LinearGradient
 				colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
 				style={{

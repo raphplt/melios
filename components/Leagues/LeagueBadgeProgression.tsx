@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import CachedImage from "@components/Shared/CachedImage";
 
 import { League } from "../../type/league.d";
 
-interface LigueBadgeProgressionProps {
+interface LeagueBadgeProgressionProps {
 	currentLeague: League;
 	currentRank: number;
 	currentPoints: number;
@@ -16,7 +16,7 @@ interface LigueBadgeProgressionProps {
 	progressPercent: number;
 }
 
-export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
+export const LeagueBadgeProgression: React.FC<LeagueBadgeProgressionProps> = ({
 	currentLeague,
 	currentRank,
 	currentPoints,
@@ -25,13 +25,23 @@ export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
 }) => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
+	const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
 	const pointsRemaining = nextLeague
 		? nextLeague.pointsRequired - currentPoints
 		: 0;
 
+	useEffect(() => {
+		// Fade in animation
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 600,
+			useNativeDriver: true,
+		}).start();
+	}, []);
+
 	return (
-		<View className="mx-4 mb-6">
+		<Animated.View className="mx-4 mb-8" style={{ opacity: fadeAnim }}>
 			<LinearGradient
 				colors={[theme.colors.cardBackground, theme.colors.background]}
 				style={{
@@ -202,6 +212,6 @@ export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
 					</View>
 				)}
 			</LinearGradient>
-		</View>
+		</Animated.View>
 	);
 };

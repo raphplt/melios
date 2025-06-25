@@ -7,10 +7,10 @@ import { useTheme } from "../../context/ThemeContext";
 import { useLeague } from "../../hooks/useLeague";
 import { LeagueInfoButton } from "../../components/LeagueInfoModal";
 import {
-	LigueBadgeProgression,
-	ObjectifHebdoProgression,
-	PodiumOlympique,
-	StatistiquesLigue,
+	LeagueBadgeProgression,
+	WeeklyObjectiveProgression,
+	OlympicPodium,
+	LeagueStatistics,
 } from "../../components/Leagues";
 
 if (__DEV__) {
@@ -171,8 +171,6 @@ const LeagueCurrent = () => {
 			  )
 			: 0;
 
-	console.log("leagues", leagues);
-
 	return (
 		<View
 			className="flex-1 mb-24"
@@ -195,10 +193,10 @@ const LeagueCurrent = () => {
 			<ScrollView
 				className="flex-1"
 				showsVerticalScrollIndicator={false}
-				contentContainerStyle={{ paddingBottom: 20 }}
+				contentContainerStyle={{ paddingBottom: 40, paddingTop: 12 }}
 			>
 				{currentLeague && (
-					<LigueBadgeProgression
+					<LeagueBadgeProgression
 						currentLeague={currentLeague}
 						currentRank={member.league?.rank ?? 1}
 						currentPoints={currentPoints}
@@ -206,24 +204,26 @@ const LeagueCurrent = () => {
 						progressPercent={progressPercent}
 					/>
 				)}
-				<ObjectifHebdoProgression
+				<WeeklyObjectiveProgression
 					currentPoints={currentWeeklyPoints}
 					targetPoints={weeklyTargetPoints}
 					daysLeft={Math.max(daysLeft, 1)}
 					currentLeague={currentLeague}
 				/>
 				{!isSoloLeague && podiumParticipants.length > 0 && (
-					<PodiumOlympique
+					<OlympicPodium
 						participants={podiumParticipants}
 						currentLeague={currentLeague}
 					/>
 				)}
-				<StatistiquesLigue
-					totalParticipants={topMembers.length}
-					record={maxPoints}
-					moyenne={averagePoints}
-					isSoloLeague={isSoloLeague}
-				/>
+				{!isSoloLeague && (
+					<LeagueStatistics
+						totalParticipants={topMembers.length}
+						record={maxPoints}
+						moyenne={averagePoints}
+						isSoloLeague={isSoloLeague}
+					/>
+				)}
 			</ScrollView>
 		</View>
 	);

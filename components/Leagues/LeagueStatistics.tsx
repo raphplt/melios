@@ -5,14 +5,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
 
-interface StatistiquesLigueProps {
+interface LeagueStatisticsProps {
 	totalParticipants: number;
 	record: number;
 	moyenne: number;
 	isSoloLeague: boolean;
 }
 
-export const StatistiquesLigue: React.FC<StatistiquesLigueProps> = ({
+export const LeagueStatistics: React.FC<LeagueStatisticsProps> = ({
 	totalParticipants,
 	record,
 	moyenne,
@@ -23,7 +23,31 @@ export const StatistiquesLigue: React.FC<StatistiquesLigueProps> = ({
 
 	if (isSoloLeague) {
 		return (
-			<View className="mx-4 mb-6">
+			<View className="mx-4 mb-8">
+				{/* Séparateur visuel décoratif */}
+				<View className="flex-row items-center mb-6">
+					<View
+						className="flex-1 h-px"
+						style={{ backgroundColor: theme.colors.border + "40" }}
+					/>
+					<View
+						className="mx-4 px-3 py-1 rounded-full"
+						style={{
+							backgroundColor: theme.colors.bluePrimary + "20",
+						}}
+					>
+						<MaterialCommunityIcons
+							name="chart-bar"
+							size={16}
+							color={theme.colors.bluePrimary}
+						/>
+					</View>
+					<View
+						className="flex-1 h-px"
+						style={{ backgroundColor: theme.colors.border + "40" }}
+					/>
+				</View>
+
 				<LinearGradient
 					colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
 					style={{
@@ -87,7 +111,31 @@ export const StatistiquesLigue: React.FC<StatistiquesLigueProps> = ({
 		},
 	];
 	return (
-		<View className="mx-4 mb-6">
+		<View className="mx-4 mb-8">
+			{/* Séparateur visuel décoratif */}
+			<View className="flex-row items-center mb-6">
+				<View
+					className="flex-1 h-px"
+					style={{ backgroundColor: theme.colors.border + "40" }}
+				/>
+				<View
+					className="mx-4 px-3 py-1 rounded-full"
+					style={{
+						backgroundColor: theme.colors.bluePrimary + "20",
+					}}
+				>
+					<MaterialCommunityIcons
+						name="chart-bar"
+						size={16}
+						color={theme.colors.bluePrimary}
+					/>
+				</View>
+				<View
+					className="flex-1 h-px"
+					style={{ backgroundColor: theme.colors.border + "40" }}
+				/>
+			</View>
+
 			<LinearGradient
 				colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
 				style={{

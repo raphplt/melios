@@ -361,11 +361,10 @@
     "loading_olympus": "Chargement de l'Olympe...",
     "no_god_connected": "Aucun dieu connecté à l'Olympe",
     "league_in_development": "Ligue en développement",
-    "continue_earning_points": "Continuez à gagner des points pour voir apparaître les champions de cette ligue !",
+    "continue_earning_points": "Continue à gagner des points pour voir apparaître les champions de cette ligue !",
     "personal_progress": "Ma Progression Personnelle",
     "weekly_objective": "Objectif Hebdomadaire",
-    "day_remaining": "jour restant",
-    "days_remaining": "jours restants",
+    "days_left": "{{days}} jour{{days, plural, one {} other{s}}} restant{{days, plural, one {} other{s}}}",
     "points": "points",
     "progress_completed": "complété",
     "points_remaining": "restants",
@@ -430,8 +429,6 @@
         "weekly_goal": {
             "completed": "Objectif hebdomadaire atteint !",
             "remaining": "Encore {{points}} points pour atteindre ton objectif",
-            "days_left_one": "{{count}} jour restant",
-            "days_left_other": "{{count}} jours restants",
             "title": "Objectif hebdomadaire"
         },
         "stats": {

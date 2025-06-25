@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -7,33 +7,83 @@ import { useTheme } from "../../context/ThemeContext";
 import CachedImage from "@components/Shared/CachedImage";
 import { League } from "../../type/league.d";
 
-interface ObjectifHebdoProgressionProps {
+interface WeeklyObjectiveProgressionProps {
 	currentPoints: number;
 	targetPoints: number;
 	daysLeft: number;
 	currentLeague?: League | null;
 }
 
-export const ObjectifHebdoProgression: React.FC<
-	ObjectifHebdoProgressionProps
+export const WeeklyObjectiveProgression: React.FC<
+	WeeklyObjectiveProgressionProps
 > = ({ currentPoints, targetPoints, daysLeft, currentLeague }) => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
+	const progressAnimation = useRef(new Animated.Value(0)).current;
 
 	const isCompleted = currentPoints >= targetPoints;
 	const progressPercent = Math.min((currentPoints / targetPoints) * 100, 100);
 	const pointsRemaining = Math.max(targetPoints - currentPoints, 0);
 
+	useEffect(() => {
+		Animated.timing(progressAnimation, {
+			toValue: progressPercent,
+			duration: 1000,
+			useNativeDriver: false,
+		}).start();
+	}, [progressPercent]);
+
+	useEffect(() => {
+		if (isCompleted) {
+			Animated.sequence([
+				Animated.timing(progressAnimation, {
+					toValue: 105,
+					duration: 200,
+					useNativeDriver: false,
+				}),
+				Animated.timing(progressAnimation, {
+					toValue: 100,
+					duration: 200,
+					useNativeDriver: false,
+				}),
+			]).start();
+		}
+	}, [isCompleted]);
+
 	return (
-		<View className="mx-4 mb-6">
+		<View className="mx-4 mb-8">
+			{/* Séparateur visuel décoratif */}
+			<View className="flex-row items-center mb-6">
+				<View
+					className="flex-1 h-px"
+					style={{ backgroundColor: theme.colors.border + "40" }}
+				/>
+				<View
+					className="mx-4 px-3 py-1 rounded-full"
+					style={{
+						backgroundColor: theme.colors.primary + "10",
+					}}
+				>
+					<MaterialCommunityIcons
+						name="chart-timeline-variant"
+						size={16}
+						color={theme.colors.primary}
+					/>
+				</View>
+				<View
+					className="flex-1 h-px"
+					style={{ backgroundColor: theme.colors.border + "40" }}
+				/>
+			</View>
+
 			<LinearGradient
 				colors={[
 					isCompleted
-						? theme.colors.greenSecondary || "#CDEAD6"
-						: theme.colors.cardBackground || "#F6F6F6",
+						? theme.colors.greenSecondary
+						: theme.colors.cardBackground,
 					isCompleted
-						? (theme.colors.greenPrimary || "#47A86C") + "20"
-						: theme.colors.background || "#ffffff",
+						? theme.colors.greenPrimary + "20"
+						: theme.colors.background,
 				]}
 				style={{
 					borderRadius: 24,
@@ -52,8 +102,8 @@ export const ObjectifHebdoProgression: React.FC<
 							className="w-12 h-12 rounded-full items-center justify-center mr-3"
 							style={{
 								backgroundColor: isCompleted
-									? (theme.colors.greenPrimary || "#47A86C") + "20"
-									: (theme.colors.yellowPrimary || "#D1A916") + "20",
+									? theme.colors.greenPrimary + "20"
+									: theme.colors.yellowPrimary + "20",
 							}}
 						>
 							<MaterialCommunityIcons
@@ -61,8 +111,8 @@ export const ObjectifHebdoProgression: React.FC<
 								size={24}
 								color={
 									isCompleted
-										? theme.colors.greenPrimary || "#47A86C"
-										: theme.colors.yellowPrimary || "#D1A916"
+										? theme.colors.greenPrimary
+										: theme.colors.yellowPrimary
 								}
 							/>
 						</View>
@@ -77,31 +127,6 @@ export const ObjectifHebdoProgression: React.FC<
 								>
 									{t("leagues.weekly_goal.title")}
 								</Text>
-								{currentLeague && (
-									<View
-										className="w-6 h-6 rounded-full items-center justify-center overflow-hidden"
-										style={{
-											backgroundColor: currentLeague.color + "20",
-											borderWidth: 1,
-											borderColor: currentLeague.color,
-										}}
-									>
-										<CachedImage
-											imagePath={`images/badges/${currentLeague.iconUrl}`}
-											style={{
-												width: 16,
-												height: 16,
-											}}
-											placeholder={
-												<MaterialCommunityIcons
-													name="medal"
-													size={12}
-													color={currentLeague.color}
-												/>
-											}
-										/>
-									</View>
-								)}
 							</View>
 							<Text
 								className="text-sm"
@@ -110,9 +135,7 @@ export const ObjectifHebdoProgression: React.FC<
 									fontFamily: theme.fonts.regular.fontFamily,
 								}}
 							>
-								{daysLeft === 1
-									? t("leagues.weekly_goal.days_left_one", { count: daysLeft })
-									: t("leagues.weekly_goal.days_left_other", { count: daysLeft })}
+								{t("days_left", { days: daysLeft })}
 							</Text>
 						</View>
 					</View>
@@ -123,8 +146,8 @@ export const ObjectifHebdoProgression: React.FC<
 							className="text-xl font-bold"
 							style={{
 								color: isCompleted
-									? theme.colors.greenPrimary || "#47A86C"
-									: theme.colors.primary || "#082099",
+									? theme.colors.greenPrimary
+									: theme.colors.primary,
 								fontFamily: theme.fonts.bold.fontFamily,
 							}}
 						>
@@ -147,27 +170,21 @@ export const ObjectifHebdoProgression: React.FC<
 					<View
 						className="h-2 rounded-full overflow-hidden"
 						style={{
-							backgroundColor: (theme.colors.grayPrimary || "#B0B0B0") + "30",
+							backgroundColor: theme.colors.grayPrimary + "30",
 						}}
 					>
-						<LinearGradient
-							colors={
-								isCompleted
-									? [
-											theme.colors.greenPrimary || "#47A86C",
-											theme.colors.greenSecondary || "#CDEAD6",
-									  ]
-									: [
-											theme.colors.yellowPrimary || "#D1A916",
-											theme.colors.yellowSecondary || "#FFF4C2",
-									  ]
-							}
-							start={{ x: 0, y: 0 }}
-							end={{ x: 1, y: 0 }}
+						<Animated.View
 							style={{
 								height: "100%",
 								borderRadius: 999,
-								width: `${progressPercent}%`,
+								width: progressAnimation.interpolate({
+									inputRange: [0, 100],
+									outputRange: ["0%", "100%"],
+									extrapolate: "clamp",
+								}),
+								backgroundColor: isCompleted
+									? theme.colors.greenPrimary
+									: theme.colors.yellowPrimary,
 							}}
 						/>
 					</View>
@@ -201,8 +218,8 @@ export const ObjectifHebdoProgression: React.FC<
 						size={16}
 						color={
 							isCompleted
-								? theme.colors.greenPrimary || "#47A86C"
-								: theme.colors.yellowPrimary || "#D1A916"
+								? theme.colors.greenPrimary
+								: theme.colors.yellowPrimary
 						}
 						style={{ marginRight: 8 }}
 					/>
@@ -210,8 +227,8 @@ export const ObjectifHebdoProgression: React.FC<
 						className="text-sm font-medium text-center"
 						style={{
 							color: isCompleted
-								? theme.colors.greenPrimary || "#47A86C"
-								: theme.colors.yellowPrimary || "#D1A916",
+								? theme.colors.greenPrimary
+								: theme.colors.yellowPrimary,
 							fontFamily: theme.fonts.medium.fontFamily,
 						}}
 					>
