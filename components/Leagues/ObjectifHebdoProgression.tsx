@@ -4,16 +4,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
+import CachedImage from "@components/Shared/CachedImage";
+import { League } from "../../type/league.d";
 
 interface ObjectifHebdoProgressionProps {
 	currentPoints: number;
 	targetPoints: number;
 	daysLeft: number;
+	currentLeague?: League | null;
 }
 
 export const ObjectifHebdoProgression: React.FC<
 	ObjectifHebdoProgressionProps
-> = ({ currentPoints, targetPoints, daysLeft }) => {
+> = ({ currentPoints, targetPoints, daysLeft, currentLeague }) => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
 
@@ -63,16 +66,43 @@ export const ObjectifHebdoProgression: React.FC<
 								}
 							/>
 						</View>
-						<View>
-							<Text
-								className="text-lg font-bold"
-								style={{
-									color: theme.colors.text,
-									fontFamily: theme.fonts.bold.fontFamily,
-								}}
-							>
-								{t("leagues.weekly_goal.title")}
-							</Text>
+						<View className="flex-1">
+							<View className="flex-row items-center">
+								<Text
+									className="text-lg font-bold mr-2"
+									style={{
+										color: theme.colors.text,
+										fontFamily: theme.fonts.bold.fontFamily,
+									}}
+								>
+									{t("leagues.weekly_goal.title")}
+								</Text>
+								{currentLeague && (
+									<View
+										className="w-6 h-6 rounded-full items-center justify-center overflow-hidden"
+										style={{
+											backgroundColor: currentLeague.color + "20",
+											borderWidth: 1,
+											borderColor: currentLeague.color,
+										}}
+									>
+										<CachedImage
+											imagePath={`images/badges/${currentLeague.iconUrl}`}
+											style={{
+												width: 16,
+												height: 16,
+											}}
+											placeholder={
+												<MaterialCommunityIcons
+													name="medal"
+													size={12}
+													color={currentLeague.color}
+												/>
+											}
+										/>
+									</View>
+								)}
+							</View>
 							<Text
 								className="text-sm"
 								style={{

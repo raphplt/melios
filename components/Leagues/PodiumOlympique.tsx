@@ -4,6 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
+import CachedImage from "@components/Shared/CachedImage";
+import { League } from "../../type/league.d";
 
 interface PodiumParticipant {
 	name: string;
@@ -15,12 +17,12 @@ interface PodiumParticipant {
 
 interface PodiumOlympiqueProps {
 	participants: PodiumParticipant[];
-	leagueName?: string;
+	currentLeague?: League | null;
 }
 
 export const PodiumOlympique: React.FC<PodiumOlympiqueProps> = ({
 	participants,
-	leagueName,
+	currentLeague,
 }) => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
@@ -106,16 +108,33 @@ export const PodiumOlympique: React.FC<PodiumOlympiqueProps> = ({
 					>
 						{t("leagues.podium.title")}
 					</Text>
-					{leagueName && (
-						<Text
-							className="text-sm"
-							style={{
-								color: theme.colors.textTertiary,
-								fontFamily: theme.fonts.regular.fontFamily,
-							}}
-						>
-							{t("leagues.podium.champions_of", { league: leagueName })}
-						</Text>
+					{currentLeague && (
+						<View className="flex-row items-center justify-center">
+							<CachedImage
+								imagePath={`images/badges/${currentLeague.iconUrl}`}
+								style={{
+									width: 16,
+									height: 16,
+									marginRight: 6,
+								}}
+								placeholder={
+									<MaterialCommunityIcons
+										name="medal"
+										size={16}
+										color={currentLeague.color}
+									/>
+								}
+							/>
+							<Text
+								className="text-sm"
+								style={{
+									color: theme.colors.textTertiary,
+									fontFamily: theme.fonts.regular.fontFamily,
+								}}
+							>
+								{t("leagues.podium.champions_of", { league: currentLeague.name })}
+							</Text>
+						</View>
 					)}
 				</View>
 

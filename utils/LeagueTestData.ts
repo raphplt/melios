@@ -7,16 +7,37 @@ import {
 	PodiumOlympique,
 	StatistiquesLigue,
 } from "../components/Leagues";
+import { League } from "../type/league.d";
+
+// Exemple de ligue pour les tests
+export const mockCurrentLeague: League = {
+	id: "league_4",
+	name: "Argent",
+	rank: 4,
+	color: "#C0C0C0",
+	iconUrl: "Argent.png",
+	pointsRequired: 1000,
+	weeklyPointsRequired: 200,
+};
+
+export const mockNextLeague: League = {
+	id: "league_5",
+	name: "Or",
+	rank: 5,
+	color: "#FFD700",
+	iconUrl: "Or.png",
+	pointsRequired: 2000,
+	weeklyPointsRequired: 300,
+};
 
 // Exemples de données de test
 export const mockData = {
 	// Données pour LigueBadgeProgression
 	badgeProgression: {
-		currentBadge: "Argent",
+		currentLeague: mockCurrentLeague,
 		currentRank: 3,
 		currentPoints: 1350,
-		targetBadge: "Or",
-		targetPoints: 2000,
+		nextLeague: mockNextLeague,
 		progressPercent: 67.5,
 	},
 
@@ -25,6 +46,7 @@ export const mockData = {
 		currentPoints: 85,
 		targetPoints: 150,
 		daysLeft: 3,
+		currentLeague: mockCurrentLeague,
 	},
 
 	// Données pour PodiumOlympique
@@ -72,11 +94,10 @@ export const mockData = {
 // Exemple d'utilisation dans une page de test
 /*
 <LigueBadgeProgression
-  currentBadge={mockData.badgeProgression.currentBadge}
+  currentLeague={mockLeagues[0]}
   currentRank={mockData.badgeProgression.currentRank}
   currentPoints={mockData.badgeProgression.currentPoints}
-  targetBadge={mockData.badgeProgression.targetBadge}
-  targetPoints={mockData.badgeProgression.targetPoints}
+  nextLeague={mockLeagues[1]}
   progressPercent={mockData.badgeProgression.progressPercent}
 />
 
@@ -84,6 +105,7 @@ export const mockData = {
   currentPoints={mockData.weeklyGoal.currentPoints}
   targetPoints={mockData.weeklyGoal.targetPoints}
   daysLeft={mockData.weeklyGoal.daysLeft}
+  currentLeague={mockLeagues[0]}
 />
 
 <PodiumOlympique

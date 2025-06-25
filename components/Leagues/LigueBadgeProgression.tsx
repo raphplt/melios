@@ -4,75 +4,31 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
+import CachedImage from "@components/Shared/CachedImage";
+
+import { League } from "../../type/league.d";
 
 interface LigueBadgeProgressionProps {
-	currentBadge: string;
+	currentLeague: League;
 	currentRank: number;
 	currentPoints: number;
-	targetBadge?: string;
-	targetPoints?: number;
+	nextLeague?: League;
 	progressPercent: number;
 }
 
 export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
-	currentBadge,
+	currentLeague,
 	currentRank,
 	currentPoints,
-	targetBadge,
-	targetPoints,
+	nextLeague,
 	progressPercent,
 }) => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
 
-	const getBadgeIcon = (badge: string) => {
-		switch (badge.toLowerCase()) {
-			case "fer":
-			case "iron":
-				return "medal";
-			case "bronze":
-				return "medal-outline";
-			case "argent":
-			case "silver":
-				return "trophy-outline";
-			case "or":
-			case "gold":
-				return "trophy";
-			case "platine":
-			case "platinum":
-				return "crown-outline";
-			case "diamant":
-			case "diamond":
-				return "diamond-stone";
-			default:
-				return "medal";
-		}
-	};
-	const getBadgeColor = (badge: string) => {
-		switch (badge.toLowerCase()) {
-			case "fer":
-			case "iron":
-				return theme.colors.grayPrimary || "#B0B0B0";
-			case "bronze":
-				return "#CD7F32";
-			case "argent":
-			case "silver":
-				return "#C0C0C0";
-			case "or":
-			case "gold":
-				return theme.colors.mythologyGold || "#F4E4A6";
-			case "platine":
-			case "platinum":
-				return "#E5E4E2";
-			case "diamant":
-			case "diamond":
-				return "#B9F2FF";
-			default:
-				return theme.colors.grayPrimary || "#B0B0B0";
-		}
-	};
-
-	const pointsRemaining = targetPoints ? targetPoints - currentPoints : 0;
+	const pointsRemaining = nextLeague
+		? nextLeague.pointsRequired - currentPoints
+		: 0;
 
 	return (
 		<View className="mx-4 mb-6">
@@ -91,17 +47,26 @@ export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
 				{/* Header avec badge actuel */}
 				<View className="flex-row items-center mb-4">
 					<View
-						className="w-16 h-16 rounded-full items-center justify-center mr-4"
+						className="w-16 h-16 rounded-full items-center justify-center mr-4 overflow-hidden"
 						style={{
-							backgroundColor: getBadgeColor(currentBadge) + "20",
+							backgroundColor: currentLeague.color + "20",
 							borderWidth: 2,
-							borderColor: getBadgeColor(currentBadge),
+							borderColor: currentLeague.color,
 						}}
 					>
-						<MaterialCommunityIcons
-							name={getBadgeIcon(currentBadge)}
-							size={32}
-							color={getBadgeColor(currentBadge)}
+						<CachedImage
+							imagePath={`images/badges/${currentLeague.iconUrl}`}
+							style={{
+								width: 48,
+								height: 48,
+							}}
+							placeholder={
+								<MaterialCommunityIcons
+									name="medal"
+									size={32}
+									color={currentLeague.color}
+								/>
+							}
 						/>
 					</View>
 					<View className="flex-1">
@@ -121,7 +86,7 @@ export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
 								fontFamily: theme.fonts.bold.fontFamily,
 							}}
 						>
-							{currentBadge}
+							{currentLeague.name}
 						</Text>
 						<Text
 							className="text-sm"
@@ -150,13 +115,13 @@ export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
 								fontFamily: theme.fonts.regular.fontFamily,
 							}}
 						>
-							Rang
+							{t("rank")}
 						</Text>
 					</View>
 				</View>
 
 				{/* Barre de progression */}
-				{targetBadge && targetPoints ? (
+				{nextLeague ? (
 					<>
 						<View className="mb-3">
 							<View className="flex-row justify-between items-center mb-2">
@@ -167,7 +132,7 @@ export const LigueBadgeProgression: React.FC<LigueBadgeProgressionProps> = ({
 										fontFamily: theme.fonts.medium.fontFamily,
 									}}
 								>
-									{t("progress_towards")} {targetBadge}
+									{`${t("progress_towards")} ${nextLeague.name}`}
 								</Text>
 								<Text
 									className="text-sm font-bold"

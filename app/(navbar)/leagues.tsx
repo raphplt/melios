@@ -120,12 +120,13 @@ const LeagueCurrent = () => {
 	}
 
 	// Logique pour calculer les données nécessaires aux nouveaux composants
-	const currentLeagueIndex = leagues.findIndex(
+	const sortedLeagues = leagues.sort((a, b) => a.rank - b.rank);
+	const currentLeagueIndex = sortedLeagues.findIndex(
 		(l) => l.id === currentLeague?.id
 	);
 	const nextLeague =
-		currentLeagueIndex >= 0 && currentLeagueIndex < leagues.length - 1
-			? leagues.sort((a, b) => a.rank - b.rank)[currentLeagueIndex + 1]
+		currentLeagueIndex >= 0 && currentLeagueIndex < sortedLeagues.length - 1
+			? sortedLeagues[currentLeagueIndex + 1]
 			: undefined;
 
 	const currentPoints = member?.league?.points ?? 0;
@@ -170,6 +171,8 @@ const LeagueCurrent = () => {
 			  )
 			: 0;
 
+	console.log("leagues", leagues);
+
 	return (
 		<View
 			className="flex-1 mb-24"
@@ -194,33 +197,27 @@ const LeagueCurrent = () => {
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 20 }}
 			>
-				{/* 1. Badge & progression vers la ligue suivante */}
 				{currentLeague && (
 					<LigueBadgeProgression
-						currentBadge={currentLeague.name}
+						currentLeague={currentLeague}
 						currentRank={member.league?.rank ?? 1}
 						currentPoints={currentPoints}
-						targetBadge={nextLeague?.name}
-						targetPoints={targetPoints}
+						nextLeague={nextLeague}
 						progressPercent={progressPercent}
 					/>
 				)}
-
-				{/* 2. Objectif hebdomadaire */}
 				<ObjectifHebdoProgression
 					currentPoints={currentWeeklyPoints}
 					targetPoints={weeklyTargetPoints}
 					daysLeft={Math.max(daysLeft, 1)}
+					currentLeague={currentLeague}
 				/>
-
-				{/* 3. Classement et statistiques */}
 				{!isSoloLeague && podiumParticipants.length > 0 && (
 					<PodiumOlympique
 						participants={podiumParticipants}
-						leagueName={currentLeague?.name}
+						currentLeague={currentLeague}
 					/>
 				)}
-
 				<StatistiquesLigue
 					totalParticipants={topMembers.length}
 					record={maxPoints}

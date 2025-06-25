@@ -3,12 +3,12 @@ import { League } from "../type/league";
 // Configuration par défaut des ligues
 export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 	{
-		name: "Terre",
+		name: "Bois",
 		rank: 1,
 		color: "#8B4513",
 		pointsRequired: 0,
 		weeklyPointsRequired: 50,
-		iconUrl: "🌍",
+		iconUrl: "Terre.png",
 	},
 	{
 		name: "Bronze",
@@ -16,7 +16,7 @@ export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 		color: "#CD7F32",
 		pointsRequired: 200,
 		weeklyPointsRequired: 100,
-		iconUrl: "🟤",
+		iconUrl: "Bronze.png",
 	},
 	{
 		name: "Fer",
@@ -24,7 +24,7 @@ export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 		color: "#708090",
 		pointsRequired: 500,
 		weeklyPointsRequired: 150,
-		iconUrl: "⚫",
+		iconUrl: "Fer.png",
 	},
 	{
 		name: "Argent",
@@ -32,7 +32,7 @@ export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 		color: "#C0C0C0",
 		pointsRequired: 1000,
 		weeklyPointsRequired: 200,
-		iconUrl: "⚪",
+		iconUrl: "Argent.png",
 	},
 	{
 		name: "Or",
@@ -40,7 +40,7 @@ export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 		color: "#FFD700",
 		pointsRequired: 2000,
 		weeklyPointsRequired: 300,
-		iconUrl: "🟡",
+		iconUrl: "Or.png",
 	},
 	{
 		name: "Platine",
@@ -48,7 +48,7 @@ export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 		color: "#E5E4E2",
 		pointsRequired: 4000,
 		weeklyPointsRequired: 400,
-		iconUrl: "💎",
+		iconUrl: "Platine.png",
 	},
 	{
 		name: "Diamant",
@@ -56,7 +56,7 @@ export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 		color: "#B9F2FF",
 		pointsRequired: 8000,
 		weeklyPointsRequired: 500,
-		iconUrl: "💠",
+		iconUrl: "Diamant.png",
 	},
 	{
 		name: "Maître",
@@ -64,7 +64,7 @@ export const DEFAULT_LEAGUES: Omit<League, "id">[] = [
 		color: "#9932CC",
 		pointsRequired: 15000,
 		weeklyPointsRequired: 700,
-		iconUrl: "👑",
+		iconUrl: "Maitre.png",
 	},
 ];
 
