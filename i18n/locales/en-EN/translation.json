@@ -416,5 +416,33 @@
     "quality_over_quantity": "Quality over quantity",
     "celebrate_progress": "Celebrate every small victory",
     "league_understood": "I understand!",
-    "league_info": "League information"
+    "league_info": "League information",
+    "leagues": {
+        "badge": {
+            "current": "Current badge",
+            "progress_to_next": "{{points}} more points to advance!",
+            "promotion_achieved": "Promotion achieved!",
+            "max_level": "Maximum level reached!"
+        },
+        "weekly_goal": {
+            "completed": "Weekly goal achieved!",
+            "remaining": "{{points}} more points to reach your goal",
+            "days_left_one": "{{count}} day left",
+            "days_left_other": "{{count}} days left",
+            "title": "Weekly Goal"
+        },
+        "stats": {
+            "participants": "Participants",
+            "record": "Record",
+            "average": "Average"
+        },
+        "empty_state": {
+            "solo": "You are alone in this league for now.",
+            "developing": "This league is under development."
+        },
+        "podium": {
+            "title": "Olympic Podium",
+            "champions_of": "Champions of {{league}}"
+        }
+    }
 }

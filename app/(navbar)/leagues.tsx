@@ -1,17 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { View, Text, ScrollView, StatusBar, Animated } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useData } from "../../context/DataContext";
 import { useTheme } from "../../context/ThemeContext";
 import { useLeague } from "../../hooks/useLeague";
-import { OlympicPodium } from "../../components/OlympicPodium";
-import { LeagueCarousel } from "../../components/LeagueCarousel";
-import { CurrentLeagueCard } from "../../components/CurrentLeagueCard";
-import { LeagueStats } from "../../components/LeagueStats";
-import { PersonalProgressCard } from "../../components/PersonalProgressCard";
 import { LeagueInfoButton } from "../../components/LeagueInfoModal";
+import {
+	LigueBadgeProgression,
+	ObjectifHebdoProgression,
+	PodiumOlympique,
+	StatistiquesLigue,
+} from "../../components/Leagues";
 
 if (__DEV__) {
 	import("../../utils/LeagueDebugUtils");
@@ -119,6 +119,7 @@ const LeagueCurrent = () => {
 		);
 	}
 
+	// Logique pour calculer les données nécessaires aux nouveaux composants
 	const currentLeagueIndex = leagues.findIndex(
 		(l) => l.id === currentLeague?.id
 	);
@@ -127,6 +128,38 @@ const LeagueCurrent = () => {
 			? leagues.sort((a, b) => a.rank - b.rank)[currentLeagueIndex + 1]
 			: undefined;
 
+	const currentPoints = member?.league?.points ?? 0;
+	const currentWeeklyPoints = member?.league?.weeklyPoints ?? 0;
+	const targetPoints = nextLeague?.pointsRequired ?? 0;
+	const weeklyTargetPoints = currentLeague?.weeklyPointsRequired ?? 150;
+
+	// Calculer les jours restants dans la semaine
+	const now = new Date();
+	const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+	const endOfWeek = new Date(startOfWeek);
+	endOfWeek.setDate(startOfWeek.getDate() + 6);
+	const daysLeft = Math.ceil(
+		(endOfWeek.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+	);
+
+	// Progression vers la ligue suivante
+	const progressPercent = nextLeague
+		? Math.min((currentPoints / targetPoints) * 100, 100)
+		: 100;
+
+	// Déterminer si c'est une ligue solo
+	const isSoloLeague = topMembers.length <= 1;
+
+	// Préparer les données du podium
+	const podiumParticipants = topMembers.slice(0, 3).map((topMember, index) => ({
+		name: topMember.nom,
+		points: topMember.league?.points ?? 0,
+		rank: index + 1,
+		avatarUrl: topMember.profilePicture,
+		isCurrentUser: topMember.uid === member.uid,
+	}));
+
+	// Calculer les statistiques
 	const maxPoints =
 		topMembers.length > 0 ? topMembers[0]?.league?.points ?? 0 : 0;
 	const averagePoints =
@@ -161,88 +194,39 @@ const LeagueCurrent = () => {
 				showsVerticalScrollIndicator={false}
 				contentContainerStyle={{ paddingBottom: 20 }}
 			>
-				{/* Carrousel des ligues */}
-				<LeagueCarousel
-					leagues={leagues}
-					currentLeagueId={member?.league?.leagueId}
+				{/* 1. Badge & progression vers la ligue suivante */}
+				{currentLeague && (
+					<LigueBadgeProgression
+						currentBadge={currentLeague.name}
+						currentRank={member.league?.rank ?? 1}
+						currentPoints={currentPoints}
+						targetBadge={nextLeague?.name}
+						targetPoints={targetPoints}
+						progressPercent={progressPercent}
+					/>
+				)}
+
+				{/* 2. Objectif hebdomadaire */}
+				<ObjectifHebdoProgression
+					currentPoints={currentWeeklyPoints}
+					targetPoints={weeklyTargetPoints}
+					daysLeft={Math.max(daysLeft, 1)}
 				/>
 
-				{/* Carte de ligue actuelle */}
-				{currentLeague && (
-					<CurrentLeagueCard
-						league={currentLeague}
-						member={member}
-						nextLeague={nextLeague}
+				{/* 3. Classement et statistiques */}
+				{!isSoloLeague && podiumParticipants.length > 0 && (
+					<PodiumOlympique
+						participants={podiumParticipants}
+						leagueName={currentLeague?.name}
 					/>
 				)}
 
-				{/* Progression personnelle */}
-				{currentLeague && member && (
-					<PersonalProgressCard
-						league={currentLeague}
-						member={member}
-						nextLeague={nextLeague}
-					/>
-				)}
-
-				{/* Podium olympique */}
-
-				{topMembers.length > 0 && (
-					<View className="mb-6 mt-2">
-						<OlympicPodium topMembers={topMembers} currentMember={member} />
-					</View>
-				)}
-
-				{/* Statistiques */}
-				{topMembers.length > 0 && (
-					<LeagueStats
-						participants={topMembers.length}
-						record={maxPoints}
-						average={averagePoints}
-					/>
-				)}
-
-				{/* Message informatif si pas de top membres */}
-				{topMembers.length === 0 && currentLeague && (
-					<View className="mx-4 mb-6">
-						<LinearGradient
-							colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
-							className="rounded-3xl p-8 items-center"
-							style={{
-								shadowColor: theme.colors.border,
-								shadowOffset: { width: 0, height: 8 },
-								shadowOpacity: 0.1,
-								shadowRadius: 12,
-								elevation: 8,
-							}}
-						>
-							<MaterialCommunityIcons
-								name="trophy-outline"
-								size={48}
-								color={theme.colors.textTertiary}
-							/>
-							<Text
-								className="text-lg font-bold mt-4 text-center"
-								style={{
-									color: theme.colors.text,
-									fontFamily: theme.fonts.bold.fontFamily,
-								}}
-							>
-								{t("league_in_development")}
-							</Text>
-							<Text
-								className="text-base mt-2 text-center"
-								style={{
-									color: theme.colors.textTertiary,
-									fontFamily: theme.fonts.regular.fontFamily,
-									lineHeight: 20,
-								}}
-							>
-								{t("continue_earning_points")}
-							</Text>
-						</LinearGradient>
-					</View>
-				)}
+				<StatistiquesLigue
+					totalParticipants={topMembers.length}
+					record={maxPoints}
+					moyenne={averagePoints}
+					isSoloLeague={isSoloLeague}
+				/>
 			</ScrollView>
 		</View>
 	);
