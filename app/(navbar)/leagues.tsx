@@ -176,7 +176,6 @@ const LeagueCurrent = () => {
 			className="flex-1 mb-24"
 			style={{ backgroundColor: theme.colors.background }}
 		>
-			{/* Header avec bouton d'information */}
 			<View className="flex-row items-center justify-between px-4 py-3">
 				<Text
 					className="text-2xl font-bold"

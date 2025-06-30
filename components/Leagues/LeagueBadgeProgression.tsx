@@ -60,7 +60,7 @@ export const LeagueBadgeProgression: React.FC<LeagueBadgeProgressionProps> = ({
 						className="w-16 h-16 rounded-full items-center justify-center mr-4 overflow-hidden"
 						style={{
 							backgroundColor: currentLeague.color + "20",
-							borderWidth: 2,
+							// borderWidth: 2,
 							borderColor: currentLeague.color,
 						}}
 					>
