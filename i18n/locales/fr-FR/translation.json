@@ -384,6 +384,7 @@
     "weekly_objective": "Objectif Hebdomadaire",
     "days_left": "{{days}} jour{{days, plural, one {} other{s}}} restant{{days, plural, one {} other{s}}}",
     "points": "points",
+    "you": "TOI",
     "progress_completed": "complété",
     "points_remaining": "restants",
     "rank": "Rang",
@@ -438,6 +439,32 @@
     "league_understood": "J'ai compris !",
     "league_info": "Informations sur les ligues",
     "leagues": {
+        "all_leagues": "Toutes les Ligues",
+        "scroll_to_explore": "Fais défiler pour explorer toutes les ligues disponibles",
+        "current": "ACTUELLE",
+        "time_remaining": {
+            "title": "Temps Restant dans la Ligue",
+            "days": "JOURS",
+            "hours": "HRS",
+            "minutes": "MIN",
+            "seconds": "SEC",
+            "urgent_message": "Dernier jour pour gravir les échelons !",
+            "reset_message": "Le classement se remet à zéro chaque dimanche à minuit"
+        },
+        "ranking": {
+            "title": "Classement de la Ligue",
+            "your_rank": "Toi : #{{rank}}",
+            "bot_info": "Des figures mythologiques te rejoignent dans cette ligue pour créer une compétition engageante !"
+        },
+        "rewards": {
+            "title": "Récompenses de Ligue",
+            "multiplier_label": "Multiplicateur Melios",
+            "daily_bonus": "Bonus Quotidien",
+            "examples": "Exemples de Récompenses :",
+            "habit": "Habitude",
+            "goal": "Objectif",
+            "motivation_message": "Plus ta ligue est élevée, plus tu gagnes de récompenses !"
+        },
         "badge": {
             "current": "Badge actuel",
             "progress_to_next": "Encore {{points}} points pour monter !",

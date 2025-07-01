@@ -385,6 +385,7 @@
     "day_remaining": "day remaining",
     "days_remaining": "days remaining",
     "points": "points",
+    "you": "YOU",
     "progress_completed": "completed",
     "points_remaining": "remaining",
     "rank": "Rank",
@@ -439,6 +440,32 @@
     "league_understood": "I understand!",
     "league_info": "League information",
     "leagues": {
+        "all_leagues": "All Leagues",
+        "scroll_to_explore": "Scroll to explore all available leagues",
+        "current": "CURRENT",
+        "time_remaining": {
+            "title": "Time Remaining in League",
+            "days": "DAYS",
+            "hours": "HRS",
+            "minutes": "MIN",
+            "seconds": "SEC",
+            "urgent_message": "Last day to climb the ranks!",
+            "reset_message": "Rankings reset every Sunday at midnight"
+        },
+        "ranking": {
+            "title": "League Ranking",
+            "your_rank": "You: #{{rank}}",
+            "bot_info": "Mythological figures join you in this league to create an engaging competition!"
+        },
+        "rewards": {
+            "title": "League Rewards",
+            "multiplier_label": "Melios Multiplier",
+            "daily_bonus": "Daily Bonus",
+            "examples": "Reward Examples:",
+            "habit": "Habit",
+            "goal": "Goal",
+            "motivation_message": "The higher your league, the more rewards you earn!"
+        },
         "badge": {
             "current": "Current badge",
             "progress_to_next": "{{points}} more points to advance!",

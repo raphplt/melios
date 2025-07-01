@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, ScrollView, StatusBar, Animated } from "react-native";
+import { View, Text, ScrollView, Animated } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useData } from "../../context/DataContext";
@@ -11,6 +11,10 @@ import {
 	WeeklyObjectiveProgression,
 	OlympicPodium,
 	LeagueStatistics,
+	LeagueCarousel,
+	LeagueTimeRemaining,
+	LeagueRanking,
+	LeagueRewardsDisplay,
 } from "../../components/Leagues";
 
 if (__DEV__) {
@@ -195,6 +199,17 @@ const LeagueCurrent = () => {
 				contentContainerStyle={{ paddingBottom: 40, paddingTop: 12 }}
 			>
 				{currentLeague && (
+					<LeagueCarousel
+						leagues={leagues}
+						currentLeague={currentLeague}
+						onLeaguePress={(league) => {
+							// TODO: Implement league detail view or info modal
+							console.log("Selected league:", league.name);
+						}}
+					/>
+				)}
+
+				{currentLeague && (
 					<LeagueBadgeProgression
 						currentLeague={currentLeague}
 						currentRank={member.league?.rank ?? 1}
@@ -203,12 +218,40 @@ const LeagueCurrent = () => {
 						progressPercent={progressPercent}
 					/>
 				)}
+				{currentLeague && (
+					<LeagueTimeRemaining 
+						currentLeague={currentLeague}
+						daysLeft={Math.max(daysLeft, 1)}
+					/>
+				)}
+
+				{currentLeague && (
+					<LeagueRewardsDisplay 
+						currentLeague={currentLeague}
+						onInfoPress={() => {
+							// TODO: Implement detailed reward info modal
+							console.log("Show reward info for:", currentLeague.name);
+						}}
+					/>
+				)}
+
 				<WeeklyObjectiveProgression
 					currentPoints={currentWeeklyPoints}
 					targetPoints={weeklyTargetPoints}
 					daysLeft={Math.max(daysLeft, 1)}
 					currentLeague={currentLeague}
 				/>
+				
+				<LeagueRanking
+					currentMember={member}
+					topMembers={topMembers}
+					currentLeague={currentLeague}
+					onMemberPress={(selectedMember) => {
+						// TODO: Implement member profile view or info modal
+						console.log("Selected member:", selectedMember.nom);
+					}}
+				/>
+				
 				{!isSoloLeague && podiumParticipants.length > 0 && (
 					<OlympicPodium
 						participants={podiumParticipants}
