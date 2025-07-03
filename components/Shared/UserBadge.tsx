@@ -27,17 +27,35 @@ const UserBadge = ({
 	useEffect(() => {
 		const loadProfilePicture = () => {
 			if (customProfilePicture) {
-				const uri = getIcon(customProfilePicture);
-				setProfilePictureUri(uri);
+				// Si c'est une URL complète (Firebase, etc.), l'utiliser directement
+				if (
+					customProfilePicture.startsWith("http") ||
+					customProfilePicture.startsWith("gs://")
+				) {
+					setProfilePictureUri(customProfilePicture);
+				} else {
+					// Sinon, utiliser la fonction getIcon pour les avatars locaux
+					const uri = getIcon(customProfilePicture);
+					setProfilePictureUri(uri);
+				}
 				return;
 			}
 			if (member?.profilePicture) {
-				const uri = getIcon(member.profilePicture);
-				setProfilePictureUri(uri);
+				// Si c'est une URL complète (Firebase, etc.), l'utiliser directement
+				if (
+					member.profilePicture.startsWith("http") ||
+					member.profilePicture.startsWith("gs://")
+				) {
+					setProfilePictureUri(member.profilePicture);
+				} else {
+					// Sinon, utiliser la fonction getIcon pour les avatars locaux
+					const uri = getIcon(member.profilePicture);
+					setProfilePictureUri(uri);
+				}
 			}
 		};
 		loadProfilePicture();
-	}, [member]);
+	}, [member, customProfilePicture]);
 
 	return (
 		<CachedImage

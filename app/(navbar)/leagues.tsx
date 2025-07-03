@@ -1,11 +1,19 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, ScrollView, Animated } from "react-native";
+import {
+	View,
+	Text,
+	ScrollView,
+	Animated,
+	TouchableOpacity,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useData } from "../../context/DataContext";
 import { useTheme } from "../../context/ThemeContext";
 import { useLeague } from "../../hooks/useLeague";
+import { useWeeklyResults } from "../../hooks/useWeeklyResults";
 import { LeagueInfoButton } from "../../components/LeagueInfoModal";
+import WeeklyResultModal from "../../components/Modals/WeeklyResultModal";
 import {
 	LeagueBadgeProgression,
 	WeeklyObjectiveProgression,
@@ -16,6 +24,7 @@ import {
 	LeagueRanking,
 	LeagueRewardsDisplay,
 } from "../../components/Leagues";
+import LoaderScreen from "@components/Shared/LoaderScreen";
 
 if (__DEV__) {
 	import("../../utils/LeagueDebugUtils");
@@ -29,6 +38,17 @@ const LeagueCurrent = () => {
 		member || null,
 		setMember
 	);
+	const {
+		showWeeklyModal,
+		setShowWeeklyModal,
+		weeklyResultData,
+		triggerWeeklyModal,
+	} = useWeeklyResults({
+		member: member || null,
+		currentLeague,
+		allLeagues: leagues,
+		topMembers,
+	});
 	const loadingAnimation = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
@@ -44,47 +64,7 @@ const LeagueCurrent = () => {
 	}, [loading]);
 
 	if (loading) {
-		return (
-			<View
-				className="flex-1 justify-center items-center px-4 pb-24"
-				style={{ backgroundColor: theme.colors.background }}
-			>
-				<Animated.View
-					style={{
-						shadowColor: theme.colors.background,
-						shadowOffset: { width: 0, height: 8 },
-						shadowOpacity: 0.3,
-						shadowRadius: 12,
-						elevation: 10,
-						alignItems: "center",
-						padding: 14,
-						transform: [
-							{
-								rotate: loadingAnimation.interpolate({
-									inputRange: [0, 1],
-									outputRange: ["0deg", "360deg"],
-								}),
-							},
-						],
-					}}
-				>
-					<MaterialCommunityIcons
-						name="loading"
-						size={48}
-						color={theme.colors.mythologyGold}
-					/>
-				</Animated.View>
-				<Text
-					className="text-lg mt-4 font-medium text-center"
-					style={{
-						color: theme.colors.textSecondary,
-						fontFamily: theme.fonts.medium.fontFamily,
-					}}
-				>
-					{t("loading_olympus")}
-				</Text>
-			</View>
-		);
+		return <LoaderScreen />;
 	}
 
 	if (!member) {
@@ -190,7 +170,26 @@ const LeagueCurrent = () => {
 				>
 					{t("olympic_leagues")}
 				</Text>
-				<LeagueInfoButton />
+				<View className="flex-row items-center">
+					{/* Bouton de test pour la modal hebdomadaire (dev only) */}
+					{__DEV__ && (
+						<TouchableOpacity
+							onPress={triggerWeeklyModal}
+							className="mr-2"
+							style={{
+								backgroundColor: theme.colors.primary,
+								borderRadius: 20,
+								width: 40,
+								height: 40,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<MaterialCommunityIcons name="trophy" size={20} color="white" />
+						</TouchableOpacity>
+					)}
+					<LeagueInfoButton />
+				</View>
 			</View>
 
 			<ScrollView
@@ -219,14 +218,14 @@ const LeagueCurrent = () => {
 					/>
 				)}
 				{currentLeague && (
-					<LeagueTimeRemaining 
+					<LeagueTimeRemaining
 						currentLeague={currentLeague}
 						daysLeft={Math.max(daysLeft, 1)}
 					/>
 				)}
 
 				{currentLeague && (
-					<LeagueRewardsDisplay 
+					<LeagueRewardsDisplay
 						currentLeague={currentLeague}
 						onInfoPress={() => {
 							// TODO: Implement detailed reward info modal
@@ -235,13 +234,13 @@ const LeagueCurrent = () => {
 					/>
 				)}
 
-				<WeeklyObjectiveProgression
+				{/* <WeeklyObjectiveProgression
 					currentPoints={currentWeeklyPoints}
 					targetPoints={weeklyTargetPoints}
 					daysLeft={Math.max(daysLeft, 1)}
 					currentLeague={currentLeague}
-				/>
-				
+				/> */}
+
 				<LeagueRanking
 					currentMember={member}
 					topMembers={topMembers}
@@ -251,7 +250,7 @@ const LeagueCurrent = () => {
 						console.log("Selected member:", selectedMember.nom);
 					}}
 				/>
-				
+
 				{!isSoloLeague && podiumParticipants.length > 0 && (
 					<OlympicPodium
 						participants={podiumParticipants}
@@ -267,6 +266,14 @@ const LeagueCurrent = () => {
 					/>
 				)}
 			</ScrollView>
+
+			{/* Modal de résultats hebdomadaires */}
+			<WeeklyResultModal
+				visible={showWeeklyModal}
+				setVisible={setShowWeeklyModal}
+				resultData={weeklyResultData}
+				member={member!}
+			/>
 		</View>
 	);
 };

@@ -21,9 +21,9 @@ export const LeagueInfoModal: React.FC<{
 		>
 			<ScrollView className="px-4" showsVerticalScrollIndicator={false}>
 				{/* Introduction */}
-				<View className="mb-6">
+				<View className="mb-4">
 					<Text
-						className="text-base leading-6"
+						className="text-sm leading-5"
 						style={{
 							color: theme.colors.text,
 						}}
@@ -32,160 +32,69 @@ export const LeagueInfoModal: React.FC<{
 					</Text>
 				</View>
 
-				{/* Comment ça marche */}
-				<View className="mb-6">
+				{/* Comment ça marche - Version condensée */}
+				<View className="mb-4">
 					<Text
-						className="text-lg font-bold mb-3"
+						className="text-base font-bold mb-3"
 						style={{
 							color: theme.colors.text,
 							fontFamily: theme.fonts.bold.fontFamily,
 						}}
 					>
-						{t("league_how_it_works")}
-					</Text>
-
-					<View className="space-y-3">
-						<View className="flex-row">
-							<View
-								className="w-6 h-6 rounded-full items-center justify-center mr-3 mt-1"
-								style={{ backgroundColor: theme.colors.primary }}
-							>
-								<Text className="text-white text-xs font-bold">1</Text>
-							</View>
-							<View className="flex-1">
-								<Text
-									className="text-sm font-medium mb-1"
-									style={{ color: theme.colors.text }}
-								>
-									{t("points_explanation")}
-								</Text>
-								<Text
-									className="text-sm"
-									style={{ color: theme.colors.textTertiary, lineHeight: 20 }}
-								>
-									{t("complete_habits_explanation")}
-								</Text>
-							</View>
-						</View>
-
-						<View className="flex-row">
-							<View
-								className="w-6 h-6 rounded-full items-center justify-center mr-3 mt-1"
-								style={{ backgroundColor: theme.colors.primary }}
-							>
-								<Text className="text-white text-xs font-bold">2</Text>
-							</View>
-							<View className="flex-1">
-								<Text
-									className="text-sm font-medium mb-1"
-									style={{ color: theme.colors.text }}
-								>
-									{t("promotion_explanation")}
-								</Text>
-								<Text
-									className="text-sm"
-									style={{ color: theme.colors.textTertiary, lineHeight: 20 }}
-								>
-									{t("league_promotion_detail")}
-								</Text>
-							</View>
-						</View>
-
-						<View className="flex-row">
-							<View
-								className="w-6 h-6 rounded-full items-center justify-center mr-3 mt-1"
-								style={{ backgroundColor: theme.colors.primary }}
-							>
-								<Text className="text-white text-xs font-bold">3</Text>
-							</View>
-							<View className="flex-1">
-								<Text
-									className="text-sm font-medium mb-1"
-									style={{ color: theme.colors.text }}
-								>
-									{t("weekly_objectives_explanation")}
-								</Text>
-								<Text
-									className="text-sm"
-									style={{ color: theme.colors.textTertiary, lineHeight: 20 }}
-								>
-									{t("weekly_objectives_detail")}
-								</Text>
-							</View>
-						</View>
-					</View>
-				</View>
-
-				{/* Objectifs hebdomadaires */}
-				<View className="mb-6">
-					<Text
-						className="text-lg font-bold mb-3"
-						style={{
-							color: theme.colors.text,
-							fontFamily: theme.fonts.bold.fontFamily,
-						}}
-					>
-						🗓️ {t("weekly_objectives_title")}
+						⚡ Comment ça marche
 					</Text>
 
 					<LinearGradient
 						colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
-						className="rounded-2xl p-4"
+						className="rounded-xl p-3"
 					>
-						<View className="flex-row items-start">
-							<MaterialCommunityIcons
-								name="information"
-								size={20}
-								color={theme.colors.primary}
-								style={{ marginTop: 2, marginRight: 8 }}
-							/>
-							<View className="flex-1">
-								<Text
-									className="text-sm"
-									style={{
-										color: theme.colors.text,
-										lineHeight: 20,
-										fontFamily: theme.fonts.regular.fontFamily,
-									}}
-								>
-									Chaque ligue a un objectif de points hebdomadaire. Si vous n'atteignez
-									pas cet objectif, vous risquez de descendre d'une ligue.
-								</Text>
-								<Text
-									className="text-sm mt-2"
-									style={{
-										color: theme.colors.textTertiary,
-										lineHeight: 20,
-										fontFamily: theme.fonts.regular.fontFamily,
-									}}
-								>
-									Les compteurs se remettent à zéro chaque semaine !
-								</Text>
-							</View>
-						</View>
+						<Text
+							className="text-sm mb-2"
+							style={{
+								color: theme.colors.text,
+								lineHeight: 18,
+							}}
+						>
+							• Complétez vos habitudes pour gagner des points
+						</Text>
+						<Text
+							className="text-sm mb-2"
+							style={{
+								color: theme.colors.text,
+								lineHeight: 18,
+							}}
+						>
+							• Montez dans les ligues supérieures pour plus de récompenses
+						</Text>
+						<Text
+							className="text-sm"
+							style={{
+								color: theme.colors.text,
+								lineHeight: 18,
+							}}
+						>
+							• Atteignez l'objectif hebdomadaire pour éviter la relégation
+						</Text>
 					</LinearGradient>
 				</View>
 
-				{/* Récompenses */}
+				{/* Récompenses - Version condensée */}
 				<View className="mb-6">
 					<Text
-						className="text-lg font-bold mb-3"
+						className="text-base font-bold mb-3"
 						style={{
 							color: theme.colors.text,
 							fontFamily: theme.fonts.bold.fontFamily,
 						}}
 					>
-						🎁 Récompenses
+						🎁 Récompenses par ligue
 					</Text>
 
 					<View className="space-y-2">
-						<View className="flex-row items-center justify-between py-2">
-							<View className="flex-row items-center">
-								<Text className="text-base mr-2">🎉</Text>
-								<Text className="text-sm" style={{ color: theme.colors.text }}>
-									Promotion
-								</Text>
-							</View>
+						<View className="flex-row items-center justify-between py-1">
+							<Text className="text-sm" style={{ color: theme.colors.text }}>
+								🎉 Promotion
+							</Text>
 							<Text
 								className="text-sm font-bold"
 								style={{ color: theme.colors.primary }}
@@ -194,13 +103,10 @@ export const LeagueInfoModal: React.FC<{
 							</Text>
 						</View>
 
-						<View className="flex-row items-center justify-between py-2">
-							<View className="flex-row items-center">
-								<Text className="text-base mr-2">✅</Text>
-								<Text className="text-sm" style={{ color: theme.colors.text }}>
-									Maintien hebdomadaire
-								</Text>
-							</View>
+						<View className="flex-row items-center justify-between py-1">
+							<Text className="text-sm" style={{ color: theme.colors.text }}>
+								✅ Maintien
+							</Text>
 							<Text
 								className="text-sm font-bold"
 								style={{ color: theme.colors.primary }}
@@ -209,50 +115,18 @@ export const LeagueInfoModal: React.FC<{
 							</Text>
 						</View>
 
-						<View className="flex-row items-center justify-between py-2">
-							<View className="flex-row items-center">
-								<Text className="text-base mr-2">📉</Text>
-								<Text className="text-sm" style={{ color: theme.colors.text }}>
-									Relégation (consolation)
-								</Text>
-							</View>
+						<View className="flex-row items-center justify-between py-1">
+							<Text className="text-sm" style={{ color: theme.colors.text }}>
+								🏆 Podium (top 3)
+							</Text>
 							<Text
 								className="text-sm font-bold"
 								style={{ color: theme.colors.primary }}
 							>
-								+5 récompenses
+								Bonus quotidien
 							</Text>
 						</View>
 					</View>
-				</View>
-
-				{/* Podium olympique */}
-				<View className="mb-8">
-					<Text
-						className="text-lg font-bold mb-3"
-						style={{
-							color: theme.colors.text,
-							fontFamily: theme.fonts.bold.fontFamily,
-						}}
-					>
-						🏆 Podium Olympique
-					</Text>
-
-					<LinearGradient
-						colors={[theme.colors.cardBackground, theme.colors.backgroundSecondary]}
-						className="rounded-2xl p-4"
-					>
-						<Text
-							className="text-sm"
-							style={{
-								color: theme.colors.text,
-								lineHeight: 20,
-							}}
-						>
-							Le podium affiche les 3 meilleurs joueurs de votre ligue actuelle. C'est
-							le seul endroit où vous pouvez voir et vous comparer aux autres !
-						</Text>
-					</LinearGradient>
 				</View>
 			</ScrollView>
 		</BottomSlideModal>

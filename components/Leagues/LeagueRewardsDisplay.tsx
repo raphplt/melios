@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
 import { League } from "../../type/league.d";
 import { LeagueRewardService } from "../../services/LeagueRewardService";
+import MoneyMelios from "@components/Svg/MoneyMelios";
 
 interface LeagueRewardsDisplayProps {
 	currentLeague: League | null;
@@ -21,7 +22,8 @@ export const LeagueRewardsDisplay: React.FC<LeagueRewardsDisplayProps> = ({
 
 	if (!currentLeague) return null;
 
-	const leagueReward = LeagueRewardService.getLeagueRewardDescription(currentLeague);
+	const leagueReward =
+		LeagueRewardService.getLeagueRewardDescription(currentLeague);
 	const multiplier = leagueReward.multiplier;
 	const dailyBonus = leagueReward.meliosPoints;
 
@@ -56,7 +58,9 @@ export const LeagueRewardsDisplay: React.FC<LeagueRewardsDisplayProps> = ({
 				}}
 			>
 				{/* Header */}
-				<View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+				<View
+					style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}
+				>
 					<MaterialCommunityIcons
 						name="star-circle"
 						size={20}
@@ -67,11 +71,11 @@ export const LeagueRewardsDisplay: React.FC<LeagueRewardsDisplayProps> = ({
 						style={{
 							fontSize: 14,
 							fontFamily: theme.fonts.bold.fontFamily,
-							color: theme.colors.text,
+							color: theme.colors.textSecondary,
 							flex: 1,
 						}}
 					>
-						{t("leagues.rewards.title")}
+						🎯 Avantages de votre ligue
 					</Text>
 					<TouchableOpacity
 						onPress={onInfoPress}
@@ -89,138 +93,178 @@ export const LeagueRewardsDisplay: React.FC<LeagueRewardsDisplayProps> = ({
 					</TouchableOpacity>
 				</View>
 
-				{/* Multiplicateur principal */}
-				<View style={{ 
-					flexDirection: "row", 
-					alignItems: "center", 
-					justifyContent: "space-between",
-					marginBottom: 12 
-				}}>
-					<View style={{ flex: 1 }}>
-						<Text
-							style={{
-								fontSize: 12,
-								fontFamily: theme.fonts.medium.fontFamily,
-								color: theme.colors.textTertiary,
-								marginBottom: 2,
-							}}
-						>
-							{t("leagues.rewards.multiplier_label")}
-						</Text>
-						<Text
-							style={{
-								fontSize: 18,
-								fontFamily: theme.fonts.bold.fontFamily,
-								color: getRewardColor(),
-							}}
-						>
-							×{multiplier.toFixed(1)}
-						</Text>
-					</View>
-					
-					{/* Bonus quotidien */}
-					{dailyBonus > 0 && (
-						<View style={{ alignItems: "flex-end" }}>
-							<Text
-								style={{
-									fontSize: 12,
-									fontFamily: theme.fonts.medium.fontFamily,
-									color: theme.colors.textTertiary,
-									marginBottom: 2,
-								}}
-							>
-								{t("leagues.rewards.daily_bonus")}
-							</Text>
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontFamily: theme.fonts.bold.fontFamily,
-										color: theme.colors.orangePrimary,
-										marginRight: 4,
-									}}
-								>
-									+{dailyBonus}
-								</Text>
-								<MaterialCommunityIcons
-									name="currency-usd"
-									size={16}
-									color={theme.colors.orangePrimary}
-								/>
-							</View>
-						</View>
-					)}
-				</View>
-
-				{/* Exemples de récompenses */}
-				<View style={{
-					backgroundColor: theme.colors.cardBackground,
-					borderRadius: 12,
-					padding: 12,
-					marginBottom: 8,
-				}}>
+				{/* Gains quotidiens */}
+				<View
+					style={{
+						backgroundColor: theme.colors.cardBackground,
+						borderRadius: 12,
+						padding: 12,
+						marginBottom: 12,
+					}}
+				>
 					<Text
 						style={{
-							fontSize: 11,
-							fontFamily: theme.fonts.medium.fontFamily,
-							color: theme.colors.textTertiary,
-							marginBottom: 6,
+							fontSize: 12,
+							fontFamily: theme.fonts.bold.fontFamily,
+							color: theme.colors.text,
+							marginBottom: 8,
 						}}
 					>
-						{t("leagues.rewards.examples")}
+						💰 Gains quotidiens possibles
 					</Text>
-					
+
 					<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-						<View style={{ alignItems: "center" }}>
+						<View style={{ alignItems: "center", flex: 1 }}>
 							<MaterialCommunityIcons
 								name="check-circle"
-								size={16}
+								size={20}
 								color={theme.colors.greenPrimary}
 							/>
-							<Text style={{ 
-								fontSize: 10, 
-								color: theme.colors.textTertiary,
-								fontFamily: theme.fonts.regular.fontFamily,
-								marginTop: 2,
-								textAlign: "center"
-							}}>
-								{t("leagues.rewards.habit")}
+							<Text
+								style={{
+									fontSize: 10,
+									color: theme.colors.textTertiary,
+									fontFamily: theme.fonts.regular.fontFamily,
+									marginTop: 2,
+									textAlign: "center",
+								}}
+							>
+								1 habitude
 							</Text>
-							<Text style={{ 
-								fontSize: 11, 
-								color: getRewardColor(),
-								fontFamily: theme.fonts.bold.fontFamily,
-								marginTop: 1
-							}}>
-								{LeagueRewardService.calculateHabitCompletionReward(currentLeague, 1).totalReward}
-							</Text>
+							<View
+								style={{ flexDirection: "row", alignItems: "center", marginTop: 2 }}
+							>
+								<Text
+									style={{
+										fontSize: 12,
+										color: getRewardColor(),
+										fontFamily: theme.fonts.bold.fontFamily,
+										marginRight: 2,
+									}}
+								>
+									+
+									{
+										LeagueRewardService.calculateHabitCompletionReward(currentLeague, 1)
+											.totalReward
+									}
+								</Text>
+								<MoneyMelios width={12} height={12} />
+							</View>
 						</View>
-						
-						<View style={{ alignItems: "center" }}>
+
+						<View style={{ alignItems: "center", flex: 1 }}>
 							<MaterialCommunityIcons
 								name="target"
-								size={16}
+								size={20}
 								color={theme.colors.bluePrimary}
 							/>
-							<Text style={{ 
-								fontSize: 10, 
-								color: theme.colors.textTertiary,
-								fontFamily: theme.fonts.regular.fontFamily,
-								marginTop: 2,
-								textAlign: "center"
-							}}>
-								{t("leagues.rewards.goal")}
+							<Text
+								style={{
+									fontSize: 10,
+									color: theme.colors.textTertiary,
+									fontFamily: theme.fonts.regular.fontFamily,
+									marginTop: 2,
+									textAlign: "center",
+								}}
+							>
+								1 objectif
 							</Text>
-							<Text style={{ 
-								fontSize: 11, 
-								color: getRewardColor(),
-								fontFamily: theme.fonts.bold.fontFamily,
-								marginTop: 1
-							}}>
-								{LeagueRewardService.calculateGoalCompletionReward(currentLeague, 50).totalReward}
-							</Text>
+							<View
+								style={{ flexDirection: "row", alignItems: "center", marginTop: 2 }}
+							>
+								<Text
+									style={{
+										fontSize: 12,
+										color: getRewardColor(),
+										fontFamily: theme.fonts.bold.fontFamily,
+										marginRight: 2,
+									}}
+								>
+									+
+									{
+										LeagueRewardService.calculateGoalCompletionReward(currentLeague, 50)
+											.totalReward
+									}
+								</Text>
+								<MoneyMelios width={12} height={12} />
+							</View>
 						</View>
+
+						{dailyBonus > 0 && (
+							<View style={{ alignItems: "center", flex: 1 }}>
+								<MaterialCommunityIcons
+									name="gift"
+									size={20}
+									color={theme.colors.yellowPrimary}
+								/>
+								<Text
+									style={{
+										fontSize: 10,
+										color: theme.colors.textTertiary,
+										fontFamily: theme.fonts.regular.fontFamily,
+										marginTop: 2,
+										textAlign: "center",
+									}}
+								>
+									Bonus quotidien
+								</Text>
+								<View
+									style={{ flexDirection: "row", alignItems: "center", marginTop: 2 }}
+								>
+									<Text
+										style={{
+											fontSize: 12,
+											color: theme.colors.yellowPrimary,
+											fontFamily: theme.fonts.bold.fontFamily,
+											marginRight: 2,
+										}}
+									>
+										+{dailyBonus}
+									</Text>
+									<MoneyMelios width={12} height={12} />
+								</View>
+							</View>
+						)}
 					</View>
+				</View>
+
+				{/* Multiplicateur de ligue */}
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "center",
+						backgroundColor: getRewardColor() + "15",
+						borderRadius: 8,
+						padding: 8,
+						marginBottom: 8,
+					}}
+				>
+					<MaterialCommunityIcons
+						name="trophy"
+						size={16}
+						color={theme.colors.textSecondary}
+						style={{ marginRight: 6 }}
+					/>
+					<Text
+						style={{
+							fontSize: 12,
+							fontFamily: theme.fonts.medium.fontFamily,
+							color: theme.colors.textSecondary,
+							marginRight: 4,
+						}}
+					>
+						Multiplicateur de ligue:
+					</Text>
+					<Text
+						style={{
+							fontSize: 14,
+							fontFamily: theme.fonts.bold.fontFamily,
+							color: theme.colors.textSecondary,
+						}}
+					>
+						×{multiplier.toFixed(1)}
+					</Text>
 				</View>
 
 				{/* Message de motivation */}
@@ -228,12 +272,12 @@ export const LeagueRewardsDisplay: React.FC<LeagueRewardsDisplayProps> = ({
 					style={{
 						fontSize: 10,
 						fontFamily: theme.fonts.regular.fontFamily,
-						color: theme.colors.textTertiary,
+						color: theme.colors.textSecondary,
 						textAlign: "center",
 						fontStyle: "italic",
 					}}
 				>
-					{t("leagues.rewards.motivation_message")}
+					Plus votre ligue est élevée, plus vous gagnez de points Melios !
 				</Text>
 			</LinearGradient>
 		</View>

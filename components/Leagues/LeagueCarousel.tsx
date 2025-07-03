@@ -1,6 +1,11 @@
 import React, { useRef } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Dimensions } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import {
+	View,
+	Text,
+	ScrollView,
+	TouchableOpacity,
+	Dimensions,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
@@ -30,25 +35,28 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 
 	const scrollToCurrentLeague = () => {
 		if (!currentLeague) return;
-		
-		const currentIndex = sortedLeagues.findIndex(l => l.id === currentLeague.id);
+
+		const currentIndex = sortedLeagues.findIndex(
+			(l) => l.id === currentLeague.id
+		);
 		if (currentIndex >= 0) {
 			const scrollPosition = currentIndex * (CARD_WIDTH + CARD_MARGIN * 2);
-			scrollRef.current?.scrollTo({ 
-				x: Math.max(0, scrollPosition - screenWidth / 2 + CARD_WIDTH / 2), 
-				animated: true 
+			scrollRef.current?.scrollTo({
+				x: Math.max(0, scrollPosition - screenWidth / 2 + CARD_WIDTH / 2),
+				animated: true,
 			});
 		}
 	};
 
 	React.useEffect(() => {
-		// Scroll to current league when component mounts
 		setTimeout(scrollToCurrentLeague, 100);
 	}, [currentLeague]);
 
 	const renderLeagueCard = (league: League, index: number) => {
 		const isCurrentLeague = currentLeague?.id === league.id;
-		const isUnlocked = currentLeague ? league.rank <= currentLeague.rank : league.rank === 1;
+		const isUnlocked = currentLeague
+			? league.rank <= currentLeague.rank
+			: league.rank === 1;
 
 		return (
 			<TouchableOpacity
@@ -65,13 +73,11 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 						alignItems: "center",
 						padding: 12,
 						borderRadius: 16,
-						backgroundColor: isCurrentLeague 
-							? theme.colors.primary + "15" 
+						backgroundColor: isCurrentLeague
+							? theme.colors.primary + "15"
 							: theme.colors.cardBackground,
 						borderWidth: isCurrentLeague ? 2 : 1,
-						borderColor: isCurrentLeague 
-							? theme.colors.primary 
-							: theme.colors.border,
+						borderColor: isCurrentLeague ? theme.colors.primary : theme.colors.border,
 						shadowColor: theme.colors.border,
 						shadowOffset: { width: 0, height: 4 },
 						shadowOpacity: isCurrentLeague ? 0.2 : 0.1,
@@ -85,8 +91,8 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 							width: 48,
 							height: 48,
 							borderRadius: 24,
-							backgroundColor: isUnlocked 
-								? league.color + "20" 
+							backgroundColor: isUnlocked
+								? league.color + "20"
 								: theme.colors.grayPrimary + "20",
 							alignItems: "center",
 							justifyContent: "center",
@@ -102,11 +108,7 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 									height: 36,
 								}}
 								placeholder={
-									<MaterialCommunityIcons
-										name="medal"
-										size={24}
-										color={league.color}
-									/>
+									<MaterialCommunityIcons name="medal" size={24} color={league.color} />
 								}
 							/>
 						) : (
@@ -124,11 +126,13 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 						style={{
 							fontSize: 12,
 							textAlign: "center",
-							color: isUnlocked 
-								? theme.colors.text 
+							color: isUnlocked
+								? isCurrentLeague
+									? theme.colors.textSecondary
+									: theme.colors.text
 								: theme.colors.grayPrimary,
-							fontFamily: isCurrentLeague 
-								? theme.fonts.bold.fontFamily 
+							fontFamily: isCurrentLeague
+								? theme.fonts.bold.fontFamily
 								: theme.fonts.medium.fontFamily,
 							lineHeight: 14,
 						}}
@@ -180,7 +184,7 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 
 	return (
 		<View style={{ marginBottom: 20 }}>
-			<View style={{ paddingHorizontal: 16, marginBottom: 12 }}>
+			{/* <View style={{ paddingHorizontal: 16, marginBottom: 12 }}>
 				<Text
 					style={{
 						fontSize: 16,
@@ -200,7 +204,7 @@ export const LeagueCarousel: React.FC<LeagueCarouselProps> = ({
 				>
 					{t("leagues.scroll_to_explore")}
 				</Text>
-			</View>
+			</View> */}
 
 			<ScrollView
 				ref={scrollRef}

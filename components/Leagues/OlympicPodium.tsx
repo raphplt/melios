@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
+import UserBadge from "@components/Shared/UserBadge";
 import CachedImage from "@components/Shared/CachedImage";
 import { League } from "../../type/league.d";
 
@@ -47,11 +48,20 @@ export const OlympicPodium: React.FC<OlympicPodiumProps> = ({
 	const getPodiumColors = (rank: number): [string, string] => {
 		switch (rank) {
 			case 1:
-				return [theme.colors.mythologyGold || "#F4E4A6", theme.colors.mythologyGold || "#F4E4A6"];
+				return [
+					theme.colors.mythologyGold || "#F4E4A6",
+					theme.colors.mythologyGold || "#F4E4A6",
+				];
 			case 2:
-				return [theme.colors.grayPrimary || "#C0C0C0", theme.colors.backgroundSecondary || "#E8E8E8"];
+				return [
+					theme.colors.grayPrimary || "#C0C0C0",
+					theme.colors.backgroundSecondary || "#E8E8E8",
+				];
 			case 3:
-				return [theme.colors.orangePrimary || "#CD7F32", theme.colors.orangeSecondary || "#D2B48C"];
+				return [
+					theme.colors.orangePrimary || "#CD7F32",
+					theme.colors.orangeSecondary || "#D2B48C",
+				];
 			default:
 				return [
 					theme.colors.grayPrimary || "#B0B0B0",
@@ -190,23 +200,17 @@ export const OlympicPodium: React.FC<OlympicPodiumProps> = ({
 											: getPodiumColors(participant.rank)[0],
 									}}
 								>
-									{participant.avatarUrl ? (
-										<Image
-											source={{ uri: participant.avatarUrl }}
-											className="w-full h-full"
-											style={{ resizeMode: "cover" }}
-										/>
-									) : (
-										<MaterialCommunityIcons
-											name="account-circle"
-											size={40}
-											color={
-												participant.isCurrentUser
-													? theme.colors.primary
-													: theme.colors.textTertiary
-											}
-										/>
-									)}
+									<UserBadge
+										width={60}
+										height={60}
+										customProfilePicture={participant.avatarUrl}
+										style={{
+											borderWidth: participant.isCurrentUser ? 3 : 2,
+											borderColor: participant.isCurrentUser
+												? theme.colors.primary
+												: getPodiumColors(participant.rank)[0],
+										}}
+									/>
 								</View>
 
 								{/* Icône de rang */}

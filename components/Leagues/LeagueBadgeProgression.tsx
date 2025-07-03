@@ -25,14 +25,13 @@ export const LeagueBadgeProgression: React.FC<LeagueBadgeProgressionProps> = ({
 }) => {
 	const { t } = useTranslation();
 	const { theme } = useTheme();
-	const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+	const fadeAnim = useRef(new Animated.Value(0)).current;
 
 	const pointsRemaining = nextLeague
 		? nextLeague.pointsRequired - currentPoints
 		: 0;
 
 	useEffect(() => {
-		// Fade in animation
 		Animated.timing(fadeAnim, {
 			toValue: 1,
 			duration: 600,
@@ -60,7 +59,6 @@ export const LeagueBadgeProgression: React.FC<LeagueBadgeProgressionProps> = ({
 						className="w-16 h-16 rounded-full items-center justify-center mr-4 overflow-hidden"
 						style={{
 							backgroundColor: currentLeague.color + "20",
-							// borderWidth: 2,
 							borderColor: currentLeague.color,
 						}}
 					>
@@ -139,7 +137,6 @@ export const LeagueBadgeProgression: React.FC<LeagueBadgeProgressionProps> = ({
 									className="text-sm font-medium"
 									style={{
 										color: theme.colors.textTertiary,
-										fontFamily: theme.fonts.medium.fontFamily,
 									}}
 								>
 									{`${t("progress_towards")} ${nextLeague.name}`}

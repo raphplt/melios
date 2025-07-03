@@ -108,7 +108,9 @@ export const LeagueTimeRemaining: React.FC<LeagueTimeRemainingProps> = ({
 					elevation: 4,
 				}}
 			>
-				<View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+				<View
+					style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}
+				>
 					<MaterialCommunityIcons
 						name="clock-outline"
 						size={20}
@@ -134,25 +136,69 @@ export const LeagueTimeRemaining: React.FC<LeagueTimeRemainingProps> = ({
 					)}
 				</View>
 
-				<View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }}>
-					<TimeUnit value={timeRemaining.days} label={t("leagues.time_remaining.days")} />
-					<Text style={{ fontSize: 16, color: theme.colors.textTertiary, marginHorizontal: 4 }}>:</Text>
-					<TimeUnit value={timeRemaining.hours} label={t("leagues.time_remaining.hours")} />
-					<Text style={{ fontSize: 16, color: theme.colors.textTertiary, marginHorizontal: 4 }}>:</Text>
-					<TimeUnit value={timeRemaining.minutes} label={t("leagues.time_remaining.minutes")} />
-					<Text style={{ fontSize: 16, color: theme.colors.textTertiary, marginHorizontal: 4 }}>:</Text>
-					<TimeUnit value={timeRemaining.seconds} label={t("leagues.time_remaining.seconds")} />
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-around",
+						alignItems: "center",
+					}}
+				>
+					<TimeUnit
+						value={timeRemaining.days}
+						label={t("leagues.time_remaining.days")}
+					/>
+					<Text
+						style={{
+							fontSize: 16,
+							color: theme.colors.textTertiary,
+							marginHorizontal: 4,
+						}}
+					>
+						:
+					</Text>
+					<TimeUnit
+						value={timeRemaining.hours}
+						label={t("leagues.time_remaining.hours")}
+					/>
+					<Text
+						style={{
+							fontSize: 16,
+							color: theme.colors.textTertiary,
+							marginHorizontal: 4,
+						}}
+					>
+						:
+					</Text>
+					<TimeUnit
+						value={timeRemaining.minutes}
+						label={t("leagues.time_remaining.minutes")}
+					/>
+					<Text
+						style={{
+							fontSize: 16,
+							color: theme.colors.textTertiary,
+							marginHorizontal: 4,
+						}}
+					>
+						:
+					</Text>
+					<TimeUnit
+						value={timeRemaining.seconds}
+						label={t("leagues.time_remaining.seconds")}
+					/>
 				</View>
 
 				{daysLeft <= 1 && (
-					<View style={{ 
-						marginTop: 12, 
-						padding: 8, 
-						backgroundColor: theme.colors.redPrimary + "20",
-						borderRadius: 8,
-						flexDirection: "row",
-						alignItems: "center",
-					}}>
+					<View
+						style={{
+							marginTop: 12,
+							padding: 8,
+							backgroundColor: theme.colors.redPrimary + "20",
+							borderRadius: 8,
+							flexDirection: "row",
+							alignItems: "center",
+						}}
+					>
 						<MaterialCommunityIcons
 							name="fire"
 							size={16}
@@ -175,7 +221,6 @@ export const LeagueTimeRemaining: React.FC<LeagueTimeRemainingProps> = ({
 				<Text
 					style={{
 						fontSize: 11,
-						fontFamily: theme.fonts.regular.fontFamily,
 						color: theme.colors.textTertiary,
 						textAlign: "center",
 						marginTop: 8,

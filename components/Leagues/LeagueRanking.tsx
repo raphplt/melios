@@ -1,13 +1,16 @@
 import React, { useMemo } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../context/ThemeContext";
-import CachedImage from "@components/Shared/CachedImage";
+import UserBadge from "@components/Shared/UserBadge";
 import { Member } from "../../type/member";
 import { League } from "../../type/league.d";
-import { BotMember, BotGeneratorService } from "../../services/BotGeneratorService";
+import {
+	BotMember,
+	BotGeneratorService,
+} from "../../services/BotGeneratorService";
 
 interface LeagueRankingProps {
 	currentMember: Member;
@@ -30,7 +33,7 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 
 		// Générer des bots si nécessaire
 		const allRealMembers = [...topMembers];
-		if (!allRealMembers.find(m => m.uid === currentMember.uid)) {
+		if (!allRealMembers.find((m) => m.uid === currentMember.uid)) {
 			allRealMembers.push(currentMember);
 		}
 
@@ -42,32 +45,50 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 		);
 
 		// Combiner et trier par rang
-		const allMembers = BotGeneratorService.assignRanks([...allRealMembers, ...bots]);
-		
+		const allMembers = BotGeneratorService.assignRanks([
+			...allRealMembers,
+			...bots,
+		]);
+
 		return allMembers;
 	}, [currentMember, topMembers, currentLeague]);
 
-	const currentMemberRank = enhancedRanking.findIndex(m => m.uid === currentMember.uid) + 1;
+	const currentMemberRank =
+		enhancedRanking.findIndex((m) => m.uid === currentMember.uid) + 1;
 
 	const getRankIcon = (rank: number) => {
 		switch (rank) {
-			case 1: return "trophy";
-			case 2: return "medal";
-			case 3: return "medal-outline";
-			default: return "account-circle";
+			case 1:
+				return "trophy";
+			case 2:
+				return "medal";
+			case 3:
+				return "medal-outline";
+			default:
+				return "account-circle";
 		}
 	};
 
 	const getRankColor = (rank: number) => {
 		switch (rank) {
-			case 1: return theme.colors.mythologyGold;
-			case 2: return "#C0C0C0"; // Silver
-			case 3: return "#CD7F32"; // Bronze
-			default: return theme.colors.textTertiary;
+			case 1:
+				return theme.colors.mythologyGold;
+			case 2:
+				return "#C0C0C0"; // Silver
+			case 3:
+				return "#CD7F32"; // Bronze
+			default:
+				return theme.colors.textTertiary;
 		}
 	};
 
-	const MemberRow = ({ member, index }: { member: Member | BotMember; index: number }) => {
+	const MemberRow = ({
+		member,
+		index,
+	}: {
+		member: Member | BotMember;
+		index: number;
+	}) => {
 		const rank = index + 1;
 		const isCurrentUser = member.uid === currentMember.uid;
 		const isBot = BotGeneratorService.isBot(member);
@@ -83,8 +104,8 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 					alignItems: "center",
 					paddingVertical: 12,
 					paddingHorizontal: 16,
-					backgroundColor: isCurrentUser 
-						? theme.colors.primary + "15" 
+					backgroundColor: isCurrentUser
+						? theme.colors.primary + "15"
 						: "transparent",
 					borderRadius: 12,
 					marginBottom: 8,
@@ -102,13 +123,13 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 					<MaterialCommunityIcons
 						name={getRankIcon(rank)}
 						size={rank <= 3 ? 24 : 20}
-						color={getRankColor(rank)}
+						color={isCurrentUser ? theme.colors.textSecondary : getRankColor(rank)}
 					/>
 					<Text
 						style={{
 							fontSize: 10,
 							fontFamily: theme.fonts.bold.fontFamily,
-							color: getRankColor(rank),
+							color: isCurrentUser ? theme.colors.textSecondary : getRankColor(rank),
 							marginTop: 2,
 						}}
 					>
@@ -119,38 +140,18 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 				{/* Avatar */}
 				<View
 					style={{
-						width: 40,
-						height: 40,
-						borderRadius: 20,
 						marginLeft: 12,
 						marginRight: 16,
-						overflow: "hidden",
-						backgroundColor: theme.colors.cardBackground,
 					}}
 				>
-					<CachedImage
-						imagePath={member.profilePicture}
+					<UserBadge
+						width={40}
+						height={40}
+						customProfilePicture={member.profilePicture}
 						style={{
-							width: 40,
-							height: 40,
+							borderWidth: isCurrentUser ? 2 : 0,
+							borderColor: isCurrentUser ? theme.colors.primary : "transparent",
 						}}
-						placeholder={
-							<View
-								style={{
-									width: 40,
-									height: 40,
-									backgroundColor: theme.colors.grayPrimary + "30",
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<MaterialCommunityIcons
-									name="account"
-									size={24}
-									color={theme.colors.grayPrimary}
-								/>
-							</View>
-						}
 					/>
 				</View>
 
@@ -161,12 +162,10 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 							numberOfLines={1}
 							style={{
 								fontSize: 14,
-								fontFamily: isCurrentUser 
-									? theme.fonts.bold.fontFamily 
+								fontFamily: isCurrentUser
+									? theme.fonts.bold.fontFamily
 									: theme.fonts.medium.fontFamily,
-								color: isCurrentUser 
-									? theme.colors.primary 
-									: theme.colors.text,
+								color: isCurrentUser ? theme.colors.textSecondary : theme.colors.text,
 								flex: 1,
 							}}
 						>
@@ -223,9 +222,7 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 						style={{
 							fontSize: 16,
 							fontFamily: theme.fonts.bold.fontFamily,
-							color: isCurrentUser 
-								? theme.colors.primary 
-								: theme.colors.text,
+							color: isCurrentUser ? theme.colors.textSecondary : theme.colors.text,
 						}}
 					>
 						{points}
@@ -234,7 +231,9 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 						style={{
 							fontSize: 10,
 							fontFamily: theme.fonts.regular.fontFamily,
-							color: theme.colors.textTertiary,
+							color: isCurrentUser
+								? theme.colors.textSecondary
+								: theme.colors.textTertiary,
 						}}
 					>
 						{t("points")}
@@ -265,7 +264,9 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 				}}
 			>
 				{/* Header */}
-				<View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
+				<View
+					style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}
+				>
 					<MaterialCommunityIcons
 						name="trophy-variant"
 						size={24}
@@ -334,9 +335,9 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 									}}
 								/>
 							</View>
-							<MemberRow 
-								member={enhancedRanking[currentMemberRank - 1]} 
-								index={currentMemberRank - 1} 
+							<MemberRow
+								member={enhancedRanking[currentMemberRank - 1]}
+								index={currentMemberRank - 1}
 							/>
 						</>
 					)}
@@ -363,7 +364,7 @@ export const LeagueRanking: React.FC<LeagueRankingProps> = ({
 						style={{
 							fontSize: 11,
 							fontFamily: theme.fonts.regular.fontFamily,
-							color: theme.colors.textTertiary,
+							color: theme.colors.textSecondary,
 							flex: 1,
 							lineHeight: 14,
 						}}
