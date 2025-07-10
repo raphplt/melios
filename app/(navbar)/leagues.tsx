@@ -8,23 +8,23 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { useData } from "../../context/DataContext";
-import { useTheme } from "../../context/ThemeContext";
-import { useLeague } from "../../hooks/useLeague";
-import { useWeeklyResults } from "../../hooks/useWeeklyResults";
-import { LeagueInfoButton } from "../../components/LeagueInfoModal";
-import WeeklyResultModal from "../../components/Modals/WeeklyResultModal";
+
+import LoaderScreen from "@components/Shared/LoaderScreen";
+import { useData } from "@context/DataContext";
+import { useTheme } from "@context/ThemeContext";
+import { useLeague } from "@hooks/useLeague";
+import { useWeeklyResults } from "@hooks/useWeeklyResults";
+import { LeagueInfoButton } from "@components/LeagueInfoModal";
 import {
+	LeagueCarousel,
 	LeagueBadgeProgression,
-	WeeklyObjectiveProgression,
+	LeagueTimeRemaining,
+	LeagueRewardsDisplay,
+	LeagueRanking,
 	OlympicPodium,
 	LeagueStatistics,
-	LeagueCarousel,
-	LeagueTimeRemaining,
-	LeagueRanking,
-	LeagueRewardsDisplay,
-} from "../../components/Leagues";
-import LoaderScreen from "@components/Shared/LoaderScreen";
+} from "@components/Leagues";
+import { WeeklyResultModal } from "@components/Modals";
 
 if (__DEV__) {
 	import("../../utils/LeagueDebugUtils");
