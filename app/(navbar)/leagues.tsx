@@ -114,7 +114,6 @@ const LeagueCurrent = () => {
 			: undefined;
 
 	const currentPoints = member?.league?.points ?? 0;
-	const currentWeeklyPoints = member?.league?.weeklyPoints ?? 0;
 	const targetPoints = nextLeague?.pointsRequired ?? 0;
 	const weeklyTargetPoints = currentLeague?.weeklyPointsRequired ?? 150;
 
